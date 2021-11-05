@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { editor } from 'monaco-editor';
-  import screenfull from 'screenfull';
+  import type { Screenfull } from 'screenfull';
+  import { onMount } from 'svelte';
 
   import parse from '../editor/hdl/parse';
   import type { Root } from '../editor/hdl/tree';
@@ -45,6 +46,11 @@ CHIP Xor {
       },
     };
   }
+
+  let screenfull: Screenfull;
+  onMount(async () => {
+    screenfull = (await import('screenfull')).default as unknown as Screenfull;
+  });
 
   function setup() {
     let tree: Root | undefined;
@@ -125,7 +131,7 @@ CHIP Xor {
           </button>
         </span>
 
-        {#if screenfull.isEnabled}
+        {#if screenfull?.isEnabled}
           <span class="hidden sm:block sm:ml-3">
             <button
               type="button"
