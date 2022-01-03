@@ -17,8 +17,12 @@
       const { monaco } = await import('../editor');
 
       editor = monaco.editor.create(node, {
-        value: `/* Xor (exclusive or) gate:
-If a<>b out=1 else out=0. */
+        value: `/** XOR
+ * Exclusive OR gate
+ *
+ * Outputs 1 only of both inputs differ
+ * Else outputs 0
+ */
 CHIP Xor {
     IN a, b;
     OUT out;
@@ -266,7 +270,13 @@ CHIP Xor {
             <tr>
               <td class="border border-gray-200 py-1 px-2">{pin.name}</td>
               <td class="border border-gray-200 py-1 px-2"
-                ><input type="number" bind:value={pin.value} min="0" max="1" /></td
+                ><input
+                  type="number"
+                  bind:value={pin.value}
+                  min="0"
+                  max="1"
+                  class="border-none p-0"
+                /></td
               >
             </tr>
           {/each}

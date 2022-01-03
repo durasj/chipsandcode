@@ -1,0 +1,14 @@
+{
+  "transform": {
+    "^.+\\.svelte$": [
+      "svelte-jester",
+      {
+        "preprocess": true
+      }
+    ],
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "testRegex": "/src/.*\\.test\\.ts$",
+  "collectCoverageFrom": ["src/**/*(?!.test).{ts,js,svelte}"],
+  "moduleFileExtensions": ["js", "ts", "svelte"]
+}

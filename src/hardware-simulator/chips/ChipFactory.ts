@@ -1,4 +1,4 @@
-import type { ChipNode } from '../hdl/tree';
+import type { ChipNode } from 'src/editor/hdl/tree';
 import type { ChipPin } from './Chip';
 import type Chip from './Chip';
 import CustomChip from './CustomChip';
@@ -58,8 +58,7 @@ class ChipFactory {
 
       for (const statement of conf.statements) {
         const partChip = this.fromDefined(statement.chip as BUILTIN_GATES);
-        if (!partChip)
-          throw new InvalidDesignError(`Unknown chip '${statement.chip}'`);
+        if (!partChip) throw new InvalidDesignError(`Unknown chip '${statement.chip}'`);
         const partConnections = [] as [string, string][];
         parts.set(partChip, partConnections);
         const partPins = partChip.getPins();

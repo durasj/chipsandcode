@@ -11,7 +11,7 @@
   import SolidChevronDown from './icons/SolidChevronDown.svelte';
 
   const logo = {
-    title: 'ChipsAndCode',
+    title: 'Chips and Code',
     path: '/logo.svg',
   };
 
@@ -174,9 +174,14 @@
       </nav>
 
       <div class="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
-        <button class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
+        <a
+          href="/signin"
+          class={`whitespace-nowrap text-base font-medium ${
+            $page.path.startsWith('/signin') ? 'text-gray-900' : 'text-gray-500'
+          } hover:text-gray-900`}
+        >
           Sign in
-        </button>
+        </a>
       </div>
     </div>
   </div>
@@ -225,11 +230,12 @@
         </div>
 
         <div class="py-6 px-5 space-y-6">
-          <button
+          <a
+            href="/signin"
             class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
           >
             Sign in
-          </button>
+          </a>
         </div>
       </div>
     </div>

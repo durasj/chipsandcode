@@ -8,19 +8,17 @@ import IllegalStateError from '../IllegalStateError';
 class NotChip implements Chip {
   public readonly name = 'Not';
 
-  private in: boolean = false;
-  private out: boolean = true;
+  private in = false;
+  private out = true;
 
   setInput(name: string, value: boolean) {
-    if (name !== 'in')
-      throw new IllegalStateError(`Input pin '${name}' does not exist.`);
+    if (name !== 'in') throw new IllegalStateError(`Input pin '${name}' does not exist.`);
 
     this.in = value;
   }
 
   getOutput(name: string) {
-    if (name !== 'out')
-      throw new IllegalStateError(`Output pin '${name}' does not exist.`);
+    if (name !== 'out') throw new IllegalStateError(`Output pin '${name}' does not exist.`);
     return this.out;
   }
 

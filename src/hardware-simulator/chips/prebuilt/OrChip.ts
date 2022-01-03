@@ -8,9 +8,9 @@ import IllegalStateError from '../IllegalStateError';
 class OrChip implements Chip {
   public readonly name = 'Or';
 
-  private a: boolean = false;
-  private b: boolean = false;
-  private out: boolean = false;
+  private a = false;
+  private b = false;
+  private out = false;
 
   setInput(name: 'a' | 'b', value: boolean) {
     if (name !== 'a' && name !== 'b')
@@ -20,8 +20,7 @@ class OrChip implements Chip {
   }
 
   getOutput(name: string) {
-    if (name !== 'out')
-      throw new IllegalStateError(`Output pin '${name}' does not exist.`);
+    if (name !== 'out') throw new IllegalStateError(`Output pin '${name}' does not exist.`);
     return this.out;
   }
 

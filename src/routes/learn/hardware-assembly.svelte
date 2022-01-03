@@ -1,5 +1,5 @@
 <svelte:head>
-  <title>Learn - Hardware & Assembly - ChipsAndCode</title>
+  <title>Learn - Hardware & Assembly - Chips and Code</title>
 </svelte:head>
 
 <div class="bg-white">

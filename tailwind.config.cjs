@@ -8,7 +8,7 @@ const config = {
       ringOffsetWidth: ['focus-visible'],
     },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/forms')],
 };
 
 module.exports = config;

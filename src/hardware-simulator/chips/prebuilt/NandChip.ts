@@ -8,9 +8,9 @@ import IllegalStateError from '../IllegalStateError';
 class NandChip implements Chip {
   public readonly name = 'Nand';
 
-  private a: boolean = false;
-  private b: boolean = false;
-  private out: boolean = false;
+  private a = false;
+  private b = false;
+  private out = false;
 
   setInput(name: 'a' | 'b', value: boolean) {
     if (name !== 'a' && name !== 'b')
@@ -20,8 +20,7 @@ class NandChip implements Chip {
   }
 
   getOutput(name: string) {
-    if (name !== 'out')
-      throw new IllegalStateError(`Output pin '${name}' does not exist.`);
+    if (name !== 'out') throw new IllegalStateError(`Output pin '${name}' does not exist.`);
     return this.out;
   }
 

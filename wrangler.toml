@@ -1,0 +1,16 @@
+name = "chips-and-code-api"
+type = "javascript"
+compatibility_date = "2021-11-06"
+workers_dev = true
+account_id = "e65cd8f4f4622d905ef50204e895cf4b"
+
+[build]
+command = "npm run backend:build"
+watch_dir = "src/backend"
+[build.upload]
+format = "service-worker"
+
+[env.production]
+workers_dev = false
+route = "https://api.chipsandcode.com/v1/*"
+zone_id = "244407f282cb71c3f95c5e70bdc72db6"

@@ -1,9 +1,9 @@
 <script lang="ts">
-  import HardwareIDE from '../../components/HardwareIDE.svelte';
+  import HardwareIDE from 'src/components/HardwareIDE.svelte';
 </script>
 
 <svelte:head>
-  <title>Experiment - Hardware IDE - ChipsAndCode</title>
+  <title>Experiment - Hardware IDE - Chips and Code</title>
 </svelte:head>
 
 <HardwareIDE />

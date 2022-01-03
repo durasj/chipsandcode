@@ -3,6 +3,7 @@ import preprocess from 'svelte-preprocess';
 import adapter from '@sveltejs/adapter-static';
 import { defineConfig } from 'vite';
 import monacoEditorPlugin from 'vite-plugin-monaco-editor';
+import path from 'path';
 
 import mdsvexConfig from './mdsvex.config.js';
 import NearleyPlugin from './src/editor/nearleyPlugin.js';
@@ -30,6 +31,11 @@ const config = {
       fallback: null,
     }),
     vite: defineConfig({
+      resolve: {
+        alias: {
+          src: path.resolve('./src'),
+        },
+      },
       plugins: [
         NearleyPlugin(),
         monacoEditorPlugin.default({ languageWorkers: ['editorWorkerService'] }),

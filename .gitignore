@@ -1,5 +1,8 @@
 .DS_Store
 node_modules
+# Used for FE build
 /build
+# Used for BE build
+/dist
 /.svelte-kit
 /package

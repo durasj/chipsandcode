@@ -1,5 +1,9 @@
+<script lang="ts">
+  import Button from 'src/components/Button.svelte';
+</script>
+
 <svelte:head>
-  <title>ChipsAndCode: What our computers are made of</title>
+  <title>Chips and Code: Learning what our computers are made of</title>
 </svelte:head>
 
 <div class="relative bg-white overflow-hidden">
@@ -7,12 +11,11 @@
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 sm:static">
       <div class="sm:max-w-lg">
         <h1 class="text-4xl font font-extrabold tracking-tight text-gray-900 sm:text-6xl">
-          Wondering what computers are made of?
+          Wondering how computers work?
         </h1>
-        <p class="mt-4 text-xl text-gray-500">
-          Build your own computer from scratch, starting with chips and ending with your own
-          operating system. No need to get your hands dirty with real hardware - embark on the
-          journey from the browser now.
+        <p class="mt-4 text-xl text-gray-700">
+          Find out by embarking on the journey of building your own computer from scratch, from
+          chips to code. No prerequisites - start from the browser now.
         </p>
       </div>
       <div>
@@ -27,16 +30,39 @@
             >
               <div class="flex items-center space-x-6 lg:space-x-8">
                 <div class="flex-shrink-0 grid grid-cols-1 gap-y-6 lg:gap-y-8">
-                  <div class="w-44 h-64 rounded-lg overflow-hidden sm:opacity-0 lg:opacity-100">
+                  <div class="w-44 h-60 rounded-lg overflow-hidden sm:opacity-0 lg:opacity-100">
                     <img
-                      src="https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-01.jpg"
+                      src="/decorative/hdl.png"
+                      alt=""
+                      class="w-full h-full object-center object-cover"
+                    />
+                  </div>
+                  <div class="w-44 h-60 rounded-lg overflow-hidden">
+                    <img
+                      src="/decorative/chip.png"
+                      alt=""
+                      class="w-full h-full object-center object-cover"
+                    />
+                  </div>
+                </div>
+                <div class="flex-shrink-0 grid grid-cols-1 gap-y-6 lg:gap-y-8">
+                  <div class="w-44 h-60 rounded-lg overflow-hidden">
+                    <img
+                      src="/decorative/binary.png"
                       alt=""
                       class="w-full h-full object-center object-cover"
                     />
                   </div>
                   <div class="w-44 h-64 rounded-lg overflow-hidden">
                     <img
-                      src="https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-02.jpg"
+                      src="/decorative/pcb.png"
+                      alt=""
+                      class="w-full h-full object-center object-cover"
+                    />
+                  </div>
+                  <div class="w-44 h-64 rounded-lg overflow-hidden">
+                    <img
+                      src="/decorative/keyboard.png"
                       alt=""
                       class="w-full h-full object-center object-cover"
                     />
@@ -45,37 +71,14 @@
                 <div class="flex-shrink-0 grid grid-cols-1 gap-y-6 lg:gap-y-8">
                   <div class="w-44 h-64 rounded-lg overflow-hidden">
                     <img
-                      src="https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-03.jpg"
+                      src="/decorative/pixels.png"
                       alt=""
                       class="w-full h-full object-center object-cover"
                     />
                   </div>
                   <div class="w-44 h-64 rounded-lg overflow-hidden">
                     <img
-                      src="https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-04.jpg"
-                      alt=""
-                      class="w-full h-full object-center object-cover"
-                    />
-                  </div>
-                  <div class="w-44 h-64 rounded-lg overflow-hidden">
-                    <img
-                      src="https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-05.jpg"
-                      alt=""
-                      class="w-full h-full object-center object-cover"
-                    />
-                  </div>
-                </div>
-                <div class="flex-shrink-0 grid grid-cols-1 gap-y-6 lg:gap-y-8">
-                  <div class="w-44 h-64 rounded-lg overflow-hidden">
-                    <img
-                      src="https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-06.jpg"
-                      alt=""
-                      class="w-full h-full object-center object-cover"
-                    />
-                  </div>
-                  <div class="w-44 h-64 rounded-lg overflow-hidden">
-                    <img
-                      src="https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-07.jpg"
+                      src="/decorative/matrix.png"
                       alt=""
                       class="w-full h-full object-center object-cover"
                     />
@@ -85,11 +88,7 @@
             </div>
           </div>
 
-          <a
-            href="/learn/hardware-assembly"
-            class="inline-block text-center bg-indigo-600 border border-transparent rounded-md py-3 px-8 font-medium text-white hover:bg-indigo-700"
-            >Start Learning 🤯</a
-          >
+          <Button href="/learn/hardware-assembly" primary>Start Learning 🤯</Button>
         </div>
       </div>
     </div>

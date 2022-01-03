@@ -1,3 +1,3 @@
 <svelte:head>
-  <title>About ChipsAndCode</title>
+  <title>About Chips and Code</title>
 </svelte:head>
