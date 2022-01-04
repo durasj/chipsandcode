@@ -109,7 +109,7 @@
               <button
                 type="button"
                 class={`group bg-white rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500 ${
-                  $page.path.startsWith(item.href) ? 'text-gray-900' : 'text-gray-500'
+                  $page.url.pathname.startsWith(item.href) ? 'text-gray-900' : 'text-gray-500'
                 }`}
                 aria-expanded={expandedItem?.href === item.href}
                 on:click={(e) => {
@@ -124,7 +124,7 @@
                 <span>{item.title}</span>
                 <SolidChevronDown
                   className={`ml-2 h-5 w-5 group-hover:text-gray-500 ${
-                    $page.path.startsWith(item.href) ? 'text-gray-600' : 'text-gray-400'
+                    $page.url.pathname.startsWith(item.href) ? 'text-gray-600' : 'text-gray-400'
                   }`}
                 />
               </button>
@@ -142,7 +142,7 @@
                         <a
                           href={subItem.href}
                           class="-m-3 p-3 flex items-start rounded-lg hover:bg-gray-50"
-                          class:bg-gray-50={$page.path.startsWith(subItem.href)}
+                          class:bg-gray-50={$page.url.pathname.startsWith(subItem.href)}
                         >
                           <svelte:component
                             this={subItem.icon}
@@ -166,7 +166,7 @@
             <a
               href={item.href}
               class={`text-base font-medium hover:text-gray-900 ${
-                $page.path === item.href ? 'text-gray-900' : 'text-gray-500'
+                $page.url.pathname === item.href ? 'text-gray-900' : 'text-gray-500'
               }`}>{item.title}</a
             >
           {/if}
@@ -177,7 +177,7 @@
         <a
           href="/signin"
           class={`whitespace-nowrap text-base font-medium ${
-            $page.path.startsWith('/signin') ? 'text-gray-900' : 'text-gray-500'
+            $page.url.pathname.startsWith('/signin') ? 'text-gray-900' : 'text-gray-500'
           } hover:text-gray-900`}
         >
           Sign in

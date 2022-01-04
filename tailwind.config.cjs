@@ -1,6 +1,5 @@
 const config = {
-  mode: 'jit',
-  purge: ['./src/**/*.{html,js,svelte,ts}'],
+  content: ['./src/**/*.{html,js,svelte,ts}'],
   theme: {
     extend: {
       ringWidth: ['focus-visible'],
@@ -8,7 +7,7 @@ const config = {
       ringOffsetWidth: ['focus-visible'],
     },
   },
-  plugins: [require('@tailwindcss/forms')],
+  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
 };
 
 module.exports = config;
