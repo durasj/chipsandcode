@@ -1,6 +1,7 @@
 import remarkOembed from 'remark-oembed';
 import remarkHint from 'remark-hint';
 import remarkGfm from 'remark-gfm';
+import remarkExtendedTable from 'remark-extended-table';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeAccessibleEmojis from 'rehype-accessible-emojis';
@@ -13,7 +14,7 @@ import rehypeKatex from 'rehype-katex';
 const config = {
   extensions: ['.svelte.md', '.md', '.svx'],
 
-  remarkPlugins: [remarkOembed, remarkHint, remarkGfm, remarkMath],
+  remarkPlugins: [remarkOembed, remarkHint, remarkGfm, remarkExtendedTable, remarkMath],
   rehypePlugins: [rehypeKatex, rehypeSlug, rehypeAutolinkHeadings, rehypeAccessibleEmojis],
 };
 
