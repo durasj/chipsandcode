@@ -22,8 +22,6 @@ const config = {
   ],
 
   kit: {
-    // hydrate the <body> element in src/app.html
-    target: 'body',
     adapter: adapter({
       // default options are shown
       pages: 'build',
