@@ -27,17 +27,17 @@ const authMiddleware: AppMiddleware = async (ctx, next) => {
     }
 
     token = generateRandom(96);
-    response.set(
-      'Set-Cookie',
-      serialize(AUTH_KEY, token, {
-        maxAge: 60 * 60 * 24 * 365,
-        httpOnly: true,
-        path: '/',
-        sameSite: 'lax',
-        secure: true,
-      }),
-    );
   }
+  response.set(
+    'Set-Cookie',
+    serialize(AUTH_KEY, token, {
+      maxAge: 60 * 60 * 24 * 365,
+      httpOnly: true,
+      path: '/',
+      sameSite: 'lax',
+      secure: true,
+    }),
+  );
 
   // Verify token
   let user = await KV.get<UserData>(`user-${token}`, 'json');
