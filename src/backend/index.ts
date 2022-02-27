@@ -1,23 +1,24 @@
 import { Sunder, Router } from 'sunder';
+import type { ContextData, Environment } from './shared';
 
-const app = new Sunder();
-const router = new Router();
+import authMiddleware from './middleware/auth';
+import errorMiddleware from './middleware/error';
+import addExperimentEndpoints from './endpoints/experiment';
 
-// Example route with a named parameter
-router.get('/hello/:username', ({ response, params }) => {
-  response.body = `Hello ${decodeURI(params.username)}`;
-});
+const app = new Sunder<Environment>();
+const router = new Router<Environment, ContextData>();
 
-// Example middleware
-app.use(async (ctx, next) => {
-  const start = Date.now();
-  await next();
+export type AppMiddleware = Parameters<typeof app.use>[0];
+export type AppEndpoints = (r: typeof router) => void;
 
-  const ms = Date.now() - start;
-  ctx.response.set('X-Response-Time', `${ms}ms`);
-});
+app.use(errorMiddleware);
+app.use(authMiddleware);
+
+addExperimentEndpoints(router);
 app.use(router.middleware);
 
-addEventListener('fetch', (event: FetchEvent) => {
-  event.respondWith(app.handle(event));
-});
+export default {
+  fetch(request: Request, env: Environment, ctx: FetchEvent) {
+    return app.fetch(request, env, ctx);
+  },
+};
