@@ -45,7 +45,7 @@ const addExperimentEndpoints: AppEndpoints = (router) => {
       await KV.put(`experiment-${id}`, JSON.stringify(experiment));
       await KV.put(`user-${userKey}`, JSON.stringify(userData));
 
-      response.body = JSON.stringify({ success: true, experiment });
+      response.body = JSON.stringify({ experiment });
     } catch (e) {
       console.error(e);
 
@@ -105,7 +105,7 @@ const addExperimentEndpoints: AppEndpoints = (router) => {
     try {
       await KV.put(`experiment-${id}`, JSON.stringify(updatedExperiment));
 
-      response.body = JSON.stringify({ success: true, experiment: updatedExperiment });
+      response.body = JSON.stringify({ experiment: updatedExperiment });
     } catch (e) {
       console.error(e);
       throw createHttpError(500, 'Saving failed.', { expose: true });
@@ -121,23 +121,28 @@ const addExperimentEndpoints: AppEndpoints = (router) => {
       throw createHttpError(404, 'Experiment not found.');
     }
 
-    if (
-      experiment.visibility === 'PRIVATE' &&
-      !data[USER_DATA_KEY]?.experiments.includes(experiment.id)
-    ) {
+    if (!data[USER_DATA_KEY]?.experiments.includes(experiment.id)) {
       throw createHttpError(
         !data[USER_DATA_KEY] ? 401 : 403,
-        'Experiment is available only to the author.',
+        'Experiment can be deleted only by the author.',
       );
     }
 
+    const userKey = data[AUTH_KEY];
+    const existingExperiments = data[USER_DATA_KEY]?.experiments;
+    const userData = {
+      ...data[USER_DATA_KEY],
+      experiments: existingExperiments ? existingExperiments.filter((e) => e !== id) : [],
+    };
+
     try {
       await KV.delete(`experiment-${id}`);
+      await KV.put(`user-${userKey}`, JSON.stringify(userData));
 
-      response.body = JSON.stringify({ success: true, experiment });
+      response.body = JSON.stringify({ experiment });
     } catch (e) {
       console.error(e);
-      throw createHttpError(500, 'Saving failed.', { expose: true });
+      throw createHttpError(500, 'Deleting failed.', { expose: true });
     }
   });
 };
