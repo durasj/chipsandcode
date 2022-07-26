@@ -4,11 +4,12 @@ export const HTTP_MUTATION_METHODS = new Set(['POST', 'PUT', 'DELETE']);
 
 export type Environment = {
   KV: KVNamespace;
+  ENVIRONMENT: 'dev' | 'production';
 };
 
 export type UserData = {
   name: string;
-  experiments: string[];
+  experiments: { id: string; name: string }[];
 };
 
 export type ContextData = {
@@ -16,5 +17,17 @@ export type ContextData = {
   [USER_DATA_KEY]?: UserData;
 };
 
+export type ErrorResponse = {
+  message?: string;
+  details?: unknown;
+  code?: unknown;
+};
+
+/**
+ * Generates random alphanumeric (plus dash -) string of requested length
+ */
 export const generateRandom = (bytes: number) =>
-  btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(bytes))));
+  btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(bytes)))).replaceAll(
+    /[/=+]/g,
+    '-',
+  );

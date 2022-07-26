@@ -10,8 +10,12 @@ import 'monaco-editor/esm/vs/editor/standalone/browser/referenceSearch/standalon
 
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
+import registerThemes from './themes';
 import registerHdlLanguage from './hdl/registerHdlLanguage';
+import registerTstLanguage from './tst/registerTstLanguage';
 
+registerThemes();
 registerHdlLanguage();
+registerTstLanguage();
 
 export { monaco };

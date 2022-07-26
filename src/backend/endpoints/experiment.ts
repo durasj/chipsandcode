@@ -2,23 +2,37 @@ import { z } from 'zod';
 import createHttpError from 'http-errors';
 
 import type { AppEndpoints } from '..';
-import { AUTH_KEY, generateRandom, USER_DATA_KEY } from '../shared';
+import { AUTH_KEY, generateRandom, USER_DATA_KEY, type UserData } from '../shared';
 
 const experimentSchema = z.object({
   name: z.string(),
   type: z.enum(['HARDWARE']),
-  code: z.string(),
+  code: z.string().describe('HDL code'),
+  tests: z.string().describe('Test script'),
+  compare: z.string().describe('Expected test script output'),
   visibility: z.enum(['PRIVATE', 'PUBLIC']),
 });
 
-type ExperimentRequest = z.infer<typeof experimentSchema>;
-type Experiment = ExperimentRequest & {
+export type ExperimentRequest = z.infer<typeof experimentSchema>;
+export type Experiment = ExperimentRequest & {
   id: string;
   created: Date;
   modified?: Date;
 };
 
 const addExperimentEndpoints: AppEndpoints = (router) => {
+  router.get('/experiments', async ({ response, data }) => {
+    const experiments = data[USER_DATA_KEY]?.experiments || [];
+
+    try {
+      response.body = JSON.stringify({ experiments });
+    } catch (e) {
+      console.error(e);
+
+      throw createHttpError(500, 'Retrieval failed.', { expose: true });
+    }
+  });
+
   router.post('/experiment', async ({ response, request, env, data }) => {
     const { KV } = env;
 
@@ -35,9 +49,12 @@ const addExperimentEndpoints: AppEndpoints = (router) => {
 
     const userKey = data[AUTH_KEY];
     const existingExperiments = data[USER_DATA_KEY]?.experiments;
+    const newUserDataItem = { id, name: body.name };
     const userData = {
       ...data[USER_DATA_KEY],
-      experiments: existingExperiments ? [...existingExperiments, id] : [id],
+      experiments: existingExperiments
+        ? [...existingExperiments, newUserDataItem]
+        : [newUserDataItem],
     };
     const experiment: Experiment = { id, ...body, created: new Date() };
 
@@ -45,7 +62,7 @@ const addExperimentEndpoints: AppEndpoints = (router) => {
       await KV.put(`experiment-${id}`, JSON.stringify(experiment));
       await KV.put(`user-${userKey}`, JSON.stringify(userData));
 
-      response.body = JSON.stringify({ experiment });
+      response.body = { experiment };
     } catch (e) {
       console.error(e);
 
@@ -64,7 +81,7 @@ const addExperimentEndpoints: AppEndpoints = (router) => {
 
     if (
       experiment.visibility === 'PRIVATE' &&
-      !data[USER_DATA_KEY]?.experiments.includes(experiment.id)
+      !data[USER_DATA_KEY]?.experiments.find((e) => e.id)
     ) {
       throw createHttpError(
         !data[USER_DATA_KEY] ? 401 : 403,
@@ -72,7 +89,7 @@ const addExperimentEndpoints: AppEndpoints = (router) => {
       );
     }
 
-    response.body = experiment;
+    response.body = { experiment };
   });
 
   router.put('/experiment/:id', async ({ response, request, params, env, data }) => {
@@ -93,7 +110,7 @@ const addExperimentEndpoints: AppEndpoints = (router) => {
       throw createHttpError(404, 'Experiment not found.');
     }
 
-    if (!data[USER_DATA_KEY]?.experiments.includes(experiment.id)) {
+    if (!data[USER_DATA_KEY]?.experiments.find((e) => e.id)) {
       throw createHttpError(
         !data[USER_DATA_KEY] ? 401 : 403,
         'Experiment can be modified only by the author.',
@@ -102,8 +119,25 @@ const addExperimentEndpoints: AppEndpoints = (router) => {
 
     const updatedExperiment = { ...experiment, ...body, updated: new Date() };
 
+    const userKey = data[AUTH_KEY];
+    const userData = data[USER_DATA_KEY];
+    let updatedUserData: UserData | undefined;
+    if (updatedExperiment.name !== experiment.name && userData) {
+      const existingExperiments = userData.experiments;
+      const newUserDataItem = { id, name: updatedExperiment.name };
+      updatedUserData = {
+        ...userData,
+        experiments: existingExperiments
+          ? existingExperiments.map((e) => (e.id === experiment.id ? newUserDataItem : e))
+          : [newUserDataItem],
+      };
+    }
+
     try {
       await KV.put(`experiment-${id}`, JSON.stringify(updatedExperiment));
+      if (updatedUserData) {
+        await KV.put(`user-${userKey}`, JSON.stringify(updatedUserData));
+      }
 
       response.body = JSON.stringify({ experiment: updatedExperiment });
     } catch (e) {
@@ -121,7 +155,7 @@ const addExperimentEndpoints: AppEndpoints = (router) => {
       throw createHttpError(404, 'Experiment not found.');
     }
 
-    if (!data[USER_DATA_KEY]?.experiments.includes(experiment.id)) {
+    if (!data[USER_DATA_KEY]?.experiments.find((e) => e.id)) {
       throw createHttpError(
         !data[USER_DATA_KEY] ? 401 : 403,
         'Experiment can be deleted only by the author.',
@@ -132,7 +166,7 @@ const addExperimentEndpoints: AppEndpoints = (router) => {
     const existingExperiments = data[USER_DATA_KEY]?.experiments;
     const userData = {
       ...data[USER_DATA_KEY],
-      experiments: existingExperiments ? existingExperiments.filter((e) => e !== id) : [],
+      experiments: existingExperiments ? existingExperiments.filter((e) => e.id !== id) : [],
     };
 
     try {

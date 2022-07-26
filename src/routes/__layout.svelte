@@ -1,21 +1,17 @@
 <script lang="ts">
-  import Header from 'src/components/Header.svelte';
-
   import 'src/app.css';
+  import { theme } from 'src/stores';
+
+  let themeName: 'dark' | 'light';
+  theme.subscribe((name) => {
+    themeName = name;
+  });
 </script>
 
-<div class="flex flex-col h-screen">
-  <Header />
-
-  <main class="flex-grow">
-    <slot />
-  </main>
-
-  <footer class="w-full text-center border-t border-grey p-4 pin-b">
-    <p class="text-sm">
-      © 2021 <a href="https://duras.me" target="_blank" rel="external">Jakub Duras</a>. Code
-      available under MIT License at
-      <a href="https://github.com/durasj/chipsandcode" target="_blank" rel="external">Github</a>.
-    </p>
-  </footer>
+<div
+  data-theme={themeName}
+  class="flex flex-col min-h-screen transition-colors"
+  class:dark={themeName === 'dark'}
+>
+  <slot />
 </div>

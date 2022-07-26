@@ -4,7 +4,7 @@ import {
   AUTH_KEY,
   generateRandom,
   HTTP_MUTATION_METHODS,
-  UserData,
+  type UserData,
   USER_DATA_KEY,
 } from '../shared';
 import type { AppMiddleware } from '..';

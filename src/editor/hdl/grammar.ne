@@ -5,8 +5,8 @@
         rightBrace:     '}',
         leftParen:      '(',
         rightParen:     ')',
-        leftBracket:    '(',
-        rightBracket:   ')',
+        leftBracket:    '[',
+        rightBracket:   ']',
         semicolon:      ';',
         colon:          ':',
         comma:          ',',
@@ -14,7 +14,7 @@
         keyword:        ['CHIP', 'IN', 'OUT', 'PARTS', 'BUILTIN', 'CLOCKED'],
         identifier:     /[a-zA-Z_][a-zA-Z0-9_\.]*/,
         number:         /\d+/,
-        ws:             { match: /\s+/, lineBreaks: true },
+        whiteSpace:     { match: /\s+/, lineBreaks: true },
         comment:        { match: /\/\/[^\n]*/, value: c => c.slice(2) },
         commentBlock:   { match: /\/\*[\s\S]*?\*\//, lineBreaks: true, value: c => c.slice(2, -2) }
     });
@@ -68,11 +68,11 @@ pinConnections ->
 
 # Space and comments
 _ ->
-      optionalWs           {% id %}
-    | optionalWs comment _ {% ([, comment]) => comment %}
-optionalWs ->
+      optionalWhiteSpace           {% id %}
+    | optionalWhiteSpace comment _ {% ([, comment]) => comment %}
+optionalWhiteSpace ->
       null  {% id %}
-    | %ws   {% () => null %}
+    | %whiteSpace   {% () => null %}
 comment ->
       %comment      {% ([content]) => ({ type: 'comment', content }) %}
     | %commentBlock {% ([content]) => ({ type: 'comment', content }) %}

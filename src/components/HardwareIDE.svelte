@@ -1,95 +1,323 @@
 <script lang="ts">
-  import type { editor } from 'monaco-editor';
-  import type { Screenfull } from 'screenfull';
-  import { onMount } from 'svelte';
+  import { Icon } from '@steeze-ui/svelte-icon';
+  import {
+    Share,
+    CheckCircle,
+    DotsCircleHorizontal,
+    ExclamationCircle,
+    Play,
+    DotsVertical,
+    Trash,
+    DocumentText,
+    DocumentDownload,
+    Plus,
+    X,
+  } from '@steeze-ui/heroicons';
+  import {
+    Menu,
+    MenuButton,
+    MenuItems,
+    MenuItem,
+    Popover,
+    PopoverButton,
+    PopoverPanel,
+    TabGroup,
+    TabList,
+    Tab,
+  } from '@rgossiaux/svelte-headlessui';
+  import { createPopperActions } from 'svelte-popperjs';
+  import type zipType from '@zip.js/zip.js';
 
-  import parse from '../editor/hdl/parse';
-  import type { Root } from '../editor/hdl/tree';
-  import type Chip from '../hardware-simulator/chips/Chip';
-  import ChipFactory from '../hardware-simulator/chips/ChipFactory';
+  import { goto } from '$app/navigation';
+  import parseHdl from 'src/editor/hdl/parse';
+  import parseTst from 'src/editor/tst/parse';
+  import type { Root as HDLRoot } from 'src/editor/hdl/tree';
+  import type { CompareNode, LoadNode, OutputNode, Root as TSTRoot } from 'src/editor/tst/tree';
+  import type Chip from 'src/hardware-simulator/chips/Chip';
+  import ChipFactory from 'src/hardware-simulator/chips/ChipFactory';
+  import type { Experiment, ExperimentRequest } from 'src/backend/endpoints/experiment';
+  import type { monaco, monaco as monacoApi } from 'src/editor';
+  import { theme } from 'src/stores';
+  import api from 'src/api';
+  import TestScript from 'src/hardware-simulator/tests/TestScript';
 
-  import OutlineAdjustments from './icons/OutlineAdjustments.svelte';
-  import OutlineArrowsExpand from './icons/OutlineArrowsExpand.svelte';
-  import SolidPlay from './icons/SolidPlay.svelte';
+  const [popperRef, popperContent] = createPopperActions();
+  const popperOptions = {
+    placement: 'bottom-end',
+    strategy: 'fixed',
+    modifiers: [{ name: 'offset', options: { offset: [0, 8] } }],
+  };
+
+  popperContent;
 
   function monacoEditor(node: HTMLElement) {
     (async () => {
-      const { monaco } = await import('../editor');
+      monaco = (await import('../editor')).monaco;
 
-      editor = monaco.editor.create(node, {
-        value: `/** XOR
- * Exclusive OR gate
- *
- * Outputs 1 only of both inputs differ
- * Else outputs 0
- */
-CHIP Xor {
-    IN a, b;
-    OUT out;
-
-    PARTS:
-    Not(in=a, out=nota);
-    Not(in=b, out=notb);
-    And(a=a, b=notb, out=w1);
-    And(a=nota, b=b, out=w2);
-    Or(a=w1, b=w2, out=out);
-}
-`,
-        language: 'hdl',
-        theme: 'vs-dark',
-        automaticLayout: true,
+      hdlModel = monaco.editor.createModel(experiment?.code || '', 'hdl');
+      hdlModel.onDidChangeContent(() => {
+        setup();
+        checkIsDirty();
       });
 
-      editor.onDidChangeModelContent(setup);
+      tstModel = monaco.editor.createModel(experiment?.tests || '', 'tst');
+      tstModel.onDidChangeContent(() => {
+        setupTestScript();
+        checkIsDirty();
+      });
+
+      diffModel = {
+        original: monaco.editor.createModel('', 'text/plain'),
+        modified: monaco.editor.createModel(experiment?.compare || '', 'text/plain'),
+      };
+      diffModel.modified.onDidChangeContent(() => {
+        // TODO: Should rerun tests?
+        checkIsDirty();
+      });
+
       setup();
+      setupTestScript();
+
+      editor = monaco.editor.create(node, {
+        theme: themeName ? `vs-${themeName}` : 'vs-light',
+        automaticLayout: true,
+        model: hdlModel,
+        accessibilityHelpUrl:
+          'https://github.com/Microsoft/monaco-editor/wiki/Monaco-Editor-Accessibility-Guide',
+      });
+
+      if (experiment) {
+        run();
+      }
     })();
 
     return {
       destroy() {
-        editor.dispose();
+        editor?.dispose();
       },
     };
   }
 
-  let screenfull: Screenfull;
-  onMount(async () => {
-    screenfull = (await import('screenfull')).default as unknown as Screenfull;
-  });
+  const examples = [
+    {
+      id: 'nnDG6JRQjL0aNVb7AJHnmZrv02pHIINF',
+      name: 'XOR Gate',
+    },
+    {
+      id: '456',
+      name: 'NOR Gate',
+    },
+  ];
+
+  function handleEditorError(e: any, model: monacoApi.editor.ITextModel) {
+    let line: number = e.token?.line;
+    let col: number = e.token?.col;
+    if (!e.token) {
+      // If this is lexer error it provides line/col only in message
+      const lineCol = e.message.match(/line (\d+) col (\d+)/);
+      if (lineCol) {
+        line = +lineCol[1];
+        col = +lineCol[2];
+      }
+    }
+
+    // We must resort to simply first character if we don't know the token
+    // This can be an error that is not strictly parsing related
+    if (!line && !col) {
+      monaco.editor.setModelMarkers(model, 'parser', [
+        {
+          startColumn: 1,
+          startLineNumber: 1,
+          endColumn: 1,
+          endLineNumber: 1,
+          severity: monaco.MarkerSeverity.Error,
+          message: e.message,
+        },
+      ]);
+      return;
+    }
+
+    // Skip suggestions for tokens like comments that don't help
+    const skip = ['comment', 'commentBlock', 'whiteSpace'];
+    const unwantedSuggestionsRe = new RegExp(
+      `A (${skip.join('|')})( token)? based on:.*?(?=A .+ based on)`,
+      'gms',
+    );
+    const message = e.message.replace(unwantedSuggestionsRe, '');
+
+    monaco.editor.setModelMarkers(model, 'parser', [
+      {
+        startColumn: col,
+        startLineNumber: line,
+        endColumn: col + (e.token?.text.length || 1),
+        endLineNumber: line,
+        severity: monaco.MarkerSeverity.Error,
+        message,
+      },
+    ]);
+  }
 
   function setup() {
-    let tree: Root | undefined;
+    const value = hdlModel.getValue();
+
+    let tree: HDLRoot | undefined;
     try {
-      tree = parse(editor.getModel()!.getValue());
+      tree = parseHdl(value);
+
+      monaco.editor.setModelMarkers(hdlModel, 'parser', []);
     } catch (e: any) {
-      console.log(e);
+      handleEditorError(e, hdlModel);
 
-      error = e.toString();
       return;
     }
 
-    if (!tree || !tree[0]) {
-      error = 'Add CHIP to start';
+    if (!tree?.[0]) {
+      if (!!value) {
+        monaco.editor.setModelMarkers(hdlModel, 'parser', [
+          {
+            startColumn: 1,
+            startLineNumber: 1,
+            endColumn: 1,
+            endLineNumber: 1,
+            severity: monaco.MarkerSeverity.Error,
+            message: 'Expected at least one CHIP.',
+          },
+        ]);
+      }
       return;
     }
 
-    // TODO: Use for debugging
-    // const ast = JSON.stringify(tree, undefined, 2);
+    try {
+      const chipFactory = new ChipFactory();
+      chip = chipFactory.fromAST(tree[0]);
+    } catch (e) {
+      if (typeof e === 'string') {
+        error = e;
+      } else if (e instanceof Error) {
+        error = e.message;
+      } else {
+        error = 'Loading of chip failed: ' + e;
+      }
+    }
 
     error = '';
-    const chipFactory = new ChipFactory();
-    chip = chipFactory.fromAST(tree[0]);
 
     reflectPins();
   }
 
+  function setupTestScript() {
+    const value = tstModel.getValue();
+
+    let tree: TSTRoot | undefined;
+    try {
+      tree = parseTst(value);
+
+      monaco.editor.setModelMarkers(tstModel, 'parser', []);
+
+      monaco.editor.setModelMarkers(tstModel, 'tests', []);
+      testStats = undefined;
+    } catch (e: any) {
+      handleEditorError(e, tstModel);
+
+      return;
+    }
+
+    if (!tree) return;
+
+    const { preamble } = tree;
+
+    const firstUnusedPreamble = preamble.find(
+      (p) => p.type === 'compare' || p.type === 'load' || p.type === 'output',
+    ) as LoadNode | OutputNode | CompareNode;
+    if (firstUnusedPreamble) {
+      const line = firstUnusedPreamble.file.line;
+      const col = firstUnusedPreamble.file.col;
+      monaco.editor.setModelMarkers(tstModel, 'tests', [
+        {
+          startColumn: col,
+          startLineNumber: line,
+          endColumn: col,
+          endLineNumber: line,
+          severity: monaco.MarkerSeverity.Info,
+          message:
+            'Specification of files is ignored. Only the loaded chip and comparison file specified via other tabs are used.',
+        },
+      ]);
+    }
+
+    tests = TestScript.fromAST(tree);
+  }
+
   function run() {
-    inputPins.forEach(({ name, value }) => {
-      chip?.setInput(name, !!value);
-    });
+    if (tests && chip) {
+      const result = tests.run(chip, diffModel.modified.getValue(), (effect) => {
+        if (effect.type === 'output') {
+          diffModel.original.setValue(effect.output);
+        }
+      });
 
-    chip?.run();
+      reflectScriptResult(result);
+      reflectPins();
+    } else {
+      inputPins.forEach(({ name, value }) => {
+        chip?.setInput(name, !!value);
+      });
 
-    reflectPins();
+      chip?.run();
+
+      reflectPins();
+    }
+  }
+
+  function reflectScriptResult(result: ReturnType<TestScript['run']>) {
+    const oldDecorations = testStats?.decorations;
+    testStats = undefined;
+    const decorations = [];
+
+    for (const instructions of result) {
+      for (const instruction of instructions) {
+        if (instruction.type === 'output') {
+          const range = new monaco.Range(instruction.line, 0, instruction.line, 0);
+
+          if ('error' in instruction && typeof instruction.error === 'string') {
+            decorations.push({
+              range,
+              options: {
+                isWholeLine: true,
+                linesDecorationsClassName: 'bg-error monaco-line-decoration',
+                hoverMessage: { value: 'Output comparison failed' },
+              },
+            });
+
+            if (!testStats) {
+              testStats = { passed: 0, total: 1, decorations: [] };
+            } else {
+              testStats.total++;
+            }
+          } else if ('error' in instruction && instruction.error === false) {
+            decorations.push({
+              range,
+              options: {
+                isWholeLine: true,
+                linesDecorationsClassName: 'bg-success monaco-line-decoration',
+                hoverMessage: { value: 'Output comparison passed' },
+              },
+            });
+
+            if (!testStats) {
+              testStats = { passed: 1, total: 1, decorations: [] };
+            } else {
+              testStats.passed++;
+              testStats.total++;
+            }
+          }
+        }
+      }
+    }
+
+    if (testStats) {
+      testStats.decorations = tstModel.deltaDecorations(oldDecorations || [], decorations);
+    }
   }
 
   function reflectPins() {
@@ -106,232 +334,574 @@ CHIP Xor {
     outputPins = output;
   }
 
-  let ideElement: HTMLElement;
-  let editor: editor.IStandaloneCodeEditor;
+  export let experiment: Experiment | undefined = undefined;
+
+  let monaco: typeof monacoApi;
+  let editor: monacoApi.editor.IStandaloneCodeEditor | monacoApi.editor.IStandaloneDiffEditor;
+  let hdlModel: monacoApi.editor.ITextModel;
+  let hdlState: monacoApi.editor.ICodeEditorViewState;
+  let tstModel: monacoApi.editor.ITextModel;
+  let testsState: monacoApi.editor.ICodeEditorViewState;
+  let diffModel: monaco.editor.IDiffEditorModel;
+  let diffState: monacoApi.editor.IDiffEditorViewState;
 
   let chip: Chip | undefined;
-  let error: string;
+  let error: string = '';
   let inputPins: { name: string; value: number }[] = [];
   let internalPins: { name: string; value: number }[] = [];
   let outputPins: { name: string; value: number }[] = [];
+
+  let tests: TestScript | undefined;
+  let testStats: { total: number; passed: number; decorations: string[] } | undefined;
+
+  let name = experiment?.name || 'Untitled Experiment';
+  let visibility = experiment?.visibility || 'PUBLIC';
+
+  let savingState: 'UNSAVED' | 'SAVING' | 'SAVED' | undefined = experiment ? 'SAVED' : undefined;
+  async function save() {
+    savingState = 'SAVING';
+
+    try {
+      const response = await api<{ experiment: Experiment }>(
+        `/experiment/${experiment?.id || ''}`,
+        {
+          method: experiment?.id ? 'PUT' : 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          redirect: 'follow',
+          body: JSON.stringify({
+            name,
+            code: hdlModel.getValue(),
+            tests: tstModel.getValue(),
+            compare: diffModel.modified.getValue(),
+            type: experiment?.type || 'HARDWARE',
+            visibility,
+          } as ExperimentRequest),
+        },
+      );
+
+      experiment = response.experiment;
+
+      savingState = 'SAVED';
+    } catch (e) {
+      error = `Could not save: ${(e as Error)?.message || 'Unknown error'}`;
+      savingState = 'UNSAVED';
+    }
+  }
+
+  async function download(e: MouseEvent) {
+    const target = e.target as HTMLAnchorElement;
+
+    // Already triggered download
+    if (target.download) return;
+
+    e.preventDefault();
+
+    if (!target) return;
+
+    // We only import part to reduce chunk size by two thirds
+    // @ts-ignore
+    const zip = (await import('@zip.js/zip.js/lib/zip-no-worker-deflate')) as typeof zipType;
+    zip.configure({ useWebWorkers: false });
+
+    const fileName = experiment?.name.replaceAll(/[^\w]/g, '-').toLocaleLowerCase();
+
+    const blobWriter = new zip.BlobWriter('application/zip');
+    const writer = new zip.ZipWriter(blobWriter);
+    await writer.add(`${fileName}.hdl`, new zip.TextReader(hdlModel.getValue()));
+    await writer.add(`${fileName}.tst`, new zip.TextReader(tstModel.getValue()));
+    await writer.close();
+    const blob = blobWriter.getData();
+
+    const url = URL.createObjectURL(blob);
+
+    target.href = url;
+    target.download = `${fileName}.zip`;
+    target.click();
+
+    URL.revokeObjectURL(url);
+    target.href = 'data:';
+    target.download = '';
+  }
+
+  let removingState: boolean = false;
+  async function remove() {
+    // It was not even saved
+    if (!experiment?.id) openNewExperiment();
+
+    removingState = true;
+
+    try {
+      await api(`/experiment/${experiment?.id}`, {
+        method: 'DELETE',
+        redirect: 'follow',
+      });
+
+      openNewExperiment();
+    } catch (e) {
+      error = `Could not delete: ${(e as Error)?.message || 'Unknown error'}`;
+    }
+    removingState = false;
+  }
+
+  async function getUserExperiments() {
+    return (await api<{ experiments: { id: string; name: string }[] }>('/experiments')).experiments;
+  }
+
+  function checkIsDirty() {
+    if (
+      experiment?.name !== name ||
+      experiment?.code !== hdlModel.getValue() ||
+      experiment?.tests !== tstModel.getValue() ||
+      experiment?.compare !== diffModel.modified.getValue() ||
+      experiment?.visibility !== visibility
+    ) {
+      if (savingState !== 'UNSAVED') {
+        savingState = 'UNSAVED';
+      }
+    } else {
+      savingState = 'SAVED';
+    }
+  }
+
+  function openNewExperiment() {
+    const alreadyOnNew = location.pathname.match(/.*hardware-ide\/?$/);
+    if (alreadyOnNew) {
+      location.reload();
+    } else {
+      goto('/experiment/hardware-ide');
+    }
+  }
+
+  let themeName: 'light' | 'dark';
+  theme.subscribe((name) => {
+    themeName = name;
+    if (monaco) monaco.editor.setTheme(`vs-${name}`);
+  });
+
+  enum EditorTab {
+    HDL = 0,
+    TST = 1,
+    DIFF = 2,
+  }
+  const tabDescription: Record<EditorTab, string> = {
+    [EditorTab.HDL]: 'Hardware Description Language',
+    [EditorTab.TST]: 'Test Script',
+    [EditorTab.DIFF]: 'Editable Expected and read-only Actual Output',
+  };
+  let selectedTab = EditorTab.HDL;
+  function onTabChange({ detail }: { detail: EditorTab }) {
+    const viewState = editor.saveViewState();
+    if (viewState && editor.getModel() === hdlModel) {
+      hdlState = viewState as monaco.editor.ICodeEditorViewState;
+    } else if (viewState && editor.getModel() === tstModel) {
+      testsState = viewState as monaco.editor.ICodeEditorViewState;
+    } else if (viewState && 'original' in viewState) {
+      diffState = viewState;
+    }
+
+    if (detail === EditorTab.DIFF) {
+      editor.dispose();
+
+      selectedTab = detail;
+      editor = monaco.editor.createDiffEditor(editor.getContainerDomNode(), {
+        theme: themeName ? `vs-${themeName}` : 'vs-light',
+        automaticLayout: true,
+        enableSplitViewResizing: false,
+      });
+    } else if (selectedTab === EditorTab.DIFF) {
+      editor.dispose();
+
+      selectedTab = detail;
+      editor = monaco.editor.create(editor.getContainerDomNode(), {
+        theme: themeName ? `vs-${themeName}` : 'vs-light',
+        automaticLayout: true,
+      });
+    }
+
+    if (detail === EditorTab.DIFF) {
+      const diffEditor = editor as monacoApi.editor.IStandaloneDiffEditor;
+
+      diffEditor.setModel(diffModel);
+      if (diffState) diffEditor.restoreViewState(diffState);
+    } else {
+      const standaloneEditor = editor as monacoApi.editor.IStandaloneCodeEditor;
+
+      if (detail === EditorTab.HDL) {
+        standaloneEditor.setModel(hdlModel);
+        if (hdlState) standaloneEditor.restoreViewState(hdlState);
+      } else if (detail === EditorTab.TST) {
+        standaloneEditor.setModel(tstModel);
+        if (testsState) standaloneEditor.restoreViewState(testsState);
+      }
+    }
+
+    editor.focus();
+  }
 </script>
 
-<div bind:this={ideElement} class="grid grid-cols-1 md:grid-cols-2 h-full bg-white">
-  <div use:monacoEditor class="h-full border-t border-grey" aria-label="" />
+<svelte:window
+  on:keydown={(e) => {
+    if (e.ctrlKey && e.key === 's') {
+      // Don't open default Save dialog
+      e.preventDefault();
+      save();
+    }
+  }}
+/>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 content-start border-t border-gray-200">
+<div class="grid grid-cols-1 md:grid-cols-2 flex-grow">
+  <div class="border-t border-base-200">
+    <TabGroup class="flex flex-col h-full" manual on:change={onTabChange}>
+      <TabList class="w-full">
+        <Tab
+          class={({ selected }) =>
+            `p-3 text-sm font-semibold ${selected ? 'bg-stone-100 dark:bg-stone-900' : ''}`}
+          >HDL</Tab
+        >
+        <Tab
+          class={({ selected }) =>
+            `p-3 text-sm font-semibold ${selected ? 'bg-stone-100 dark:bg-stone-900' : ''}`}
+          >Tests {#if testStats?.passed}
+            <div
+              class="badge gap-2"
+              class:badge-success={testStats.passed === testStats.total}
+              class:badge-error={testStats.passed < testStats.total}
+            >
+              {testStats.passed} / {testStats.total}
+            </div>
+          {/if}
+        </Tab>
+        <Tab
+          class={({ selected }) =>
+            `p-3 text-sm font-semibold ${selected ? 'bg-stone-100 dark:bg-stone-900' : ''}`}
+          >Output</Tab
+        >
+      </TabList>
+
+      {#if selectedTab === EditorTab.DIFF}
+        <div class="bg-stone-100 dark:bg-stone-900 flex justify-around" aria-hidden="true">
+          <span class="px-3 py-1">Actual output - read-only</span>
+
+          <span class="px-3 py-1">Expected output - editable</span>
+        </div>
+      {/if}
+
+      <div use:monacoEditor class="grow" aria-label={`${tabDescription[selectedTab]} editor`} />
+    </TabGroup>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 content-start border-t border-base-200">
     <div class="flex justify-between items-center p-4 md:col-span-3">
-      <h1 class="text-lg text-gray-700 font-medium">Hardware Experiment #1</h1>
+      <input
+        class="bg-inherit text-lg font-bold grow rounded-sm hover:outline hover:outline-2 hover:outline-base-content"
+        bind:value={name}
+        on:change={checkIsDirty}
+        title="Experiment name"
+        aria-label="Experiment name"
+      />
 
-      <div class="mt-5 flex lg:mt-0 lg:ml-4">
-        <span class="hidden sm:block">
+      <div class="mt-5 flex lg:mt-0 lg:ml-4 gap-2">
+        <div class="btn-group">
           <button
-            type="button"
-            class="inline-flex items-center px-2 py-2 border border-gray-200 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            class="btn btn-sm btn-outline rounded-r-none"
+            class:btn-warning={savingState === 'UNSAVED'}
+            on:click={save}
+            disabled={savingState === 'SAVING'}
+            aria-live={savingState === 'SAVING' ? 'assertive' : 'off'}
+            title={savingState === 'UNSAVED'
+              ? 'You have unsaved changes'
+              : savingState === 'SAVING'
+              ? 'Saving changes...'
+              : 'All changes are saved'}
           >
-            <span class="sr-only">Settings</span>
+            {#if savingState === 'SAVED'}
+              <Icon src={CheckCircle} class="-ml-1 mr-2 h-5 w-5" />
 
-            <OutlineAdjustments className="h-5 w-5 text-gray-500" />
-          </button>
-        </span>
+              Save
+            {:else if savingState === 'SAVING'}
+              <Icon src={DotsCircleHorizontal} class="-ml-1 mr-2 h-5 w-5" />
 
-        {#if screenfull?.isEnabled}
-          <span class="hidden sm:block sm:ml-3">
-            <button
-              type="button"
-              class="inline-flex items-center px-2 py-2 border border-gray-200 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              on:click={() => screenfull.toggle(ideElement, { navigationUI: 'hide' })}
-            >
-              <span class="sr-only">Full screen</span>
+              Saving...
+            {:else if savingState === 'UNSAVED'}
+              <Icon src={ExclamationCircle} class="-ml-1 mr-2 h-5 w-5" />
 
-              <OutlineArrowsExpand className="h-5 w-5 text-gray-500" />
-            </button>
-          </span>
-        {/if}
-
-        <span class="sm:ml-3">
-          <button
-            type="button"
-            class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            <!-- Heroicon name: solid/check -->
-            <svg
-              class="-ml-1 mr-2 h-5 w-5"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            Save
-          </button>
-        </span>
-
-        <!-- Dropdown -->
-        <span class="ml-3 relative sm:hidden">
-          <button
-            type="button"
-            class="inline-flex items-center px-4 py-2 border border-gray-200 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            id="mobile-menu-button"
-            aria-expanded="false"
-            aria-haspopup="true"
-          >
-            More
-            <!-- Heroicon name: solid/chevron-down -->
-            <svg
-              class="-mr-1 ml-2 h-5 w-5 text-gray-500"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                clip-rule="evenodd"
-              />
-            </svg>
+              Save
+            {:else}
+              Save
+            {/if}
           </button>
 
-          <!--
-            Dropdown menu, show/hide based on menu state.
-    
-            Entering: "transition ease-out duration-200"
-              From: "transform opacity-0 scale-95"
-              To: "transform opacity-100 scale-100"
-            Leaving: "transition ease-in duration-75"
-              From: "transform opacity-100 scale-100"
-              To: "transform opacity-0 scale-95"
-          -->
-          <div
-            class="origin-top-right absolute right-0 mt-2 -mr-1 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
-            role="menu"
-            aria-orientation="vertical"
-            aria-labelledby="mobile-menu-button"
-            tabindex="-1"
-          >
-            <!-- Active: "bg-gray-100", Not Active: "" -->
-            <a
-              href="#"
-              class="block px-4 py-2 text-sm text-gray-700"
-              role="menuitem"
-              tabindex="-1"
-              id="mobile-menu-item-0">Edit</a
+          <Menu>
+            <MenuButton
+              as="button"
+              use={[popperRef]}
+              class="btn btn-square btn-sm btn-outline rounded-none border-l-0"
+              title="Open/New"
+              aria-label="Open/New"
             >
-            <a
-              href="#"
-              class="block px-4 py-2 text-sm text-gray-700"
-              role="menuitem"
-              tabindex="-1"
-              id="mobile-menu-item-1">View</a
+              <Icon src={DocumentText} class="h-5" />
+            </MenuButton>
+
+            <MenuItems
+              as="ul"
+              use={[[popperContent, popperOptions]]}
+              class="menu menu-compact bg-base-100 dark:bg-neutral w-56 p-1.5 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
             >
-          </div>
-        </span>
+              {#await getUserExperiments()}
+                <MenuItem as="li" class="menu-title" aria-live="polite" aria-busy="true">
+                  <span class="!text-base-content/60">Loading Your Experiments...</span></MenuItem
+                >
+              {:then savedExperiments}
+                <MenuItem as="li" class="menu-title" aria-live="polite" aria-busy="false">
+                  <span class="!text-base-content/60">Your Experiments</span>
+                </MenuItem>
+
+                {#each savedExperiments as saved}
+                  <MenuItem as="li" let:active>
+                    <a href="/experiment/hardware-ide/{saved.id}" class:active>{saved.name}</a>
+                  </MenuItem>
+                {/each}
+              {:catch error}
+                <MenuItem as="li" aria-live="polite" aria-busy="false"
+                  ><span class="text-error">Loading failed: {error.message}</span></MenuItem
+                >
+              {/await}
+
+              <MenuItem as="li" let:active>
+                <button on:click={openNewExperiment} class:active
+                  ><Icon src={Plus} class="h-5 w-5 text-primary dark:text-base-content" />Open new</button
+                >
+              </MenuItem>
+
+              <MenuItem as="li" class="menu-title">
+                <span class="!text-base-content/60">Examples</span>
+              </MenuItem>
+              {#each examples as example (example.id)}
+                <MenuItem as="li" let:active>
+                  <a href="/experiment/hardware-ide/{example.id}" class:active>{example.name}</a>
+                </MenuItem>
+              {/each}
+            </MenuItems>
+          </Menu>
+
+          <Popover>
+            <PopoverButton
+              as="button"
+              use={[popperRef]}
+              class="btn btn-square btn-sm btn-outline rounded-none border-l-0"
+              title="Share"
+              aria-label="Share"
+            >
+              <Icon src={Share} class="h-5" />
+            </PopoverButton>
+
+            <PopoverPanel
+              use={[[popperContent, popperOptions]]}
+              class="bg-base-100 dark:bg-neutral rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 min-w-[20rem] p-4"
+            >
+              <div class="form-control">
+                <label class="label cursor-pointer">
+                  <span class="label-text">Anyone with a link can view</span>
+                  <input
+                    type="checkbox"
+                    class="toggle"
+                    checked={visibility === 'PUBLIC'}
+                    on:change={() => {
+                      visibility = visibility === 'PUBLIC' ? 'PRIVATE' : 'PUBLIC';
+                      checkIsDirty();
+                    }}
+                  />
+                </label>
+              </div>
+
+              <div class="input-group input-group-sm w-full">
+                <input
+                  type="text"
+                  readonly
+                  class="input input-bordered input-sm"
+                  value={location.href}
+                />
+                <button
+                  class="btn btn-square btn-sm w-fit px-2"
+                  on:click={() => navigator.clipboard.writeText(location.href)}>Copy link</button
+                >
+              </div>
+            </PopoverPanel>
+          </Popover>
+
+          <Menu>
+            <MenuButton
+              use={[popperRef]}
+              class="btn btn-square btn-sm btn-outline rounded-l-none border-l-0"
+              title="More actions"
+              aria-label="More actions"
+            >
+              <Icon src={DotsVertical} class="h-5" />
+            </MenuButton>
+
+            <MenuItems
+              as="ul"
+              use={[[popperContent, popperOptions]]}
+              class="menu menu-compact bg-base-100 dark:bg-neutral w-56 p-1.5 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
+            >
+              <MenuItem as="li" let:active>
+                <a href="data:" class:active on:click={download}>
+                  <Icon
+                    src={DocumentDownload}
+                    class="h-5 w-5 text-primary dark:text-base-content"
+                  /> Download</a
+                >
+              </MenuItem>
+              <!-- <MenuItem as="li" disabled let:active>
+                <button type="button" class:active
+                  ><Icon src={Cog} class="h-5 w-5 text-primary dark:text-base-content" /> Settings</button
+                >
+              </MenuItem> -->
+              <MenuItem as="li" let:active>
+                <button
+                  type="button"
+                  class:active
+                  on:click={remove}
+                  disabled={removingState}
+                  aria-live={removingState ? 'assertive' : 'off'}
+                  ><Icon src={Trash} class="h-5 w-5 text-primary dark:text-base-content" />
+                  {removingState ? 'Deleting...' : 'Delete'}</button
+                >
+              </MenuItem>
+            </MenuItems>
+          </Menu>
+        </div>
       </div>
     </div>
 
-    <div class="flex justify-between items-center p-4 md:col-span-3">
-      <div class="col-span-2">Chip selection</div>
+    {#if error}
+      <div role="alert" class="self-stretch col-span-3 px-4">
+        <div class="alert alert-error py-0 pr-0">
+          <Icon src={ExclamationCircle} class="h-5 w-5" />
+          <div class="sr-only">Error:</div>
 
-      <div class="col-span-2">
-        {#if chip}
-          <span class="sm:ml-3">
-            <button
-              type="button"
-              class="inline-flex items-center px-2 py-2 border border-gray-200 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              on:click={run}
-            >
-              <SolidPlay className="h-5 w-5" />
-            </button>
-          </span>
-        {/if}
+          {error}
+
+          <button
+            class="btn btn-ghost btn-circle"
+            on:click={() => (error = '')}
+            title="Dismiss"
+            aria-label="Dismiss"
+          >
+            <Icon src={X} class="h-5 w-5" />
+          </button>
+        </div>
       </div>
-    </div>
+    {/if}
 
-    <div class="self-stretch pt-4 md:pl-4 md:pt-0">
-      <table class="table-auto w-full">
-        <thead>
-          <tr>
-            <th class="bg-gray-200 border-gray-200 rounded-t-md" colspan="2">Input Pins</th>
-          </tr>
-          <tr
-            ><th class="border border-gray-200 py-1 px-2">Name</th><th
-              class="border border-gray-200">Value</th
-            ></tr
-          >
-        </thead>
-        <tbody>
-          {#each inputPins as pin}
+    {#if chip}
+      <div class="flex justify-between items-center p-4 md:col-span-3">
+        <div class="col-span-2">Chip {chip?.name}</div>
+
+        <div class="col-span-2">
+          {#if chip}
+            <span class="sm:ml-3">
+              <div class="btn-group">
+                <button class="btn btn-sm btn-outline btn-primary" on:click={run}>
+                  <div class="sr-only">Run</div>
+
+                  <Icon src={Play} theme="solid" class="h-5 w-5" />
+                </button>
+              </div></span
+            >
+          {/if}
+        </div>
+      </div>
+
+      <div class="self-stretch pt-4 md:pl-4 md:pt-0">
+        <table class="table-auto w-full">
+          <thead>
             <tr>
-              <td class="border border-gray-200 py-1 px-2">{pin.name}</td>
-              <td class="border border-gray-200 py-1 px-2"
-                ><input
-                  type="number"
-                  bind:value={pin.value}
-                  min="0"
-                  max="1"
-                  class="border-none p-0"
-                /></td
-              >
+              <th class="bg-base-200 border-base-200 rounded-t-md" colspan="2">Input Pins</th>
             </tr>
-          {/each}
-        </tbody>
-      </table>
-    </div>
+            <tr
+              ><th class="border border-base-200 py-1 px-2">Name</th><th
+                class="border border-base-200">Value</th
+              ></tr
+            >
+          </thead>
+          <tbody>
+            {#each inputPins as pin}
+              <tr>
+                <td class="border border-base-200 py-1 px-2">{pin.name}</td>
+                <td class="border border-base-200 py-1 px-2"
+                  ><input
+                    type="number"
+                    bind:value={pin.value}
+                    min="0"
+                    max="1"
+                    class="border-none p-0 bg-inherit"
+                  /></td
+                >
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
 
-    <div class="self-stretch pt-4 md:pl-4 md:pt-0">
-      <table class="table-auto w-full">
-        <thead>
-          <tr>
-            <th class="bg-gray-200 border-gray-200 rounded-t-md" colspan="2">Internal Pins</th>
-          </tr>
-          <tr
-            ><th class="border border-gray-200 py-1 px-2">Name</th><th
-              class="border border-gray-200">Value</th
-            ></tr
-          >
-        </thead>
-        <tbody>
-          {#each internalPins as pin}
+      <div class="self-stretch pt-4 md:pl-4 md:pt-0">
+        <table class="table-auto w-full">
+          <thead>
             <tr>
-              <td class="border border-gray-200 py-1 px-2">{pin.name}</td>
-              <td class="border border-gray-200 py-1 px-2">{pin.value ? '1' : '0'}</td>
+              <th class="bg-base-200 border-base-200 rounded-t-md" colspan="2">Internal Pins</th>
             </tr>
-          {/each}
-        </tbody>
-      </table>
-    </div>
+            <tr
+              ><th class="border border-base-200 py-1 px-2">Name</th><th
+                class="border border-base-200">Value</th
+              ></tr
+            >
+          </thead>
+          <tbody>
+            {#each internalPins as pin}
+              <tr>
+                <td class="border border-base-200 py-1 px-2">{pin.name}</td>
+                <td class="border border-base-200 py-1 px-2">{pin.value ? '1' : '0'}</td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
 
-    <div class="self-stretch pt-4 pr-4 md:pl-4 md:pt-0">
-      <table class="table-auto w-full">
-        <thead>
-          <tr>
-            <th class="bg-gray-200 border-gray-200 rounded-t-md" colspan="2">Output Pins</th>
-          </tr>
-          <tr
-            ><th class="border border-gray-200 py-1 px-2">Name</th><th
-              class="border border-gray-200 py-1 px-2">Value</th
-            ></tr
-          >
-        </thead>
-        <tbody>
-          {#each outputPins as pin}
+      <div class="self-stretch pt-4 pr-4 md:pl-4 md:pt-0">
+        <table class="table-auto w-full">
+          <thead>
             <tr>
-              <td class="border border-gray-200 py-1 px-2">{pin.name}</td>
-              <td class="border border-gray-200 py-1 px-2">{pin.value ? '1' : '0'}</td>
+              <th class="bg-base-200 border-base-200 rounded-t-md" colspan="2">Output Pins</th>
             </tr>
-          {/each}
-        </tbody>
-      </table>
-    </div>
-
-    <div class="self-stretch col-span-3 mt-4">
-      {error}
-    </div>
+            <tr
+              ><th class="border border-base-200 py-1 px-2">Name</th><th
+                class="border border-base-200 py-1 px-2">Value</th
+              ></tr
+            >
+          </thead>
+          <tbody>
+            {#each outputPins as pin}
+              <tr>
+                <td class="border border-base-200 py-1 px-2">{pin.name}</td>
+                <td class="border border-base-200 py-1 px-2">{pin.value ? '1' : '0'}</td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
+    {:else}
+      <div class="italic md:col-span-3 p-4">
+        Add CHIP to start or check one of the examples like the <a
+          href="/experiment/hardware-ide/{examples.find((e) => e.name === 'XOR Gate')?.id}"
+          class="link">XOR Gate</a
+        >.
+      </div>
+    {/if}
   </div>
 </div>
+
+<style>
+  :global(.monaco-line-decoration) {
+    @apply !w-1 ml-1;
+  }
+</style>

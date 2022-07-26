@@ -6,4 +6,6 @@
   <title>Experiment - Hardware IDE - Chips and Code</title>
 </svelte:head>
 
-<HardwareIDE />
+<main class="flex flex-grow">
+  <HardwareIDE />
+</main>

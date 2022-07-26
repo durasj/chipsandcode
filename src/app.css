@@ -2,3 +2,47 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*:focus {
+    @apply !outline-primary;
+}
+
+/* Overrides for DaisyUI components */
+
+.btn {
+    @apply font-semibold text-base;
+}
+
+.btn.btn-link {
+    @apply no-underline text-base-content no-animation;
+}
+.btn.btn-link.btn-active, .btn.btn-link:hover {
+    @apply text-primary;
+}
+[data-theme="dark"] .btn.btn-link.btn-active,  [data-theme="dark"] .btn.btn-link:hover {
+    @apply text-white;
+}
+
+.btn.btn-outline {
+    @apply border-gray-200 shadow-sm;
+}
+.btn.btn-outline:hover, .btn.btn-outline.btn-active {
+    @apply bg-base-200 text-primary;
+}
+[data-theme="dark"] .btn.btn-outline {
+    @apply border-stone-500 bg-neutral;
+}
+[data-theme="dark"] .btn.btn-outline:hover, [data-theme="dark"] .btn.btn-outline.btn-active {
+    @apply bg-base-100 text-white;
+}
+
+.btn.btn-outline.btn-success, .btn.btn-outline.btn-warning, .btn.btn-outline.btn-error {
+    @apply border-gray-200;
+}
+[data-theme="dark"] .btn.btn-outline.btn-success, [data-theme="dark"] .btn.btn-outline.btn-warning, [data-theme="dark"] .btn.btn-outline.btn-error {
+    @apply border-stone-500 bg-neutral;
+}
+
+.menu :where(li:not(.menu-title):not(:empty)) > :where(:not(ul).active), .menu :where(li:not(.menu-title):not(:empty)) > :where(*:not(ul):active) {
+    @apply bg-base-content/10 text-base-content;
+}

@@ -1,21 +1,16 @@
 name = "chips-and-code-api"
-type = "javascript"
+main = "./src/backend/index.ts"
 compatibility_date = "2021-11-06"
 workers_dev = true
 account_id = "e65cd8f4f4622d905ef50204e895cf4b"
+vars = { ENVIRONMENT = "dev" }
 
 kv_namespaces = [
     { binding = "KV", id = "4922e9f726254da0a57642a379fc9603", preview_id = "60a14a267de44dc7b546a4de49e65ebd" }
 ]
 
-[build]
-command = "npm run backend:build"
-watch_dir = "src/backend"
-[build.upload]
-format = "modules"
-main = "worker.mjs"
-
 [env.production]
 workers_dev = false
 route = "https://api.chipsandcode.com/v1/*"
 zone_id = "244407f282cb71c3f95c5e70bdc72db6"
+vars = { ENVIRONMENT = "production" }
