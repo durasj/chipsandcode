@@ -42,6 +42,9 @@ const config = {
           NearleyPlugin(),
           monacoEditorPlugin.default({ languageWorkers: ['editorWorkerService'] }),
         ],
+        ssr: {
+          noExternal: ['date-fns'],
+        },
         server: env.PROXY_URL
           ? {
               proxy: {
