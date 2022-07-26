@@ -14,6 +14,7 @@
     "test": "jest",
     "wrangler": "wrangler",
     "backend:dev": "wrangler dev",
+    "backend:build": "wrangler publish --dry-run --outdir=dist && mv dist/worker.mjs _worker.js",
     "backend:publish": "wrangler publish"
   },
   "devDependencies": {

@@ -14,3 +14,6 @@ workers_dev = false
 route = "https://api.chipsandcode.com/v1/*"
 zone_id = "244407f282cb71c3f95c5e70bdc72db6"
 vars = { ENVIRONMENT = "production" }
+kv_namespaces = [
+    { binding = "KV", id = "4922e9f726254da0a57642a379fc9603", preview_id = "60a14a267de44dc7b546a4de49e65ebd" }
+]
