@@ -6,13 +6,20 @@ account_id = "e65cd8f4f4622d905ef50204e895cf4b"
 vars = { ENVIRONMENT = "dev" }
 
 kv_namespaces = [
-    { binding = "KV", id = "4922e9f726254da0a57642a379fc9603", preview_id = "60a14a267de44dc7b546a4de49e65ebd" }
+    { binding = "KV", id = "60a14a267de44dc7b546a4de49e65ebd", preview_id = "60a14a267de44dc7b546a4de49e65ebd" }
+]
+
+[env.dev]
+workers_dev = false
+route = "https://api.dev.chipsandcode.com/*"
+vars = { ENVIRONMENT = "production", DOMAIN = "dev.chipsandcode.com" }
+kv_namespaces = [
+    { binding = "KV", id = "60a14a267de44dc7b546a4de49e65ebd", preview_id = "60a14a267de44dc7b546a4de49e65ebd" }
 ]
 
 [env.production]
 workers_dev = false
-route = "https://api.chipsandcode.com/v1/*"
-zone_id = "244407f282cb71c3f95c5e70bdc72db6"
+route = "https://api.chipsandcode.com/*"
 vars = { ENVIRONMENT = "production", DOMAIN = "chipsandcode.com" }
 kv_namespaces = [
     { binding = "KV", id = "4922e9f726254da0a57642a379fc9603", preview_id = "60a14a267de44dc7b546a4de49e65ebd" }
