@@ -1,7 +1,10 @@
 import type { ErrorResponse } from './backend/shared';
 
 export default async function api<T>(url: string, options?: RequestInit) {
-  const response = await fetch(`${import.meta.env.VITE_API_PREFIX}${url}`, options);
+  const response = await fetch(`${import.meta.env.VITE_API_PREFIX}${url}`, {
+    credentials: 'include',
+    ...options,
+  });
   if (!response.ok) {
     throw new Error(
       response.headers.get('content-type')?.includes('application/json')

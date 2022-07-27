@@ -34,7 +34,7 @@ const authMiddleware: AppMiddleware = async (ctx, next) => {
       maxAge: 60 * 60 * 24 * 365,
       httpOnly: true,
       path: '/',
-      sameSite: 'lax',
+      sameSite: 'none',
       domain: DOMAIN,
       secure: true,
     }),
