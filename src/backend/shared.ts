@@ -5,6 +5,7 @@ export const HTTP_MUTATION_METHODS = new Set(['POST', 'PUT', 'DELETE']);
 export type Environment = {
   KV: KVNamespace;
   ENVIRONMENT: 'dev' | 'production';
+  DOMAIN?: string;
 };
 
 export type UserData = {

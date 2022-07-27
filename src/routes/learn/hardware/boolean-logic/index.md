@@ -11,16 +11,16 @@ menu:
     link: /hardware/boolean-logic/background
     label: 1.1
   - name: Specification
-    link: /hardware/boolean-logic/specification
+    link: /hardware/boolean-logic/background
     label: 1.2
   - name: Implementation
-    link: /hardware/boolean-logic/implementation
+    link: /hardware/boolean-logic/background
     label: 1.3
   - name: Perspective
-    link: /hardware/boolean-logic/perspective
+    link: /hardware/boolean-logic/background
     label: 1.4
   - name: Project
-    link: /hardware/boolean-logic/project
+    link: /hardware/boolean-logic/background
     label: 1.5
 ---
 

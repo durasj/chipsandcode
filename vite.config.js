@@ -24,13 +24,13 @@ const config = defineConfig(() => {
     ssr: {
       noExternal: ['date-fns'],
     },
-    server: env.PROXY_URL
+    server: env.PROXY_API_URL
       ? {
           proxy: {
-            [env.VITE_API_PATH]: {
-              target: env.PROXY_URL,
+            [env.VITE_API_PREFIX]: {
+              target: env.PROXY_API_URL,
               rewrite: (path) =>
-                path.replace(new RegExp(`^${env.VITE_API_PATH.replace('/', '\\/')}`), ''),
+                path.replace(new RegExp(`^${env.VITE_API_PREFIX.replace('/', '\\/')}`), ''),
               changeOrigin: true,
             },
           },

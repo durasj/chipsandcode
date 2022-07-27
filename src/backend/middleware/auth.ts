@@ -14,7 +14,7 @@ import type { AppMiddleware } from '..';
  */
 const authMiddleware: AppMiddleware = async (ctx, next) => {
   const { request, response, env } = ctx;
-  const { KV } = env;
+  const { KV, DOMAIN } = env;
 
   const cookies = parse(request.get('Cookie') || '');
 
@@ -35,6 +35,7 @@ const authMiddleware: AppMiddleware = async (ctx, next) => {
       httpOnly: true,
       path: '/',
       sameSite: 'lax',
+      domain: DOMAIN,
       secure: true,
     }),
   );
