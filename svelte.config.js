@@ -23,7 +23,7 @@ const config = {
       assets: 'build',
     }),
     prerender: {
-      default: true,
+      crawl: true,
     },
   },
 };
