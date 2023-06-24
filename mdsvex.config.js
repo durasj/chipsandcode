@@ -17,7 +17,7 @@ import rehypeKatex from 'rehype-katex';
 const config = {
   extensions: ['.md'],
 
-  layout: './src/components/MarkdownLayout.svelte',
+  layout: './src/lib/components/MarkdownLayout.svelte',
 
   frontmatter: {
     marker: '-',

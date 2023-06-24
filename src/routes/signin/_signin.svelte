@@ -1,8 +1,8 @@
 <script lang="ts">
   import { writable } from 'svelte/store';
 
-  import Button from 'src/components/Button.svelte';
-  import Google from 'src/components/icons/social/Google.svelte';
+  import Button from 'src/lib/components/Button.svelte';
+  import Google from 'src/lib/components/icons/social/Google.svelte';
 
   const email = writable('');
 

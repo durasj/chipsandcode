@@ -3,7 +3,7 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import monacoEditorPlugin from 'vite-plugin-monaco-editor';
 import path from 'path';
 
-import NearleyPlugin from './src/editor/nearleyPlugin.js';
+import NearleyPlugin from './src/lib/editor/nearleyPlugin.js';
 
 /** @type {import('vite').UserConfig} */
 const config = defineConfig(() => {

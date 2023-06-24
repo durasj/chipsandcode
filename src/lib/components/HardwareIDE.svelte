@@ -3,15 +3,15 @@
   import {
     Share,
     CheckCircle,
-    DotsCircleHorizontal,
+    EllipsisHorizontalCircle,
     ExclamationCircle,
     Play,
-    DotsVertical,
+    EllipsisVertical,
     Trash,
     DocumentText,
-    DocumentDownload,
+    ArchiveBoxArrowDown,
     Plus,
-    X,
+    XMark,
   } from '@steeze-ui/heroicons';
   import {
     Menu,
@@ -29,17 +29,17 @@
   import type zipType from '@zip.js/zip.js';
 
   import { goto } from '$app/navigation';
-  import parseHdl from 'src/editor/hdl/parse';
-  import parseTst from 'src/editor/tst/parse';
-  import type { Root as HDLRoot } from 'src/editor/hdl/tree';
-  import type { CompareNode, LoadNode, OutputNode, Root as TSTRoot } from 'src/editor/tst/tree';
-  import type Chip from 'src/hardware-simulator/chips/Chip';
-  import ChipFactory from 'src/hardware-simulator/chips/ChipFactory';
+  import parseHdl from '$lib/editor/hdl/parse';
+  import parseTst from '$lib/editor/tst/parse';
+  import type { Root as HDLRoot } from '$lib/editor/hdl/tree';
+  import type { CompareNode, LoadNode, OutputNode, Root as TSTRoot } from '$lib/editor/tst/tree';
+  import type Chip from '$lib/hardware-simulator/chips/Chip';
+  import ChipFactory from '$lib/hardware-simulator/chips/ChipFactory';
   import type { Experiment, ExperimentRequest } from 'src/backend/endpoints/experiment';
-  import type { monaco, monaco as monacoApi } from 'src/editor';
+  import type { monaco, monaco as monacoApi } from '$lib/editor';
   import { theme } from 'src/stores';
   import api from 'src/api';
-  import TestScript from 'src/hardware-simulator/tests/TestScript';
+  import TestScript from '$lib/hardware-simulator/tests/TestScript';
 
   const [popperRef, popperContent] = createPopperActions();
   const popperOptions = {
@@ -410,7 +410,7 @@
     await writer.add(`${fileName}.hdl`, new zip.TextReader(hdlModel.getValue()));
     await writer.add(`${fileName}.tst`, new zip.TextReader(tstModel.getValue()));
     await writer.close();
-    const blob = blobWriter.getData();
+    const blob = await blobWriter.getData();
 
     const url = URL.createObjectURL(blob);
 
@@ -619,7 +619,7 @@
 
               Save
             {:else if savingState === 'SAVING'}
-              <Icon src={DotsCircleHorizontal} class="-ml-1 mr-2 h-5 w-5" />
+              <Icon src={EllipsisHorizontalCircle} class="-ml-1 mr-2 h-5 w-5" />
 
               Saving...
             {:else if savingState === 'UNSAVED'}
@@ -736,7 +736,7 @@
               title="More actions"
               aria-label="More actions"
             >
-              <Icon src={DotsVertical} class="h-5" />
+              <Icon src={EllipsisVertical} class="h-5" />
             </MenuButton>
 
             <MenuItems
@@ -747,7 +747,7 @@
               <MenuItem as="li" let:active>
                 <a href="data:" class:active on:click={download}>
                   <Icon
-                    src={DocumentDownload}
+                    src={ArchiveBoxArrowDown}
                     class="h-5 w-5 text-primary dark:text-base-content"
                   /> Download</a
                 >
@@ -788,7 +788,7 @@
             title="Dismiss"
             aria-label="Dismiss"
           >
-            <Icon src={X} class="h-5 w-5" />
+            <Icon src={XMark} class="h-5 w-5" />
           </button>
         </div>
       </div>

@@ -1,13 +1,13 @@
 <script lang="ts">
   import { Icon } from '@steeze-ui/svelte-icon';
   import {
-    Chip,
+    CpuChip,
     Cog,
     InformationCircle,
-    Menu,
+    Bars3,
     ChevronDown,
     UserCircle,
-    X,
+    XMark,
   } from '@steeze-ui/heroicons';
   import {
     Popover,
@@ -33,7 +33,7 @@
         {
           title: 'Chip Hardware',
           href: '/learn/hardware/boolean-logic',
-          icon: Chip,
+          icon: CpuChip,
           description: 'Learn about chip design by creating your own chips.',
         },
       ],
@@ -89,7 +89,7 @@
         <PopoverButton class="btn btn-ghost btn-circle">
           <div class="sr-only">Open menu</div>
 
-          <Icon src={Menu} class="h-6" />
+          <Icon src={Bars3} class="h-6" />
         </PopoverButton>
 
         <Transition
@@ -115,7 +115,7 @@
                   <PopoverButton as="button" type="button" class="btn btn-ghost btn-circle">
                     <span class="sr-only">Close menu</span>
 
-                    <Icon src={X} class="h-6" />
+                    <Icon src={XMark} class="h-6" />
                   </PopoverButton>
                 </div>
               </div>
