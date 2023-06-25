@@ -1,27 +1,6 @@
 ---
 title: Boolean Logic
 updated: 2022-06-26
-copyright: Adapted by <a href="https://jan.duras.me" class="link">Jan Duras</a> from <a href="https://www.nand2tetris.org/license" class="link">Nand to Tetris</a> by Shimon Schocken and Noam Nisan. <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" class="link">CC BY-NC-SA 3.0</a>
-course: Hardware
-menu:
-  - name: Boolean Logic
-    link: /hardware/boolean-logic
-    label: 1
-  - name: Background
-    link: /hardware/boolean-logic/background
-    label: 1.1
-  - name: Specification
-    link: /hardware/boolean-logic/background
-    label: 1.2
-  - name: Implementation
-    link: /hardware/boolean-logic/background
-    label: 1.3
-  - name: Perspective
-    link: /hardware/boolean-logic/background
-    label: 1.4
-  - name: Project
-    link: /hardware/boolean-logic/background
-    label: 1.5
 ---
 
 > Such simple things, And we make of them something so complex it defeats us, Almost.

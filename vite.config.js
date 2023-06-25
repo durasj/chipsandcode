@@ -4,6 +4,7 @@ import monacoEditorPlugin from 'vite-plugin-monaco-editor';
 import path from 'path';
 
 import NearleyPlugin from './src/lib/editor/nearleyPlugin.js';
+import contentPlugin from './src/lib/content/plugin.js';
 
 /** @type {import('vite').UserConfig} */
 const config = defineConfig(() => {
@@ -20,6 +21,7 @@ const config = defineConfig(() => {
       sveltekit(),
       NearleyPlugin(),
       monacoEditorPlugin.default({ languageWorkers: ['editorWorkerService'] }),
+      contentPlugin(),
     ],
     ssr: {
       noExternal: ['date-fns'],

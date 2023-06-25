@@ -3,13 +3,10 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "strict": true,
-    "baseUrl": ".",
     "paths": {
-      "src/*": ["src/*"],
+      "src/*": ["./src/*"],
       "$lib": ["./src/lib"],
       "$lib/*": ["./src/lib/*"]
     }
-  },
-  "include": ["src/**/*.d.ts", "src/**/*.js", "src/**/*.ts", "src/**/*.svelte"],
-  "exclude": ["node_modules", "dist", "test"]
+  }
 }

@@ -24,8 +24,7 @@
     "@popperjs/core": "^2.11.8",
     "@rollup/pluginutils": "^5.0.2",
     "@sveltejs/adapter-cloudflare": "^2.3.0",
-    "@sveltejs/adapter-static": "^2.0.2",
-    "@sveltejs/kit": "^1.20.4",
+    "@sveltejs/kit": "^1.20.5",
     "@tailwindcss/typography": "^0.5.9",
     "@testing-library/svelte": "^3.2.2",
     "@types/cookie": "^0.5.1",
@@ -75,6 +74,7 @@
     "vite-plugin-monaco-editor": "^1.1.0"
   },
   "dependencies": {
+    "@markdoc/markdoc": "^0.3.0",
     "@rgossiaux/svelte-headlessui": "^2.0.0",
     "@steeze-ui/heroicons": "^2.2.2",
     "@steeze-ui/remix-icons": "^1.1.0",
@@ -87,6 +87,7 @@
     "monaco-editor": "^0.39.0",
     "screenfull": "^6.0.2",
     "wrangler": "^3.1.1",
+    "yaml": "^2.3.1",
     "zod": "^3.21.4"
   },
   "overrides": {
