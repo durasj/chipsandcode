@@ -1,10 +1,10 @@
 import { error } from '@sveltejs/kit';
-import type { PageLoad } from './$types';
+import type { PageServerLoad } from './$types';
 import type { Content } from 'src/lib/content/types';
 import type { Tag } from '@markdoc/markdoc';
 
 const FIRST_CHAPTER = 'boolean-logic';
-const FIRST_SECTION = '0-intro';
+const FIRST_SECTION = 'intro';
 
 export const load = (async ({ params }) => {
   const modules = import.meta.glob('../**/*.md');
@@ -35,9 +35,9 @@ export const load = (async ({ params }) => {
     meta: markdownModule.default.meta,
     content: (markdownModule.default.content as Tag).children,
   };
-}) satisfies PageLoad;
+}) satisfies PageServerLoad;
 
 // TODO: Make sure this works correctly with the Hardware IDE
-export const prerender = false;
-export const ssr = true;
-export const csr = false;
+export const prerender = true;
+export const ssr = false;
+export const csr = true;

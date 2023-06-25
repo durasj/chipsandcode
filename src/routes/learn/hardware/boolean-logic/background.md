@@ -1,32 +1,7 @@
 ---
 title: Background
-updated: 2022-06-26
-copyright: Adapted by <a href="https://jan.duras.me" class="link">Jan Duras</a> from <a href="https://www.nand2tetris.org/license" class="link">Nand to Tetris</a> by Shimon Schocken and Noam Nisan. <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" class="link">CC BY-NC-SA 3.0</a>
-course: Hardware
-menu:
-  - name: Boolean Logic
-    link: /hardware/boolean-logic
-    label: 1
-  - name: Background
-    link: /hardware/boolean-logic/background
-    label: 1.1
-  - name: Specification
-    link: /hardware/boolean-logic/background
-    label: 1.2
-  - name: Implementation
-    link: /hardware/boolean-logic/background
-    label: 1.3
-  - name: Perspective
-    link: /hardware/boolean-logic/background
-    label: 1.4
-  - name: Project
-    link: /hardware/boolean-logic/background
-    label: 1.5
+updated: 2023-06-26
 ---
-
-<script>
-  import EmbeddedHardwareIDE from "src/components/EmbeddedHardwareIDE.svelte";
-</script>
 
 This chapter focuses on the construction of a family of simple chips called _Boolean gates_. Since Boolean gates are physical implementations of _Boolean functions_, we start with a brief treatment of Boolean algebra. We then show how Boolean gates implementing simple Boolean functions can be interconnected to deliver the functionality of more complex chips. We conclude the background section with a description of how hardware design is actually done in practice, using software simulation tools.
 
@@ -138,7 +113,7 @@ life cycle - from an optimized HDL program to mass production - is typically out
 
 As we have seen in figures 1.2 and 1.5, one way to define _exclusive_ or is Xor($a,b$)=Or(And($a$, Not($b$)), And(Not($a$),$b$)). This logic can be expressed either graphically, as a gate diagram, or textually, as an HDL program. The latter program is written in the HDL variant used throughout this course. See figure 1.6 for the details.
 
-<EmbeddedHardwareIDE id="nnDG6JRQjL0aNVb7AJHnmZrv02pHIINF" />
+{% EmbeddedHardwareIDE id="nnDG6JRQjL0aNVb7AJHnmZrv02pHIINF" /%}
 
 ## Explanation
 

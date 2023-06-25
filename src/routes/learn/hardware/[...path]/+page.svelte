@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { RenderableTreeNode, Tag } from '@markdoc/markdoc';
   import formatDistance from 'date-fns/formatDistance';
   import parseISO from 'date-fns/parseISO';
   import { Icon } from '@steeze-ui/svelte-icon';
@@ -87,9 +86,7 @@
   <article class="prose dark:prose-invert px-4 sm:px-6 lg:px-8 lg:col-start-2 lg:col-end-5">
     <h1>{data.meta.title}</h1>
 
-    {#each data.content as node}
-      <Elements {node} />
-    {/each}
+    <Elements children={data.content} />
 
     <div
       class="flex my-4"

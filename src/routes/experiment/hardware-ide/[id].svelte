@@ -8,11 +8,11 @@
 </script>
 
 <script lang="ts">
-  import type { Experiment } from 'src/backend/endpoints/experiment';
-  import Problem from 'src/components/Problem.svelte';
-  import HardwareIDE from 'src/components/HardwareIDE.svelte';
-  import api from 'src/api';
-  import Loading from 'src/components/Loading.svelte';
+  import type { Experiment } from '$lib/backend/endpoints/experiment';
+  import Problem from '$lib/components/Problem.svelte';
+  import HardwareIDE from '$lib/components/HardwareIDE.svelte';
+  import api from '$lib/api';
+  import Loading from '$lib/components/Loading.svelte';
 
   export let id: string;
 

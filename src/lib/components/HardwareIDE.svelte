@@ -35,7 +35,7 @@
   import type { CompareNode, LoadNode, OutputNode, Root as TSTRoot } from '$lib/editor/tst/tree';
   import type Chip from '$lib/hardware-simulator/chips/Chip';
   import ChipFactory from '$lib/hardware-simulator/chips/ChipFactory';
-  import type { Experiment, ExperimentRequest } from 'src/backend/endpoints/experiment';
+  import type { Experiment, ExperimentRequest } from '$lib/backend/endpoints/experiment';
   import type { monaco, monaco as monacoApi } from '$lib/editor';
   import { theme } from 'src/stores';
   import api from 'src/api';
@@ -400,7 +400,7 @@
 
     // We only import part to reduce chunk size by two thirds
     // @ts-ignore
-    const zip = (await import('@zip.js/zip.js/lib/zip-no-worker-deflate')) as typeof zipType;
+    const zip = (await import('@zip.js/zip.js/lib/zip-no-worker-deflate.js')) as typeof zipType;
     zip.configure({ useWebWorkers: false });
 
     const fileName = experiment?.name.replaceAll(/[^\w]/g, '-').toLocaleLowerCase();

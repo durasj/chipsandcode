@@ -1,5 +1,5 @@
 <script lang="ts">
-  import HardwareIDE from 'src/components/HardwareIDE.svelte';
+  import HardwareIDE from '$lib/components/HardwareIDE.svelte';
 </script>
 
 <svelte:head>
