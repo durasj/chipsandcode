@@ -1,6 +1,16 @@
 <script>
+  import Img from '@zerodevx/svelte-img';
+
   import Header from 'src/lib/components/Header.svelte';
   import Footer from 'src/lib/components/Footer.svelte';
+
+  import binary from '$lib/images/binary.png?run';
+  import chip from '$lib/images/chip.png?run';
+  import hdl from '$lib/images/hdl.png?run';
+  import keyboard from '$lib/images/keyboard.png?run';
+  import matrix from '$lib/images/matrix.png?run';
+  import pcb from '$lib/images/pcb.png?run';
+  import pixels from '$lib/images/pixels.png?run';
 </script>
 
 <svelte:head>
@@ -35,57 +45,29 @@
                 <div class="flex items-center space-x-6 lg:space-x-8">
                   <div class="flex-shrink-0 grid grid-cols-1 gap-y-6 lg:gap-y-8">
                     <div class="w-44 h-60 rounded-lg overflow-hidden sm:opacity-0 lg:opacity-100">
-                      <img
-                        src="/decorative/hdl.png"
-                        alt=""
-                        class="w-full h-full object-center object-cover"
-                      />
+                      <Img class="w-full h-full object-center object-cover" src={hdl} alt="" />
                     </div>
                     <div class="w-44 h-60 rounded-lg overflow-hidden">
-                      <img
-                        src="/decorative/chip.png"
-                        alt=""
-                        class="w-full h-full object-center object-cover"
-                      />
+                      <Img class="w-full h-full object-center object-cover" src={chip} alt="" />
                     </div>
                   </div>
                   <div class="flex-shrink-0 grid grid-cols-1 gap-y-6 lg:gap-y-8">
                     <div class="w-44 h-60 rounded-lg overflow-hidden">
-                      <img
-                        src="/decorative/binary.png"
-                        alt=""
-                        class="w-full h-full object-center object-cover"
-                      />
+                      <Img class="w-full h-full object-center object-cover" src={binary} alt="" />
                     </div>
                     <div class="w-44 h-64 rounded-lg overflow-hidden">
-                      <img
-                        src="/decorative/pcb.png"
-                        alt=""
-                        class="w-full h-full object-center object-cover"
-                      />
+                      <Img class="w-full h-full object-center object-cover" src={pcb} alt="" />
                     </div>
                     <div class="w-44 h-64 rounded-lg overflow-hidden">
-                      <img
-                        src="/decorative/keyboard.png"
-                        alt=""
-                        class="w-full h-full object-center object-cover"
-                      />
+                      <Img class="w-full h-full object-center object-cover" src={keyboard} alt="" />
                     </div>
                   </div>
                   <div class="flex-shrink-0 grid grid-cols-1 gap-y-6 lg:gap-y-8">
                     <div class="w-44 h-64 rounded-lg overflow-hidden">
-                      <img
-                        src="/decorative/pixels.png"
-                        alt=""
-                        class="w-full h-full object-center object-cover"
-                      />
+                      <Img class="w-full h-full object-center object-cover" src={pixels} alt="" />
                     </div>
                     <div class="w-44 h-64 rounded-lg overflow-hidden">
-                      <img
-                        src="/decorative/matrix.png"
-                        alt=""
-                        class="w-full h-full object-center object-cover"
-                      />
+                      <Img class="w-full h-full object-center object-cover" src={matrix} alt="" />
                     </div>
                   </div>
                 </div>

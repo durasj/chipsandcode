@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import { sveltekit } from '@sveltejs/kit/vite';
+import { imagetools } from '@zerodevx/svelte-img/vite';
 import path from 'path';
 
 import NearleyPlugin from './src/lib/editor/nearleyPlugin.js';
@@ -13,7 +14,7 @@ const config = defineConfig(() => {
         src: path.resolve('./src'),
       },
     },
-    plugins: [sveltekit(), NearleyPlugin(), contentPlugin()],
+    plugins: [sveltekit(), imagetools(), NearleyPlugin(), contentPlugin()],
     ssr: {
       noExternal: ['date-fns'],
     },

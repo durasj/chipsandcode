@@ -39,7 +39,17 @@ const authMiddleware: Middleware = async (context) => {
 
     token = generateRandom(96);
   }
-  request.headers.set(
+
+  // Verify token
+  let user = await KV.get<UserData>(`user-${token}`, 'json');
+  if (!user) {
+    user = { name: 'Anonym', experiments: [] };
+  }
+  context.data[AUTH_KEY] = token;
+  context.data[USER_DATA_KEY] = user;
+
+  const response = await context.next();
+  response.headers.set(
     'Set-Cookie',
     serialize(AUTH_KEY, token, {
       maxAge: 60 * 60 * 24 * 365,
@@ -50,15 +60,7 @@ const authMiddleware: Middleware = async (context) => {
     }),
   );
 
-  // Verify token
-  let user = await KV.get<UserData>(`user-${token}`, 'json');
-  if (!user) {
-    user = { name: 'Anonym', experiments: [] };
-  }
-  context.data[AUTH_KEY] = token;
-  context.data[USER_DATA_KEY] = user;
-
-  return await context.next();
+  return response;
 };
 
 export const onRequest = [errorMiddleware, authMiddleware];
