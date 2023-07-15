@@ -1,5 +1,5 @@
 name = "chips-and-code-api"
-main = "./src/backend/index.ts"
+main = "./src/lib/server/index.ts"
 compatibility_date = "2021-11-06"
 workers_dev = true
 account_id = "e65cd8f4f4622d905ef50204e895cf4b"

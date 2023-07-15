@@ -6,7 +6,7 @@ import {
   HTTP_MUTATION_METHODS,
   type UserData,
   USER_DATA_KEY,
-} from '../shared';
+} from '../../shared';
 import type { AppMiddleware } from '..';
 
 /**

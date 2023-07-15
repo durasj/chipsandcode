@@ -1,25 +1,19 @@
-<script lang="ts" context="module">
-  import type { Load } from '@sveltejs/kit';
-
-  export const load: Load = ({ params }) => ({
-    status: 200,
-    props: { id: params.id },
-  });
-</script>
-
 <script lang="ts">
-  import type { Experiment } from '$lib/backend/endpoints/experiment';
+  import type { Experiment } from 'src/lib/server/endpoints/experiment';
   import Problem from '$lib/components/Problem.svelte';
   import HardwareIDE from '$lib/components/HardwareIDE.svelte';
   import api from '$lib/api';
   import Loading from '$lib/components/Loading.svelte';
+  import Header from 'src/lib/components/Header.svelte';
+  import type { PageData } from './$types';
 
-  export let id: string;
+  export let data: PageData;
+
+  console.log('Id is', data.id);
 
   $: experiment = (async () => {
     try {
-      const response = await api<{ experiment: Experiment }>(`/experiment/${id}`);
-
+      const response = await api<{ experiment: Experiment }>(`/experiment/${data.id}`);
       return response.experiment;
     } catch (e) {
       if (e instanceof Error && e.message) {
@@ -40,6 +34,8 @@
     <title>Invalid Experiment - Hardware IDE - Chips and Code</title>
   {/await}
 </svelte:head>
+
+<Header />
 
 {#await experiment}
   <main class="flex flex-grow" aria-live="polite" aria-busy="true">

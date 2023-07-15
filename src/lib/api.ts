@@ -1,7 +1,11 @@
-import type { ErrorResponse } from './backend/shared';
+import type { ErrorResponse } from './shared';
 
 export default async function api<T>(url: string, options?: RequestInit) {
-  const response = await fetch(`${import.meta.env.VITE_API_PREFIX}${url}`, {
+  const resourceUrl = `${import.meta.env.VITE_API_PREFIX}${url}`;
+
+  console.log({ resourceUrl, options });
+
+  const response = await fetch(resourceUrl, {
     credentials: 'include',
     ...options,
   });

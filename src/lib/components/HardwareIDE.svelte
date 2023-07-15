@@ -35,10 +35,10 @@
   import type { CompareNode, LoadNode, OutputNode, Root as TSTRoot } from '$lib/editor/tst/tree';
   import type Chip from '$lib/hardware-simulator/chips/Chip';
   import ChipFactory from '$lib/hardware-simulator/chips/ChipFactory';
-  import type { Experiment, ExperimentRequest } from '$lib/backend/endpoints/experiment';
+  import type { Experiment, ExperimentRequest } from 'src/lib/server/endpoints/experiment';
   import type { monaco, monaco as monacoApi } from '$lib/editor';
   import { theme } from 'src/stores';
-  import api from 'src/api';
+  import api from '$lib/api';
   import TestScript from '$lib/hardware-simulator/tests/TestScript';
 
   const [popperRef, popperContent] = createPopperActions();

@@ -1,4 +1,4 @@
-import { AppMiddleware } from '..';
+import type { AppMiddleware } from '../index';
 
 /**
  * Adds CORS headers if DOMAIN is set

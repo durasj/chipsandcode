@@ -1,5 +1,5 @@
 import { Sunder, Router } from 'sunder';
-import type { ContextData, Environment } from './shared';
+import type { ContextData, Environment } from '../shared';
 
 import authMiddleware from './middleware/auth';
 import errorMiddleware from './middleware/error';

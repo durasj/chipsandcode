@@ -2,7 +2,7 @@ import { z } from 'zod';
 import createHttpError from 'http-errors';
 
 import type { AppEndpoints } from '..';
-import { AUTH_KEY, generateRandom, USER_DATA_KEY, type UserData } from '../shared';
+import { AUTH_KEY, generateRandom, USER_DATA_KEY, type UserData } from '../../shared';
 
 const experimentSchema = z.object({
   name: z.string(),

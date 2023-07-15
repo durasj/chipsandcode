@@ -1,6 +1,5 @@
 import { defineConfig, loadEnv } from 'vite';
 import { sveltekit } from '@sveltejs/kit/vite';
-import monacoEditorPlugin from 'vite-plugin-monaco-editor';
 import path from 'path';
 
 import NearleyPlugin from './src/lib/editor/nearleyPlugin.js';
@@ -17,12 +16,7 @@ const config = defineConfig(() => {
         src: path.resolve('./src'),
       },
     },
-    plugins: [
-      sveltekit(),
-      NearleyPlugin(),
-      monacoEditorPlugin.default({ languageWorkers: ['editorWorkerService'] }),
-      contentPlugin(),
-    ],
+    plugins: [sveltekit(), NearleyPlugin(), contentPlugin()],
     ssr: {
       noExternal: ['date-fns'],
     },
