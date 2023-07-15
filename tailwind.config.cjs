@@ -13,14 +13,14 @@ const config = {
     themes: [
       {
         light: {
-          ...require('daisyui/src/colors/themes')['[data-theme=light]'],
+          ...require('daisyui/src/theming/themes')['[data-theme=light]'],
           primary: '#4f46e5',
           secondary: '#0284c7',
 
           '--btn-text-case': 'none',
         },
         dark: {
-          ...require('daisyui/src/colors/themes')['[data-theme=dark]'],
+          ...require('daisyui/src/theming/themes')['[data-theme=dark]'],
           primary: '#4f46e5',
           'base-100': '#292524',
           'base-200': '#1c1917',

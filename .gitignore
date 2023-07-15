@@ -1,10 +1,11 @@
 .DS_Store
 node_modules
-# Used for FE build
+# Used for builds
 /build
-# Used for BE build
-/dist
 /.svelte-kit
+/dist
 /package
+# Local env persistence temps file
+*.sqlite-shm
 # Environment-specific
 .env

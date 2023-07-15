@@ -1,6 +1,5 @@
 name = "chips-and-code-api"
-main = "./src/backend/index.ts"
-compatibility_date = "2021-11-06"
+compatibility_date = "2023-07-10"
 workers_dev = true
 account_id = "e65cd8f4f4622d905ef50204e895cf4b"
 vars = { ENVIRONMENT = "dev" }
@@ -11,7 +10,6 @@ kv_namespaces = [
 
 [env.dev]
 workers_dev = false
-route = "https://api.dev.chipsandcode.com/*"
 vars = { ENVIRONMENT = "production", DOMAIN = "dev.chipsandcode.com" }
 kv_namespaces = [
     { binding = "KV", id = "60a14a267de44dc7b546a4de49e65ebd", preview_id = "60a14a267de44dc7b546a4de49e65ebd" }
@@ -19,7 +17,6 @@ kv_namespaces = [
 
 [env.production]
 workers_dev = false
-route = "https://api.chipsandcode.com/*"
 vars = { ENVIRONMENT = "production", DOMAIN = "chipsandcode.com" }
 kv_namespaces = [
     { binding = "KV", id = "4922e9f726254da0a57642a379fc9603", preview_id = "60a14a267de44dc7b546a4de49e65ebd" }

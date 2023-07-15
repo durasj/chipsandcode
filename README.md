@@ -1,4 +1,4 @@
-# Chips And Code
+# Chips and Code
 
 <img src="./demo.gif" width="100%">
 
@@ -31,7 +31,7 @@ npm run build
 
 The application works completely fine without any backend, but the ability to sign in and save the progress or content requires a backend.
 
-Currently, this application uses Cloudflare to both distribute the website and power the backend using Cloudflare Pages and Workers, respectively.
+Currently, this application uses Cloudflare to both distribute the website and power the backend using Cloudflare Pages.
 
 To replicate the backend, you can log in using the wrangler:
 
@@ -51,4 +51,4 @@ npm run backend:publish
 
 ## Browser Support
 
-ChipsAndCode is designed for and tested on the latest stable versions of Chrome, Firefox, Edge, and Safari. It does not support any version of Internet Explorer.
+Chips and Code is designed for and tested on the latest stable versions of Chrome, Firefox, Edge, and Safari. It does not support any version of Internet Explorer.
