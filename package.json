@@ -14,9 +14,7 @@
     "format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. .",
     "test": "jest",
     "wrangler": "wrangler",
-    "backend:dev": "wrangler dev --remote",
-    "backend:build": "wrangler deploy --dry-run --outdir=dist",
-    "backend:deploy": "wrangler deploy",
+    "backend:dev": "wrangler pages dev --remote",
     "postinstall": "svelte-kit sync"
   },
   "devDependencies": {

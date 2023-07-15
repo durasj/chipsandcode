@@ -35,7 +35,7 @@
   import type { CompareNode, LoadNode, OutputNode, Root as TSTRoot } from '$lib/editor/tst/tree';
   import type Chip from '$lib/hardware-simulator/chips/Chip';
   import ChipFactory from '$lib/hardware-simulator/chips/ChipFactory';
-  import type { Experiment, ExperimentRequest } from 'src/lib/server/endpoints/experiment';
+  import type { Experiment, ExperimentRequest } from 'src/lib/shared';
   import type { monaco, monaco as monacoApi } from '$lib/editor';
   import { theme } from 'src/stores';
   import api from '$lib/api';
@@ -363,7 +363,7 @@
 
     try {
       const response = await api<{ experiment: Experiment }>(
-        `/experiment/${experiment?.id || ''}`,
+        `/experiments/${experiment?.id || ''}`,
         {
           method: experiment?.id ? 'PUT' : 'POST',
           headers: { 'Content-Type': 'application/json' },

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Experiment } from 'src/lib/server/endpoints/experiment';
+  import type { Experiment } from 'src/lib/shared';
   import Problem from '$lib/components/Problem.svelte';
   import HardwareIDE from '$lib/components/HardwareIDE.svelte';
   import api from '$lib/api';
@@ -9,11 +9,9 @@
 
   export let data: PageData;
 
-  console.log('Id is', data.id);
-
   $: experiment = (async () => {
     try {
-      const response = await api<{ experiment: Experiment }>(`/experiment/${data.id}`);
+      const response = await api<{ experiment: Experiment }>(`/experiments/${data.id}`);
       return response.experiment;
     } catch (e) {
       if (e instanceof Error && e.message) {
