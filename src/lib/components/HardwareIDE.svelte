@@ -555,12 +555,11 @@
       <TabList class="w-full">
         <Tab
           class={({ selected }) =>
-            `p-3 text-sm font-semibold ${selected ? 'bg-stone-100 dark:bg-stone-900' : ''}`}
-          >HDL</Tab
+            `p-3 text-sm font-semibold ${selected ? 'bg-zinc-100 dark:bg-zinc-900' : ''}`}>HDL</Tab
         >
         <Tab
           class={({ selected }) =>
-            `p-3 text-sm font-semibold ${selected ? 'bg-stone-100 dark:bg-stone-900' : ''}`}
+            `p-3 text-sm font-semibold ${selected ? 'bg-zinc-100 dark:bg-zinc-900' : ''}`}
           >Tests {#if testStats?.passed}
             <div
               class="badge gap-2"
@@ -573,13 +572,13 @@
         </Tab>
         <Tab
           class={({ selected }) =>
-            `p-3 text-sm font-semibold ${selected ? 'bg-stone-100 dark:bg-stone-900' : ''}`}
+            `p-3 text-sm font-semibold ${selected ? 'bg-zinc-100 dark:bg-zinc-900' : ''}`}
           >Output</Tab
         >
       </TabList>
 
       {#if selectedTab === EditorTab.DIFF}
-        <div class="bg-stone-100 dark:bg-stone-900 flex justify-around" aria-hidden="true">
+        <div class="bg-zinc-100 dark:bg-zinc-900 flex justify-around" aria-hidden="true">
           <span class="px-3 py-1">Actual output - read-only</span>
 
           <span class="px-3 py-1">Expected output - editable</span>

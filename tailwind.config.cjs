@@ -22,10 +22,10 @@ const config = {
         dark: {
           ...require('daisyui/src/theming/themes')['[data-theme=dark]'],
           primary: '#4f46e5',
-          'base-100': '#292524',
-          'base-200': '#1c1917',
-          'base-300': '#0b0a09',
-          neutral: '#34302f',
+          'base-100': '#27272a',
+          'base-200': '#18181b',
+          'base-300': '#09090b',
+          neutral: '#2F2F33',
 
           '--btn-text-case': 'none',
         },

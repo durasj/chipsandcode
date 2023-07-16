@@ -30,7 +30,7 @@
     @apply bg-base-200 text-primary;
 }
 [data-theme="dark"] .btn.btn-outline {
-    @apply border-stone-500 bg-neutral;
+    @apply border-zinc-500 bg-neutral;
 }
 [data-theme="dark"] .btn.btn-outline:hover, [data-theme="dark"] .btn.btn-outline.btn-active {
     @apply bg-base-100 text-white;
@@ -40,7 +40,7 @@
     @apply border-gray-200;
 }
 [data-theme="dark"] .btn.btn-outline.btn-success, [data-theme="dark"] .btn.btn-outline.btn-warning, [data-theme="dark"] .btn.btn-outline.btn-error {
-    @apply border-stone-500 bg-neutral;
+    @apply border-zinc-500 bg-neutral;
 }
 
 .menu :where(li:not(.menu-title):not(:empty)) > :where(:not(ul).active), .menu :where(li:not(.menu-title):not(:empty)) > :where(*:not(ul):active) {

@@ -18,7 +18,7 @@ function registerThemes() {
     inherit: true,
     rules: [],
     colors: {
-      'editor.background': '#1c1917',
+      'editor.background': '#171717',
     },
   });
 }
