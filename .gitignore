@@ -4,6 +4,7 @@ node_modules
 /build
 /.svelte-kit
 /dist
+/dev-dist
 /package
 # Local env persistence temps file
 *.sqlite-shm
