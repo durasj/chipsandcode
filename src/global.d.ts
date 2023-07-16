@@ -7,3 +7,9 @@ declare module '*.ne' {
   const rules: CompiledRules;
   export default rules;
 }
+
+declare module 'virtual:pwa-*' {
+  export const pwaInfo: { webManifest: { linkTag: unknown } };
+
+  export const registerSW: (options: unknown) => { manifest: unknown };
+}

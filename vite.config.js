@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { imagetools } from '@zerodevx/svelte-img/vite';
-import { VitePWA } from 'vite-plugin-pwa';
+import { SvelteKitPWA } from '@vite-pwa/sveltekit';
 import path from 'path';
 
 import NearleyPlugin from './src/lib/editor/nearleyPlugin.js';
@@ -20,7 +20,7 @@ const config = defineConfig(() => {
       imagetools(),
       NearleyPlugin(),
       contentPlugin(),
-      VitePWA({
+      SvelteKitPWA({
         registerType: 'autoUpdate',
         manifest: {
           name: 'Chips and Code',
@@ -31,14 +31,26 @@ const config = defineConfig(() => {
           display: 'minimal-ui',
           icons: [
             {
-              src: 'logo.png',
+              src: 'pwa-64x64.png',
+              sizes: '64x64',
+              type: 'image/png',
+            },
+            {
+              src: 'pwa-192x192.png',
               sizes: '192x192',
               type: 'image/png',
             },
             {
-              src: 'logo.png',
+              src: 'pwa-512x512.png',
               sizes: '512x512',
               type: 'image/png',
+              purpose: 'any',
+            },
+            {
+              src: 'maskable-icon-512x512.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'maskable',
             },
           ],
         },
