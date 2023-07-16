@@ -24,11 +24,11 @@ const config = defineConfig(() => {
         registerType: 'autoUpdate',
         manifest: {
           name: 'Chips and Code',
-          shortName: 'Chips&Code',
+          short_name: 'Chips&Code',
           description:
             'Find out how computers work by embarking on the journey of building your own computer from scratch, from chips to code. No prerequisites - start from the browser now.',
           categories: ['books', 'education', 'developer', 'developer tools', 'development'],
-          display: 'minimal-ui',
+          display: 'standalone',
           icons: [
             {
               src: 'pwa-64x64.png',
