@@ -48,8 +48,7 @@ class CustomChip implements Chip {
    */
   setInput(name: string, value: boolean) {
     const pin = this.pins.get(name);
-    if (!pin)
-      throw new IllegalStateError(`Input pin '${name}' does not exist.`);
+    if (!pin) throw new IllegalStateError(`Input pin '${name}' does not exist.`);
     pin.state = value;
   }
 
@@ -58,8 +57,7 @@ class CustomChip implements Chip {
    */
   getOutput(name: string) {
     const pin = this.pins.get(name);
-    if (!pin)
-      throw new IllegalStateError(`Output pin '${name}' does not exist.`);
+    if (!pin) throw new IllegalStateError(`Output pin '${name}' does not exist.`);
     return pin.state;
   }
 
@@ -70,7 +68,6 @@ class CustomChip implements Chip {
    */
   public run() {
     // Execute using breadth-first exploring
-    const planned = new Set<Chip>();
     const queue = new Denque<Chip>();
 
     const explore = (pin: ChipPin) => {
@@ -78,8 +75,8 @@ class CustomChip implements Chip {
         // Set chip internal pin state
         chip.setInput(pinName, pin.state);
 
-        // Plan to visit the connected chip next if we didn't already see it
-        if (!planned.has(chip)) queue.push(chip);
+        // Plan to visit the connected chip next
+        queue.push(chip);
       }
     };
 
@@ -87,6 +84,11 @@ class CustomChip implements Chip {
     for (const [, pin] of this.pins) {
       if (pin.type === 'input') explore(pin);
     }
+
+    // TODO: Find a better way to detect unstable output (loops)
+    // ...especially once there is a support for clocked
+    let iterations = 0;
+    const MAX_ITERATIONS = 9999;
 
     let next = queue.shift();
     while (next) {
@@ -105,6 +107,11 @@ class CustomChip implements Chip {
 
         // 2.2. Explore target pin next
         explore(pin);
+      }
+
+      iterations++;
+      if (iterations > MAX_ITERATIONS) {
+        throw new InvalidDesignError(`Implementation contains a loop`);
       }
 
       next = queue.shift();

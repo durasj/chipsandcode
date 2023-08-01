@@ -829,7 +829,8 @@
         <div class="col-span-2">Chip {chip?.name}</div>
 
         <div class="col-span-2">
-          {#if chip && controls}
+          <!-- TODO: Consider proper controls - run here is useless as it's done automatically -->
+          {#if chip && controls && 1 === Math.round(3)}
             <span class="sm:ml-3">
               <div class="btn-group">
                 <button class="btn btn-sm btn-outline btn-primary" on:click={run}>
@@ -863,6 +864,7 @@
                   ><input
                     type="number"
                     bind:value={pin.value}
+                    on:change={() => run()}
                     min="0"
                     max="1"
                     class="block w-full border-none py-1 px-2 bg-inherit hover:outline focus-visible:outline outline-base-content outline-2"
