@@ -29,29 +29,33 @@
       name: 'Specification',
       link: '/hardware/boolean-logic/background',
       label: 1.2,
+      disabled: true,
     },
     {
       name: 'Implementation',
       link: '/hardware/boolean-logic/background',
       label: 1.3,
+      disabled: true,
     },
     {
       name: 'Perspective',
       link: '/hardware/boolean-logic/background',
       label: 1.4,
+      disabled: true,
     },
     {
       name: 'Project',
       link: '/hardware/boolean-logic/background',
       label: 1.5,
+      disabled: true,
     },
   ];
 
-  const activeItemIndex = menu.findIndex((i) => $page.url.pathname.endsWith(i.link));
-  const prevItem = menu[activeItemIndex - 1];
-  const nextItem = menu[activeItemIndex + 1];
+  $: activeItemIndex = menu.findIndex((i) => $page.url.pathname.endsWith(i.link));
+  $: prevItem = menu[activeItemIndex - 1];
+  $: nextItem = !menu[activeItemIndex + 1]?.disabled ? menu[activeItemIndex + 1] : undefined;
 
-  const updatedHr = data.meta.updated
+  $: updatedHr = data.meta.updated
     ? formatDistance(parseISO(data.meta.updated), new Date(), { addSuffix: true })
     : '';
 </script>
@@ -68,9 +72,15 @@
 
     <ul class="steps steps-vertical mb-4">
       {#each menu as item, i}
-        <li class="step" class:step-primary={i <= activeItemIndex} data-content={item.label}>
-          <a href={`/learn${item.link}`} class="link link-hover">{item.name}</a>
-        </li>
+        {#if !item.disabled}
+          <li class="step" class:step-primary={i <= activeItemIndex} data-content={item.label}>
+            <a href={`/learn${item.link}`} class="link link-hover">{item.name}</a>
+          </li>
+        {:else}
+          <li class="step" class:step-primary={i <= activeItemIndex} data-content={item.label}>
+            Coming Soon: {item.name}
+          </li>
+        {/if}
       {/each}
     </ul>
 
