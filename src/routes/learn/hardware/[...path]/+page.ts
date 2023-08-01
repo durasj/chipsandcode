@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
+import type { PageLoad } from './$types';
 import type { Content } from 'src/lib/content/types';
 import type { Tag } from '@markdoc/markdoc';
 
@@ -35,9 +35,4 @@ export const load = (async ({ params }) => {
     meta: markdownModule.default.meta,
     content: (markdownModule.default.content as Tag).children,
   };
-}) satisfies PageServerLoad;
-
-// TODO: Make sure this works correctly with the Hardware IDE
-export const prerender = true;
-export const ssr = false;
-export const csr = true;
+}) satisfies PageLoad;
