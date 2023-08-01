@@ -9,6 +9,6 @@
 
 <Header />
 
-<main class="flex flex-grow" aria-live="polite" aria-busy="false">
+<main class="flex flex-grow border-t border-base-200" aria-live="polite" aria-busy="false">
   <HardwareIDE />
 </main>

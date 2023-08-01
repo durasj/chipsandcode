@@ -58,12 +58,16 @@
       hdlModel.onDidChangeContent(() => {
         setup();
         checkIsDirty();
+
+        runTestScript();
       });
 
       tstModel = monaco.editor.createModel(experiment?.tests || '', 'tst');
       tstModel.onDidChangeContent(() => {
         setupTestScript();
         checkIsDirty();
+
+        runTestScript();
       });
 
       diffModel = {
@@ -71,8 +75,9 @@
         modified: monaco.editor.createModel(experiment?.compare || '', 'text/plain'),
       };
       diffModel.modified.onDidChangeContent(() => {
-        // TODO: Should rerun tests?
         checkIsDirty();
+
+        runTestScript();
       });
 
       setup();
@@ -88,6 +93,7 @@
 
       if (experiment) {
         run();
+        runTestScript();
       }
     })();
 
@@ -249,16 +255,7 @@
   }
 
   function run() {
-    if (tests && chip) {
-      const result = tests.run(chip, diffModel.modified.getValue(), (effect) => {
-        if (effect.type === 'output') {
-          diffModel.original.setValue(effect.output);
-        }
-      });
-
-      reflectScriptResult(result);
-      reflectPins();
-    } else {
+    try {
       inputPins.forEach(({ name, value }) => {
         chip?.setInput(name, !!value);
       });
@@ -266,6 +263,28 @@
       chip?.run();
 
       reflectPins();
+
+      error = '';
+    } catch (e) {
+      error = e instanceof Error ? e.message : `Chip execution failed: ${e}`;
+    }
+  }
+
+  function runTestScript() {
+    if (!tests || !chip) return;
+
+    try {
+      const result = tests.run(chip, diffModel.modified.getValue(), (effect) => {
+        if (effect.type === 'output') {
+          diffModel.original.setValue(effect.output);
+        }
+      });
+
+      reflectScriptResult(result);
+
+      error = '';
+    } catch (e) {
+      error = e instanceof Error ? e.message : `Test execution failed: ${e}`;
     }
   }
 
@@ -334,7 +353,14 @@
     outputPins = output;
   }
 
+  /**
+   * Preloaded experiment
+   */
   export let experiment: Experiment | undefined = undefined;
+  /**
+   * Should show experiment-level controls like Save/Open/Share
+   */
+  export let controls: boolean = true;
 
   let monaco: typeof monacoApi;
   let editor: monacoApi.editor.IStandaloneCodeEditor | monacoApi.editor.IStandaloneDiffEditor;
@@ -550,7 +576,7 @@
 />
 
 <div class="grid grid-cols-1 md:grid-cols-2 flex-grow">
-  <div class="border-t border-base-200">
+  <div>
     <TabGroup class="flex flex-col h-full" manual on:change={onTabChange}>
       <TabList class="w-full">
         <Tab
@@ -589,188 +615,193 @@
     </TabGroup>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 content-start border-t border-base-200">
+  <div class="grid grid-cols-1 md:grid-cols-3 content-start">
     <div class="flex justify-between items-center p-4 md:col-span-3">
       <input
-        class="bg-inherit text-lg font-bold grow rounded-sm hover:outline hover:outline-2 hover:outline-base-content"
+        class={`bg-inherit text-lg font-bold grow rounded-sm${
+          controls ? ' hover:outline hover:outline-2 hover:outline-base-content' : ''
+        }`}
         bind:value={name}
         on:change={checkIsDirty}
+        disabled={!controls}
         title="Experiment name"
         aria-label="Experiment name"
       />
 
-      <div class="mt-5 flex lg:mt-0 lg:ml-4 gap-2">
-        <div class="btn-group">
-          <button
-            class="btn btn-sm btn-outline rounded-r-none"
-            class:btn-warning={savingState === 'UNSAVED'}
-            on:click={save}
-            disabled={savingState === 'SAVING'}
-            aria-live={savingState === 'SAVING' ? 'assertive' : 'off'}
-            title={savingState === 'UNSAVED'
-              ? 'You have unsaved changes'
-              : savingState === 'SAVING'
-              ? 'Saving changes...'
-              : 'All changes are saved'}
-          >
-            {#if savingState === 'SAVED'}
-              <Icon src={CheckCircle} class="-ml-1 mr-2 h-5 w-5" />
-
-              Save
-            {:else if savingState === 'SAVING'}
-              <Icon src={EllipsisHorizontalCircle} class="-ml-1 mr-2 h-5 w-5" />
-
-              Saving...
-            {:else if savingState === 'UNSAVED'}
-              <Icon src={ExclamationCircle} class="-ml-1 mr-2 h-5 w-5" />
-
-              Save
-            {:else}
-              Save
-            {/if}
-          </button>
-
-          <Menu>
-            <MenuButton
-              as="button"
-              use={[popperRef]}
-              class="btn btn-square btn-sm btn-outline rounded-none border-l-0"
-              title="Open/New"
-              aria-label="Open/New"
+      {#if controls}
+        <div class="mt-5 flex lg:mt-0 lg:ml-4 gap-2">
+          <div class="btn-group">
+            <button
+              class="btn btn-sm btn-outline rounded-r-none"
+              class:btn-warning={savingState === 'UNSAVED'}
+              on:click={save}
+              disabled={savingState === 'SAVING'}
+              aria-live={savingState === 'SAVING' ? 'assertive' : 'off'}
+              title={savingState === 'UNSAVED'
+                ? 'You have unsaved changes'
+                : savingState === 'SAVING'
+                ? 'Saving changes...'
+                : 'All changes are saved'}
             >
-              <Icon src={DocumentText} class="h-5" />
-            </MenuButton>
+              {#if savingState === 'SAVED'}
+                <Icon src={CheckCircle} class="-ml-1 mr-2 h-5 w-5" />
 
-            <MenuItems
-              as="ul"
-              use={[[popperContent, popperOptions]]}
-              class="menu menu-compact bg-base-100 dark:bg-neutral w-56 p-1.5 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
-            >
-              {#await getUserExperiments()}
-                <MenuItem as="li" class="menu-title" aria-live="polite" aria-busy="true">
-                  <span class="!text-base-content/60">Loading Your Experiments...</span></MenuItem
-                >
-              {:then savedExperiments}
-                <MenuItem as="li" class="menu-title" aria-live="polite" aria-busy="false">
-                  <span class="!text-base-content/60">Your Experiments</span>
+                Save
+              {:else if savingState === 'SAVING'}
+                <Icon src={EllipsisHorizontalCircle} class="-ml-1 mr-2 h-5 w-5" />
+
+                Saving...
+              {:else if savingState === 'UNSAVED'}
+                <Icon src={ExclamationCircle} class="-ml-1 mr-2 h-5 w-5" />
+
+                Save
+              {:else}
+                Save
+              {/if}
+            </button>
+
+            <Menu>
+              <MenuButton
+                as="button"
+                use={[popperRef]}
+                class="btn btn-square btn-sm btn-outline rounded-none border-l-0"
+                title="Open/New"
+                aria-label="Open/New"
+              >
+                <Icon src={DocumentText} class="h-5" />
+              </MenuButton>
+
+              <MenuItems
+                as="ul"
+                use={[[popperContent, popperOptions]]}
+                class="menu menu-compact bg-base-100 dark:bg-neutral w-56 p-1.5 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
+              >
+                {#await getUserExperiments()}
+                  <MenuItem as="li" class="menu-title" aria-live="polite" aria-busy="true">
+                    <span class="!text-base-content/60">Loading Your Experiments...</span></MenuItem
+                  >
+                {:then savedExperiments}
+                  <MenuItem as="li" class="menu-title" aria-live="polite" aria-busy="false">
+                    <span class="!text-base-content/60">Your Experiments</span>
+                  </MenuItem>
+
+                  {#each savedExperiments as saved}
+                    <MenuItem as="li" let:active>
+                      <a href="/experiment/hardware-ide/{saved.id}" class:active>{saved.name}</a>
+                    </MenuItem>
+                  {/each}
+                {:catch error}
+                  <MenuItem as="li" aria-live="polite" aria-busy="false"
+                    ><span class="text-error">Loading failed: {error.message}</span></MenuItem
+                  >
+                {/await}
+
+                <MenuItem as="li" let:active>
+                  <button on:click={openNewExperiment} class:active
+                    ><Icon src={Plus} class="h-5 w-5 text-primary dark:text-base-content" />Open new</button
+                  >
                 </MenuItem>
 
-                {#each savedExperiments as saved}
+                <MenuItem as="li" class="menu-title">
+                  <span class="!text-base-content/60">Examples</span>
+                </MenuItem>
+                {#each examples as example (example.id)}
                   <MenuItem as="li" let:active>
-                    <a href="/experiment/hardware-ide/{saved.id}" class:active>{saved.name}</a>
+                    <a href="/experiment/hardware-ide/{example.id}" class:active>{example.name}</a>
                   </MenuItem>
                 {/each}
-              {:catch error}
-                <MenuItem as="li" aria-live="polite" aria-busy="false"
-                  ><span class="text-error">Loading failed: {error.message}</span></MenuItem
-                >
-              {/await}
+              </MenuItems>
+            </Menu>
 
-              <MenuItem as="li" let:active>
-                <button on:click={openNewExperiment} class:active
-                  ><Icon src={Plus} class="h-5 w-5 text-primary dark:text-base-content" />Open new</button
-                >
-              </MenuItem>
+            <Popover>
+              <PopoverButton
+                as="button"
+                use={[popperRef]}
+                class="btn btn-square btn-sm btn-outline rounded-none border-l-0"
+                title="Share"
+                aria-label="Share"
+              >
+                <Icon src={Share} class="h-5" />
+              </PopoverButton>
 
-              <MenuItem as="li" class="menu-title">
-                <span class="!text-base-content/60">Examples</span>
-              </MenuItem>
-              {#each examples as example (example.id)}
-                <MenuItem as="li" let:active>
-                  <a href="/experiment/hardware-ide/{example.id}" class:active>{example.name}</a>
-                </MenuItem>
-              {/each}
-            </MenuItems>
-          </Menu>
+              <PopoverPanel
+                use={[[popperContent, popperOptions]]}
+                class="bg-base-100 dark:bg-neutral rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 min-w-[20rem] p-4"
+              >
+                <div class="form-control">
+                  <label class="label cursor-pointer">
+                    <span class="label-text">Anyone with a link can view</span>
+                    <input
+                      type="checkbox"
+                      class="toggle"
+                      checked={visibility === 'PUBLIC'}
+                      on:change={() => {
+                        visibility = visibility === 'PUBLIC' ? 'PRIVATE' : 'PUBLIC';
+                        checkIsDirty();
+                      }}
+                    />
+                  </label>
+                </div>
 
-          <Popover>
-            <PopoverButton
-              as="button"
-              use={[popperRef]}
-              class="btn btn-square btn-sm btn-outline rounded-none border-l-0"
-              title="Share"
-              aria-label="Share"
-            >
-              <Icon src={Share} class="h-5" />
-            </PopoverButton>
-
-            <PopoverPanel
-              use={[[popperContent, popperOptions]]}
-              class="bg-base-100 dark:bg-neutral rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 min-w-[20rem] p-4"
-            >
-              <div class="form-control">
-                <label class="label cursor-pointer">
-                  <span class="label-text">Anyone with a link can view</span>
+                <div class="input-group input-group-sm w-full">
                   <input
-                    type="checkbox"
-                    class="toggle"
-                    checked={visibility === 'PUBLIC'}
-                    on:change={() => {
-                      visibility = visibility === 'PUBLIC' ? 'PRIVATE' : 'PUBLIC';
-                      checkIsDirty();
-                    }}
+                    type="text"
+                    readonly
+                    class="input input-bordered input-sm"
+                    value={location.href}
                   />
-                </label>
-              </div>
+                  <button
+                    class="btn btn-square btn-sm w-fit px-2"
+                    on:click={() => navigator.clipboard.writeText(location.href)}>Copy link</button
+                  >
+                </div>
+              </PopoverPanel>
+            </Popover>
 
-              <div class="input-group input-group-sm w-full">
-                <input
-                  type="text"
-                  readonly
-                  class="input input-bordered input-sm"
-                  value={location.href}
-                />
-                <button
-                  class="btn btn-square btn-sm w-fit px-2"
-                  on:click={() => navigator.clipboard.writeText(location.href)}>Copy link</button
-                >
-              </div>
-            </PopoverPanel>
-          </Popover>
+            <Menu>
+              <MenuButton
+                use={[popperRef]}
+                class="btn btn-square btn-sm btn-outline rounded-l-none border-l-0"
+                title="More actions"
+                aria-label="More actions"
+              >
+                <Icon src={EllipsisVertical} class="h-5" />
+              </MenuButton>
 
-          <Menu>
-            <MenuButton
-              use={[popperRef]}
-              class="btn btn-square btn-sm btn-outline rounded-l-none border-l-0"
-              title="More actions"
-              aria-label="More actions"
-            >
-              <Icon src={EllipsisVertical} class="h-5" />
-            </MenuButton>
-
-            <MenuItems
-              as="ul"
-              use={[[popperContent, popperOptions]]}
-              class="menu menu-compact bg-base-100 dark:bg-neutral w-56 p-1.5 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
-            >
-              <MenuItem as="li" let:active>
-                <a href="data:" class:active on:click={download}>
-                  <Icon
-                    src={ArchiveBoxArrowDown}
-                    class="h-5 w-5 text-primary dark:text-base-content"
-                  /> Download</a
-                >
-              </MenuItem>
-              <!-- <MenuItem as="li" disabled let:active>
+              <MenuItems
+                as="ul"
+                use={[[popperContent, popperOptions]]}
+                class="menu menu-compact bg-base-100 dark:bg-neutral w-56 p-1.5 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
+              >
+                <MenuItem as="li" let:active>
+                  <a href="data:" class:active on:click={download}>
+                    <Icon
+                      src={ArchiveBoxArrowDown}
+                      class="h-5 w-5 text-primary dark:text-base-content"
+                    /> Download</a
+                  >
+                </MenuItem>
+                <!-- <MenuItem as="li" disabled let:active>
                 <button type="button" class:active
                   ><Icon src={Cog} class="h-5 w-5 text-primary dark:text-base-content" /> Settings</button
                 >
               </MenuItem> -->
-              <MenuItem as="li" let:active>
-                <button
-                  type="button"
-                  class:active
-                  on:click={remove}
-                  disabled={removingState}
-                  aria-live={removingState ? 'assertive' : 'off'}
-                  ><Icon src={Trash} class="h-5 w-5 text-primary dark:text-base-content" />
-                  {removingState ? 'Deleting...' : 'Delete'}</button
-                >
-              </MenuItem>
-            </MenuItems>
-          </Menu>
+                <MenuItem as="li" let:active>
+                  <button
+                    type="button"
+                    class:active
+                    on:click={remove}
+                    disabled={removingState}
+                    aria-live={removingState ? 'assertive' : 'off'}
+                    ><Icon src={Trash} class="h-5 w-5 text-primary dark:text-base-content" />
+                    {removingState ? 'Deleting...' : 'Delete'}</button
+                  >
+                </MenuItem>
+              </MenuItems>
+            </Menu>
+          </div>
         </div>
-      </div>
+      {/if}
     </div>
 
     {#if error}
@@ -798,7 +829,7 @@
         <div class="col-span-2">Chip {chip?.name}</div>
 
         <div class="col-span-2">
-          {#if chip}
+          {#if chip && controls}
             <span class="sm:ml-3">
               <div class="btn-group">
                 <button class="btn btn-sm btn-outline btn-primary" on:click={run}>
@@ -828,13 +859,13 @@
             {#each inputPins as pin}
               <tr>
                 <td class="border border-base-200 py-1 px-2">{pin.name}</td>
-                <td class="border border-base-200 py-1 px-2"
+                <td class="border border-base-200"
                   ><input
                     type="number"
                     bind:value={pin.value}
                     min="0"
                     max="1"
-                    class="border-none p-0 bg-inherit"
+                    class="block w-full border-none py-1 px-2 bg-inherit hover:outline focus-visible:outline outline-base-content outline-2"
                   /></td
                 >
               </tr>

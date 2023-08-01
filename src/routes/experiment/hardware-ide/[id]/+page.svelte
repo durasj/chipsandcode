@@ -35,16 +35,12 @@
 
 <Header />
 
-{#await experiment}
-  <main class="flex flex-grow" aria-live="polite" aria-busy="true">
+<main class="flex flex-grow border-t border-base-200" aria-live="polite">
+  {#await experiment}
     <Loading name="Experiment" />
-  </main>
-{:then experiment}
-  <main class="flex flex-grow" aria-live="polite" aria-busy="false">
+  {:then experiment}
     <HardwareIDE {experiment} />
-  </main>
-{:catch error}
-  <main class="flex flex-grow" aria-live="polite" aria-busy="false">
+  {:catch error}
     <Problem message={error.message} />
-  </main>
-{/await}
+  {/await}
+</main>

@@ -28,6 +28,8 @@
     document.documentElement.setAttribute('data-theme', name);
     if (name === 'dark') {
       document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
     }
   });
 </script>

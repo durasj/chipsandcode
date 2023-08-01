@@ -22,28 +22,15 @@
   })();
 </script>
 
-{#await experiment}
-  <main
-    class="not-prose relative flex flex-grow -left-80 w-[calc(100%+40rem)] z-10"
-    aria-live="polite"
-    aria-busy="true"
-  >
+<main
+  class="not-prose relative flex flex-grow -left-80 w-[calc(100%+40rem)] z-10 my-12"
+  aria-live="polite"
+>
+  {#await experiment}
     <Loading name="Experiment" />
-  </main>
-{:then experiment}
-  <main
-    class="not-prose relative flex flex-grow -left-80 w-[calc(100%+40rem)] z-10"
-    aria-live="polite"
-    aria-busy="false"
-  >
-    <HardwareIDE {experiment} />
-  </main>
-{:catch error}
-  <main
-    class="not-prose relative flex flex-grow -left-80 w-[calc(100%+40rem)] z-10"
-    aria-live="polite"
-    aria-busy="false"
-  >
+  {:then experiment}
+    <HardwareIDE {experiment} controls={false} />
+  {:catch error}
     <Problem message={error.message} />
-  </main>
-{/await}
+  {/await}
+</main>

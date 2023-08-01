@@ -8,6 +8,13 @@ declare module '*.ne' {
   export default rules;
 }
 
+declare module '*.md' {
+  import { RenderableTreeNode } from '@markdoc/markdoc';
+
+  export const content: RenderableTreeNode;
+  export const meta: Record<string, undefined>;
+}
+
 declare module 'virtual:pwa-*' {
   export const pwaInfo: { webManifest: { linkTag: unknown } };
 
