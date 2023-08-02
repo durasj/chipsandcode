@@ -1,0 +1,11 @@
+{
+  "id": "Y596SRnnhQZU4XQj-k-C4o-MHvSAJVPO",
+  "name": "XOR Gate",
+  "code": "/**\n * XOR - Exclusive OR gate\n *\n * Outputs 1 only if both inputs differ\n * Else outputs 0\n */\nCHIP Xor {\n    IN a, b;\n    OUT out;\n}\n",
+  "tests": "output-list a%B3.1.3 b%B3.1.3 out%B3.1.3;\n\nset a 0,\nset b 0,\neval,\noutput;\n\nset a 0,\nset b 1,\neval,\noutput;\n\nset a 1,\nset b 0,\neval,\noutput;\n\nset a 1,\nset b 1,\neval,\noutput;\n",
+  "compare": "|   a   |   b   |  out  |\n|   0   |   0   |   0   |\n|   0   |   1   |   1   |\n|   1   |   0   |   1   |\n|   1   |   1   |   0   |",
+  "type": "HARDWARE",
+  "visibility": "PUBLIC",
+  "created": "2023-08-01T23:02:12.350Z",
+  "updated": "2023-08-01T23:02:36.257Z"
+}

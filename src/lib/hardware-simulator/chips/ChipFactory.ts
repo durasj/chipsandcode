@@ -1,13 +1,13 @@
-import type { ChipNode } from 'src/editor/hdl/tree';
+import type { ChipNode } from 'src/editor/hdl/tree.d';
 import type { ChipPin } from './Chip';
 import type Chip from './Chip';
 import CustomChip from './CustomChip';
 import InvalidDesignError from './InvalidDesignError';
 import AndChip from './prebuilt/AndChip';
-import NandChip from './prebuilt/NandChip';
+// import NandChip from './prebuilt/NandChip';
 import NotChip from './prebuilt/NotChip';
 import OrChip from './prebuilt/OrChip';
-import XorChip from './prebuilt/XorChip';
+// import XorChip from './prebuilt/XorChip';
 
 export type BUILTIN_GATES = keyof typeof ChipFactory.BUILTIN;
 
@@ -20,10 +20,10 @@ class ChipFactory {
    */
   public static readonly BUILTIN = {
     And: AndChip,
-    Nand: NandChip,
+    // Nand: NandChip,
     Not: NotChip,
     Or: OrChip,
-    Xor: XorChip,
+    // Xor: XorChip,
   };
 
   /**
