@@ -630,9 +630,9 @@
 
       {#if controls}
         <div class="mt-5 flex lg:mt-0 lg:ml-4 gap-2">
-          <div class="btn-group">
+          <div class="join">
             <button
-              class="btn btn-sm btn-outline rounded-r-none"
+              class="btn btn-sm btn-outline rounded-r-none join-item"
               class:btn-warning={savingState === 'UNSAVED'}
               on:click={save}
               disabled={savingState === 'SAVING'}
@@ -664,7 +664,7 @@
               <MenuButton
                 as="button"
                 use={[popperRef]}
-                class="btn btn-square btn-sm btn-outline rounded-none border-l-0"
+                class="btn btn-square btn-sm btn-outline rounded-none border-l-0 join-item"
                 title="Open/New"
                 aria-label="Open/New"
               >
@@ -717,7 +717,7 @@
               <PopoverButton
                 as="button"
                 use={[popperRef]}
-                class="btn btn-square btn-sm btn-outline rounded-none border-l-0"
+                class="btn btn-square btn-sm btn-outline rounded-none border-l-0 join-item"
                 title="Share"
                 aria-label="Share"
               >
@@ -761,7 +761,7 @@
             <Menu>
               <MenuButton
                 use={[popperRef]}
-                class="btn btn-square btn-sm btn-outline rounded-l-none border-l-0"
+                class="btn btn-square btn-sm btn-outline rounded-l-none border-l-0 join-item"
                 title="More actions"
                 aria-label="More actions"
               >
@@ -832,7 +832,7 @@
           <!-- TODO: Consider proper controls - run here is useless as it's done automatically -->
           {#if chip && controls && 1 === Math.round(3)}
             <span class="sm:ml-3">
-              <div class="btn-group">
+              <div class="join">
                 <button class="btn btn-sm btn-outline btn-primary" on:click={run}>
                   <div class="sr-only">Run</div>
 
