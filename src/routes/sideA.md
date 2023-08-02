@@ -8,7 +8,7 @@ This exercise focuses on the construction of a family of simple chips called _Bo
 
 # Boolean Algebra
 
-Boolean algebra deals with Boolean (also called binary) values that are typically labeled true/false, 1/0, yes/no, on/off, and so forth. We will use 1 and 0. A Boolean function is a function that operates on binary inputs and returns binary outputs. Since computer hardware is based on the representation and manipulation of binary values, Boolean functions play a central role in the specification, construction, and optimization of hardware architectures.
+Boolean algebra deals with Boolean (also called binary) values that are typically labeled true/false, 1/0, yes/no, on/off, and so forth. We will use $1$ and $0$. A Boolean function is a function that operates on binary inputs and returns binary outputs. Since computer hardware is based on the representation and manipulation of binary values, Boolean functions play a central role in the specification, construction, and optimization of hardware architectures.
 
 The simplest way to specify a Boolean function is to enumerate all the possible values of the functions input variables, along with the functions output for each set of inputs. This is called the _truth table_ representation of the function, illustrated in Figure 1.1. The first two columns of Figure 1.1 enumerate all the possible binary inputs of the function and the last respective output from the boolean function.
 
@@ -21,7 +21,7 @@ The simplest way to specify a Boolean function is to enumerate all the possible 
 
 _**Figure 1.1** Truth table representation of boolean function And._
 
-The Boolean function we see in Figure 1.1 is called _And_. This boolean function outputs $1$ only and only if both inputs are $1$, otherwise, it outputs $0$.
+The Boolean function we see in Figure 1.1 is called _And_. This boolean function outputs $1$ if and only if both inputs are $1$, otherwise, it outputs $0$.
 
 # Gate Logic
 
@@ -47,46 +47,45 @@ We will be implementing chips in the embedded hardware simulator. Check the vide
 
 <!-- TODO: Video how to work with hardware simulator containing three-way And -->
 
-## Gate: Three-way And
+## Chip 1: Three-way And
 
-Let us consider a three-way And as can be seen in Figure 1.3. Its output is $1$ if and only if all three inputs are 1, otherwise, it is $0$. This logic can be expressed either graphically, as a gate diagram, or textually, as an HDL program. Below we can see the embedded hardware simulator with the ThreeWayAnd preloaded. You can see the expected and the actual truth table on the tab Output and checks on the tab Tests. Feel free to play around with it.
+Let us consider a three-way And that you could see in Figure 1.3. Its output is $1$ if and only if all three inputs are 1, otherwise, it is $0$. This logic can be expressed either graphically, as a gate diagram, or textually, as an HDL program. Below we can see the embedded hardware simulator with the ThreeWayAnd preloaded. You can see the HDL code that defined the chip on the HDL tab and the expected and the actual truth table on the Output tab. Feel free to play around with it.
 
 <!-- Three-way And -->
 
 {% EmbeddedHardwareIDE id="zJPaqknoyQJdvOvfo8hInjHhWBAuzXZE" /%}
 
-## Gate: Nand
+## Chip 2: Nand
 
-Now, let us consider a Boolean function called _Nand_. Being an opposite to _And_, its output is $1$ if and only if both of its inputs are $0$, otherwise, it is $1$. We can see both the interface and the implementation in Figure 1.4. However, the HDL is missing. It is your turn to implement it - good luck! You are done when all Tests are passing.
+Now, let us consider a Boolean function called _Nand_. Being a negated _And_, its output is $0$ if and only if both of its inputs are $1$, otherwise, it is $1$. We can see both the interface and the implementation in Figure 1.4. However, the HDL is missing. It is now your turn to implement it - good luck! You are done when all Tests are passing.
 
-<!-- Figure 1.4 Nand -->
+![Composite implementation of a Nand gate.](/figures/nand.svg)
+_**Figure 1.4** Composite implementation of a Nand gate._
 
 <!-- Nand -->
 
 {% EmbeddedHardwareIDE id="23dyaQzWOLuUeJbLozhnzzs8A64tBkc8" /%}
 
-## Gate: Nor
+## Chip 3: Nor
 
-Analogously, a Boolean function called _Nor_ is an opposite to _Or_. Its output is $1$ if and only if both of its inputs are $0$, otherwise, it is $1$. We can see both the interface in Figure 1.5. This time, the implementation diagram is missing to make it harder for you. Do you know what gates to use? You are done when all Tests are passing.
+Analogously, a Boolean function called _Nor_ is an opposite to _Or_. Its output is $1$ if and only if both of its inputs are $0$, otherwise, it is $1$. We can see an interface in Figure 1.5. This time, the implementation diagram is missing to make it harder for you. Do you know what gates to use? You are done when all Tests are passing.
 
-<!-- Figure 1.5 Nor -->
+![Interface of a Nor gate.](/figures/nor.svg)
+
+_**Figure 1.5** Interface of a Nor gate._
 
 <!-- Nor -->
 
 {% EmbeddedHardwareIDE id="xqKdROsftOA6WwMZtXNoW4L0Q0Y9x-1W" /%}
 
-## Gate: Three-way Or
+## Chip 4: Three-way Or
 
-You are getting the hang of it! The next gate is a three-way Or, similar to the three-way And we mentioned before. This Boolean function outputs $1$ if any of its three inputs are $1$. If none of its inputs are $1$, it outputs $0$. As usual, you are done when all Tests are passing.
+You are getting the hang of it! The last gate is a three-way Or, similar to the three-way And we mentioned before. This Boolean function outputs $1$ if any of its three inputs are $1$. If none of its inputs are $1$, it outputs $0$. As usual, you are done when all Tests are passing.
+
+![Interface of a three-way Or gate.](/figures/three-way-or.svg)
+
+_**Figure 1.6** Interface of a three-way Or gate._
 
 <!-- Three-way Or -->
 
 {% EmbeddedHardwareIDE id="iFz2lLJM35-c3hzwKemsHQ7xY0aCyqXS" /%}
-
-## Gate: Xor
-
-Let us increase the difficulty a bit. The next one is called _Xor_. Its output is $1$ if and only if one of its inputs is $1$. If both are $1$ or $0$, it is $0$. This one can be challenging! Feel free to use a pen and paper to draw a possible implementation before writing the HDL if you want. As usual, you are done when all Tests are passing.
-
-<!-- Xor -->
-
-{% EmbeddedHardwareIDE id="Y596SRnnhQZU4XQj-k-C4o-MHvSAJVPO" /%}
