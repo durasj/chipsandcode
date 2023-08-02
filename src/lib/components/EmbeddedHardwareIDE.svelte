@@ -23,7 +23,7 @@
 </script>
 
 <main
-  class="not-prose relative flex flex-grow -left-80 w-[calc(100%+40rem)] min-h-[24rem] z-10 my-12"
+  class="not-prose relative flex flex-grow w-full 2xl:w-[260%] 2xl:-left-[80%] xl:w-[220%] xl:-left-[60%] lg:w-[174%] lg:-left-[37%] md:w-[120%] md:-left-[10%] w-min-h-[24rem] z-10 my-12"
   aria-live="polite"
 >
   {#await experiment}
