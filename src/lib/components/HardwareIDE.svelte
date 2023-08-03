@@ -40,6 +40,7 @@
   import { theme } from 'src/stores';
   import api from '$lib/api';
   import TestScript from '$lib/hardware-simulator/tests/TestScript';
+  import { formatISO } from 'date-fns';
 
   const [popperRef, popperContent] = createPopperActions();
   const popperOptions = {
@@ -54,12 +55,19 @@
     (async () => {
       monaco = (await import('../editor')).monaco;
 
-      hdlModel = monaco.editor.createModel(experiment?.code || '', 'hdl');
+      // Prefer autosaved local data
+      const content = loadLocal('hdl') || experiment?.code || '';
+
+      hdlModel = monaco.editor.createModel(content, 'hdl');
       hdlModel.onDidChangeContent(() => {
         setup();
         checkIsDirty();
 
         runTestScript();
+
+        if (autoSaveHdlLocally) {
+          saveLocally(hdlModel.getValue(), 'hdl');
+        }
       });
 
       tstModel = monaco.editor.createModel(experiment?.tests || '', 'tst');
@@ -361,6 +369,14 @@
    * Should show experiment-level controls like Save/Open/Share
    */
   export let controls: boolean = true;
+  /**
+   * Should the content of the HDL be autosaved locally to prevent loss of progress
+   */
+  export let autoSaveHdlLocally: boolean = false;
+  /**
+   * Should the tests and output be in the assignment mode - meaning read-only
+   */
+  export let readOnlyAssignment: boolean = false;
 
   let monaco: typeof monacoApi;
   let editor: monacoApi.editor.IStandaloneCodeEditor | monacoApi.editor.IStandaloneDiffEditor;
@@ -489,6 +505,37 @@
     }
   }
 
+  function saveLocally(content: string, type: 'hdl') {
+    // Saving locally is possible only for drafts on existing experiments
+    if (!experiment) return;
+
+    const stored = localStorage.getItem(experiment.id);
+
+    const newSave = {
+      ...JSON.parse(stored || '{}'),
+      [type]: content,
+      saved: new Date().toISOString(),
+    };
+
+    localStorage.setItem(experiment.id, JSON.stringify(newSave));
+  }
+
+  function loadLocal(type: 'hdl') {
+    // Saving locally is possible only for drafts on existing experiments
+    if (!experiment) return;
+
+    const stored = localStorage.getItem(experiment.id);
+    if (!stored) return;
+
+    const local = JSON.parse(stored);
+
+    const localAt = new Date(local.saved);
+    const remoteAt = new Date(experiment.modified || experiment.created);
+    if (localAt.valueOf() < remoteAt.valueOf()) return;
+
+    return local[type] as string;
+  }
+
   function openNewExperiment() {
     const alreadyOnNew = location.pathname.match(/.*hardware-ide\/?$/);
     if (alreadyOnNew) {
@@ -561,6 +608,8 @@
       }
     }
 
+    editor.updateOptions({ readOnly: detail !== EditorTab.HDL && readOnlyAssignment });
+
     editor.focus();
   }
 </script>
@@ -605,9 +654,17 @@
 
       {#if selectedTab === EditorTab.DIFF}
         <div class="bg-zinc-100 dark:bg-zinc-900 flex justify-around" aria-hidden="true">
-          <span class="px-3 py-1">Actual output - read-only</span>
+          {#if readOnlyAssignment}
+            <span class="px-3 py-1">Actual output</span>
+          {:else}
+            <span class="px-3 py-1">Actual output - read-only</span>
+          {/if}
 
-          <span class="px-3 py-1">Expected output - editable</span>
+          {#if readOnlyAssignment}
+            <span class="px-3 py-1">Expected output</span>
+          {:else}
+            <span class="px-3 py-1">Expected output - editable</span>
+          {/if}
         </div>
       {/if}
 
@@ -825,12 +882,12 @@
     {/if}
 
     {#if chip}
-      <div class="flex justify-between items-center p-4 md:col-span-3">
-        <div class="col-span-2">Chip {chip?.name}</div>
+      <!-- TODO: Consider proper controls - run here is useless as it's done automatically -->
+      {#if controls && 1 === Math.round(3)}
+        <div class="flex justify-between items-center p-4 md:col-span-3">
+          <div class="col-span-2">Chip {chip?.name}</div>
 
-        <div class="col-span-2">
-          <!-- TODO: Consider proper controls - run here is useless as it's done automatically -->
-          {#if chip && controls && 1 === Math.round(3)}
+          <div class="col-span-2">
             <span class="sm:ml-3">
               <div class="join">
                 <button class="btn btn-sm btn-outline btn-primary" on:click={run}>
@@ -840,9 +897,9 @@
                 </button>
               </div></span
             >
-          {/if}
+          </div>
         </div>
-      </div>
+      {/if}
 
       <div class="self-stretch pt-4 md:pl-4 md:pt-0">
         <table class="table-auto w-full">
