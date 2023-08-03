@@ -29,7 +29,12 @@
   {#await experiment}
     <Loading name="Experiment" />
   {:then experiment}
-    <HardwareIDE {experiment} controls={false} />
+    <HardwareIDE
+      {experiment}
+      controls={false}
+      autoSaveHdlLocally={true}
+      readOnlyAssignment={true}
+    />
   {:catch error}
     <Problem message={error.message} />
   {/await}
