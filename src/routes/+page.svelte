@@ -1,10 +1,10 @@
 <script lang="ts">
   import ThemeSwitch from 'src/lib/components/ThemeSwitch.svelte';
   import Elements from './learn/hardware/[...path]/Elements.svelte';
-  import sideA from './sideA.md';
+  import sideB from './sideB.md';
   import 'katex/dist/katex.css';
 
-  const { content } = sideA;
+  const { content } = sideB;
   const elements =
     content &&
     typeof content === 'object' &&
@@ -15,7 +15,7 @@
 </script>
 
 <svelte:head>
-  <title>Side A - Chips and Code: Learning what our computers are made of</title>
+  <title>Side B - Chips and Code: Learning what our computers are made of</title>
 </svelte:head>
 
 <main class="flex-grow grid grid-cols-1 lg:grid-cols-4 gap-x-8 pt-6 pb-16 max-w-7xl mx-auto">

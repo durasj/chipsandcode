@@ -45,13 +45,22 @@ Today, hardware designers no longer build anything with their bare hands. Instea
 
 Now that we understand the basics behind the chip design, we can look at some examples of composite chips created from elementary gates AND, OR, and NOT. To keep our job simple, we will always have a design of our chips ready in the form of a schematic. Our task will be always only to implement it in HDL and observe whether the Tests passed.
 
-We will be implementing chips in the embedded hardware simulator. To familiarize yourself with the hardware simulator and the used process, please check the video below that goes through the first example. You can either work on the first example during the video or after you watch it - up to you!
+We will be implementing chips in the hardware simulator. To familiarize yourself with the hardware simulator and the used process, please check the video below that goes through the first example. You can either work on the first example during the video or after you watch it - up to you!
 
-<!-- TODO: Video how to work with hardware simulator containing three-way And -->
+{% EmbeddedVideo id="s9eosWa9bmQ" /%}
+
+Download the [Nand2tetris Software Suite Version 2.6 (about 730K)](https://drive.google.com/open?id=1xZzcMIUETv3u3sdpM_oTJSTetpVee3KZ).
+Note: after we update the software, which happens now and then, there is a limited time period in which some browsers may warn that "this file is not frequently downloaded and can be dangerous", or something like this. Please ignore this warning, and proceed to download and extract the nand2tetris.zip file to your computer.
+
+Mac users: after downloading, read this [Setup Guide for Apple MacOS](https://drive.google.com/open?id=1QDYIvriWBS_ARntfmZ5E856OEPpE4j1F), written by Yong Bakos.
+
+Windows users: after downloading, put the downloaded zip file in an empty directory on your computer, and extract its contents as is, without changing the directories structure and names.
+
+In order to use the nand2tetris software tools, your computer must be equipped with a Java Run-time Environment. The JRE can be downloaded freely from many sites including [this one](http://java.com/en/download/index.jsp). For best performance, download the latest available version.
 
 ## Chip 1: Three-way And
 
-Let us consider a three-way And that you can see in Figure 1.3. Its output is $1$ if and only if all three inputs are 1, otherwise, it is $0$. This logic can be expressed either graphically, as a gate diagram, or textually, as an HDL program. Below we can see the embedded hardware simulator with the ThreeWayAnd preloaded. However, the HDL is missing. It is your turn to implement the missing `PARTS` following the video - good luck! You are done when all Tests are passing.
+Let us consider a three-way And that you can see in Figure 1.3. Its output is $1$ if and only if all three inputs are 1, otherwise, it is $0$. This logic can be expressed either graphically, as a gate diagram, or textually, as an HDL program. Below we can see the files for ThreeWayAnd. However, the HDL is missing. It is your turn to implement the missing `PARTS` following the video - good luck! You are done when all comparisons in the script pass.
 
 ![Standard symbolic notation of some elementary logic gates.](/figures/figure1-3.svg 'Figure 1.2: Standard symbolic notation of some elementary logic gates.')
 _**Figure 1.2** Standard symbolic notation of some elementary logic gates._
@@ -61,11 +70,11 @@ _**Figure 1.3** Composite implementation of a three-way And gate. The rectangle 
 
 <!-- Three-way And -->
 
-{% EmbeddedHardwareIDE id="zJPaqknoyQJdvOvfo8hInjHhWBAuzXZE" /%}
+{% EmbeddedStartingFiles name="ThreeWayAnd" id="zJPaqknoyQJdvOvfo8hInjHhWBAuzXZE" /%}
 
 ## Chip 2: Nand
 
-Now, let us consider a Boolean function called _Nand_. Being a negated _And_, its output is $0$ if and only if both of its inputs are $1$, otherwise, it is $1$. We can see both the interface and the implementation in Figure 1.4. However, the HDL is missing. It is your turn to implement the missing `PARTS` following the gate implementation in Figure 1.4 - good luck! You are done when all Tests are passing.
+Now, let us consider a Boolean function called _Nand_. Being a negated _And_, its output is $0$ if and only if both of its inputs are $1$, otherwise, it is $1$. We can see both the interface and the implementation in Figure 1.4. However, the HDL is again missing. It is your turn to implement the missing `PARTS` following the gate implementation in Figure 1.4 - good luck! You are done when the all comparisons in the script pass.
 
 ![Standard symbolic notation of some elementary logic gates.](/figures/figure1-3.svg 'Figure 1.2: Standard symbolic notation of some elementary logic gates.')
 _**Figure 1.2** Standard symbolic notation of some elementary logic gates._
@@ -75,11 +84,11 @@ _**Figure 1.4** Composite implementation of a Nand gate._
 
 <!-- Nand -->
 
-{% EmbeddedHardwareIDE id="23dyaQzWOLuUeJbLozhnzzs8A64tBkc8" /%}
+{% EmbeddedStartingFiles name="Nand" id="23dyaQzWOLuUeJbLozhnzzs8A64tBkc8" /%}
 
 ## Chip 3: Nor
 
-Analogously, a Boolean function called _Nor_ is an opposite to _Or_. Its output is $1$ if and only if both of its inputs are $0$, otherwise, it is $1$. We can see the interface and implementation in Figure 1.5. Please implement the missing `PARTS` following the gate implementation in Figure 1.5 - good luck! You are done when all Tests are passing.
+Analogously, a Boolean function called _Nor_ is an opposite to _Or_. Its output is $1$ if and only if both of its inputs are $0$, otherwise, it is $1$. We can see the interface and implementation in Figure 1.5. Please implement the missing `PARTS` following the gate implementation in Figure 1.5 - good luck! You are done when the all comparisons in the script pass.
 
 ![Standard symbolic notation of some elementary logic gates.](/figures/figure1-3.svg 'Figure 1.2: Standard symbolic notation of some elementary logic gates.')
 _**Figure 1.2** Standard symbolic notation of some elementary logic gates._
@@ -90,11 +99,11 @@ _**Figure 1.5** Interface of a Nor gate._
 
 <!-- Nor -->
 
-{% EmbeddedHardwareIDE id="xqKdROsftOA6WwMZtXNoW4L0Q0Y9x-1W" /%}
+{% EmbeddedStartingFiles name="Nor" id="xqKdROsftOA6WwMZtXNoW4L0Q0Y9x-1W" /%}
 
 ## Chip 4: Three-way Or
 
-You are getting the hang of it! The last gate is a three-way Or, similar to the three-way And we mentioned before. This Boolean function outputs $1$ if any of its three inputs are $1$. If none of its inputs are $1$, it outputs $0$. Please implement the missing `PARTS` following the gate implementation in Figure 1.6 - good luck! As usual, you are done when all Tests are passing.
+You are getting the hang of it! The last gate is a three-way Or, similar to the three-way And we mentioned before. This Boolean function outputs $1$ if any of its three inputs are $1$. If none of its inputs are $1$, it outputs $0$. Please implement the missing `PARTS` following the gate implementation in Figure 1.6 - good luck! As usual, you are done when the all comparisons in the script pass.
 
 ![Standard symbolic notation of some elementary logic gates.](/figures/figure1-3.svg 'Figure 1.2: Standard symbolic notation of some elementary logic gates.')
 _**Figure 1.2** Standard symbolic notation of some elementary logic gates._
@@ -105,6 +114,6 @@ _**Figure 1.6** Interface of a three-way Or gate._
 
 <!-- Three-way Or -->
 
-{% EmbeddedHardwareIDE id="iFz2lLJM35-c3hzwKemsHQ7xY0aCyqXS" /%}
+{% EmbeddedStartingFiles name="ThreeWayOr" id="iFz2lLJM35-c3hzwKemsHQ7xY0aCyqXS" /%}
 
-You are all done on this page! It is time to [rate your experience](https://docs.google.com/forms/d/e/1FAIpQLSenuIHELBUYrm86NPks-Bs3YfW3j9FJ-YbaDOTkvrRFCDWZ2A/viewform?usp=sf_link).
+You are all done on this page! It is time to [rate your experience](https://docs.google.com/forms/d/e/1FAIpQLSfyzGfjmGEtVHGNTgbjYvpY-r8ssu-XkHGUBlSfhQlP6XXYww/viewform?usp=sf_link).

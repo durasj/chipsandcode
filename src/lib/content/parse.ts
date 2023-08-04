@@ -25,6 +25,19 @@ const config = {
         },
       },
     },
+    EmbeddedStartingFiles: {
+      render: 'EmbeddedStartingFiles',
+      description: 'Embedded Starting Files',
+      selfClosing: true,
+      attributes: {
+        id: {
+          type: String,
+        },
+        name: {
+          type: String,
+        },
+      },
+    },
     EmbeddedVideo: {
       render: 'EmbeddedVideo',
       description: 'Embedded YouTube Video',

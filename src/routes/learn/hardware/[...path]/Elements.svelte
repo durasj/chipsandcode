@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { RenderableTreeNode, Tag } from '@markdoc/markdoc';
   import EmbeddedHardwareIDE from '$lib/components/EmbeddedHardwareIDE.svelte';
+  import EmbeddedStartingFiles from '$lib/components/EmbeddedStartingFiles.svelte';
   import EmbeddedVideo from '$lib/components/EmbeddedVideo.svelte';
   import Math from '$lib/components/Math.svelte';
 
@@ -8,6 +9,7 @@
 
   const components: Record<string, ConstructorOfATypedSvelteComponent> = {
     EmbeddedHardwareIDE,
+    EmbeddedStartingFiles,
     EmbeddedVideo,
     Math,
   };
