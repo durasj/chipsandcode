@@ -40,7 +40,6 @@
   import { theme } from 'src/stores';
   import api from '$lib/api';
   import TestScript from '$lib/hardware-simulator/tests/TestScript';
-  import { formatISO } from 'date-fns';
 
   const [popperRef, popperContent] = createPopperActions();
   const popperOptions = {
@@ -64,6 +63,7 @@
         checkIsDirty();
 
         runTestScript();
+        run();
 
         if (autoSaveHdlLocally) {
           saveLocally(hdlModel.getValue(), 'hdl');
@@ -95,6 +95,7 @@
         theme: themeName ? `vs-${themeName}` : 'vs-light',
         automaticLayout: true,
         model: hdlModel,
+        wordBasedSuggestions: false,
         accessibilityHelpUrl:
           'https://github.com/Microsoft/monaco-editor/wiki/Monaco-Editor-Accessibility-Guide',
       });
@@ -588,6 +589,7 @@
       editor = monaco.editor.create(editor.getContainerDomNode(), {
         theme: themeName ? `vs-${themeName}` : 'vs-light',
         automaticLayout: true,
+        wordBasedSuggestions: false,
       });
     }
 
@@ -608,7 +610,9 @@
       }
     }
 
-    editor.updateOptions({ readOnly: detail !== EditorTab.HDL && readOnlyAssignment });
+    editor.updateOptions({
+      readOnly: detail !== EditorTab.HDL && readOnlyAssignment,
+    });
 
     editor.focus();
   }
