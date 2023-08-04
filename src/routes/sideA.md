@@ -43,7 +43,7 @@ Today, hardware designers no longer build anything with their bare hands. Instea
 
 # Examples
 
-Now that we understand the basics behind the chip design, we can look at some examples of composite chips created from elementary gates AND, OR, and NOT. To keep our job simple, we will always have a design of our chips ready in the form of a schematic. Our task will be always only to implement it in HDL and observe whether the Tests passed.
+Now that we understand the basics behind the chip design, we can look at some examples of composite chips created from elementary gates And, Or, and Not. To keep our job simple, we will always have a design of our chips ready in the form of a schematic. Our task will be always only to implement it in HDL and observe whether the Tests passed.
 
 We will be implementing chips in the embedded hardware simulator. To familiarize yourself with the hardware simulator and the used process, please check the video below that goes through the first example. You can either work on the first example during the video or after you watch it - up to you!
 
