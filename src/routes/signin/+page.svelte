@@ -14,7 +14,7 @@
     <h1 class="my-8">Hi, Anonym 👋</h1>
 
     Currently, all session are anonymous. You are able to edit your content from the same device.
-    Content opened on other devices by you or others is read-only. The ability to sing in will come
+    Content opened on other devices by you or others is read-only. The ability to sign in will come
     soon. Stay tuned!
   </article>
 </main>

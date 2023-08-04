@@ -1,12 +1,14 @@
 <script lang="ts">
   import type { RenderableTreeNode, Tag } from '@markdoc/markdoc';
   import EmbeddedHardwareIDE from '$lib/components/EmbeddedHardwareIDE.svelte';
+  import EmbeddedVideo from '$lib/components/EmbeddedVideo.svelte';
   import Math from '$lib/components/Math.svelte';
 
   export let children: RenderableTreeNode[] = [];
 
   const components: Record<string, ConstructorOfATypedSvelteComponent> = {
     EmbeddedHardwareIDE,
+    EmbeddedVideo,
     Math,
   };
 
