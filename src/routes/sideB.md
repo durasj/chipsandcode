@@ -47,7 +47,7 @@ Now that we understand the basics behind the chip design, we can look at some ex
 
 We will be implementing chips in the hardware simulator. To familiarize yourself with the hardware simulator and the used process, please check the video below that goes through the first example. You can either work on the first example during the video or after you watch it - up to you!
 
-{% EmbeddedVideo id="s9eosWa9bmQ" /%}
+{% EmbeddedVideo id="3VteSdhUvtE" /%}
 
 Download the [Nand2tetris Software Suite Version 2.6 (about 730K)](https://drive.google.com/open?id=1xZzcMIUETv3u3sdpM_oTJSTetpVee3KZ).
 Note: after we update the software, which happens now and then, there is a limited time period in which some browsers may warn that "this file is not frequently downloaded and can be dangerous", or something like this. Please ignore this warning, and proceed to download and extract the nand2tetris.zip file to your computer.
