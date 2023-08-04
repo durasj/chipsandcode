@@ -47,7 +47,7 @@ Now that we understand the basics behind the chip design, we can look at some ex
 
 We will be implementing chips in the embedded hardware simulator. To familiarize yourself with the hardware simulator and the used process, please check the video below that goes through the first example. You can either work on the first example during the video or after you watch it - up to you!
 
-<!-- TODO: Video how to work with hardware simulator containing three-way And -->
+{% EmbeddedVideo id="s9eosWa9bmQ" /%}
 
 ## Chip 1: Three-way And
 
