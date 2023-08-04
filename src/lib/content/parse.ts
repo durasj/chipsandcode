@@ -25,6 +25,16 @@ const config = {
         },
       },
     },
+    EmbeddedVideo: {
+      render: 'EmbeddedVideo',
+      description: 'Embedded YouTube Video',
+      selfClosing: true,
+      attributes: {
+        id: {
+          type: String,
+        },
+      },
+    },
   },
 } satisfies Config;
 
