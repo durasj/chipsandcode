@@ -14,13 +14,14 @@ class OrChip implements Chip {
 
   setInput(name: 'a' | 'b', value: boolean) {
     if (name !== 'a' && name !== 'b')
-      throw new IllegalStateError(`Input pin '${name}' does not exist.`);
+      throw new IllegalStateError(`Input pin '${name}' does not exist on 'Or'. Input pins: a, b.`);
 
     this[name] = value;
   }
 
   getOutput(name: string) {
-    if (name !== 'out') throw new IllegalStateError(`Output pin '${name}' does not exist.`);
+    if (name !== 'out')
+      throw new IllegalStateError(`Output pin '${name}' does not exist on 'Or'. Output pins: not.`);
     return this.out;
   }
 

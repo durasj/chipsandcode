@@ -58,7 +58,12 @@ class ChipFactory {
 
       for (const statement of conf.statements) {
         const partChip = this.fromDefined(statement.chip as BUILTIN_GATES);
-        if (!partChip) throw new InvalidDesignError(`Unknown chip '${statement.chip}'`);
+        if (!partChip)
+          throw new InvalidDesignError(
+            `Unknown chip '${statement.chip}'. Available chips: ${this.getAvailableChips().join(
+              ', ',
+            )}.`,
+          );
         const partConnections = [] as [string, string][];
         parts.set(partChip, partConnections);
         const partPins = partChip.getPins();
@@ -68,17 +73,17 @@ class ChipFactory {
           const right = connection.right.value;
           const pinType = partPins.get(left)?.type;
 
+          if (!pins.has(right)) {
+            pins.set(right, {
+              type: 'internal',
+              state: false,
+              connections: [],
+            });
+          }
+
           if (pinType === 'output') {
             partConnections.push([left, right]);
           } else {
-            if (!pins.has(right)) {
-              pins.set(right, {
-                type: 'internal',
-                state: false,
-                connections: [],
-              });
-            }
-
             const rightPin = pins.get(right)!;
             rightPin.connections.push([partChip, left]);
           }
@@ -100,6 +105,15 @@ class ChipFactory {
     if (!DefinedChip) return undefined;
 
     return new DefinedChip();
+  }
+
+  /**
+   * Provides a list of name of available chips
+   *
+   * @returns List of names
+   */
+  public getAvailableChips() {
+    return Object.keys(ChipFactory.BUILTIN);
   }
 }
 

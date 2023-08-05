@@ -48,7 +48,16 @@ class CustomChip implements Chip {
    */
   setInput(name: string, value: boolean) {
     const pin = this.pins.get(name);
-    if (!pin) throw new IllegalStateError(`Input pin '${name}' does not exist.`);
+    const isInput = pin?.type === 'input';
+    if (!isInput) {
+      const inputs = [...this.pins.entries()]
+        .filter(([, p]) => p.type === 'input')
+        .map(([name]) => name)
+        .join(', ');
+      throw new IllegalStateError(
+        `Input pin '${name}' does not exist on '${this.name}'. Input pins: ${inputs}.`,
+      );
+    }
     pin.state = value;
   }
 
@@ -57,7 +66,16 @@ class CustomChip implements Chip {
    */
   getOutput(name: string) {
     const pin = this.pins.get(name);
-    if (!pin) throw new IllegalStateError(`Output pin '${name}' does not exist.`);
+    const isOutput = pin?.type === 'output';
+    if (!isOutput) {
+      const outputs = [...this.pins.entries()]
+        .filter(([, p]) => p.type === 'output')
+        .map(([name]) => name)
+        .join(', ');
+      throw new IllegalStateError(
+        `Output pin '${name}' does not exist on '${this.name}'. Output pins: ${outputs}.`,
+      );
+    }
     return pin.state;
   }
 
@@ -86,7 +104,7 @@ class CustomChip implements Chip {
     }
 
     // TODO: Find a better way to detect unstable output (loops)
-    // ...especially once there is a support for clocked
+    // ...probably once there is a support for CLOCKED
     let iterations = 0;
     const MAX_ITERATIONS = 9999;
 
@@ -101,7 +119,7 @@ class CustomChip implements Chip {
         const pin = this.pins.get(target);
         if (!pin)
           throw new InvalidDesignError(
-            `Output pin '${source}' is connected to non-existing pin '${target}'`,
+            `Output pin '${source}' is connected to a non-existing pin '${target}'`,
           );
         pin.state = next.getOutput(source);
 
