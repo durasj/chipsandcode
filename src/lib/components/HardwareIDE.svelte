@@ -40,6 +40,7 @@
   import { theme } from 'src/stores';
   import api from '$lib/api';
   import TestScript from '$lib/hardware-simulator/tests/TestScript';
+  import InvalidDesignError from '../hardware-simulator/chips/InvalidDesignError';
 
   const [popperRef, popperContent] = createPopperActions();
   const popperOptions = {
@@ -202,22 +203,24 @@
       return;
     }
 
+    error = '';
+
     try {
       const chipFactory = new ChipFactory();
       chip = chipFactory.fromAST(tree[0]);
     } catch (e) {
-      if (typeof e === 'string') {
-        error = e;
-      } else if (e instanceof Error) {
+      if (e instanceof InvalidDesignError) {
         error = e.message;
       } else {
         error = 'Loading of chip failed: ' + e;
       }
+
+      return false;
     }
 
-    error = '';
-
     reflectPins();
+
+    return true;
   }
 
   function setupTestScript() {
@@ -264,12 +267,14 @@
   }
 
   function run() {
+    if (!chip) return;
+
     try {
       inputPins.forEach(({ name, value }) => {
-        chip?.setInput(name, !!value);
+        chip!.setInput(name, !!value);
       });
 
-      chip?.run();
+      chip.run();
 
       reflectPins();
 
@@ -349,10 +354,12 @@
   }
 
   function reflectPins() {
+    if (!chip) return;
+
     const input = [] as { name: string; value: number }[];
     const internal = [] as { name: string; value: number }[];
     const output = [] as { name: string; value: number }[];
-    for (const [name, pin] of chip!.getPins()) {
+    for (const [name, pin] of chip.getPins()) {
       if (pin.type === 'input') input.push({ name, value: pin.state ? 1 : 0 });
       if (pin.type === 'internal') internal.push({ name, value: pin.state ? 1 : 0 });
       if (pin.type === 'output') output.push({ name, value: pin.state ? 1 : 0 });
@@ -982,7 +989,7 @@
           </tbody>
         </table>
       </div>
-    {:else}
+    {:else if controls}
       <div class="italic md:col-span-3 p-4">
         Add CHIP to start or check one of the examples like the <a
           href="/experiment/hardware-ide/{examples.find((e) => e.name === 'XOR Gate')?.id}"

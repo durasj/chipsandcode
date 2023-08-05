@@ -12,13 +12,17 @@ class NotChip implements Chip {
   private out = true;
 
   setInput(name: string, value: boolean) {
-    if (name !== 'in') throw new IllegalStateError(`Input pin '${name}' does not exist.`);
+    if (name !== 'in')
+      throw new IllegalStateError(`Input pin '${name}' does not exist on 'Not'. Input pins: in.`);
 
     this.in = value;
   }
 
   getOutput(name: string) {
-    if (name !== 'out') throw new IllegalStateError(`Output pin '${name}' does not exist.`);
+    if (name !== 'out')
+      throw new IllegalStateError(
+        `Output pin '${name}' does not exist on 'Not'. Output pins: out.`,
+      );
     return this.out;
   }
 

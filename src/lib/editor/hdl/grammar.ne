@@ -27,18 +27,19 @@ main ->
     | _ chip main  {% ([, stm, acc]) => ([stm, ...acc]) %}
 
 chip ->
-    "CHIP" _ %identifier _ "{" chipBody "}" {% ([, , name, , , body]) => ({ type: 'chip', name, body }) %}
+    "CHIP" _ %identifier _ %leftBrace chipBody %rightBrace {% ([, , name, , , body]) => ({ type: 'chip', name, body }) %}
 chipBody ->
-      _ in _ ";" _              {% ([, id]) => [id] %}
-    | _ in _ ";" chipBody       {% ([, id, , , acc]) => [id, ...acc] %}
-    | _ out _ ";" _             {% ([, id]) => [id] %}
-    | _ out _ ";" chipBody      {% ([, id, , , acc]) => [id, ...acc] %}
+      _ in _ %semicolon _              {% ([, id]) => [id] %}
+    | _ in _ %semicolon chipBody       {% ([, id, , , acc]) => [id, ...acc] %}
+    | _ out _ %semicolon _             {% ([, id]) => [id] %}
+    | _ out _ %semicolon chipBody      {% ([, id, , , acc]) => [id, ...acc] %}
     | _ parts _                 {% ([, id]) => [id] %}
     | _ parts chipBody          {% ([, id, acc]) => [id, ...acc] %}
-    | _ builtIn _ ";" _         {% ([, id]) => [id] %}
-    | _ builtIn _ ";" chipBody  {% ([, id, , , acc]) => [id, ...acc] %}
-    | _ clocked _ ";" _         {% ([, id]) => [id] %}
-    | _ clocked _ ";" chipBody  {% ([, id, , , acc]) => [id, ...acc] %}
+    # TODO: Add back once these are supported by Hardware Simulator
+    # | _ builtIn _ %semicolon _         {% ([, id]) => [id] %}
+    # | _ builtIn _ %semicolon chipBody  {% ([, id, , , acc]) => [id, ...acc] %}
+    # | _ clocked _ %semicolon _         {% ([, id]) => [id] %}
+    # | _ clocked _ %semicolon chipBody  {% ([, id, , , acc]) => [id, ...acc] %}
 
 in ->
       "IN"              {% () => ({ type: 'input', pins: [] }) %}
@@ -48,10 +49,10 @@ out ->
       "OUT"             {% () => ({ type: 'output', pins: [] }) %}
     | "OUT" _ pinList   {% ([, , pins]) => ({ type: 'output', pins }) %}
 
-parts -> "PARTS" _ ":" _ statementList {% ([, , , , id]) => ({ type: 'parts', statements: id }) %}
+parts -> "PARTS" _ %colon _ statementList {% ([, , , , id]) => ({ type: 'parts', statements: id }) %}
 statementList ->
-      %identifier _ "(" _ pinConnections _ ")" _ ";"                     {% ([chip, , , , connections]) => [{ type: 'statement', chip, connections }] %}
-    | %identifier _ "(" _ pinConnections _ ")" _ ";" _ statementList     {% ([chip, , , , connections, , , , , , acc]) => [{ type: 'statement', chip, connections }, ...acc] %}
+      %identifier _ %leftParen _ pinConnections _ %rightParen _ %semicolon                     {% ([chip, , , , connections]) => [{ type: 'statement', chip, connections }] %}
+    | %identifier _ %leftParen _ pinConnections _ %rightParen _ %semicolon _ statementList     {% ([chip, , , , connections, , , , , , acc]) => [{ type: 'statement', chip, connections }, ...acc] %}
 
 builtIn -> "BUILTIN" _ %identifier {% ([, , id]) => ({ type: 'builtin', template: id }) %}
 
@@ -61,10 +62,10 @@ clocked ->
 
 pinList ->
       %identifier                   {% ([pin]) => [pin] %}
-    | %identifier _ "," _ pinList   {% ([pin, , , , acc]) => ([pin, ...acc]) %}
+    | %identifier _ %comma _ pinList   {% ([pin, , , , acc]) => ([pin, ...acc]) %}
 pinConnections ->
-      %identifier _ "=" _ %identifier                           {% ([left, , , , right]) => [{ type: 'assignment', left, right }] %}
-    | %identifier _ "=" _ %identifier _ "," _ pinConnections    {% ([left, , , , right, , , , acc]) => [{ type: 'assignment', left, right }, ...acc] %}
+      %identifier _ %equals _ %identifier                           {% ([left, , , , right]) => [{ type: 'assignment', left, right }] %}
+    | %identifier _ %equals _ %identifier _ %comma _ pinConnections    {% ([left, , , , right, , , , acc]) => [{ type: 'assignment', left, right }, ...acc] %}
 
 # Space and comments
 _ ->
