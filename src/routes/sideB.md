@@ -74,7 +74,7 @@ _**Figure 1.3** Composite implementation of a three-way And gate. The rectangle 
 
 ## Chip 2: Nand
 
-Now, let us consider a Boolean function called _Nand_. Being a negated _And_, its output is $0$ if and only if both of its inputs are $1$, otherwise, it is $1$. We can see both the interface and the implementation in Figure 1.4. However, the HDL is again missing. It is your turn to implement the missing `PARTS` following the gate implementation in Figure 1.4 - good luck! You are done when the all comparisons in the script pass.
+Now, let us consider a Boolean function called _Nand_. Being a negated _And_, its output is $0$ if and only if both of its inputs are $1$, otherwise, it is $1$. We can see both the interface and the implementation in Figure 1.4. However, the HDL is again missing. It is your turn to implement the missing `PARTS` following the gate implementation in Figure 1.4 - good luck! You are done when all the comparisons in the script pass.
 
 ![Standard symbolic notation of some elementary logic gates.](/figures/figure1-3.svg 'Figure 1.2: Standard symbolic notation of some elementary logic gates.')
 _**Figure 1.2** Standard symbolic notation of some elementary logic gates._
@@ -88,7 +88,7 @@ _**Figure 1.4** Composite implementation of a Nand gate._
 
 ## Chip 3: Nor
 
-Analogously, a Boolean function called _Nor_ is an opposite to _Or_. Its output is $1$ if and only if both of its inputs are $0$, otherwise, it is $1$. We can see the interface and implementation in Figure 1.5. Please implement the missing `PARTS` following the gate implementation in Figure 1.5 - good luck! You are done when the all comparisons in the script pass.
+Analogously, a Boolean function called _Nor_ is an opposite to _Or_. Its output is $1$ if and only if both of its inputs are $0$, otherwise, it is $1$. We can see the interface and implementation in Figure 1.5. Please implement the missing `PARTS` following the gate implementation in Figure 1.5 - good luck! You are done when all the comparisons in the script pass.
 
 ![Standard symbolic notation of some elementary logic gates.](/figures/figure1-3.svg 'Figure 1.2: Standard symbolic notation of some elementary logic gates.')
 _**Figure 1.2** Standard symbolic notation of some elementary logic gates._
@@ -103,7 +103,7 @@ _**Figure 1.5** Interface of a Nor gate._
 
 ## Chip 4: Three-way Or
 
-You are getting the hang of it! The last gate is a three-way Or, similar to the three-way And we mentioned before. This Boolean function outputs $1$ if any of its three inputs are $1$. If none of its inputs are $1$, it outputs $0$. Please implement the missing `PARTS` following the gate implementation in Figure 1.6 - good luck! As usual, you are done when the all comparisons in the script pass.
+You are getting the hang of it! The last gate is a three-way Or, similar to the three-way And we mentioned before. This Boolean function outputs $1$ if any of its three inputs are $1$. If none of its inputs are $1$, it outputs $0$. Please implement the missing `PARTS` following the gate implementation in Figure 1.6 - good luck! As usual, you are done when all the comparisons in the script pass.
 
 ![Standard symbolic notation of some elementary logic gates.](/figures/figure1-3.svg 'Figure 1.2: Standard symbolic notation of some elementary logic gates.')
 _**Figure 1.2** Standard symbolic notation of some elementary logic gates._
