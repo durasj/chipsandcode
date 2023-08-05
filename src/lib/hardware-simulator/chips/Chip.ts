@@ -5,7 +5,7 @@ export interface ChipPin {
   /**
    * Type of the pin - input, internal, or output
    */
-  type: 'input' | 'output' | 'internal';
+  readonly type: 'input' | 'output' | 'internal';
 
   /**
    * Mutable current pin state
@@ -15,7 +15,7 @@ export interface ChipPin {
   /**
    * List of connections from this pin as tuple Chip, pin name
    */
-  connections: Array<[Chip, string]>;
+  readonly connections: Array<[Chip, string]>;
 }
 
 /**
