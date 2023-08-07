@@ -60,11 +60,14 @@
 
       hdlModel = monaco.editor.createModel(content, 'hdl');
       hdlModel.onDidChangeContent(() => {
-        setup();
-        checkIsDirty();
+        const valid = setup();
 
-        runTestScript();
-        run();
+        if (valid) {
+          checkIsDirty();
+
+          runTestScript();
+          run();
+        }
 
         if (autoSaveHdlLocally) {
           saveLocally(hdlModel.getValue(), 'hdl');
