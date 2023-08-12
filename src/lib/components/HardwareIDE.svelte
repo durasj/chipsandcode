@@ -627,6 +627,8 @@
 
 <svelte:window
   on:keydown={(e) => {
+    if (!controls) return;
+
     if (e.ctrlKey && e.key === 's') {
       // Don't open default Save dialog
       e.preventDefault();
