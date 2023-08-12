@@ -11,9 +11,9 @@ Boolean algebra deals with Boolean (also called binary) values that are typicall
 
 ## Truth Table Representation
 
-The simplest way to specify a Boolean function is to enumerate all the possible values of the functions input variables, along with the functions output for each set of inputs. This is called the _truth table_ representation of the function, illustrated in figure 1.1.
+The simplest way to specify a Boolean function is to enumerate all the possible values of the function's input variables, along with the function's output for each set of inputs. This is called the _truth table_ representation of the function, illustrated in figure 1.1.
 
-The first three columns of figure 1.1 enumerate all the possible binary values of the functions variables. For each one of the $2^n$ possible tuples $v_1 ... v_n$ (here $n = 3$), the last column gives the value of $f(v_1 ... v_n)$.
+The first three columns of figure 1.1 enumerate all the possible binary values of the function's variables. For each one of the $2^n$ possible tuples $v_1 ... v_n$ (here $n = 3$), the last column gives the value of $f(v_1 ... v_n)$.
 
 ## Boolean Expressions
 
