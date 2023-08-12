@@ -10,7 +10,7 @@ This exercise focuses on the construction of a family of simple chips called _Bo
 
 Boolean algebra deals with Boolean (also called binary) values that are typically labeled true/false, 1/0, yes/no, on/off, and so forth. We will use $1$ and $0$. A Boolean function is a function that operates on binary inputs and returns binary outputs. Since computer hardware is based on the representation and manipulation of binary values, Boolean functions play a central role in the specification, construction, and optimization of hardware architectures.
 
-The simplest way to specify a Boolean function is to enumerate all the possible values of the functions input variables, along with the functions output for each set of inputs. This is called the _truth table_ representation of the function, illustrated in Figure 1.1. The first two columns of Figure 1.1 enumerate all the possible binary inputs of the function and the last respective output from the boolean function.
+The simplest way to specify a Boolean function is to enumerate all the possible values of the function's input variables, along with the function's output for each set of inputs. This is called the _truth table_ representation of the function, illustrated in Figure 1.1. The first two columns of Figure 1.1 enumerate all the possible binary inputs of the function and the last respective output from the boolean function.
 
 |  x  |  y  | $f(x, y)$ |
 | :-: | :-: | :-------: |
@@ -43,7 +43,7 @@ Today, hardware designers no longer build anything with their bare hands. Instea
 
 # Examples
 
-Now that we understand the basics behind the chip design, we can look at some examples of composite chips created from elementary gates AND, OR, and NOT. To keep our job simple, we will always have a design of our chips ready in the form of a schematic. Our task will be always only to implement it in HDL and observe whether the Tests passed.
+Now that we understand the basics behind the chip design, we can look at some examples of composite chips created from elementary gates And, Or, and Not. To keep our job simple, we will always have a design of our chips ready in the form of a schematic. Our task will be always only to implement it in HDL and observe whether the Tests passed.
 
 We will be implementing chips in the hardware simulator. To familiarize yourself with the hardware simulator and the used process, please check the video below that goes through the first example. You can either work on the first example during the video or after you watch it - up to you!
 
