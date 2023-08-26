@@ -1,0 +1,456 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`API call abstraction > Calls side effect on output 1`] = `
+[
+  [
+    {
+      "col": 1,
+      "line": 11,
+      "name": {
+        "col": 5,
+        "line": 11,
+        "type": "identifier",
+        "value": "a",
+      },
+      "type": "set",
+      "value": 0,
+    },
+    {
+      "col": 1,
+      "line": 12,
+      "name": {
+        "col": 5,
+        "line": 12,
+        "type": "identifier",
+        "value": "b",
+      },
+      "type": "set",
+      "value": 0,
+    },
+    {
+      "col": 1,
+      "line": 13,
+      "type": "eval",
+    },
+    {
+      "col": 1,
+      "error": false,
+      "line": 14,
+      "type": "output",
+    },
+  ],
+  [
+    {
+      "col": 1,
+      "line": 16,
+      "name": {
+        "col": 5,
+        "line": 16,
+        "type": "identifier",
+        "value": "a",
+      },
+      "type": "set",
+      "value": 0,
+    },
+    {
+      "col": 1,
+      "line": 17,
+      "name": {
+        "col": 5,
+        "line": 17,
+        "type": "identifier",
+        "value": "b",
+      },
+      "type": "set",
+      "value": 1,
+    },
+    {
+      "col": 1,
+      "line": 18,
+      "type": "eval",
+    },
+    {
+      "col": 1,
+      "error": false,
+      "line": 19,
+      "type": "output",
+    },
+  ],
+  [
+    {
+      "col": 1,
+      "line": 21,
+      "name": {
+        "col": 5,
+        "line": 21,
+        "type": "identifier",
+        "value": "a",
+      },
+      "type": "set",
+      "value": 1,
+    },
+    {
+      "col": 1,
+      "line": 22,
+      "name": {
+        "col": 5,
+        "line": 22,
+        "type": "identifier",
+        "value": "b",
+      },
+      "type": "set",
+      "value": 0,
+    },
+    {
+      "col": 1,
+      "line": 23,
+      "type": "eval",
+    },
+    {
+      "col": 1,
+      "error": false,
+      "line": 24,
+      "type": "output",
+    },
+  ],
+  [
+    {
+      "col": 1,
+      "line": 26,
+      "name": {
+        "col": 5,
+        "line": 26,
+        "type": "identifier",
+        "value": "a",
+      },
+      "type": "set",
+      "value": 1,
+    },
+    {
+      "col": 1,
+      "line": 27,
+      "name": {
+        "col": 5,
+        "line": 27,
+        "type": "identifier",
+        "value": "b",
+      },
+      "type": "set",
+      "value": 1,
+    },
+    {
+      "col": 1,
+      "line": 28,
+      "type": "eval",
+    },
+    {
+      "col": 1,
+      "error": false,
+      "line": 29,
+      "type": "output",
+    },
+  ],
+]
+`;
+
+exports[`API call abstraction > Can be created from TST AST 1`] = `
+[
+  [
+    {
+      "col": 1,
+      "line": 11,
+      "name": {
+        "col": 5,
+        "line": 11,
+        "type": "identifier",
+        "value": "a",
+      },
+      "type": "set",
+      "value": 0,
+    },
+    {
+      "col": 1,
+      "line": 12,
+      "name": {
+        "col": 5,
+        "line": 12,
+        "type": "identifier",
+        "value": "b",
+      },
+      "type": "set",
+      "value": 0,
+    },
+    {
+      "col": 1,
+      "line": 13,
+      "type": "eval",
+    },
+    {
+      "col": 1,
+      "line": 14,
+      "type": "output",
+    },
+  ],
+  [
+    {
+      "col": 1,
+      "line": 16,
+      "name": {
+        "col": 5,
+        "line": 16,
+        "type": "identifier",
+        "value": "a",
+      },
+      "type": "set",
+      "value": 0,
+    },
+    {
+      "col": 1,
+      "line": 17,
+      "name": {
+        "col": 5,
+        "line": 17,
+        "type": "identifier",
+        "value": "b",
+      },
+      "type": "set",
+      "value": 1,
+    },
+    {
+      "col": 1,
+      "line": 18,
+      "type": "eval",
+    },
+    {
+      "col": 1,
+      "line": 19,
+      "type": "output",
+    },
+  ],
+  [
+    {
+      "col": 1,
+      "line": 21,
+      "name": {
+        "col": 5,
+        "line": 21,
+        "type": "identifier",
+        "value": "a",
+      },
+      "type": "set",
+      "value": 1,
+    },
+    {
+      "col": 1,
+      "line": 22,
+      "name": {
+        "col": 5,
+        "line": 22,
+        "type": "identifier",
+        "value": "b",
+      },
+      "type": "set",
+      "value": 0,
+    },
+    {
+      "col": 1,
+      "line": 23,
+      "type": "eval",
+    },
+    {
+      "col": 1,
+      "line": 24,
+      "type": "output",
+    },
+  ],
+  [
+    {
+      "col": 1,
+      "line": 26,
+      "name": {
+        "col": 5,
+        "line": 26,
+        "type": "identifier",
+        "value": "a",
+      },
+      "type": "set",
+      "value": 1,
+    },
+    {
+      "col": 1,
+      "line": 27,
+      "name": {
+        "col": 5,
+        "line": 27,
+        "type": "identifier",
+        "value": "b",
+      },
+      "type": "set",
+      "value": 1,
+    },
+    {
+      "col": 1,
+      "line": 28,
+      "type": "eval",
+    },
+    {
+      "col": 1,
+      "line": 29,
+      "type": "output",
+    },
+  ],
+]
+`;
+
+exports[`API call abstraction > Return error if values, or number of rows/columns do not match 1`] = `
+[
+  [
+    {
+      "col": 1,
+      "line": 11,
+      "name": {
+        "col": 5,
+        "line": 11,
+        "type": "identifier",
+        "value": "a",
+      },
+      "type": "set",
+      "value": 0,
+    },
+    {
+      "col": 1,
+      "line": 12,
+      "name": {
+        "col": 5,
+        "line": 12,
+        "type": "identifier",
+        "value": "b",
+      },
+      "type": "set",
+      "value": 0,
+    },
+    {
+      "col": 1,
+      "line": 13,
+      "type": "eval",
+    },
+    {
+      "col": 1,
+      "error": "Values don't match",
+      "line": 14,
+      "type": "output",
+    },
+  ],
+  [
+    {
+      "col": 1,
+      "line": 16,
+      "name": {
+        "col": 5,
+        "line": 16,
+        "type": "identifier",
+        "value": "a",
+      },
+      "type": "set",
+      "value": 0,
+    },
+    {
+      "col": 1,
+      "line": 17,
+      "name": {
+        "col": 5,
+        "line": 17,
+        "type": "identifier",
+        "value": "b",
+      },
+      "type": "set",
+      "value": 1,
+    },
+    {
+      "col": 1,
+      "line": 18,
+      "type": "eval",
+    },
+    {
+      "col": 1,
+      "error": "Number of columns doesn't match",
+      "line": 19,
+      "type": "output",
+    },
+  ],
+  [
+    {
+      "col": 1,
+      "line": 21,
+      "name": {
+        "col": 5,
+        "line": 21,
+        "type": "identifier",
+        "value": "a",
+      },
+      "type": "set",
+      "value": 1,
+    },
+    {
+      "col": 1,
+      "line": 22,
+      "name": {
+        "col": 5,
+        "line": 22,
+        "type": "identifier",
+        "value": "b",
+      },
+      "type": "set",
+      "value": 0,
+    },
+    {
+      "col": 1,
+      "line": 23,
+      "type": "eval",
+    },
+    {
+      "col": 1,
+      "error": false,
+      "line": 24,
+      "type": "output",
+    },
+  ],
+  [
+    {
+      "col": 1,
+      "line": 26,
+      "name": {
+        "col": 5,
+        "line": 26,
+        "type": "identifier",
+        "value": "a",
+      },
+      "type": "set",
+      "value": 1,
+    },
+    {
+      "col": 1,
+      "line": 27,
+      "name": {
+        "col": 5,
+        "line": 27,
+        "type": "identifier",
+        "value": "b",
+      },
+      "type": "set",
+      "value": 1,
+    },
+    {
+      "col": 1,
+      "line": 28,
+      "type": "eval",
+    },
+    {
+      "col": 1,
+      "error": "Output missing in the expected output",
+      "line": 29,
+      "type": "output",
+    },
+  ],
+]
+`;

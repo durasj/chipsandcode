@@ -1,0 +1,54 @@
+[
+  {
+    "type": "chip",
+    "name": {
+      "value": "Inc16",
+      "col": 6,
+      "line": 11,
+      "lineBreaks": 0,
+      "offset": 297
+    },
+    "body": [
+      {
+        "type": "input",
+        "pins": [
+          [
+            {
+              "value": "in",
+              "col": 9,
+              "line": 13,
+              "lineBreaks": 0,
+              "offset": 316,
+              "width": 16
+            }
+          ]
+        ]
+      },
+      {
+        "type": "output",
+        "pins": [
+          [
+            {
+              "value": "out",
+              "col": 9,
+              "line": 14,
+              "lineBreaks": 0,
+              "offset": 333,
+              "width": 16
+            }
+          ]
+        ]
+      },
+      {
+        "type": "builtin",
+        "template": {
+          "value": "Inc16",
+          "col": 13,
+          "line": 16,
+          "lineBreaks": 0,
+          "offset": 357
+        }
+      }
+    ]
+  }
+]

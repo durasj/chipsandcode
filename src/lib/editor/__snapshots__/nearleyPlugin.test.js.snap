@@ -1,0 +1,25 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Nearley Vite Plugin > Processes grammar into code 1`] = `
+{
+  "code": "// Generated automatically by nearley, version unknown
+// http://github.com/Hardmath123/nearley
+function id(x) { return x[0]; }
+let Lexer = undefined;
+let ParserRules = [
+    {\\"name\\": \\"P\\", \\"symbols\\": [\\"S\\"]},
+    {\\"name\\": \\"S\\", \\"symbols\\": [\\"S\\", {\\"literal\\":\\"+\\"}, \\"M\\"]},
+    {\\"name\\": \\"S\\", \\"symbols\\": [\\"M\\"]},
+    {\\"name\\": \\"M\\", \\"symbols\\": [\\"M\\", {\\"literal\\":\\"*\\"}, \\"T\\"]},
+    {\\"name\\": \\"M\\", \\"symbols\\": [\\"T\\"]},
+    {\\"name\\": \\"T\\", \\"symbols\\": [{\\"literal\\":\\"1\\"}]},
+    {\\"name\\": \\"T\\", \\"symbols\\": [{\\"literal\\":\\"2\\"}]},
+    {\\"name\\": \\"T\\", \\"symbols\\": [{\\"literal\\":\\"3\\"}]},
+    {\\"name\\": \\"T\\", \\"symbols\\": [{\\"literal\\":\\"4\\"}]}
+];
+let ParserStart = \\"P\\";
+export default { Lexer, ParserRules, ParserStart };
+",
+  "map": null,
+}
+`;

@@ -1,0 +1,21 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Or Chip > Provides interface info 1`] = `
+Map {
+  "a" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "b" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;

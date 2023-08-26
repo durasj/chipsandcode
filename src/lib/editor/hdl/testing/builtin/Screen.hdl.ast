@@ -1,0 +1,96 @@
+[
+  {
+    "type": "chip",
+    "name": {
+      "value": "Screen",
+      "col": 6,
+      "line": 22,
+      "lineBreaks": 0,
+      "offset": 870
+    },
+    "body": [
+      {
+        "type": "input",
+        "pins": [
+          [
+            {
+              "value": "in",
+              "col": 9,
+              "line": 24,
+              "lineBreaks": 0,
+              "offset": 890,
+              "width": 16
+            }
+          ],
+          [
+            {
+              "value": "load",
+              "col": 5,
+              "line": 25,
+              "lineBreaks": 0,
+              "offset": 923
+            }
+          ],
+          [
+            {
+              "value": "address",
+              "col": 5,
+              "line": 26,
+              "lineBreaks": 0,
+              "offset": 963,
+              "width": 13
+            }
+          ]
+        ]
+      },
+      {
+        "type": "output",
+        "pins": [
+          [
+            {
+              "value": "out",
+              "col": 9,
+              "line": 27,
+              "lineBreaks": 0,
+              "offset": 1010,
+              "width": 16
+            }
+          ]
+        ]
+      },
+      {
+        "type": "builtin",
+        "template": {
+          "value": "Screen",
+          "col": 13,
+          "line": 29,
+          "lineBreaks": 0,
+          "offset": 1073
+        }
+      },
+      {
+        "type": "clocked",
+        "pins": [
+          [
+            {
+              "value": "in",
+              "col": 13,
+              "line": 30,
+              "lineBreaks": 0,
+              "offset": 1094
+            }
+          ],
+          [
+            {
+              "value": "load",
+              "col": 17,
+              "line": 30,
+              "lineBreaks": 0,
+              "offset": 1098
+            }
+          ]
+        ]
+      }
+    ]
+  }
+]

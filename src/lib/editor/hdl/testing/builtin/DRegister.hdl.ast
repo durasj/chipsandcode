@@ -1,0 +1,86 @@
+[
+  {
+    "type": "chip",
+    "name": {
+      "value": "DRegister",
+      "col": 6,
+      "line": 16,
+      "lineBreaks": 0,
+      "offset": 544
+    },
+    "body": [
+      {
+        "type": "input",
+        "pins": [
+          [
+            {
+              "value": "in",
+              "col": 9,
+              "line": 18,
+              "lineBreaks": 0,
+              "offset": 567,
+              "width": 16
+            }
+          ],
+          [
+            {
+              "value": "load",
+              "col": 17,
+              "line": 18,
+              "lineBreaks": 0,
+              "offset": 575
+            }
+          ]
+        ]
+      },
+      {
+        "type": "output",
+        "pins": [
+          [
+            {
+              "value": "out",
+              "col": 9,
+              "line": 19,
+              "lineBreaks": 0,
+              "offset": 590,
+              "width": 16
+            }
+          ]
+        ]
+      },
+      {
+        "type": "builtin",
+        "template": {
+          "value": "DRegister",
+          "col": 13,
+          "line": 21,
+          "lineBreaks": 0,
+          "offset": 614
+        }
+      },
+      {
+        "type": "clocked",
+        "pins": [
+          [
+            {
+              "value": "in",
+              "col": 13,
+              "line": 22,
+              "lineBreaks": 0,
+              "offset": 638
+            }
+          ],
+          [
+            {
+              "value": "load",
+              "col": 17,
+              "line": 22,
+              "lineBreaks": 0,
+              "offset": 642
+            }
+          ]
+        ]
+      }
+    ]
+  }
+]

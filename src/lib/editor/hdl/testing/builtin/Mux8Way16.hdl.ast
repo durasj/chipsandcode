@@ -1,0 +1,134 @@
+[
+  {
+    "type": "chip",
+    "name": {
+      "value": "Mux8Way16",
+      "col": 6,
+      "line": 15,
+      "lineBreaks": 0,
+      "offset": 325
+    },
+    "body": [
+      {
+        "type": "input",
+        "pins": [
+          [
+            {
+              "value": "a",
+              "col": 9,
+              "line": 17,
+              "lineBreaks": 0,
+              "offset": 348,
+              "width": 16
+            }
+          ],
+          [
+            {
+              "value": "b",
+              "col": 16,
+              "line": 17,
+              "lineBreaks": 0,
+              "offset": 355,
+              "width": 16
+            }
+          ],
+          [
+            {
+              "value": "c",
+              "col": 23,
+              "line": 17,
+              "lineBreaks": 0,
+              "offset": 362,
+              "width": 16
+            }
+          ],
+          [
+            {
+              "value": "d",
+              "col": 30,
+              "line": 17,
+              "lineBreaks": 0,
+              "offset": 369,
+              "width": 16
+            }
+          ],
+          [
+            {
+              "value": "e",
+              "col": 9,
+              "line": 18,
+              "lineBreaks": 0,
+              "offset": 385,
+              "width": 16
+            }
+          ],
+          [
+            {
+              "value": "f",
+              "col": 16,
+              "line": 18,
+              "lineBreaks": 0,
+              "offset": 392,
+              "width": 16
+            }
+          ],
+          [
+            {
+              "value": "g",
+              "col": 23,
+              "line": 18,
+              "lineBreaks": 0,
+              "offset": 399,
+              "width": 16
+            }
+          ],
+          [
+            {
+              "value": "h",
+              "col": 30,
+              "line": 18,
+              "lineBreaks": 0,
+              "offset": 406,
+              "width": 16
+            }
+          ],
+          [
+            {
+              "value": "sel",
+              "col": 9,
+              "line": 19,
+              "lineBreaks": 0,
+              "offset": 422,
+              "width": 3
+            }
+          ]
+        ]
+      },
+      {
+        "type": "output",
+        "pins": [
+          [
+            {
+              "value": "out",
+              "col": 9,
+              "line": 21,
+              "lineBreaks": 0,
+              "offset": 441,
+              "width": 16
+            }
+          ]
+        ]
+      },
+      {
+        "type": "builtin",
+        "template": {
+          "value": "Mux8Way16",
+          "col": 13,
+          "line": 23,
+          "lineBreaks": 0,
+          "offset": 465
+        }
+      }
+    ]
+  }
+]

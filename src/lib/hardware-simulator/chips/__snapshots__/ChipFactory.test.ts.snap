@@ -1,0 +1,2960 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Chip Factory > Creates Chip from Built-In ALU.hdl 1`] = `"ALU"`;
+
+exports[`Chip Factory > Creates Chip from Built-In ALU.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In ARegister.hdl 1`] = `"ARegister"`;
+
+exports[`Chip Factory > Creates Chip from Built-In ARegister.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In Add16.hdl 1`] = `"Add16"`;
+
+exports[`Chip Factory > Creates Chip from Built-In Add16.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In And.hdl 1`] = `"And"`;
+
+exports[`Chip Factory > Creates Chip from Built-In And.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In And16.hdl 1`] = `"And16"`;
+
+exports[`Chip Factory > Creates Chip from Built-In And16.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In Bit.hdl 1`] = `"Bit"`;
+
+exports[`Chip Factory > Creates Chip from Built-In Bit.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In DFF.hdl 1`] = `"DFF"`;
+
+exports[`Chip Factory > Creates Chip from Built-In DFF.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In DMux.hdl 1`] = `"DMux"`;
+
+exports[`Chip Factory > Creates Chip from Built-In DMux.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In DMux4Way.hdl 1`] = `"DMux4Way"`;
+
+exports[`Chip Factory > Creates Chip from Built-In DMux4Way.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In DMux8Way.hdl 1`] = `"DMux8Way"`;
+
+exports[`Chip Factory > Creates Chip from Built-In DMux8Way.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In DRegister.hdl 1`] = `"DRegister"`;
+
+exports[`Chip Factory > Creates Chip from Built-In DRegister.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In FullAdder.hdl 1`] = `"FullAdder"`;
+
+exports[`Chip Factory > Creates Chip from Built-In FullAdder.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In HalfAdder.hdl 1`] = `"HalfAdder"`;
+
+exports[`Chip Factory > Creates Chip from Built-In HalfAdder.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In Inc16.hdl 1`] = `"Inc16"`;
+
+exports[`Chip Factory > Creates Chip from Built-In Inc16.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In Keyboard.hdl 1`] = `"Keyboard"`;
+
+exports[`Chip Factory > Creates Chip from Built-In Keyboard.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In Mux.hdl 1`] = `"Mux"`;
+
+exports[`Chip Factory > Creates Chip from Built-In Mux.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In Mux4Way16.hdl 1`] = `"Mux4Way16"`;
+
+exports[`Chip Factory > Creates Chip from Built-In Mux4Way16.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In Mux8Way16.hdl 1`] = `"Mux8Way16"`;
+
+exports[`Chip Factory > Creates Chip from Built-In Mux8Way16.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In Mux16.hdl 1`] = `"Mux16"`;
+
+exports[`Chip Factory > Creates Chip from Built-In Mux16.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In Nand.hdl 1`] = `"Nand"`;
+
+exports[`Chip Factory > Creates Chip from Built-In Nand.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In Not.hdl 1`] = `"Not"`;
+
+exports[`Chip Factory > Creates Chip from Built-In Not.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In Not16.hdl 1`] = `"Not16"`;
+
+exports[`Chip Factory > Creates Chip from Built-In Not16.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In Or.hdl 1`] = `"Or"`;
+
+exports[`Chip Factory > Creates Chip from Built-In Or.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In Or8Way.hdl 1`] = `"Or8Way"`;
+
+exports[`Chip Factory > Creates Chip from Built-In Or8Way.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In Or16.hdl 1`] = `"Or16"`;
+
+exports[`Chip Factory > Creates Chip from Built-In Or16.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In PC.hdl 1`] = `"PC"`;
+
+exports[`Chip Factory > Creates Chip from Built-In PC.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In RAM4K.hdl 1`] = `"RAM4K"`;
+
+exports[`Chip Factory > Creates Chip from Built-In RAM4K.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In RAM8.hdl 1`] = `"RAM8"`;
+
+exports[`Chip Factory > Creates Chip from Built-In RAM8.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In RAM16K.hdl 1`] = `"RAM16K"`;
+
+exports[`Chip Factory > Creates Chip from Built-In RAM16K.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In RAM64.hdl 1`] = `"RAM64"`;
+
+exports[`Chip Factory > Creates Chip from Built-In RAM64.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In RAM512.hdl 1`] = `"RAM512"`;
+
+exports[`Chip Factory > Creates Chip from Built-In RAM512.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In ROM32K.hdl 1`] = `"ROM32K"`;
+
+exports[`Chip Factory > Creates Chip from Built-In ROM32K.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In Register.hdl 1`] = `"Register"`;
+
+exports[`Chip Factory > Creates Chip from Built-In Register.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In Screen.hdl 1`] = `"Screen"`;
+
+exports[`Chip Factory > Creates Chip from Built-In Screen.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Built-In Xor.hdl 1`] = `"Xor"`;
+
+exports[`Chip Factory > Creates Chip from Built-In Xor.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Project 1 And.hdl 1`] = `"And"`;
+
+exports[`Chip Factory > Creates Chip from Project 1 And.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "a" => {
+    "connections": [
+      [
+        NandChip {
+          "a": false,
+          "b": false,
+          "name": "Nand",
+          "out": false,
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "b" => {
+    "connections": [
+      [
+        NandChip {
+          "a": false,
+          "b": false,
+          "name": "Nand",
+          "out": false,
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "i1" => {
+    "connections": [
+      [
+        NandChip {
+          "a": false,
+          "b": false,
+          "name": "Nand",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        NandChip {
+          "a": false,
+          "b": false,
+          "name": "Nand",
+          "out": false,
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "out" => {
+    "connections": [],
+    "state": false,
+    "type": "internal",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Project 1 And16.hdl 1`] = `"And16"`;
+
+exports[`Chip Factory > Creates Chip from Project 1 And16.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "a" => {
+    "connections": [
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "b" => {
+    "connections": [
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "out" => {
+    "connections": [],
+    "state": false,
+    "type": "internal",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Project 1 DMux.hdl 1`] = `"DMux"`;
+
+exports[`Chip Factory > Creates Chip from Project 1 DMux.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "sel" => {
+    "connections": [
+      [
+        NotChip {
+          "in": false,
+          "name": "Not",
+          "out": true,
+        },
+        "in",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "negSel" => {
+    "connections": [
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "in" => {
+    "connections": [
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "a" => {
+    "connections": [],
+    "state": false,
+    "type": "internal",
+  },
+  "b" => {
+    "connections": [],
+    "state": false,
+    "type": "internal",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Project 1 DMux4Way.hdl 1`] = `"DMux4Way"`;
+
+exports[`Chip Factory > Creates Chip from Project 1 DMux4Way.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "in" => {
+    "connections": [
+      [
+        DMuxChip {
+          "name": "DMux",
+        },
+        "in",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "sel" => {
+    "connections": [
+      [
+        DMuxChip {
+          "name": "DMux",
+        },
+        "sel",
+      ],
+      [
+        DMuxChip {
+          "name": "DMux",
+        },
+        "sel",
+      ],
+      [
+        DMuxChip {
+          "name": "DMux",
+        },
+        "sel",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "dm0" => {
+    "connections": [
+      [
+        DMuxChip {
+          "name": "DMux",
+        },
+        "a",
+      ],
+      [
+        DMuxChip {
+          "name": "DMux",
+        },
+        "in",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "dm1" => {
+    "connections": [
+      [
+        DMuxChip {
+          "name": "DMux",
+        },
+        "b",
+      ],
+      [
+        DMuxChip {
+          "name": "DMux",
+        },
+        "in",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "a" => {
+    "connections": [
+      [
+        DMuxChip {
+          "name": "DMux",
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "b" => {
+    "connections": [
+      [
+        DMuxChip {
+          "name": "DMux",
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "c" => {
+    "connections": [
+      [
+        DMuxChip {
+          "name": "DMux",
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "d" => {
+    "connections": [
+      [
+        DMuxChip {
+          "name": "DMux",
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Project 1 DMux8Way.hdl 1`] = `"DMux8Way"`;
+
+exports[`Chip Factory > Creates Chip from Project 1 DMux8Way.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "in" => {
+    "connections": [
+      [
+        DMuxChip {
+          "name": "DMux",
+        },
+        "in",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "sel" => {
+    "connections": [
+      [
+        DMuxChip {
+          "name": "DMux",
+        },
+        "sel",
+      ],
+      [
+        DMux4WayChip {
+          "name": "DMux4Way",
+        },
+        "sel",
+      ],
+      [
+        DMux4WayChip {
+          "name": "DMux4Way",
+        },
+        "sel",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "dm1" => {
+    "connections": [
+      [
+        DMuxChip {
+          "name": "DMux",
+        },
+        "a",
+      ],
+      [
+        DMux4WayChip {
+          "name": "DMux4Way",
+        },
+        "in",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "dm2" => {
+    "connections": [
+      [
+        DMuxChip {
+          "name": "DMux",
+        },
+        "b",
+      ],
+      [
+        DMux4WayChip {
+          "name": "DMux4Way",
+        },
+        "in",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "a" => {
+    "connections": [
+      [
+        DMux4WayChip {
+          "name": "DMux4Way",
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "b" => {
+    "connections": [
+      [
+        DMux4WayChip {
+          "name": "DMux4Way",
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "c" => {
+    "connections": [
+      [
+        DMux4WayChip {
+          "name": "DMux4Way",
+        },
+        "c",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "d" => {
+    "connections": [
+      [
+        DMux4WayChip {
+          "name": "DMux4Way",
+        },
+        "d",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "e" => {
+    "connections": [
+      [
+        DMux4WayChip {
+          "name": "DMux4Way",
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "f" => {
+    "connections": [
+      [
+        DMux4WayChip {
+          "name": "DMux4Way",
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "g" => {
+    "connections": [
+      [
+        DMux4WayChip {
+          "name": "DMux4Way",
+        },
+        "c",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "h" => {
+    "connections": [
+      [
+        DMux4WayChip {
+          "name": "DMux4Way",
+        },
+        "d",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Project 1 Mux.hdl 1`] = `"Mux"`;
+
+exports[`Chip Factory > Creates Chip from Project 1 Mux.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "sel" => {
+    "connections": [
+      [
+        NotChip {
+          "in": false,
+          "name": "Not",
+          "out": true,
+        },
+        "in",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "negSel" => {
+    "connections": [
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "a" => {
+    "connections": [
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "choiceA" => {
+    "connections": [
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "b" => {
+    "connections": [
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "choiceB" => {
+    "connections": [
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "out" => {
+    "connections": [],
+    "state": false,
+    "type": "internal",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Project 1 Mux4Way16.hdl 1`] = `"Mux4Way16"`;
+
+exports[`Chip Factory > Creates Chip from Project 1 Mux4Way16.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "a" => {
+    "connections": [
+      [
+        Mux16Chip {
+          "name": "Mux16",
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "b" => {
+    "connections": [
+      [
+        Mux16Chip {
+          "name": "Mux16",
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "sel" => {
+    "connections": [
+      [
+        Mux16Chip {
+          "name": "Mux16",
+        },
+        "sel",
+      ],
+      [
+        Mux16Chip {
+          "name": "Mux16",
+        },
+        "sel",
+      ],
+      [
+        Mux16Chip {
+          "name": "Mux16",
+        },
+        "sel",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "ab" => {
+    "connections": [
+      [
+        Mux16Chip {
+          "name": "Mux16",
+        },
+        "out",
+      ],
+      [
+        Mux16Chip {
+          "name": "Mux16",
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "c" => {
+    "connections": [
+      [
+        Mux16Chip {
+          "name": "Mux16",
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "d" => {
+    "connections": [
+      [
+        Mux16Chip {
+          "name": "Mux16",
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "cd" => {
+    "connections": [
+      [
+        Mux16Chip {
+          "name": "Mux16",
+        },
+        "out",
+      ],
+      [
+        Mux16Chip {
+          "name": "Mux16",
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "out" => {
+    "connections": [
+      [
+        Mux16Chip {
+          "name": "Mux16",
+        },
+        "out",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Project 1 Mux8Way16.hdl 1`] = `"Mux8Way16"`;
+
+exports[`Chip Factory > Creates Chip from Project 1 Mux8Way16.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "a" => {
+    "connections": [
+      [
+        Mux4WayChip {
+          "name": "Mux4Way",
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "b" => {
+    "connections": [
+      [
+        Mux4WayChip {
+          "name": "Mux4Way",
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "c" => {
+    "connections": [
+      [
+        Mux4WayChip {
+          "name": "Mux4Way",
+        },
+        "c",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "d" => {
+    "connections": [
+      [
+        Mux4WayChip {
+          "name": "Mux4Way",
+        },
+        "d",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "sel" => {
+    "connections": [
+      [
+        Mux4WayChip {
+          "name": "Mux4Way",
+        },
+        "sel",
+      ],
+      [
+        Mux4WayChip {
+          "name": "Mux4Way",
+        },
+        "sel",
+      ],
+      [
+        Mux16Chip {
+          "name": "Mux16",
+        },
+        "sel",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "m0" => {
+    "connections": [
+      [
+        Mux4WayChip {
+          "name": "Mux4Way",
+        },
+        "out",
+      ],
+      [
+        Mux16Chip {
+          "name": "Mux16",
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "e" => {
+    "connections": [
+      [
+        Mux4WayChip {
+          "name": "Mux4Way",
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "f" => {
+    "connections": [
+      [
+        Mux4WayChip {
+          "name": "Mux4Way",
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "g" => {
+    "connections": [
+      [
+        Mux4WayChip {
+          "name": "Mux4Way",
+        },
+        "c",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "h" => {
+    "connections": [
+      [
+        Mux4WayChip {
+          "name": "Mux4Way",
+        },
+        "d",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "m1" => {
+    "connections": [
+      [
+        Mux4WayChip {
+          "name": "Mux4Way",
+        },
+        "out",
+      ],
+      [
+        Mux16Chip {
+          "name": "Mux16",
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "out" => {
+    "connections": [
+      [
+        Mux16Chip {
+          "name": "Mux16",
+        },
+        "out",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Project 1 Mux16.hdl 1`] = `"Mux16"`;
+
+exports[`Chip Factory > Creates Chip from Project 1 Mux16.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "a" => {
+    "connections": [
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "a",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "a",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "a",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "a",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "a",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "a",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "a",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "a",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "a",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "a",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "a",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "a",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "a",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "a",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "a",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "b" => {
+    "connections": [
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "b",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "b",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "b",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "b",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "b",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "b",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "b",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "b",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "b",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "b",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "b",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "b",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "b",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "b",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "b",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "sel" => {
+    "connections": [
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "sel",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "sel",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "sel",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "sel",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "sel",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "sel",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "sel",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "sel",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "sel",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "sel",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "sel",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "sel",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "sel",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "sel",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "sel",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "sel",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "out" => {
+    "connections": [
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "out",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "out",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "out",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "out",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "out",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "out",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "out",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "out",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "out",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "out",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "out",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "out",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "out",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "out",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "out",
+      ],
+      [
+        MuxChip {
+          "name": "Mux",
+        },
+        "out",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Project 1 Not.hdl 1`] = `"Not"`;
+
+exports[`Chip Factory > Creates Chip from Project 1 Not.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "in" => {
+    "connections": [
+      [
+        NandChip {
+          "a": false,
+          "b": false,
+          "name": "Nand",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        NandChip {
+          "a": false,
+          "b": false,
+          "name": "Nand",
+          "out": false,
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "out" => {
+    "connections": [],
+    "state": false,
+    "type": "internal",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Project 1 Not16.hdl 1`] = `"Not16"`;
+
+exports[`Chip Factory > Creates Chip from Project 1 Not16.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "in" => {
+    "connections": [
+      [
+        NotChip {
+          "in": false,
+          "name": "Not",
+          "out": true,
+        },
+        "in",
+      ],
+      [
+        NotChip {
+          "in": false,
+          "name": "Not",
+          "out": true,
+        },
+        "in",
+      ],
+      [
+        NotChip {
+          "in": false,
+          "name": "Not",
+          "out": true,
+        },
+        "in",
+      ],
+      [
+        NotChip {
+          "in": false,
+          "name": "Not",
+          "out": true,
+        },
+        "in",
+      ],
+      [
+        NotChip {
+          "in": false,
+          "name": "Not",
+          "out": true,
+        },
+        "in",
+      ],
+      [
+        NotChip {
+          "in": false,
+          "name": "Not",
+          "out": true,
+        },
+        "in",
+      ],
+      [
+        NotChip {
+          "in": false,
+          "name": "Not",
+          "out": true,
+        },
+        "in",
+      ],
+      [
+        NotChip {
+          "in": false,
+          "name": "Not",
+          "out": true,
+        },
+        "in",
+      ],
+      [
+        NotChip {
+          "in": false,
+          "name": "Not",
+          "out": true,
+        },
+        "in",
+      ],
+      [
+        NotChip {
+          "in": false,
+          "name": "Not",
+          "out": true,
+        },
+        "in",
+      ],
+      [
+        NotChip {
+          "in": false,
+          "name": "Not",
+          "out": true,
+        },
+        "in",
+      ],
+      [
+        NotChip {
+          "in": false,
+          "name": "Not",
+          "out": true,
+        },
+        "in",
+      ],
+      [
+        NotChip {
+          "in": false,
+          "name": "Not",
+          "out": true,
+        },
+        "in",
+      ],
+      [
+        NotChip {
+          "in": false,
+          "name": "Not",
+          "out": true,
+        },
+        "in",
+      ],
+      [
+        NotChip {
+          "in": false,
+          "name": "Not",
+          "out": true,
+        },
+        "in",
+      ],
+      [
+        NotChip {
+          "in": false,
+          "name": "Not",
+          "out": true,
+        },
+        "in",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "out" => {
+    "connections": [],
+    "state": false,
+    "type": "internal",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Project 1 Or.hdl 1`] = `"Or"`;
+
+exports[`Chip Factory > Creates Chip from Project 1 Or.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "a" => {
+    "connections": [
+      [
+        NandChip {
+          "a": false,
+          "b": false,
+          "name": "Nand",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        NandChip {
+          "a": false,
+          "b": false,
+          "name": "Nand",
+          "out": false,
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "negA" => {
+    "connections": [
+      [
+        NandChip {
+          "a": false,
+          "b": false,
+          "name": "Nand",
+          "out": false,
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "b" => {
+    "connections": [
+      [
+        NandChip {
+          "a": false,
+          "b": false,
+          "name": "Nand",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        NandChip {
+          "a": false,
+          "b": false,
+          "name": "Nand",
+          "out": false,
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "negB" => {
+    "connections": [
+      [
+        NandChip {
+          "a": false,
+          "b": false,
+          "name": "Nand",
+          "out": false,
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "out" => {
+    "connections": [],
+    "state": false,
+    "type": "internal",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Project 1 Or8Way.hdl 1`] = `"Or8Way"`;
+
+exports[`Chip Factory > Creates Chip from Project 1 Or8Way.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "in" => {
+    "connections": [
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "i1" => {
+    "connections": [
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "i2" => {
+    "connections": [
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "i3" => {
+    "connections": [
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "i4" => {
+    "connections": [
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "i5" => {
+    "connections": [
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "i6" => {
+    "connections": [
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "out" => {
+    "connections": [],
+    "state": false,
+    "type": "internal",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Project 1 Or16.hdl 1`] = `"Or16"`;
+
+exports[`Chip Factory > Creates Chip from Project 1 Or16.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "a" => {
+    "connections": [
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "b" => {
+    "connections": [
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        OrChip {
+          "a": false,
+          "b": false,
+          "name": "Or",
+          "out": false,
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "out" => {
+    "connections": [],
+    "state": false,
+    "type": "internal",
+  },
+}
+`;
+
+exports[`Chip Factory > Creates Chip from Project 1 Xor.hdl 1`] = `"Xor"`;
+
+exports[`Chip Factory > Creates Chip from Project 1 Xor.hdl 2`] = `
+Map {
+  undefined => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "a" => {
+    "connections": [
+      [
+        NandChip {
+          "a": false,
+          "b": false,
+          "name": "Nand",
+          "out": false,
+        },
+        "a",
+      ],
+      [
+        NandChip {
+          "a": false,
+          "b": false,
+          "name": "Nand",
+          "out": false,
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "b" => {
+    "connections": [
+      [
+        NandChip {
+          "a": false,
+          "b": false,
+          "name": "Nand",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        NandChip {
+          "a": false,
+          "b": false,
+          "name": "Nand",
+          "out": false,
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "i1" => {
+    "connections": [
+      [
+        NandChip {
+          "a": false,
+          "b": false,
+          "name": "Nand",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        NandChip {
+          "a": false,
+          "b": false,
+          "name": "Nand",
+          "out": false,
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "i2" => {
+    "connections": [
+      [
+        NandChip {
+          "a": false,
+          "b": false,
+          "name": "Nand",
+          "out": false,
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "i3" => {
+    "connections": [
+      [
+        NandChip {
+          "a": false,
+          "b": false,
+          "name": "Nand",
+          "out": false,
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "internal",
+  },
+  "out" => {
+    "connections": [],
+    "state": false,
+    "type": "internal",
+  },
+}
+`;

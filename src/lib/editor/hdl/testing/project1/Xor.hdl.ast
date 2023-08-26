@@ -1,0 +1,308 @@
+[
+  {
+    "type": "chip",
+    "name": {
+      "value": "Xor",
+      "col": 6,
+      "line": 11,
+      "lineBreaks": 0,
+      "offset": 226
+    },
+    "body": [
+      {
+        "type": "input",
+        "pins": [
+          [
+            {
+              "value": "a",
+              "col": 8,
+              "line": 12,
+              "lineBreaks": 0,
+              "offset": 239
+            }
+          ],
+          [
+            {
+              "value": "b",
+              "col": 11,
+              "line": 12,
+              "lineBreaks": 0,
+              "offset": 242
+            }
+          ]
+        ]
+      },
+      {
+        "type": "output",
+        "pins": [
+          [
+            {
+              "value": "out",
+              "col": 9,
+              "line": 13,
+              "lineBreaks": 0,
+              "offset": 253
+            }
+          ]
+        ]
+      },
+      {
+        "type": "parts",
+        "statements": [
+          {
+            "type": "statement",
+            "chip": {
+              "value": "Nand",
+              "col": 5,
+              "line": 16,
+              "lineBreaks": 0,
+              "offset": 274
+            },
+            "connections": [
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "a",
+                  "col": 10,
+                  "line": 16,
+                  "lineBreaks": 0,
+                  "offset": 279
+                },
+                "right": {
+                  "value": "a",
+                  "col": 12,
+                  "line": 16,
+                  "lineBreaks": 0,
+                  "offset": 281
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "b",
+                  "col": 15,
+                  "line": 16,
+                  "lineBreaks": 0,
+                  "offset": 284
+                },
+                "right": {
+                  "value": "b",
+                  "col": 17,
+                  "line": 16,
+                  "lineBreaks": 0,
+                  "offset": 286
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "out",
+                  "col": 20,
+                  "line": 16,
+                  "lineBreaks": 0,
+                  "offset": 289
+                },
+                "right": {
+                  "value": "i1",
+                  "col": 24,
+                  "line": 16,
+                  "lineBreaks": 0,
+                  "offset": 293
+                }
+              }
+            ]
+          },
+          {
+            "type": "statement",
+            "chip": {
+              "value": "Nand",
+              "col": 5,
+              "line": 17,
+              "lineBreaks": 0,
+              "offset": 302
+            },
+            "connections": [
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "a",
+                  "col": 10,
+                  "line": 17,
+                  "lineBreaks": 0,
+                  "offset": 307
+                },
+                "right": {
+                  "value": "a",
+                  "col": 12,
+                  "line": 17,
+                  "lineBreaks": 0,
+                  "offset": 309
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "b",
+                  "col": 15,
+                  "line": 17,
+                  "lineBreaks": 0,
+                  "offset": 312
+                },
+                "right": {
+                  "value": "i1",
+                  "col": 17,
+                  "line": 17,
+                  "lineBreaks": 0,
+                  "offset": 314
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "out",
+                  "col": 21,
+                  "line": 17,
+                  "lineBreaks": 0,
+                  "offset": 318
+                },
+                "right": {
+                  "value": "i2",
+                  "col": 25,
+                  "line": 17,
+                  "lineBreaks": 0,
+                  "offset": 322
+                }
+              }
+            ]
+          },
+          {
+            "type": "statement",
+            "chip": {
+              "value": "Nand",
+              "col": 5,
+              "line": 18,
+              "lineBreaks": 0,
+              "offset": 331
+            },
+            "connections": [
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "a",
+                  "col": 10,
+                  "line": 18,
+                  "lineBreaks": 0,
+                  "offset": 336
+                },
+                "right": {
+                  "value": "i1",
+                  "col": 12,
+                  "line": 18,
+                  "lineBreaks": 0,
+                  "offset": 338
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "b",
+                  "col": 16,
+                  "line": 18,
+                  "lineBreaks": 0,
+                  "offset": 342
+                },
+                "right": {
+                  "value": "b",
+                  "col": 18,
+                  "line": 18,
+                  "lineBreaks": 0,
+                  "offset": 344
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "out",
+                  "col": 21,
+                  "line": 18,
+                  "lineBreaks": 0,
+                  "offset": 347
+                },
+                "right": {
+                  "value": "i3",
+                  "col": 25,
+                  "line": 18,
+                  "lineBreaks": 0,
+                  "offset": 351
+                }
+              }
+            ]
+          },
+          {
+            "type": "statement",
+            "chip": {
+              "value": "Nand",
+              "col": 5,
+              "line": 19,
+              "lineBreaks": 0,
+              "offset": 360
+            },
+            "connections": [
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "a",
+                  "col": 10,
+                  "line": 19,
+                  "lineBreaks": 0,
+                  "offset": 365
+                },
+                "right": {
+                  "value": "i2",
+                  "col": 12,
+                  "line": 19,
+                  "lineBreaks": 0,
+                  "offset": 367
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "b",
+                  "col": 16,
+                  "line": 19,
+                  "lineBreaks": 0,
+                  "offset": 371
+                },
+                "right": {
+                  "value": "i3",
+                  "col": 18,
+                  "line": 19,
+                  "lineBreaks": 0,
+                  "offset": 373
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "out",
+                  "col": 22,
+                  "line": 19,
+                  "lineBreaks": 0,
+                  "offset": 377
+                },
+                "right": {
+                  "value": "out",
+                  "col": 26,
+                  "line": 19,
+                  "lineBreaks": 0,
+                  "offset": 381
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

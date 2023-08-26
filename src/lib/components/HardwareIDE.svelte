@@ -32,7 +32,13 @@
   import parseHdl from '$lib/editor/hdl/parse';
   import parseTst from '$lib/editor/tst/parse';
   import type { Root as HDLRoot } from '$lib/editor/hdl/tree';
-  import type { CompareNode, LoadNode, OutputNode, Root as TSTRoot } from '$lib/editor/tst/tree';
+  import type {
+    CompareNode,
+    LoadNode,
+    OutputFileNode,
+    OutputNode,
+    Root as TSTRoot,
+  } from '$lib/editor/tst/tree';
   import type Chip from '$lib/hardware-simulator/chips/Chip';
   import ChipFactory from '$lib/hardware-simulator/chips/ChipFactory';
   import type { Experiment, ExperimentRequest } from 'src/lib/shared';
@@ -248,7 +254,7 @@
 
     const firstUnusedPreamble = preamble.find(
       (p) => p.type === 'compare' || p.type === 'load' || p.type === 'output',
-    ) as LoadNode | OutputNode | CompareNode;
+    ) as LoadNode | OutputFileNode | CompareNode;
     if (firstUnusedPreamble) {
       const line = firstUnusedPreamble.file.line;
       const col = firstUnusedPreamble.file.col;
@@ -939,6 +945,7 @@
                     on:change={() => run()}
                     min="0"
                     max="1"
+                    required
                     class="block w-full border-none py-1 px-2 bg-inherit hover:outline focus-visible:outline outline-base-content outline-2"
                   /></td
                 >

@@ -66,6 +66,15 @@ const config = defineConfig(() => {
     ssr: {
       noExternal: ['date-fns'],
     },
+    test: {
+      clearMocks: true,
+      coverage: {
+        lines: 90,
+        functions: 90,
+        branches: 90,
+        statements: 90,
+      },
+    },
   };
 });
 

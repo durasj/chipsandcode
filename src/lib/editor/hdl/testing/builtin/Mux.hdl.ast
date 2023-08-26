@@ -1,0 +1,70 @@
+[
+  {
+    "type": "chip",
+    "name": {
+      "value": "Mux",
+      "col": 6,
+      "line": 10,
+      "lineBreaks": 0,
+      "offset": 249
+    },
+    "body": [
+      {
+        "type": "input",
+        "pins": [
+          [
+            {
+              "value": "a",
+              "col": 9,
+              "line": 12,
+              "lineBreaks": 0,
+              "offset": 266
+            }
+          ],
+          [
+            {
+              "value": "b",
+              "col": 12,
+              "line": 12,
+              "lineBreaks": 0,
+              "offset": 269
+            }
+          ],
+          [
+            {
+              "value": "sel",
+              "col": 15,
+              "line": 12,
+              "lineBreaks": 0,
+              "offset": 272
+            }
+          ]
+        ]
+      },
+      {
+        "type": "output",
+        "pins": [
+          [
+            {
+              "value": "out",
+              "col": 9,
+              "line": 13,
+              "lineBreaks": 0,
+              "offset": 286
+            }
+          ]
+        ]
+      },
+      {
+        "type": "builtin",
+        "template": {
+          "value": "Mux",
+          "col": 13,
+          "line": 15,
+          "lineBreaks": 0,
+          "offset": 306
+        }
+      }
+    ]
+  }
+]

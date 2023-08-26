@@ -1,0 +1,224 @@
+{
+  "type": "script",
+  "preamble": [
+    {
+      "type": "load",
+      "file": {
+        "value": "DMux.hdl",
+        "col": 6,
+        "line": 6,
+        "lineBreaks": 0,
+        "offset": 179
+      }
+    },
+    {
+      "type": "output",
+      "file": {
+        "value": "DMux.out",
+        "col": 13,
+        "line": 7,
+        "lineBreaks": 0,
+        "offset": 202
+      }
+    },
+    {
+      "type": "compare",
+      "file": {
+        "value": "DMux.cmp",
+        "col": 12,
+        "line": 8,
+        "lineBreaks": 0,
+        "offset": 224
+      }
+    },
+    {
+      "type": "outputList",
+      "outputs": [
+        {
+          "type": "outputSpec",
+          "name": {
+            "value": "in",
+            "col": 13,
+            "line": 9,
+            "lineBreaks": 0,
+            "offset": 247
+          },
+          "format": "B",
+          "length": 1,
+          "padLeft": 3,
+          "padRight": 3
+        },
+        {
+          "type": "outputSpec",
+          "name": {
+            "value": "sel",
+            "col": 23,
+            "line": 9,
+            "lineBreaks": 0,
+            "offset": 257
+          },
+          "format": "B",
+          "length": 1,
+          "padLeft": 3,
+          "padRight": 3
+        },
+        {
+          "type": "outputSpec",
+          "name": {
+            "value": "a",
+            "col": 34,
+            "line": 9,
+            "lineBreaks": 0,
+            "offset": 268
+          },
+          "format": "B",
+          "length": 1,
+          "padLeft": 3,
+          "padRight": 3
+        },
+        {
+          "type": "outputSpec",
+          "name": {
+            "value": "b",
+            "col": 43,
+            "line": 9,
+            "lineBreaks": 0,
+            "offset": 277
+          },
+          "format": "B",
+          "length": 1,
+          "padLeft": 3,
+          "padRight": 3
+        }
+      ]
+    }
+  ],
+  "cases": [
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "in",
+          "col": 5,
+          "line": 11,
+          "lineBreaks": 0,
+          "offset": 294
+        },
+        "value": 0,
+        "col": 1,
+        "line": 11
+      },
+      {
+        "type": "set",
+        "name": {
+          "value": "sel",
+          "col": 5,
+          "line": 12,
+          "lineBreaks": 0,
+          "offset": 305
+        },
+        "value": 0,
+        "col": 1,
+        "line": 12
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 13
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 14
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "sel",
+          "col": 5,
+          "line": 16,
+          "lineBreaks": 0,
+          "offset": 335
+        },
+        "value": 1,
+        "col": 1,
+        "line": 16
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 17
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 18
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "in",
+          "col": 5,
+          "line": 20,
+          "lineBreaks": 0,
+          "offset": 365
+        },
+        "value": 1,
+        "col": 1,
+        "line": 20
+      },
+      {
+        "type": "set",
+        "name": {
+          "value": "sel",
+          "col": 5,
+          "line": 21,
+          "lineBreaks": 0,
+          "offset": 376
+        },
+        "value": 0,
+        "col": 1,
+        "line": 21
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 22
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 23
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "sel",
+          "col": 5,
+          "line": 25,
+          "lineBreaks": 0,
+          "offset": 406
+        },
+        "value": 1,
+        "col": 1,
+        "line": 25
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 26
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 27
+      }
+    ]
+  ]
+}

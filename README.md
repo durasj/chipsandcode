@@ -42,11 +42,8 @@ npm run wrangler -- login
 You need to change the account_id within `wrangler.toml` and sign up for Cloudflare Workers, see [documentation](https://developers.cloudflare.com/workers/get-started/guide#7-configure-your-project-for-deployment). Then, you can run:
 
 ```bash
-# runs local code in dev mode on real Cloudflare nodes
-npm run backend:dev
-
-# or - publishes backend to Cloudflare
-npm run backend:publish
+# runs both backend and frontend
+npm start
 ```
 
 ## Browser Support

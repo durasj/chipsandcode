@@ -1,0 +1,29 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`TST Parser > Parses minimal TST with only output list 1`] = `
+{
+  "cases": [],
+  "preamble": [
+    {
+      "outputs": [
+        {
+          "format": "B",
+          "length": 16,
+          "name": {
+            "col": 13,
+            "line": 1,
+            "lineBreaks": 0,
+            "offset": 12,
+            "value": "in",
+          },
+          "padLeft": 1,
+          "padRight": 1,
+          "type": "outputSpec",
+        },
+      ],
+      "type": "outputList",
+    },
+  ],
+  "type": "script",
+}
+`;

@@ -115,7 +115,7 @@ class CustomChip implements Chip {
 
       // 2. Go over output pins from this chip
       for (const [source, target] of this.parts.get(next)!) {
-        // 2.1. Update connected input pin
+        // 2.1. Update connected pin
         const pin = this.pins.get(target);
         if (!pin)
           throw new InvalidDesignError(

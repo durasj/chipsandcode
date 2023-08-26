@@ -10,3 +10,5 @@ node_modules
 *.sqlite-shm
 # Environment-specific
 .env
+# Unit test coverage
+coverage

@@ -1,4 +1,4 @@
-import type { OutputSpecNode } from 'src/editor/tst/tree';
+import type { OutputSpecNode } from '../../editor/tst/tree';
 
 /**
  * Output from the test script
@@ -17,7 +17,7 @@ export default class Output {
       return new Output([]);
     }
 
-    const columns = [...lines[0].matchAll(/\| *([a-zA-Z_][a-zA-Z0-9_\.]*) */g)].map(
+    const columns = [...lines[0].matchAll(/\| *([a-zA-Z_][a-zA-Z0-9_.]*) */g)].map(
       (m) =>
         ({
           type: 'outputSpec',
@@ -81,6 +81,8 @@ export default class Output {
     return lines.join('\n');
   }
 
+  // TODO: Implement other types of output
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private formatValue(value: boolean, spec: OutputSpecNode) {
     return value ? 1 : 0;
   }

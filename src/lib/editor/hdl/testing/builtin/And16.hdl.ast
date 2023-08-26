@@ -1,0 +1,64 @@
+[
+  {
+    "type": "chip",
+    "name": {
+      "value": "And16",
+      "col": 6,
+      "line": 10,
+      "lineBreaks": 0,
+      "offset": 258
+    },
+    "body": [
+      {
+        "type": "input",
+        "pins": [
+          [
+            {
+              "value": "a",
+              "col": 9,
+              "line": 12,
+              "lineBreaks": 0,
+              "offset": 277,
+              "width": 16
+            }
+          ],
+          [
+            {
+              "value": "b",
+              "col": 16,
+              "line": 12,
+              "lineBreaks": 0,
+              "offset": 284,
+              "width": 16
+            }
+          ]
+        ]
+      },
+      {
+        "type": "output",
+        "pins": [
+          [
+            {
+              "value": "out",
+              "col": 9,
+              "line": 13,
+              "lineBreaks": 0,
+              "offset": 300,
+              "width": 16
+            }
+          ]
+        ]
+      },
+      {
+        "type": "builtin",
+        "template": {
+          "value": "And",
+          "col": 13,
+          "line": 15,
+          "lineBreaks": 0,
+          "offset": 324
+        }
+      }
+    ]
+  }
+]

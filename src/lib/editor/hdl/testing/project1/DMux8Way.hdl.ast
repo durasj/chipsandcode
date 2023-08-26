@@ -1,0 +1,437 @@
+[
+  {
+    "type": "chip",
+    "name": {
+      "value": "DMux8Way",
+      "col": 6,
+      "line": 14,
+      "lineBreaks": 0,
+      "offset": 456
+    },
+    "body": [
+      {
+        "type": "input",
+        "pins": [
+          [
+            {
+              "value": "in",
+              "col": 8,
+              "line": 15,
+              "lineBreaks": 0,
+              "offset": 474
+            }
+          ],
+          [
+            {
+              "value": "sel",
+              "col": 12,
+              "line": 15,
+              "lineBreaks": 0,
+              "offset": 478,
+              "width": 3
+            }
+          ]
+        ]
+      },
+      {
+        "type": "output",
+        "pins": [
+          [
+            {
+              "value": "a",
+              "col": 9,
+              "line": 16,
+              "lineBreaks": 0,
+              "offset": 494
+            }
+          ],
+          [
+            {
+              "value": "b",
+              "col": 12,
+              "line": 16,
+              "lineBreaks": 0,
+              "offset": 497
+            }
+          ],
+          [
+            {
+              "value": "c",
+              "col": 15,
+              "line": 16,
+              "lineBreaks": 0,
+              "offset": 500
+            }
+          ],
+          [
+            {
+              "value": "d",
+              "col": 18,
+              "line": 16,
+              "lineBreaks": 0,
+              "offset": 503
+            }
+          ],
+          [
+            {
+              "value": "e",
+              "col": 21,
+              "line": 16,
+              "lineBreaks": 0,
+              "offset": 506
+            }
+          ],
+          [
+            {
+              "value": "f",
+              "col": 24,
+              "line": 16,
+              "lineBreaks": 0,
+              "offset": 509
+            }
+          ],
+          [
+            {
+              "value": "g",
+              "col": 27,
+              "line": 16,
+              "lineBreaks": 0,
+              "offset": 512
+            }
+          ],
+          [
+            {
+              "value": "h",
+              "col": 30,
+              "line": 16,
+              "lineBreaks": 0,
+              "offset": 515
+            }
+          ]
+        ]
+      },
+      {
+        "type": "parts",
+        "statements": [
+          {
+            "type": "statement",
+            "chip": {
+              "value": "DMux",
+              "col": 5,
+              "line": 19,
+              "lineBreaks": 0,
+              "offset": 534
+            },
+            "connections": [
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "in",
+                  "col": 10,
+                  "line": 19,
+                  "lineBreaks": 0,
+                  "offset": 539
+                },
+                "right": {
+                  "value": "in",
+                  "col": 13,
+                  "line": 19,
+                  "lineBreaks": 0,
+                  "offset": 542
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "sel",
+                  "col": 17,
+                  "line": 19,
+                  "lineBreaks": 0,
+                  "offset": 546
+                },
+                "right": {
+                  "value": "sel",
+                  "col": 21,
+                  "line": 19,
+                  "lineBreaks": 0,
+                  "offset": 550,
+                  "selection": 2
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "a",
+                  "col": 29,
+                  "line": 19,
+                  "lineBreaks": 0,
+                  "offset": 558
+                },
+                "right": {
+                  "value": "dm1",
+                  "col": 31,
+                  "line": 19,
+                  "lineBreaks": 0,
+                  "offset": 560
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "b",
+                  "col": 36,
+                  "line": 19,
+                  "lineBreaks": 0,
+                  "offset": 565
+                },
+                "right": {
+                  "value": "dm2",
+                  "col": 38,
+                  "line": 19,
+                  "lineBreaks": 0,
+                  "offset": 567
+                }
+              }
+            ]
+          },
+          {
+            "type": "statement",
+            "chip": {
+              "value": "DMux4Way",
+              "col": 5,
+              "line": 20,
+              "lineBreaks": 0,
+              "offset": 577
+            },
+            "connections": [
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "in",
+                  "col": 14,
+                  "line": 20,
+                  "lineBreaks": 0,
+                  "offset": 586
+                },
+                "right": {
+                  "value": "dm1",
+                  "col": 17,
+                  "line": 20,
+                  "lineBreaks": 0,
+                  "offset": 589
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "sel",
+                  "col": 22,
+                  "line": 20,
+                  "lineBreaks": 0,
+                  "offset": 594
+                },
+                "right": {
+                  "value": "sel",
+                  "col": 26,
+                  "line": 20,
+                  "lineBreaks": 0,
+                  "offset": 598,
+                  "selection": [
+                    0,
+                    1
+                  ]
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "a",
+                  "col": 37,
+                  "line": 20,
+                  "lineBreaks": 0,
+                  "offset": 609
+                },
+                "right": {
+                  "value": "a",
+                  "col": 39,
+                  "line": 20,
+                  "lineBreaks": 0,
+                  "offset": 611
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "b",
+                  "col": 42,
+                  "line": 20,
+                  "lineBreaks": 0,
+                  "offset": 614
+                },
+                "right": {
+                  "value": "b",
+                  "col": 44,
+                  "line": 20,
+                  "lineBreaks": 0,
+                  "offset": 616
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "c",
+                  "col": 47,
+                  "line": 20,
+                  "lineBreaks": 0,
+                  "offset": 619
+                },
+                "right": {
+                  "value": "c",
+                  "col": 49,
+                  "line": 20,
+                  "lineBreaks": 0,
+                  "offset": 621
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "d",
+                  "col": 52,
+                  "line": 20,
+                  "lineBreaks": 0,
+                  "offset": 624
+                },
+                "right": {
+                  "value": "d",
+                  "col": 54,
+                  "line": 20,
+                  "lineBreaks": 0,
+                  "offset": 626
+                }
+              }
+            ]
+          },
+          {
+            "type": "statement",
+            "chip": {
+              "value": "DMux4Way",
+              "col": 5,
+              "line": 21,
+              "lineBreaks": 0,
+              "offset": 634
+            },
+            "connections": [
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "in",
+                  "col": 14,
+                  "line": 21,
+                  "lineBreaks": 0,
+                  "offset": 643
+                },
+                "right": {
+                  "value": "dm2",
+                  "col": 17,
+                  "line": 21,
+                  "lineBreaks": 0,
+                  "offset": 646
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "sel",
+                  "col": 22,
+                  "line": 21,
+                  "lineBreaks": 0,
+                  "offset": 651
+                },
+                "right": {
+                  "value": "sel",
+                  "col": 26,
+                  "line": 21,
+                  "lineBreaks": 0,
+                  "offset": 655,
+                  "selection": [
+                    0,
+                    1
+                  ]
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "a",
+                  "col": 37,
+                  "line": 21,
+                  "lineBreaks": 0,
+                  "offset": 666
+                },
+                "right": {
+                  "value": "e",
+                  "col": 39,
+                  "line": 21,
+                  "lineBreaks": 0,
+                  "offset": 668
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "b",
+                  "col": 42,
+                  "line": 21,
+                  "lineBreaks": 0,
+                  "offset": 671
+                },
+                "right": {
+                  "value": "f",
+                  "col": 44,
+                  "line": 21,
+                  "lineBreaks": 0,
+                  "offset": 673
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "c",
+                  "col": 47,
+                  "line": 21,
+                  "lineBreaks": 0,
+                  "offset": 676
+                },
+                "right": {
+                  "value": "g",
+                  "col": 49,
+                  "line": 21,
+                  "lineBreaks": 0,
+                  "offset": 678
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "d",
+                  "col": 52,
+                  "line": 21,
+                  "lineBreaks": 0,
+                  "offset": 681
+                },
+                "right": {
+                  "value": "h",
+                  "col": 54,
+                  "line": 21,
+                  "lineBreaks": 0,
+                  "offset": 683
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

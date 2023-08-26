@@ -1,0 +1,84 @@
+[
+  {
+    "type": "chip",
+    "name": {
+      "value": "Bit",
+      "col": 6,
+      "line": 12,
+      "lineBreaks": 0,
+      "offset": 309
+    },
+    "body": [
+      {
+        "type": "input",
+        "pins": [
+          [
+            {
+              "value": "in",
+              "col": 9,
+              "line": 14,
+              "lineBreaks": 0,
+              "offset": 326
+            }
+          ],
+          [
+            {
+              "value": "load",
+              "col": 13,
+              "line": 14,
+              "lineBreaks": 0,
+              "offset": 330
+            }
+          ]
+        ]
+      },
+      {
+        "type": "output",
+        "pins": [
+          [
+            {
+              "value": "out",
+              "col": 9,
+              "line": 15,
+              "lineBreaks": 0,
+              "offset": 345
+            }
+          ]
+        ]
+      },
+      {
+        "type": "builtin",
+        "template": {
+          "value": "Bit",
+          "col": 13,
+          "line": 17,
+          "lineBreaks": 0,
+          "offset": 365
+        }
+      },
+      {
+        "type": "clocked",
+        "pins": [
+          [
+            {
+              "value": "in",
+              "col": 13,
+              "line": 18,
+              "lineBreaks": 0,
+              "offset": 383
+            }
+          ],
+          [
+            {
+              "value": "load",
+              "col": 17,
+              "line": 18,
+              "lineBreaks": 0,
+              "offset": 387
+            }
+          ]
+        ]
+      }
+    ]
+  }
+]

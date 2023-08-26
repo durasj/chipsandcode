@@ -1,0 +1,52 @@
+[
+  {
+    "type": "chip",
+    "name": {
+      "value": "Not",
+      "col": 6,
+      "line": 10,
+      "lineBreaks": 0,
+      "offset": 220
+    },
+    "body": [
+      {
+        "type": "input",
+        "pins": [
+          [
+            {
+              "value": "in",
+              "col": 9,
+              "line": 12,
+              "lineBreaks": 0,
+              "offset": 237
+            }
+          ]
+        ]
+      },
+      {
+        "type": "output",
+        "pins": [
+          [
+            {
+              "value": "out",
+              "col": 9,
+              "line": 13,
+              "lineBreaks": 0,
+              "offset": 250
+            }
+          ]
+        ]
+      },
+      {
+        "type": "builtin",
+        "template": {
+          "value": "Not",
+          "col": 13,
+          "line": 15,
+          "lineBreaks": 0,
+          "offset": 270
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,79 @@
+[
+  {
+    "type": "chip",
+    "name": {
+      "value": "FullAdder",
+      "col": 6,
+      "line": 11,
+      "lineBreaks": 0,
+      "offset": 323
+    },
+    "body": [
+      {
+        "type": "input",
+        "pins": [
+          [
+            {
+              "value": "a",
+              "col": 9,
+              "line": 13,
+              "lineBreaks": 0,
+              "offset": 346
+            }
+          ],
+          [
+            {
+              "value": "b",
+              "col": 12,
+              "line": 13,
+              "lineBreaks": 0,
+              "offset": 349
+            }
+          ],
+          [
+            {
+              "value": "c",
+              "col": 15,
+              "line": 13,
+              "lineBreaks": 0,
+              "offset": 352
+            }
+          ]
+        ]
+      },
+      {
+        "type": "output",
+        "pins": [
+          [
+            {
+              "value": "sum",
+              "col": 9,
+              "line": 14,
+              "lineBreaks": 0,
+              "offset": 364
+            }
+          ],
+          [
+            {
+              "value": "carry",
+              "col": 9,
+              "line": 15,
+              "lineBreaks": 0,
+              "offset": 402
+            }
+          ]
+        ]
+      },
+      {
+        "type": "builtin",
+        "template": {
+          "value": "FullAdder",
+          "col": 13,
+          "line": 17,
+          "lineBreaks": 0,
+          "offset": 446
+        }
+      }
+    ]
+  }
+]

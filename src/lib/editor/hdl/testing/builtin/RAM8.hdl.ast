@@ -1,0 +1,96 @@
+[
+  {
+    "type": "chip",
+    "name": {
+      "value": "RAM8",
+      "col": 6,
+      "line": 17,
+      "lineBreaks": 0,
+      "offset": 699
+    },
+    "body": [
+      {
+        "type": "input",
+        "pins": [
+          [
+            {
+              "value": "in",
+              "col": 9,
+              "line": 19,
+              "lineBreaks": 0,
+              "offset": 717,
+              "width": 16
+            }
+          ],
+          [
+            {
+              "value": "load",
+              "col": 17,
+              "line": 19,
+              "lineBreaks": 0,
+              "offset": 725
+            }
+          ],
+          [
+            {
+              "value": "address",
+              "col": 23,
+              "line": 19,
+              "lineBreaks": 0,
+              "offset": 731,
+              "width": 3
+            }
+          ]
+        ]
+      },
+      {
+        "type": "output",
+        "pins": [
+          [
+            {
+              "value": "out",
+              "col": 9,
+              "line": 20,
+              "lineBreaks": 0,
+              "offset": 752,
+              "width": 16
+            }
+          ]
+        ]
+      },
+      {
+        "type": "builtin",
+        "template": {
+          "value": "RAM8",
+          "col": 13,
+          "line": 22,
+          "lineBreaks": 0,
+          "offset": 776
+        }
+      },
+      {
+        "type": "clocked",
+        "pins": [
+          [
+            {
+              "value": "in",
+              "col": 13,
+              "line": 23,
+              "lineBreaks": 0,
+              "offset": 795
+            }
+          ],
+          [
+            {
+              "value": "load",
+              "col": 17,
+              "line": 23,
+              "lineBreaks": 0,
+              "offset": 799
+            }
+          ]
+        ]
+      }
+    ]
+  }
+]

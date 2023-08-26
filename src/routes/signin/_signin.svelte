@@ -1,30 +1,30 @@
 <script lang="ts">
-  import { writable } from 'svelte/store';
+  // import { writable } from 'svelte/store';
 
-  import Button from 'src/lib/components/Button.svelte';
-  import Google from 'src/lib/components/icons/social/Google.svelte';
+  // import Button from '$lib/components/Button.svelte';
+  // import Google from '$lib/components/icons/social/Google.svelte';
 
-  const email = writable('');
+  // const email = writable('');
 
-  function continueWithEmail(e: Event) {
-    e.preventDefault();
+  // function continueWithEmail(e: Event) {
+  //   e.preventDefault();
 
-    console.log($email);
-  }
+  //   console.log($email);
+  // }
 
-  function googleAuth(node: HTMLDivElement) {
-    google.accounts.id.initialize({
-      client_id: '665071659607-omiut25e1d6ik9lnt07021vndudto9a6.apps.googleusercontent.com',
-      callback: (response) => {
-        console.log('Token is', response.credential);
-      },
-    });
-    google.accounts.id.renderButton(
-      node,
-      { theme: 'outline', size: 'large' }, // customization attributes
-    );
-    google.accounts.id.prompt(); // also display the One Tap dialog
-  }
+  // function googleAuth(node: HTMLDivElement) {
+  //   google.accounts.id.initialize({
+  //     client_id: '665071659607-omiut25e1d6ik9lnt07021vndudto9a6.apps.googleusercontent.com',
+  //     callback: (response) => {
+  //       console.log('Token is', response.credential);
+  //     },
+  //   });
+  //   google.accounts.id.renderButton(
+  //     node,
+  //     { theme: 'outline', size: 'large' }, // customization attributes
+  //   );
+  //   google.accounts.id.prompt(); // also display the One Tap dialog
+  // }
 
   // function authGoogle() {
   //   gapi.load('auth2', async () => {
@@ -56,7 +56,7 @@
   <script src="https://apis.google.com/js/api.js" async defer></script>
 </svelte:head>
 
-<div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+<!-- <div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
   <div class="max-w-md w-full space-y-8">
     <div>
       <img class="mx-auto h-12 w-auto" src="/logo.svg" alt="Workflow" />
@@ -95,19 +95,19 @@
         </div>
       </div>
 
-      <div use:googleAuth />
+      <div use:googleAuth /> -->
 
-      <!-- <Button
+<!-- <Button
         class="flex items-center justify-center w-full"
         secondary
         dense
         on:click={authGoogle}><Google class="h-4 w-4 mr-2" /> Continue with Google</Button
       > -->
-    </form>
+<!-- </form>
 
     <p class="mt-2 text-center text-sm text-base-600">
       Your data
       <a href="/about" class="font-medium text-primary hover:text-primary-500">belong to you</a>.
     </p>
   </div>
-</div>
+</div> -->

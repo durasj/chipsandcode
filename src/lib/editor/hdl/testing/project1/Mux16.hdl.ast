@@ -1,0 +1,1396 @@
+[
+  {
+    "type": "chip",
+    "name": {
+      "value": "Mux16",
+      "col": 6,
+      "line": 12,
+      "lineBreaks": 0,
+      "offset": 295
+    },
+    "body": [
+      {
+        "type": "input",
+        "pins": [
+          [
+            {
+              "value": "a",
+              "col": 8,
+              "line": 13,
+              "lineBreaks": 0,
+              "offset": 310,
+              "width": 16
+            }
+          ],
+          [
+            {
+              "value": "b",
+              "col": 15,
+              "line": 13,
+              "lineBreaks": 0,
+              "offset": 317,
+              "width": 16
+            }
+          ],
+          [
+            {
+              "value": "sel",
+              "col": 22,
+              "line": 13,
+              "lineBreaks": 0,
+              "offset": 324
+            }
+          ]
+        ]
+      },
+      {
+        "type": "output",
+        "pins": [
+          [
+            {
+              "value": "out",
+              "col": 9,
+              "line": 14,
+              "lineBreaks": 0,
+              "offset": 337,
+              "width": 16
+            }
+          ]
+        ]
+      },
+      {
+        "type": "parts",
+        "statements": [
+          {
+            "type": "statement",
+            "chip": {
+              "value": "Mux",
+              "col": 5,
+              "line": 17,
+              "lineBreaks": 0,
+              "offset": 362
+            },
+            "connections": [
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "a",
+                  "col": 9,
+                  "line": 17,
+                  "lineBreaks": 0,
+                  "offset": 366
+                },
+                "right": {
+                  "value": "a",
+                  "col": 11,
+                  "line": 17,
+                  "lineBreaks": 0,
+                  "offset": 368,
+                  "selection": 0
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "b",
+                  "col": 17,
+                  "line": 17,
+                  "lineBreaks": 0,
+                  "offset": 374
+                },
+                "right": {
+                  "value": "b",
+                  "col": 19,
+                  "line": 17,
+                  "lineBreaks": 0,
+                  "offset": 376,
+                  "selection": 0
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "sel",
+                  "col": 25,
+                  "line": 17,
+                  "lineBreaks": 0,
+                  "offset": 382
+                },
+                "right": {
+                  "value": "sel",
+                  "col": 29,
+                  "line": 17,
+                  "lineBreaks": 0,
+                  "offset": 386
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "out",
+                  "col": 34,
+                  "line": 17,
+                  "lineBreaks": 0,
+                  "offset": 391
+                },
+                "right": {
+                  "value": "out",
+                  "col": 38,
+                  "line": 17,
+                  "lineBreaks": 0,
+                  "offset": 395,
+                  "selection": 0
+                }
+              }
+            ]
+          },
+          {
+            "type": "statement",
+            "chip": {
+              "value": "Mux",
+              "col": 5,
+              "line": 18,
+              "lineBreaks": 0,
+              "offset": 408
+            },
+            "connections": [
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "a",
+                  "col": 9,
+                  "line": 18,
+                  "lineBreaks": 0,
+                  "offset": 412
+                },
+                "right": {
+                  "value": "a",
+                  "col": 11,
+                  "line": 18,
+                  "lineBreaks": 0,
+                  "offset": 414,
+                  "selection": 1
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "b",
+                  "col": 17,
+                  "line": 18,
+                  "lineBreaks": 0,
+                  "offset": 420
+                },
+                "right": {
+                  "value": "b",
+                  "col": 19,
+                  "line": 18,
+                  "lineBreaks": 0,
+                  "offset": 422,
+                  "selection": 1
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "sel",
+                  "col": 25,
+                  "line": 18,
+                  "lineBreaks": 0,
+                  "offset": 428
+                },
+                "right": {
+                  "value": "sel",
+                  "col": 29,
+                  "line": 18,
+                  "lineBreaks": 0,
+                  "offset": 432
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "out",
+                  "col": 34,
+                  "line": 18,
+                  "lineBreaks": 0,
+                  "offset": 437
+                },
+                "right": {
+                  "value": "out",
+                  "col": 38,
+                  "line": 18,
+                  "lineBreaks": 0,
+                  "offset": 441,
+                  "selection": 1
+                }
+              }
+            ]
+          },
+          {
+            "type": "statement",
+            "chip": {
+              "value": "Mux",
+              "col": 5,
+              "line": 19,
+              "lineBreaks": 0,
+              "offset": 454
+            },
+            "connections": [
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "a",
+                  "col": 9,
+                  "line": 19,
+                  "lineBreaks": 0,
+                  "offset": 458
+                },
+                "right": {
+                  "value": "a",
+                  "col": 11,
+                  "line": 19,
+                  "lineBreaks": 0,
+                  "offset": 460,
+                  "selection": 2
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "b",
+                  "col": 17,
+                  "line": 19,
+                  "lineBreaks": 0,
+                  "offset": 466
+                },
+                "right": {
+                  "value": "b",
+                  "col": 19,
+                  "line": 19,
+                  "lineBreaks": 0,
+                  "offset": 468,
+                  "selection": 2
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "sel",
+                  "col": 25,
+                  "line": 19,
+                  "lineBreaks": 0,
+                  "offset": 474
+                },
+                "right": {
+                  "value": "sel",
+                  "col": 29,
+                  "line": 19,
+                  "lineBreaks": 0,
+                  "offset": 478
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "out",
+                  "col": 34,
+                  "line": 19,
+                  "lineBreaks": 0,
+                  "offset": 483
+                },
+                "right": {
+                  "value": "out",
+                  "col": 38,
+                  "line": 19,
+                  "lineBreaks": 0,
+                  "offset": 487,
+                  "selection": 2
+                }
+              }
+            ]
+          },
+          {
+            "type": "statement",
+            "chip": {
+              "value": "Mux",
+              "col": 5,
+              "line": 20,
+              "lineBreaks": 0,
+              "offset": 500
+            },
+            "connections": [
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "a",
+                  "col": 9,
+                  "line": 20,
+                  "lineBreaks": 0,
+                  "offset": 504
+                },
+                "right": {
+                  "value": "a",
+                  "col": 11,
+                  "line": 20,
+                  "lineBreaks": 0,
+                  "offset": 506,
+                  "selection": 3
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "b",
+                  "col": 17,
+                  "line": 20,
+                  "lineBreaks": 0,
+                  "offset": 512
+                },
+                "right": {
+                  "value": "b",
+                  "col": 19,
+                  "line": 20,
+                  "lineBreaks": 0,
+                  "offset": 514,
+                  "selection": 3
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "sel",
+                  "col": 25,
+                  "line": 20,
+                  "lineBreaks": 0,
+                  "offset": 520
+                },
+                "right": {
+                  "value": "sel",
+                  "col": 29,
+                  "line": 20,
+                  "lineBreaks": 0,
+                  "offset": 524
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "out",
+                  "col": 34,
+                  "line": 20,
+                  "lineBreaks": 0,
+                  "offset": 529
+                },
+                "right": {
+                  "value": "out",
+                  "col": 38,
+                  "line": 20,
+                  "lineBreaks": 0,
+                  "offset": 533,
+                  "selection": 3
+                }
+              }
+            ]
+          },
+          {
+            "type": "statement",
+            "chip": {
+              "value": "Mux",
+              "col": 5,
+              "line": 21,
+              "lineBreaks": 0,
+              "offset": 546
+            },
+            "connections": [
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "a",
+                  "col": 9,
+                  "line": 21,
+                  "lineBreaks": 0,
+                  "offset": 550
+                },
+                "right": {
+                  "value": "a",
+                  "col": 11,
+                  "line": 21,
+                  "lineBreaks": 0,
+                  "offset": 552,
+                  "selection": 4
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "b",
+                  "col": 17,
+                  "line": 21,
+                  "lineBreaks": 0,
+                  "offset": 558
+                },
+                "right": {
+                  "value": "b",
+                  "col": 19,
+                  "line": 21,
+                  "lineBreaks": 0,
+                  "offset": 560,
+                  "selection": 4
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "sel",
+                  "col": 25,
+                  "line": 21,
+                  "lineBreaks": 0,
+                  "offset": 566
+                },
+                "right": {
+                  "value": "sel",
+                  "col": 29,
+                  "line": 21,
+                  "lineBreaks": 0,
+                  "offset": 570
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "out",
+                  "col": 34,
+                  "line": 21,
+                  "lineBreaks": 0,
+                  "offset": 575
+                },
+                "right": {
+                  "value": "out",
+                  "col": 38,
+                  "line": 21,
+                  "lineBreaks": 0,
+                  "offset": 579,
+                  "selection": 4
+                }
+              }
+            ]
+          },
+          {
+            "type": "statement",
+            "chip": {
+              "value": "Mux",
+              "col": 5,
+              "line": 22,
+              "lineBreaks": 0,
+              "offset": 592
+            },
+            "connections": [
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "a",
+                  "col": 9,
+                  "line": 22,
+                  "lineBreaks": 0,
+                  "offset": 596
+                },
+                "right": {
+                  "value": "a",
+                  "col": 11,
+                  "line": 22,
+                  "lineBreaks": 0,
+                  "offset": 598,
+                  "selection": 5
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "b",
+                  "col": 17,
+                  "line": 22,
+                  "lineBreaks": 0,
+                  "offset": 604
+                },
+                "right": {
+                  "value": "b",
+                  "col": 19,
+                  "line": 22,
+                  "lineBreaks": 0,
+                  "offset": 606,
+                  "selection": 5
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "sel",
+                  "col": 25,
+                  "line": 22,
+                  "lineBreaks": 0,
+                  "offset": 612
+                },
+                "right": {
+                  "value": "sel",
+                  "col": 29,
+                  "line": 22,
+                  "lineBreaks": 0,
+                  "offset": 616
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "out",
+                  "col": 34,
+                  "line": 22,
+                  "lineBreaks": 0,
+                  "offset": 621
+                },
+                "right": {
+                  "value": "out",
+                  "col": 38,
+                  "line": 22,
+                  "lineBreaks": 0,
+                  "offset": 625,
+                  "selection": 5
+                }
+              }
+            ]
+          },
+          {
+            "type": "statement",
+            "chip": {
+              "value": "Mux",
+              "col": 5,
+              "line": 23,
+              "lineBreaks": 0,
+              "offset": 638
+            },
+            "connections": [
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "a",
+                  "col": 9,
+                  "line": 23,
+                  "lineBreaks": 0,
+                  "offset": 642
+                },
+                "right": {
+                  "value": "a",
+                  "col": 11,
+                  "line": 23,
+                  "lineBreaks": 0,
+                  "offset": 644,
+                  "selection": 6
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "b",
+                  "col": 17,
+                  "line": 23,
+                  "lineBreaks": 0,
+                  "offset": 650
+                },
+                "right": {
+                  "value": "b",
+                  "col": 19,
+                  "line": 23,
+                  "lineBreaks": 0,
+                  "offset": 652,
+                  "selection": 6
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "sel",
+                  "col": 25,
+                  "line": 23,
+                  "lineBreaks": 0,
+                  "offset": 658
+                },
+                "right": {
+                  "value": "sel",
+                  "col": 29,
+                  "line": 23,
+                  "lineBreaks": 0,
+                  "offset": 662
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "out",
+                  "col": 34,
+                  "line": 23,
+                  "lineBreaks": 0,
+                  "offset": 667
+                },
+                "right": {
+                  "value": "out",
+                  "col": 38,
+                  "line": 23,
+                  "lineBreaks": 0,
+                  "offset": 671,
+                  "selection": 6
+                }
+              }
+            ]
+          },
+          {
+            "type": "statement",
+            "chip": {
+              "value": "Mux",
+              "col": 5,
+              "line": 24,
+              "lineBreaks": 0,
+              "offset": 684
+            },
+            "connections": [
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "a",
+                  "col": 9,
+                  "line": 24,
+                  "lineBreaks": 0,
+                  "offset": 688
+                },
+                "right": {
+                  "value": "a",
+                  "col": 11,
+                  "line": 24,
+                  "lineBreaks": 0,
+                  "offset": 690,
+                  "selection": 7
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "b",
+                  "col": 17,
+                  "line": 24,
+                  "lineBreaks": 0,
+                  "offset": 696
+                },
+                "right": {
+                  "value": "b",
+                  "col": 19,
+                  "line": 24,
+                  "lineBreaks": 0,
+                  "offset": 698,
+                  "selection": 7
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "sel",
+                  "col": 25,
+                  "line": 24,
+                  "lineBreaks": 0,
+                  "offset": 704
+                },
+                "right": {
+                  "value": "sel",
+                  "col": 29,
+                  "line": 24,
+                  "lineBreaks": 0,
+                  "offset": 708
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "out",
+                  "col": 34,
+                  "line": 24,
+                  "lineBreaks": 0,
+                  "offset": 713
+                },
+                "right": {
+                  "value": "out",
+                  "col": 38,
+                  "line": 24,
+                  "lineBreaks": 0,
+                  "offset": 717,
+                  "selection": 7
+                }
+              }
+            ]
+          },
+          {
+            "type": "statement",
+            "chip": {
+              "value": "Mux",
+              "col": 5,
+              "line": 25,
+              "lineBreaks": 0,
+              "offset": 730
+            },
+            "connections": [
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "a",
+                  "col": 9,
+                  "line": 25,
+                  "lineBreaks": 0,
+                  "offset": 734
+                },
+                "right": {
+                  "value": "a",
+                  "col": 11,
+                  "line": 25,
+                  "lineBreaks": 0,
+                  "offset": 736,
+                  "selection": 8
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "b",
+                  "col": 17,
+                  "line": 25,
+                  "lineBreaks": 0,
+                  "offset": 742
+                },
+                "right": {
+                  "value": "b",
+                  "col": 19,
+                  "line": 25,
+                  "lineBreaks": 0,
+                  "offset": 744,
+                  "selection": 8
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "sel",
+                  "col": 25,
+                  "line": 25,
+                  "lineBreaks": 0,
+                  "offset": 750
+                },
+                "right": {
+                  "value": "sel",
+                  "col": 29,
+                  "line": 25,
+                  "lineBreaks": 0,
+                  "offset": 754
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "out",
+                  "col": 34,
+                  "line": 25,
+                  "lineBreaks": 0,
+                  "offset": 759
+                },
+                "right": {
+                  "value": "out",
+                  "col": 38,
+                  "line": 25,
+                  "lineBreaks": 0,
+                  "offset": 763,
+                  "selection": 8
+                }
+              }
+            ]
+          },
+          {
+            "type": "statement",
+            "chip": {
+              "value": "Mux",
+              "col": 5,
+              "line": 26,
+              "lineBreaks": 0,
+              "offset": 776
+            },
+            "connections": [
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "a",
+                  "col": 9,
+                  "line": 26,
+                  "lineBreaks": 0,
+                  "offset": 780
+                },
+                "right": {
+                  "value": "a",
+                  "col": 11,
+                  "line": 26,
+                  "lineBreaks": 0,
+                  "offset": 782,
+                  "selection": 9
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "b",
+                  "col": 17,
+                  "line": 26,
+                  "lineBreaks": 0,
+                  "offset": 788
+                },
+                "right": {
+                  "value": "b",
+                  "col": 19,
+                  "line": 26,
+                  "lineBreaks": 0,
+                  "offset": 790,
+                  "selection": 9
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "sel",
+                  "col": 25,
+                  "line": 26,
+                  "lineBreaks": 0,
+                  "offset": 796
+                },
+                "right": {
+                  "value": "sel",
+                  "col": 29,
+                  "line": 26,
+                  "lineBreaks": 0,
+                  "offset": 800
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "out",
+                  "col": 34,
+                  "line": 26,
+                  "lineBreaks": 0,
+                  "offset": 805
+                },
+                "right": {
+                  "value": "out",
+                  "col": 38,
+                  "line": 26,
+                  "lineBreaks": 0,
+                  "offset": 809,
+                  "selection": 9
+                }
+              }
+            ]
+          },
+          {
+            "type": "statement",
+            "chip": {
+              "value": "Mux",
+              "col": 5,
+              "line": 27,
+              "lineBreaks": 0,
+              "offset": 822
+            },
+            "connections": [
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "a",
+                  "col": 9,
+                  "line": 27,
+                  "lineBreaks": 0,
+                  "offset": 826
+                },
+                "right": {
+                  "value": "a",
+                  "col": 11,
+                  "line": 27,
+                  "lineBreaks": 0,
+                  "offset": 828,
+                  "selection": 10
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "b",
+                  "col": 18,
+                  "line": 27,
+                  "lineBreaks": 0,
+                  "offset": 835
+                },
+                "right": {
+                  "value": "b",
+                  "col": 20,
+                  "line": 27,
+                  "lineBreaks": 0,
+                  "offset": 837,
+                  "selection": 10
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "sel",
+                  "col": 27,
+                  "line": 27,
+                  "lineBreaks": 0,
+                  "offset": 844
+                },
+                "right": {
+                  "value": "sel",
+                  "col": 31,
+                  "line": 27,
+                  "lineBreaks": 0,
+                  "offset": 848
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "out",
+                  "col": 36,
+                  "line": 27,
+                  "lineBreaks": 0,
+                  "offset": 853
+                },
+                "right": {
+                  "value": "out",
+                  "col": 40,
+                  "line": 27,
+                  "lineBreaks": 0,
+                  "offset": 857,
+                  "selection": 10
+                }
+              }
+            ]
+          },
+          {
+            "type": "statement",
+            "chip": {
+              "value": "Mux",
+              "col": 5,
+              "line": 28,
+              "lineBreaks": 0,
+              "offset": 871
+            },
+            "connections": [
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "a",
+                  "col": 9,
+                  "line": 28,
+                  "lineBreaks": 0,
+                  "offset": 875
+                },
+                "right": {
+                  "value": "a",
+                  "col": 11,
+                  "line": 28,
+                  "lineBreaks": 0,
+                  "offset": 877,
+                  "selection": 11
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "b",
+                  "col": 18,
+                  "line": 28,
+                  "lineBreaks": 0,
+                  "offset": 884
+                },
+                "right": {
+                  "value": "b",
+                  "col": 20,
+                  "line": 28,
+                  "lineBreaks": 0,
+                  "offset": 886,
+                  "selection": 11
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "sel",
+                  "col": 27,
+                  "line": 28,
+                  "lineBreaks": 0,
+                  "offset": 893
+                },
+                "right": {
+                  "value": "sel",
+                  "col": 31,
+                  "line": 28,
+                  "lineBreaks": 0,
+                  "offset": 897
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "out",
+                  "col": 36,
+                  "line": 28,
+                  "lineBreaks": 0,
+                  "offset": 902
+                },
+                "right": {
+                  "value": "out",
+                  "col": 40,
+                  "line": 28,
+                  "lineBreaks": 0,
+                  "offset": 906,
+                  "selection": 11
+                }
+              }
+            ]
+          },
+          {
+            "type": "statement",
+            "chip": {
+              "value": "Mux",
+              "col": 5,
+              "line": 29,
+              "lineBreaks": 0,
+              "offset": 920
+            },
+            "connections": [
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "a",
+                  "col": 9,
+                  "line": 29,
+                  "lineBreaks": 0,
+                  "offset": 924
+                },
+                "right": {
+                  "value": "a",
+                  "col": 11,
+                  "line": 29,
+                  "lineBreaks": 0,
+                  "offset": 926,
+                  "selection": 12
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "b",
+                  "col": 18,
+                  "line": 29,
+                  "lineBreaks": 0,
+                  "offset": 933
+                },
+                "right": {
+                  "value": "b",
+                  "col": 20,
+                  "line": 29,
+                  "lineBreaks": 0,
+                  "offset": 935,
+                  "selection": 12
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "sel",
+                  "col": 27,
+                  "line": 29,
+                  "lineBreaks": 0,
+                  "offset": 942
+                },
+                "right": {
+                  "value": "sel",
+                  "col": 31,
+                  "line": 29,
+                  "lineBreaks": 0,
+                  "offset": 946
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "out",
+                  "col": 36,
+                  "line": 29,
+                  "lineBreaks": 0,
+                  "offset": 951
+                },
+                "right": {
+                  "value": "out",
+                  "col": 40,
+                  "line": 29,
+                  "lineBreaks": 0,
+                  "offset": 955,
+                  "selection": 12
+                }
+              }
+            ]
+          },
+          {
+            "type": "statement",
+            "chip": {
+              "value": "Mux",
+              "col": 5,
+              "line": 30,
+              "lineBreaks": 0,
+              "offset": 969
+            },
+            "connections": [
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "a",
+                  "col": 9,
+                  "line": 30,
+                  "lineBreaks": 0,
+                  "offset": 973
+                },
+                "right": {
+                  "value": "a",
+                  "col": 11,
+                  "line": 30,
+                  "lineBreaks": 0,
+                  "offset": 975,
+                  "selection": 13
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "b",
+                  "col": 18,
+                  "line": 30,
+                  "lineBreaks": 0,
+                  "offset": 982
+                },
+                "right": {
+                  "value": "b",
+                  "col": 20,
+                  "line": 30,
+                  "lineBreaks": 0,
+                  "offset": 984,
+                  "selection": 13
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "sel",
+                  "col": 27,
+                  "line": 30,
+                  "lineBreaks": 0,
+                  "offset": 991
+                },
+                "right": {
+                  "value": "sel",
+                  "col": 31,
+                  "line": 30,
+                  "lineBreaks": 0,
+                  "offset": 995
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "out",
+                  "col": 36,
+                  "line": 30,
+                  "lineBreaks": 0,
+                  "offset": 1000
+                },
+                "right": {
+                  "value": "out",
+                  "col": 40,
+                  "line": 30,
+                  "lineBreaks": 0,
+                  "offset": 1004,
+                  "selection": 13
+                }
+              }
+            ]
+          },
+          {
+            "type": "statement",
+            "chip": {
+              "value": "Mux",
+              "col": 5,
+              "line": 31,
+              "lineBreaks": 0,
+              "offset": 1018
+            },
+            "connections": [
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "a",
+                  "col": 9,
+                  "line": 31,
+                  "lineBreaks": 0,
+                  "offset": 1022
+                },
+                "right": {
+                  "value": "a",
+                  "col": 11,
+                  "line": 31,
+                  "lineBreaks": 0,
+                  "offset": 1024,
+                  "selection": 14
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "b",
+                  "col": 18,
+                  "line": 31,
+                  "lineBreaks": 0,
+                  "offset": 1031
+                },
+                "right": {
+                  "value": "b",
+                  "col": 20,
+                  "line": 31,
+                  "lineBreaks": 0,
+                  "offset": 1033,
+                  "selection": 14
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "sel",
+                  "col": 27,
+                  "line": 31,
+                  "lineBreaks": 0,
+                  "offset": 1040
+                },
+                "right": {
+                  "value": "sel",
+                  "col": 31,
+                  "line": 31,
+                  "lineBreaks": 0,
+                  "offset": 1044
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "out",
+                  "col": 36,
+                  "line": 31,
+                  "lineBreaks": 0,
+                  "offset": 1049
+                },
+                "right": {
+                  "value": "out",
+                  "col": 40,
+                  "line": 31,
+                  "lineBreaks": 0,
+                  "offset": 1053,
+                  "selection": 14
+                }
+              }
+            ]
+          },
+          {
+            "type": "statement",
+            "chip": {
+              "value": "Mux",
+              "col": 5,
+              "line": 32,
+              "lineBreaks": 0,
+              "offset": 1067
+            },
+            "connections": [
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "a",
+                  "col": 9,
+                  "line": 32,
+                  "lineBreaks": 0,
+                  "offset": 1071
+                },
+                "right": {
+                  "value": "a",
+                  "col": 11,
+                  "line": 32,
+                  "lineBreaks": 0,
+                  "offset": 1073,
+                  "selection": 15
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "b",
+                  "col": 18,
+                  "line": 32,
+                  "lineBreaks": 0,
+                  "offset": 1080
+                },
+                "right": {
+                  "value": "b",
+                  "col": 20,
+                  "line": 32,
+                  "lineBreaks": 0,
+                  "offset": 1082,
+                  "selection": 15
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "sel",
+                  "col": 27,
+                  "line": 32,
+                  "lineBreaks": 0,
+                  "offset": 1089
+                },
+                "right": {
+                  "value": "sel",
+                  "col": 31,
+                  "line": 32,
+                  "lineBreaks": 0,
+                  "offset": 1093
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "out",
+                  "col": 36,
+                  "line": 32,
+                  "lineBreaks": 0,
+                  "offset": 1098
+                },
+                "right": {
+                  "value": "out",
+                  "col": 40,
+                  "line": 32,
+                  "lineBreaks": 0,
+                  "offset": 1102,
+                  "selection": 15
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,136 @@
+[
+  {
+    "type": "chip",
+    "name": {
+      "value": "ALU",
+      "col": 6,
+      "line": 35,
+      "lineBreaks": 0,
+      "offset": 1349
+    },
+    "body": [
+      {
+        "type": "input",
+        "pins": [
+          [
+            {
+              "value": "x",
+              "col": 9,
+              "line": 38,
+              "lineBreaks": 0,
+              "offset": 1393,
+              "width": 16
+            }
+          ],
+          [
+            {
+              "value": "y",
+              "col": 16,
+              "line": 38,
+              "lineBreaks": 0,
+              "offset": 1400,
+              "width": 16
+            }
+          ],
+          [
+            {
+              "value": "zx",
+              "col": 9,
+              "line": 40,
+              "lineBreaks": 0,
+              "offset": 1442
+            }
+          ],
+          [
+            {
+              "value": "nx",
+              "col": 9,
+              "line": 41,
+              "lineBreaks": 0,
+              "offset": 1475
+            }
+          ],
+          [
+            {
+              "value": "zy",
+              "col": 9,
+              "line": 42,
+              "lineBreaks": 0,
+              "offset": 1510
+            }
+          ],
+          [
+            {
+              "value": "ny",
+              "col": 9,
+              "line": 43,
+              "lineBreaks": 0,
+              "offset": 1543
+            }
+          ],
+          [
+            {
+              "value": "f",
+              "col": 9,
+              "line": 44,
+              "lineBreaks": 0,
+              "offset": 1578
+            }
+          ],
+          [
+            {
+              "value": "no",
+              "col": 9,
+              "line": 45,
+              "lineBreaks": 0,
+              "offset": 1630
+            }
+          ]
+        ]
+      },
+      {
+        "type": "output",
+        "pins": [
+          [
+            {
+              "value": "out",
+              "col": 9,
+              "line": 48,
+              "lineBreaks": 0,
+              "offset": 1696,
+              "width": 16
+            }
+          ],
+          [
+            {
+              "value": "zr",
+              "col": 9,
+              "line": 51,
+              "lineBreaks": 0,
+              "offset": 1745
+            }
+          ],
+          [
+            {
+              "value": "ng",
+              "col": 9,
+              "line": 52,
+              "lineBreaks": 0,
+              "offset": 1785
+            }
+          ]
+        ]
+      },
+      {
+        "type": "builtin",
+        "template": {
+          "value": "ALU",
+          "col": 13,
+          "line": 54,
+          "lineBreaks": 0,
+          "offset": 1831
+        }
+      }
+    ]
+  }
+]

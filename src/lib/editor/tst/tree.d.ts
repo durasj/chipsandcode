@@ -1,5 +1,5 @@
 export interface Root extends Node<'script'> {
-  preamble: (LoadNode | OutputNode | CompareNode | OutputListNode)[];
+  preamble: (LoadNode | OutputFileNode | CompareNode | OutputListNode)[];
   cases: (SetNode | EvalNode | OutputNode)[][];
 }
 
@@ -7,7 +7,7 @@ export interface LoadNode extends Node<'load'> {
   file: IdentifierNode;
 }
 
-export interface OutputNode extends Node<'output'> {
+export interface OutputFileNode extends Node<'output'> {
   file: IdentifierNode;
 }
 
@@ -29,7 +29,7 @@ export interface OutputSpecNode extends Node<'outputSpec'> {
 
 export interface SetNode extends Node<'set'> {
   name: IdentifierNode;
-  value: boolean;
+  value: number;
   line: number;
   col: number;
 }

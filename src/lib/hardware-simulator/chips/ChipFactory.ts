@@ -1,15 +1,20 @@
-import type { ChipNode } from 'src/editor/hdl/tree';
+import type { ChipNode } from '../../editor/hdl/tree';
 import type { ChipPin } from './Chip';
 import type Chip from './Chip';
 import CustomChip from './CustomChip';
 import InvalidDesignError from './InvalidDesignError';
-import AndChip from './prebuilt/AndChip';
-import NandChip from './prebuilt/NandChip';
-import NotChip from './prebuilt/NotChip';
-import OrChip from './prebuilt/OrChip';
-import XorChip from './prebuilt/XorChip';
+import NotImplemented from './builtin/NotImplemented';
 
-export type BUILTIN_GATES = keyof typeof ChipFactory.BUILTIN;
+interface Type<T> extends Chip {
+  new (...args: unknown[]): T;
+}
+
+const BUILTIN = Object.fromEntries(
+  Object.entries(import.meta.glob('./builtin/*Chip.ts', { eager: true })).map(([file, chip]) => [
+    file.replace(/.*\/|Chip\.[^.]*$/g, ''),
+    (chip as { default: Type<Chip> }).default,
+  ]),
+);
 
 /**
  * Creates chips
@@ -18,13 +23,7 @@ class ChipFactory {
   /**
    * Built in chips
    */
-  public static readonly BUILTIN = {
-    And: AndChip,
-    Nand: NandChip,
-    Not: NotChip,
-    Or: OrChip,
-    Xor: XorChip,
-  };
+  public static readonly BUILTIN = BUILTIN;
 
   /**
    * Loaded custom chips
@@ -57,12 +56,11 @@ class ChipFactory {
       if (conf.type !== 'parts') continue;
 
       for (const statement of conf.statements) {
-        const partChip = this.fromDefined(statement.chip as BUILTIN_GATES);
+        const chipName = statement.chip.value;
+        const partChip = this.fromDefined(chipName);
         if (!partChip)
           throw new InvalidDesignError(
-            `Unknown chip '${statement.chip}'. Available chips: ${this.getAvailableChips().join(
-              ', ',
-            )}.`,
+            `Unknown chip '${chipName}'. Available chips: ${this.getAvailableChips().join(', ')}.`,
           );
         const partConnections = [] as [string, string][];
         parts.set(partChip, partConnections);
@@ -100,7 +98,7 @@ class ChipFactory {
    * @param name Name of the wanted chip
    * @returns Chip or undefined if it was not found
    */
-  public fromDefined(name: BUILTIN_GATES) {
+  public fromDefined(name: string) {
     const DefinedChip = ChipFactory.BUILTIN[name];
     if (!DefinedChip) return undefined;
 
@@ -113,7 +111,9 @@ class ChipFactory {
    * @returns List of names
    */
   public getAvailableChips() {
-    return Object.keys(ChipFactory.BUILTIN);
+    return Object.entries(ChipFactory.BUILTIN)
+      .filter(([, chip]) => !(new chip() instanceof NotImplemented))
+      .map(([name]) => name);
   }
 }
 

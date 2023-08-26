@@ -1,0 +1,89 @@
+[
+  {
+    "type": "chip",
+    "name": {
+      "value": "DMux4Way",
+      "col": 6,
+      "line": 15,
+      "lineBreaks": 0,
+      "offset": 385
+    },
+    "body": [
+      {
+        "type": "input",
+        "pins": [
+          [
+            {
+              "value": "in",
+              "col": 9,
+              "line": 17,
+              "lineBreaks": 0,
+              "offset": 407
+            }
+          ],
+          [
+            {
+              "value": "sel",
+              "col": 13,
+              "line": 17,
+              "lineBreaks": 0,
+              "offset": 411,
+              "width": 2
+            }
+          ]
+        ]
+      },
+      {
+        "type": "output",
+        "pins": [
+          [
+            {
+              "value": "a",
+              "col": 9,
+              "line": 18,
+              "lineBreaks": 0,
+              "offset": 428
+            }
+          ],
+          [
+            {
+              "value": "b",
+              "col": 12,
+              "line": 18,
+              "lineBreaks": 0,
+              "offset": 431
+            }
+          ],
+          [
+            {
+              "value": "c",
+              "col": 15,
+              "line": 18,
+              "lineBreaks": 0,
+              "offset": 434
+            }
+          ],
+          [
+            {
+              "value": "d",
+              "col": 18,
+              "line": 18,
+              "lineBreaks": 0,
+              "offset": 437
+            }
+          ]
+        ]
+      },
+      {
+        "type": "builtin",
+        "template": {
+          "value": "DMux4Way",
+          "col": 13,
+          "line": 20,
+          "lineBreaks": 0,
+          "offset": 455
+        }
+      }
+    ]
+  }
+]

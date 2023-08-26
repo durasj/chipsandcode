@@ -1,0 +1,94 @@
+[
+  {
+    "type": "chip",
+    "name": {
+      "value": "Mux4Way16",
+      "col": 6,
+      "line": 15,
+      "lineBreaks": 0,
+      "offset": 331
+    },
+    "body": [
+      {
+        "type": "input",
+        "pins": [
+          [
+            {
+              "value": "a",
+              "col": 8,
+              "line": 17,
+              "lineBreaks": 0,
+              "offset": 358,
+              "width": 16
+            }
+          ],
+          [
+            {
+              "value": "b",
+              "col": 15,
+              "line": 17,
+              "lineBreaks": 0,
+              "offset": 365,
+              "width": 16
+            }
+          ],
+          [
+            {
+              "value": "c",
+              "col": 22,
+              "line": 17,
+              "lineBreaks": 0,
+              "offset": 372,
+              "width": 16
+            }
+          ],
+          [
+            {
+              "value": "d",
+              "col": 29,
+              "line": 17,
+              "lineBreaks": 0,
+              "offset": 379,
+              "width": 16
+            }
+          ],
+          [
+            {
+              "value": "sel",
+              "col": 36,
+              "line": 17,
+              "lineBreaks": 0,
+              "offset": 386,
+              "width": 2
+            }
+          ]
+        ]
+      },
+      {
+        "type": "output",
+        "pins": [
+          [
+            {
+              "value": "out",
+              "col": 9,
+              "line": 18,
+              "lineBreaks": 0,
+              "offset": 403,
+              "width": 16
+            }
+          ]
+        ]
+      },
+      {
+        "type": "builtin",
+        "template": {
+          "value": "Mux4Way16",
+          "col": 13,
+          "line": 20,
+          "lineBreaks": 0,
+          "offset": 427
+        }
+      }
+    ]
+  }
+]

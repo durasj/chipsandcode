@@ -6,7 +6,7 @@ export interface ChipNode extends Node<'chip'> {
 }
 
 export interface ChipIONode extends Node<'input' | 'output'> {
-  pins: IdentifierNode[];
+  pins: (IdentifierNode | BusIdentifierNode)[];
 }
 
 export interface ChipPartsNode extends Node<'parts'> {
@@ -14,7 +14,7 @@ export interface ChipPartsNode extends Node<'parts'> {
 }
 
 export interface ChipStatementNode extends Node<'statement'> {
-  chip: string;
+  chip: IdentifierNode;
   connections: AssignmentNode[];
 }
 
@@ -33,8 +33,14 @@ export interface AssignmentNode extends Node<'assignment'> {
 
 export interface IdentifierNode extends Node<'identifier'> {
   value: string;
-  line: number;
   col: number;
+  line: number;
+  lineBreaks: number;
+  offset: number;
+}
+
+export interface BusIdentifierNode extends IdentifierNode {
+  length: number;
 }
 
 export interface Node<type extends string> {
