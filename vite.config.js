@@ -58,9 +58,6 @@ const config = defineConfig(() => {
           // Increase the max size to 4MB to fit Monaco
           maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
         },
-        devOptions: {
-          enabled: true,
-        },
       }),
     ],
     ssr: {

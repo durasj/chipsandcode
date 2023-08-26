@@ -78,7 +78,7 @@
 
 <div class="relative">
   <div class="max-w-7xl mx-auto px-4 sm:px-6">
-    <div class="flex justify-between items-center py-4 md:py-6 md:justify-start md:space-x-10">
+    <header class="flex justify-between items-center py-4 md:py-6 md:justify-start md:space-x-10">
       <div class="flex justify-start lg:w-0 lg:flex-1">
         <a href="/" title={`${logo.title} home`} aria-label={`${logo.title} home`}>
           <img class="h-8 w-auto sm:h-10" src={logo.path} alt="" />
@@ -222,6 +222,6 @@
           <Icon src={UserCircle} class="w-7 h-7" />
         </a>
       </div>
-    </div>
+    </header>
   </div>
 </div>

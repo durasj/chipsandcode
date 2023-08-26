@@ -3,15 +3,13 @@ import { Parser, Grammar } from 'nearley';
 import grammar from './grammar.ne';
 import type { Root } from './tree';
 
-const grammarRules = Grammar.fromCompiled(grammar);
-
 /**
  * Parses provided test script source code to AST
  *
  * @param input test script source code
  */
 function parse(input: string): Root | undefined {
-  const parser = new Parser(grammarRules);
+  const parser = new Parser(Grammar.fromCompiled(grammar));
   parser.feed(input);
 
   if (parser.results.length > 1) {

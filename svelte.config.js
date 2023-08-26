@@ -25,6 +25,9 @@ const config = {
       crawl: true,
       entries: ['*', '/learn/hardware/boolean-logic'],
     },
+    serviceWorker: {
+      register: false,
+    },
   },
 };
 

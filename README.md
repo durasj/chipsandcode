@@ -27,6 +27,16 @@ npm run build
 
 > The built app can be found in `/build`.
 
+## Tests
+
+There are broadly two kinds of automated tests:
+
+- Unit tests - powered by Vitest, can be found next to the source code with the `.test.ts` suffix. During the dev, use the command `npm run test:unit:watch`.
+- Cypress tests - can be found in the directory `./cypress`. During the dev, use the command `npm run test:cy:open`. These tests also run visual regression and accessibility checks.
+
+All checks and tests can be run using the command `npm run test`.
+This is the command used by the CI. Make sure to build the app by running `npm run build` before running this command.
+
 ## Backend
 
 The application works completely fine without any backend, but the ability to sign in and save the progress or content requires a backend.
