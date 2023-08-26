@@ -18,6 +18,8 @@ describe('Home', () => {
     // Unfortunately, images take a bit to load
     cy.wait(1000);
     cy.matchImage();
+    // ... and screenshots cause the app to reload which may take some time
+    cy.wait(500);
 
     cy.checkA11y();
 
