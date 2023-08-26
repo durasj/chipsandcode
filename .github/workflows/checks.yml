@@ -1,0 +1,27 @@
+name: Checks and Tests
+on: [push]
+
+jobs:
+  checks-unit-tests:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install
+        run: npm install
+
+      - name: Style and Typing Checks
+        run: npm run check
+
+      - name: Unit Tests
+        run: npm run test:unit
+
+  cypress-run:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v5

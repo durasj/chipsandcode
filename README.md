@@ -35,7 +35,7 @@ There are broadly two kinds of automated tests:
 - Cypress tests - can be found in the directory `./cypress`. During the dev, use the command `npm run test:cy:open`. These tests also run visual regression and accessibility checks.
 
 All checks and tests can be run using the command `npm run test`.
-This is the command used by the CI. Make sure to build the app by running `npm run build` before running this command.
+These roughly match CI checks.
 
 ## Backend
 
