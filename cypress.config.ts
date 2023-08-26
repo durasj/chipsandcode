@@ -3,7 +3,7 @@ import { initPlugin } from '@frsource/cypress-plugin-visual-regression-diff/plug
 
 export default defineConfig({
   viewportWidth: 1280,
-  viewportHeight: 800,
+  viewportHeight: 720,
   video: false,
   e2e: {
     baseUrl: 'http://localhost:5173',
