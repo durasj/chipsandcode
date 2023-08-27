@@ -31,6 +31,8 @@ jobs:
           config: baseUrl=http://localhost:4173
           build: npm run build
           start: npm run preview
+          # We tolerate higher diff in CI due to the missing fonts
+          env: pluginVisualRegressionDiffConfig={\"threshold\":0.3}
 
       - uses: actions/upload-artifact@v3
         if: failure()
@@ -38,5 +40,3 @@ jobs:
           name: cypress-screenshots
           path: cypress/screenshots
           if-no-files-found: ignore
-          # We tolerate higher diff in CI due to the missing fonts
-          env: pluginVisualRegressionDiffConfig={\"threshold\":0.3}
