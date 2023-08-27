@@ -4,7 +4,57 @@ exports[`Chip Factory > Creates Chip from Built-In ALU.hdl 1`] = `"ALU"`;
 
 exports[`Chip Factory > Creates Chip from Built-In ALU.hdl 2`] = `
 Map {
-  undefined => {
+  "x" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "y" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "zx" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "nx" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "zy" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "ny" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "f" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "no" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "zr" => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "ng" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -16,7 +66,17 @@ exports[`Chip Factory > Creates Chip from Built-In ARegister.hdl 1`] = `"ARegist
 
 exports[`Chip Factory > Creates Chip from Built-In ARegister.hdl 2`] = `
 Map {
-  undefined => {
+  "in" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "load" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -28,7 +88,17 @@ exports[`Chip Factory > Creates Chip from Built-In Add16.hdl 1`] = `"Add16"`;
 
 exports[`Chip Factory > Creates Chip from Built-In Add16.hdl 2`] = `
 Map {
-  undefined => {
+  "a" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "b" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -40,7 +110,17 @@ exports[`Chip Factory > Creates Chip from Built-In And.hdl 1`] = `"And"`;
 
 exports[`Chip Factory > Creates Chip from Built-In And.hdl 2`] = `
 Map {
-  undefined => {
+  "a" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "b" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -52,7 +132,17 @@ exports[`Chip Factory > Creates Chip from Built-In And16.hdl 1`] = `"And16"`;
 
 exports[`Chip Factory > Creates Chip from Built-In And16.hdl 2`] = `
 Map {
-  undefined => {
+  "a" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "b" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -64,7 +154,17 @@ exports[`Chip Factory > Creates Chip from Built-In Bit.hdl 1`] = `"Bit"`;
 
 exports[`Chip Factory > Creates Chip from Built-In Bit.hdl 2`] = `
 Map {
-  undefined => {
+  "in" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "load" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -76,7 +176,12 @@ exports[`Chip Factory > Creates Chip from Built-In DFF.hdl 1`] = `"DFF"`;
 
 exports[`Chip Factory > Creates Chip from Built-In DFF.hdl 2`] = `
 Map {
-  undefined => {
+  "in" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -88,7 +193,22 @@ exports[`Chip Factory > Creates Chip from Built-In DMux.hdl 1`] = `"DMux"`;
 
 exports[`Chip Factory > Creates Chip from Built-In DMux.hdl 2`] = `
 Map {
-  undefined => {
+  "in" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "sel" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "a" => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "b" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -100,7 +220,32 @@ exports[`Chip Factory > Creates Chip from Built-In DMux4Way.hdl 1`] = `"DMux4Way
 
 exports[`Chip Factory > Creates Chip from Built-In DMux4Way.hdl 2`] = `
 Map {
-  undefined => {
+  "in" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "sel" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "a" => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "b" => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "c" => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "d" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -112,7 +257,52 @@ exports[`Chip Factory > Creates Chip from Built-In DMux8Way.hdl 1`] = `"DMux8Way
 
 exports[`Chip Factory > Creates Chip from Built-In DMux8Way.hdl 2`] = `
 Map {
-  undefined => {
+  "in" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "sel" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "a" => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "b" => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "c" => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "d" => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "e" => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "f" => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "g" => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "h" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -124,7 +314,17 @@ exports[`Chip Factory > Creates Chip from Built-In DRegister.hdl 1`] = `"DRegist
 
 exports[`Chip Factory > Creates Chip from Built-In DRegister.hdl 2`] = `
 Map {
-  undefined => {
+  "in" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "load" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -136,7 +336,27 @@ exports[`Chip Factory > Creates Chip from Built-In FullAdder.hdl 1`] = `"FullAdd
 
 exports[`Chip Factory > Creates Chip from Built-In FullAdder.hdl 2`] = `
 Map {
-  undefined => {
+  "a" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "b" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "c" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "sum" => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "carry" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -148,7 +368,22 @@ exports[`Chip Factory > Creates Chip from Built-In HalfAdder.hdl 1`] = `"HalfAdd
 
 exports[`Chip Factory > Creates Chip from Built-In HalfAdder.hdl 2`] = `
 Map {
-  undefined => {
+  "a" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "b" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "sum" => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "carry" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -160,7 +395,12 @@ exports[`Chip Factory > Creates Chip from Built-In Inc16.hdl 1`] = `"Inc16"`;
 
 exports[`Chip Factory > Creates Chip from Built-In Inc16.hdl 2`] = `
 Map {
-  undefined => {
+  "in" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -172,7 +412,7 @@ exports[`Chip Factory > Creates Chip from Built-In Keyboard.hdl 1`] = `"Keyboard
 
 exports[`Chip Factory > Creates Chip from Built-In Keyboard.hdl 2`] = `
 Map {
-  undefined => {
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -184,7 +424,22 @@ exports[`Chip Factory > Creates Chip from Built-In Mux.hdl 1`] = `"Mux"`;
 
 exports[`Chip Factory > Creates Chip from Built-In Mux.hdl 2`] = `
 Map {
-  undefined => {
+  "a" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "b" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "sel" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -196,7 +451,32 @@ exports[`Chip Factory > Creates Chip from Built-In Mux4Way16.hdl 1`] = `"Mux4Way
 
 exports[`Chip Factory > Creates Chip from Built-In Mux4Way16.hdl 2`] = `
 Map {
-  undefined => {
+  "a" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "b" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "c" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "d" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "sel" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -208,7 +488,52 @@ exports[`Chip Factory > Creates Chip from Built-In Mux8Way16.hdl 1`] = `"Mux8Way
 
 exports[`Chip Factory > Creates Chip from Built-In Mux8Way16.hdl 2`] = `
 Map {
-  undefined => {
+  "a" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "b" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "c" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "d" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "e" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "f" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "g" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "h" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "sel" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -220,7 +545,22 @@ exports[`Chip Factory > Creates Chip from Built-In Mux16.hdl 1`] = `"Mux16"`;
 
 exports[`Chip Factory > Creates Chip from Built-In Mux16.hdl 2`] = `
 Map {
-  undefined => {
+  "a" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "b" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "sel" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -232,7 +572,17 @@ exports[`Chip Factory > Creates Chip from Built-In Nand.hdl 1`] = `"Nand"`;
 
 exports[`Chip Factory > Creates Chip from Built-In Nand.hdl 2`] = `
 Map {
-  undefined => {
+  "a" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "b" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -244,7 +594,12 @@ exports[`Chip Factory > Creates Chip from Built-In Not.hdl 1`] = `"Not"`;
 
 exports[`Chip Factory > Creates Chip from Built-In Not.hdl 2`] = `
 Map {
-  undefined => {
+  "in" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -256,7 +611,12 @@ exports[`Chip Factory > Creates Chip from Built-In Not16.hdl 1`] = `"Not16"`;
 
 exports[`Chip Factory > Creates Chip from Built-In Not16.hdl 2`] = `
 Map {
-  undefined => {
+  "in" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -268,7 +628,17 @@ exports[`Chip Factory > Creates Chip from Built-In Or.hdl 1`] = `"Or"`;
 
 exports[`Chip Factory > Creates Chip from Built-In Or.hdl 2`] = `
 Map {
-  undefined => {
+  "a" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "b" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -280,7 +650,12 @@ exports[`Chip Factory > Creates Chip from Built-In Or8Way.hdl 1`] = `"Or8Way"`;
 
 exports[`Chip Factory > Creates Chip from Built-In Or8Way.hdl 2`] = `
 Map {
-  undefined => {
+  "in" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -292,7 +667,17 @@ exports[`Chip Factory > Creates Chip from Built-In Or16.hdl 1`] = `"Or16"`;
 
 exports[`Chip Factory > Creates Chip from Built-In Or16.hdl 2`] = `
 Map {
-  undefined => {
+  "a" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "b" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -304,7 +689,27 @@ exports[`Chip Factory > Creates Chip from Built-In PC.hdl 1`] = `"PC"`;
 
 exports[`Chip Factory > Creates Chip from Built-In PC.hdl 2`] = `
 Map {
-  undefined => {
+  "in" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "load" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "inc" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "reset" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -316,7 +721,22 @@ exports[`Chip Factory > Creates Chip from Built-In RAM4K.hdl 1`] = `"RAM4K"`;
 
 exports[`Chip Factory > Creates Chip from Built-In RAM4K.hdl 2`] = `
 Map {
-  undefined => {
+  "in" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "load" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "address" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -328,7 +748,22 @@ exports[`Chip Factory > Creates Chip from Built-In RAM8.hdl 1`] = `"RAM8"`;
 
 exports[`Chip Factory > Creates Chip from Built-In RAM8.hdl 2`] = `
 Map {
-  undefined => {
+  "in" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "load" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "address" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -340,7 +775,22 @@ exports[`Chip Factory > Creates Chip from Built-In RAM16K.hdl 1`] = `"RAM16K"`;
 
 exports[`Chip Factory > Creates Chip from Built-In RAM16K.hdl 2`] = `
 Map {
-  undefined => {
+  "in" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "load" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "address" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -352,7 +802,22 @@ exports[`Chip Factory > Creates Chip from Built-In RAM64.hdl 1`] = `"RAM64"`;
 
 exports[`Chip Factory > Creates Chip from Built-In RAM64.hdl 2`] = `
 Map {
-  undefined => {
+  "in" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "load" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "address" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -364,7 +829,22 @@ exports[`Chip Factory > Creates Chip from Built-In RAM512.hdl 1`] = `"RAM512"`;
 
 exports[`Chip Factory > Creates Chip from Built-In RAM512.hdl 2`] = `
 Map {
-  undefined => {
+  "in" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "load" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "address" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -376,7 +856,12 @@ exports[`Chip Factory > Creates Chip from Built-In ROM32K.hdl 1`] = `"ROM32K"`;
 
 exports[`Chip Factory > Creates Chip from Built-In ROM32K.hdl 2`] = `
 Map {
-  undefined => {
+  "address" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -388,7 +873,17 @@ exports[`Chip Factory > Creates Chip from Built-In Register.hdl 1`] = `"Register
 
 exports[`Chip Factory > Creates Chip from Built-In Register.hdl 2`] = `
 Map {
-  undefined => {
+  "in" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "load" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -400,7 +895,22 @@ exports[`Chip Factory > Creates Chip from Built-In Screen.hdl 1`] = `"Screen"`;
 
 exports[`Chip Factory > Creates Chip from Built-In Screen.hdl 2`] = `
 Map {
-  undefined => {
+  "in" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "load" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "address" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -412,7 +922,17 @@ exports[`Chip Factory > Creates Chip from Built-In Xor.hdl 1`] = `"Xor"`;
 
 exports[`Chip Factory > Creates Chip from Built-In Xor.hdl 2`] = `
 Map {
-  undefined => {
+  "a" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "b" => {
+    "connections": [],
+    "state": false,
+    "type": "input",
+  },
+  "out" => {
     "connections": [],
     "state": false,
     "type": "output",
@@ -424,11 +944,6 @@ exports[`Chip Factory > Creates Chip from Project 1 And.hdl 1`] = `"And"`;
 
 exports[`Chip Factory > Creates Chip from Project 1 And.hdl 2`] = `
 Map {
-  undefined => {
-    "connections": [],
-    "state": false,
-    "type": "output",
-  },
   "a" => {
     "connections": [
       [
@@ -442,7 +957,7 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
   },
   "b" => {
     "connections": [
@@ -457,7 +972,12 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
+  },
+  "out" => {
+    "connections": [],
+    "state": false,
+    "type": "output",
   },
   "i1" => {
     "connections": [
@@ -483,11 +1003,6 @@ Map {
     "state": false,
     "type": "internal",
   },
-  "out" => {
-    "connections": [],
-    "state": false,
-    "type": "internal",
-  },
 }
 `;
 
@@ -495,11 +1010,6 @@ exports[`Chip Factory > Creates Chip from Project 1 And16.hdl 1`] = `"And16"`;
 
 exports[`Chip Factory > Creates Chip from Project 1 And16.hdl 2`] = `
 Map {
-  undefined => {
-    "connections": [],
-    "state": false,
-    "type": "output",
-  },
   "a" => {
     "connections": [
       [
@@ -648,7 +1158,7 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
   },
   "b" => {
     "connections": [
@@ -798,12 +1308,12 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
   },
   "out" => {
     "connections": [],
     "state": false,
-    "type": "internal",
+    "type": "output",
   },
 }
 `;
@@ -812,10 +1322,29 @@ exports[`Chip Factory > Creates Chip from Project 1 DMux.hdl 1`] = `"DMux"`;
 
 exports[`Chip Factory > Creates Chip from Project 1 DMux.hdl 2`] = `
 Map {
-  undefined => {
-    "connections": [],
+  "in" => {
+    "connections": [
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "b",
+      ],
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "b",
+      ],
+    ],
     "state": false,
-    "type": "output",
+    "type": "input",
   },
   "sel" => {
     "connections": [
@@ -838,7 +1367,17 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
+  },
+  "a" => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "b" => {
+    "connections": [],
+    "state": false,
+    "type": "output",
   },
   "negSel" => {
     "connections": [
@@ -855,40 +1394,6 @@ Map {
     "state": false,
     "type": "internal",
   },
-  "in" => {
-    "connections": [
-      [
-        AndChip {
-          "a": false,
-          "b": false,
-          "name": "And",
-          "out": false,
-        },
-        "b",
-      ],
-      [
-        AndChip {
-          "a": false,
-          "b": false,
-          "name": "And",
-          "out": false,
-        },
-        "b",
-      ],
-    ],
-    "state": false,
-    "type": "internal",
-  },
-  "a" => {
-    "connections": [],
-    "state": false,
-    "type": "internal",
-  },
-  "b" => {
-    "connections": [],
-    "state": false,
-    "type": "internal",
-  },
 }
 `;
 
@@ -896,11 +1401,6 @@ exports[`Chip Factory > Creates Chip from Project 1 DMux4Way.hdl 1`] = `"DMux4Wa
 
 exports[`Chip Factory > Creates Chip from Project 1 DMux4Way.hdl 2`] = `
 Map {
-  undefined => {
-    "connections": [],
-    "state": false,
-    "type": "output",
-  },
   "in" => {
     "connections": [
       [
@@ -911,7 +1411,7 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
   },
   "sel" => {
     "connections": [
@@ -935,7 +1435,55 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
+  },
+  "a" => {
+    "connections": [
+      [
+        DMuxChip {
+          "name": "DMux",
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "output",
+  },
+  "b" => {
+    "connections": [
+      [
+        DMuxChip {
+          "name": "DMux",
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "output",
+  },
+  "c" => {
+    "connections": [
+      [
+        DMuxChip {
+          "name": "DMux",
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "output",
+  },
+  "d" => {
+    "connections": [
+      [
+        DMuxChip {
+          "name": "DMux",
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "output",
   },
   "dm0" => {
     "connections": [
@@ -973,54 +1521,6 @@ Map {
     "state": false,
     "type": "internal",
   },
-  "a" => {
-    "connections": [
-      [
-        DMuxChip {
-          "name": "DMux",
-        },
-        "a",
-      ],
-    ],
-    "state": false,
-    "type": "internal",
-  },
-  "b" => {
-    "connections": [
-      [
-        DMuxChip {
-          "name": "DMux",
-        },
-        "b",
-      ],
-    ],
-    "state": false,
-    "type": "internal",
-  },
-  "c" => {
-    "connections": [
-      [
-        DMuxChip {
-          "name": "DMux",
-        },
-        "a",
-      ],
-    ],
-    "state": false,
-    "type": "internal",
-  },
-  "d" => {
-    "connections": [
-      [
-        DMuxChip {
-          "name": "DMux",
-        },
-        "b",
-      ],
-    ],
-    "state": false,
-    "type": "internal",
-  },
 }
 `;
 
@@ -1028,11 +1528,6 @@ exports[`Chip Factory > Creates Chip from Project 1 DMux8Way.hdl 1`] = `"DMux8Wa
 
 exports[`Chip Factory > Creates Chip from Project 1 DMux8Way.hdl 2`] = `
 Map {
-  undefined => {
-    "connections": [],
-    "state": false,
-    "type": "output",
-  },
   "in" => {
     "connections": [
       [
@@ -1043,7 +1538,7 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
   },
   "sel" => {
     "connections": [
@@ -1067,7 +1562,103 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
+  },
+  "a" => {
+    "connections": [
+      [
+        DMux4WayChip {
+          "name": "DMux4Way",
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "output",
+  },
+  "b" => {
+    "connections": [
+      [
+        DMux4WayChip {
+          "name": "DMux4Way",
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "output",
+  },
+  "c" => {
+    "connections": [
+      [
+        DMux4WayChip {
+          "name": "DMux4Way",
+        },
+        "c",
+      ],
+    ],
+    "state": false,
+    "type": "output",
+  },
+  "d" => {
+    "connections": [
+      [
+        DMux4WayChip {
+          "name": "DMux4Way",
+        },
+        "d",
+      ],
+    ],
+    "state": false,
+    "type": "output",
+  },
+  "e" => {
+    "connections": [
+      [
+        DMux4WayChip {
+          "name": "DMux4Way",
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "output",
+  },
+  "f" => {
+    "connections": [
+      [
+        DMux4WayChip {
+          "name": "DMux4Way",
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "output",
+  },
+  "g" => {
+    "connections": [
+      [
+        DMux4WayChip {
+          "name": "DMux4Way",
+        },
+        "c",
+      ],
+    ],
+    "state": false,
+    "type": "output",
+  },
+  "h" => {
+    "connections": [
+      [
+        DMux4WayChip {
+          "name": "DMux4Way",
+        },
+        "d",
+      ],
+    ],
+    "state": false,
+    "type": "output",
   },
   "dm1" => {
     "connections": [
@@ -1105,102 +1696,6 @@ Map {
     "state": false,
     "type": "internal",
   },
-  "a" => {
-    "connections": [
-      [
-        DMux4WayChip {
-          "name": "DMux4Way",
-        },
-        "a",
-      ],
-    ],
-    "state": false,
-    "type": "internal",
-  },
-  "b" => {
-    "connections": [
-      [
-        DMux4WayChip {
-          "name": "DMux4Way",
-        },
-        "b",
-      ],
-    ],
-    "state": false,
-    "type": "internal",
-  },
-  "c" => {
-    "connections": [
-      [
-        DMux4WayChip {
-          "name": "DMux4Way",
-        },
-        "c",
-      ],
-    ],
-    "state": false,
-    "type": "internal",
-  },
-  "d" => {
-    "connections": [
-      [
-        DMux4WayChip {
-          "name": "DMux4Way",
-        },
-        "d",
-      ],
-    ],
-    "state": false,
-    "type": "internal",
-  },
-  "e" => {
-    "connections": [
-      [
-        DMux4WayChip {
-          "name": "DMux4Way",
-        },
-        "a",
-      ],
-    ],
-    "state": false,
-    "type": "internal",
-  },
-  "f" => {
-    "connections": [
-      [
-        DMux4WayChip {
-          "name": "DMux4Way",
-        },
-        "b",
-      ],
-    ],
-    "state": false,
-    "type": "internal",
-  },
-  "g" => {
-    "connections": [
-      [
-        DMux4WayChip {
-          "name": "DMux4Way",
-        },
-        "c",
-      ],
-    ],
-    "state": false,
-    "type": "internal",
-  },
-  "h" => {
-    "connections": [
-      [
-        DMux4WayChip {
-          "name": "DMux4Way",
-        },
-        "d",
-      ],
-    ],
-    "state": false,
-    "type": "internal",
-  },
 }
 `;
 
@@ -1208,10 +1703,35 @@ exports[`Chip Factory > Creates Chip from Project 1 Mux.hdl 1`] = `"Mux"`;
 
 exports[`Chip Factory > Creates Chip from Project 1 Mux.hdl 2`] = `
 Map {
-  undefined => {
-    "connections": [],
+  "a" => {
+    "connections": [
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "b",
+      ],
+    ],
     "state": false,
-    "type": "output",
+    "type": "input",
+  },
+  "b" => {
+    "connections": [
+      [
+        AndChip {
+          "a": false,
+          "b": false,
+          "name": "And",
+          "out": false,
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "input",
   },
   "sel" => {
     "connections": [
@@ -1234,7 +1754,12 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
+  },
+  "out" => {
+    "connections": [],
+    "state": false,
+    "type": "output",
   },
   "negSel" => {
     "connections": [
@@ -1246,21 +1771,6 @@ Map {
           "out": false,
         },
         "a",
-      ],
-    ],
-    "state": false,
-    "type": "internal",
-  },
-  "a" => {
-    "connections": [
-      [
-        AndChip {
-          "a": false,
-          "b": false,
-          "name": "And",
-          "out": false,
-        },
-        "b",
       ],
     ],
     "state": false,
@@ -1281,21 +1791,6 @@ Map {
     "state": false,
     "type": "internal",
   },
-  "b" => {
-    "connections": [
-      [
-        AndChip {
-          "a": false,
-          "b": false,
-          "name": "And",
-          "out": false,
-        },
-        "b",
-      ],
-    ],
-    "state": false,
-    "type": "internal",
-  },
   "choiceB" => {
     "connections": [
       [
@@ -1311,11 +1806,6 @@ Map {
     "state": false,
     "type": "internal",
   },
-  "out" => {
-    "connections": [],
-    "state": false,
-    "type": "internal",
-  },
 }
 `;
 
@@ -1323,11 +1813,6 @@ exports[`Chip Factory > Creates Chip from Project 1 Mux4Way16.hdl 1`] = `"Mux4Wa
 
 exports[`Chip Factory > Creates Chip from Project 1 Mux4Way16.hdl 2`] = `
 Map {
-  undefined => {
-    "connections": [],
-    "state": false,
-    "type": "output",
-  },
   "a" => {
     "connections": [
       [
@@ -1338,7 +1823,7 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
   },
   "b" => {
     "connections": [
@@ -1350,7 +1835,31 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
+  },
+  "c" => {
+    "connections": [
+      [
+        Mux16Chip {
+          "name": "Mux16",
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "input",
+  },
+  "d" => {
+    "connections": [
+      [
+        Mux16Chip {
+          "name": "Mux16",
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "input",
   },
   "sel" => {
     "connections": [
@@ -1374,7 +1883,19 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
+  },
+  "out" => {
+    "connections": [
+      [
+        Mux16Chip {
+          "name": "Mux16",
+        },
+        "out",
+      ],
+    ],
+    "state": false,
+    "type": "output",
   },
   "ab" => {
     "connections": [
@@ -1389,30 +1910,6 @@ Map {
           "name": "Mux16",
         },
         "a",
-      ],
-    ],
-    "state": false,
-    "type": "internal",
-  },
-  "c" => {
-    "connections": [
-      [
-        Mux16Chip {
-          "name": "Mux16",
-        },
-        "a",
-      ],
-    ],
-    "state": false,
-    "type": "internal",
-  },
-  "d" => {
-    "connections": [
-      [
-        Mux16Chip {
-          "name": "Mux16",
-        },
-        "b",
       ],
     ],
     "state": false,
@@ -1436,18 +1933,6 @@ Map {
     "state": false,
     "type": "internal",
   },
-  "out" => {
-    "connections": [
-      [
-        Mux16Chip {
-          "name": "Mux16",
-        },
-        "out",
-      ],
-    ],
-    "state": false,
-    "type": "internal",
-  },
 }
 `;
 
@@ -1455,11 +1940,6 @@ exports[`Chip Factory > Creates Chip from Project 1 Mux8Way16.hdl 1`] = `"Mux8Wa
 
 exports[`Chip Factory > Creates Chip from Project 1 Mux8Way16.hdl 2`] = `
 Map {
-  undefined => {
-    "connections": [],
-    "state": false,
-    "type": "output",
-  },
   "a" => {
     "connections": [
       [
@@ -1470,7 +1950,7 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
   },
   "b" => {
     "connections": [
@@ -1482,7 +1962,7 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
   },
   "c" => {
     "connections": [
@@ -1494,7 +1974,7 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
   },
   "d" => {
     "connections": [
@@ -1506,7 +1986,55 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
+  },
+  "e" => {
+    "connections": [
+      [
+        Mux4WayChip {
+          "name": "Mux4Way",
+        },
+        "a",
+      ],
+    ],
+    "state": false,
+    "type": "input",
+  },
+  "f" => {
+    "connections": [
+      [
+        Mux4WayChip {
+          "name": "Mux4Way",
+        },
+        "b",
+      ],
+    ],
+    "state": false,
+    "type": "input",
+  },
+  "g" => {
+    "connections": [
+      [
+        Mux4WayChip {
+          "name": "Mux4Way",
+        },
+        "c",
+      ],
+    ],
+    "state": false,
+    "type": "input",
+  },
+  "h" => {
+    "connections": [
+      [
+        Mux4WayChip {
+          "name": "Mux4Way",
+        },
+        "d",
+      ],
+    ],
+    "state": false,
+    "type": "input",
   },
   "sel" => {
     "connections": [
@@ -1530,7 +2058,19 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
+  },
+  "out" => {
+    "connections": [
+      [
+        Mux16Chip {
+          "name": "Mux16",
+        },
+        "out",
+      ],
+    ],
+    "state": false,
+    "type": "output",
   },
   "m0" => {
     "connections": [
@@ -1545,54 +2085,6 @@ Map {
           "name": "Mux16",
         },
         "a",
-      ],
-    ],
-    "state": false,
-    "type": "internal",
-  },
-  "e" => {
-    "connections": [
-      [
-        Mux4WayChip {
-          "name": "Mux4Way",
-        },
-        "a",
-      ],
-    ],
-    "state": false,
-    "type": "internal",
-  },
-  "f" => {
-    "connections": [
-      [
-        Mux4WayChip {
-          "name": "Mux4Way",
-        },
-        "b",
-      ],
-    ],
-    "state": false,
-    "type": "internal",
-  },
-  "g" => {
-    "connections": [
-      [
-        Mux4WayChip {
-          "name": "Mux4Way",
-        },
-        "c",
-      ],
-    ],
-    "state": false,
-    "type": "internal",
-  },
-  "h" => {
-    "connections": [
-      [
-        Mux4WayChip {
-          "name": "Mux4Way",
-        },
-        "d",
       ],
     ],
     "state": false,
@@ -1616,18 +2108,6 @@ Map {
     "state": false,
     "type": "internal",
   },
-  "out" => {
-    "connections": [
-      [
-        Mux16Chip {
-          "name": "Mux16",
-        },
-        "out",
-      ],
-    ],
-    "state": false,
-    "type": "internal",
-  },
 }
 `;
 
@@ -1635,11 +2115,6 @@ exports[`Chip Factory > Creates Chip from Project 1 Mux16.hdl 1`] = `"Mux16"`;
 
 exports[`Chip Factory > Creates Chip from Project 1 Mux16.hdl 2`] = `
 Map {
-  undefined => {
-    "connections": [],
-    "state": false,
-    "type": "output",
-  },
   "a" => {
     "connections": [
       [
@@ -1740,7 +2215,7 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
   },
   "b" => {
     "connections": [
@@ -1842,7 +2317,7 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
   },
   "sel" => {
     "connections": [
@@ -1944,7 +2419,7 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
   },
   "out" => {
     "connections": [
@@ -2046,7 +2521,7 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "output",
   },
 }
 `;
@@ -2055,11 +2530,6 @@ exports[`Chip Factory > Creates Chip from Project 1 Not.hdl 1`] = `"Not"`;
 
 exports[`Chip Factory > Creates Chip from Project 1 Not.hdl 2`] = `
 Map {
-  undefined => {
-    "connections": [],
-    "state": false,
-    "type": "output",
-  },
   "in" => {
     "connections": [
       [
@@ -2082,12 +2552,12 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
   },
   "out" => {
     "connections": [],
     "state": false,
-    "type": "internal",
+    "type": "output",
   },
 }
 `;
@@ -2096,11 +2566,6 @@ exports[`Chip Factory > Creates Chip from Project 1 Not16.hdl 1`] = `"Not16"`;
 
 exports[`Chip Factory > Creates Chip from Project 1 Not16.hdl 2`] = `
 Map {
-  undefined => {
-    "connections": [],
-    "state": false,
-    "type": "output",
-  },
   "in" => {
     "connections": [
       [
@@ -2233,12 +2698,12 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
   },
   "out" => {
     "connections": [],
     "state": false,
-    "type": "internal",
+    "type": "output",
   },
 }
 `;
@@ -2247,11 +2712,6 @@ exports[`Chip Factory > Creates Chip from Project 1 Or.hdl 1`] = `"Or"`;
 
 exports[`Chip Factory > Creates Chip from Project 1 Or.hdl 2`] = `
 Map {
-  undefined => {
-    "connections": [],
-    "state": false,
-    "type": "output",
-  },
   "a" => {
     "connections": [
       [
@@ -2274,22 +2734,7 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
-  },
-  "negA" => {
-    "connections": [
-      [
-        NandChip {
-          "a": false,
-          "b": false,
-          "name": "Nand",
-          "out": false,
-        },
-        "a",
-      ],
-    ],
-    "state": false,
-    "type": "internal",
+    "type": "input",
   },
   "b" => {
     "connections": [
@@ -2313,6 +2758,26 @@ Map {
       ],
     ],
     "state": false,
+    "type": "input",
+  },
+  "out" => {
+    "connections": [],
+    "state": false,
+    "type": "output",
+  },
+  "negA" => {
+    "connections": [
+      [
+        NandChip {
+          "a": false,
+          "b": false,
+          "name": "Nand",
+          "out": false,
+        },
+        "a",
+      ],
+    ],
+    "state": false,
     "type": "internal",
   },
   "negB" => {
@@ -2330,11 +2795,6 @@ Map {
     "state": false,
     "type": "internal",
   },
-  "out" => {
-    "connections": [],
-    "state": false,
-    "type": "internal",
-  },
 }
 `;
 
@@ -2342,11 +2802,6 @@ exports[`Chip Factory > Creates Chip from Project 1 Or8Way.hdl 1`] = `"Or8Way"`;
 
 exports[`Chip Factory > Creates Chip from Project 1 Or8Way.hdl 2`] = `
 Map {
-  undefined => {
-    "connections": [],
-    "state": false,
-    "type": "output",
-  },
   "in" => {
     "connections": [
       [
@@ -2423,7 +2878,12 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
+  },
+  "out" => {
+    "connections": [],
+    "state": false,
+    "type": "output",
   },
   "i1" => {
     "connections": [
@@ -2515,11 +2975,6 @@ Map {
     "state": false,
     "type": "internal",
   },
-  "out" => {
-    "connections": [],
-    "state": false,
-    "type": "internal",
-  },
 }
 `;
 
@@ -2527,11 +2982,6 @@ exports[`Chip Factory > Creates Chip from Project 1 Or16.hdl 1`] = `"Or16"`;
 
 exports[`Chip Factory > Creates Chip from Project 1 Or16.hdl 2`] = `
 Map {
-  undefined => {
-    "connections": [],
-    "state": false,
-    "type": "output",
-  },
   "a" => {
     "connections": [
       [
@@ -2680,7 +3130,7 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
   },
   "b" => {
     "connections": [
@@ -2830,12 +3280,12 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
   },
   "out" => {
     "connections": [],
     "state": false,
-    "type": "internal",
+    "type": "output",
   },
 }
 `;
@@ -2844,11 +3294,6 @@ exports[`Chip Factory > Creates Chip from Project 1 Xor.hdl 1`] = `"Xor"`;
 
 exports[`Chip Factory > Creates Chip from Project 1 Xor.hdl 2`] = `
 Map {
-  undefined => {
-    "connections": [],
-    "state": false,
-    "type": "output",
-  },
   "a" => {
     "connections": [
       [
@@ -2871,7 +3316,7 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
   },
   "b" => {
     "connections": [
@@ -2895,7 +3340,12 @@ Map {
       ],
     ],
     "state": false,
-    "type": "internal",
+    "type": "input",
+  },
+  "out" => {
+    "connections": [],
+    "state": false,
+    "type": "output",
   },
   "i1" => {
     "connections": [
@@ -2948,11 +3398,6 @@ Map {
         "b",
       ],
     ],
-    "state": false,
-    "type": "internal",
-  },
-  "out" => {
-    "connections": [],
     "state": false,
     "type": "internal",
   },
