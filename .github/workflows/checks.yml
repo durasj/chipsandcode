@@ -31,3 +31,10 @@ jobs:
           config: baseUrl=http://localhost:4173
           build: npm run build
           start: npm run preview
+
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+          if-no-files-found: ignore
