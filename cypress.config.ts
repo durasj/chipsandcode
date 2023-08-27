@@ -15,4 +15,8 @@ export default defineConfig({
     // Retry attempts during (CI) runs for flaky tests
     runMode: 2,
   },
+  env: {
+    // We tolerate higher diff in CI due to missing fonts
+    pluginVisualRegressionDiffConfig: process.env.CI ? { threshold: 0.3 } : { threshold: 0.01 },
+  },
 });
