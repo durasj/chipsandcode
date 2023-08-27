@@ -38,3 +38,5 @@ jobs:
           name: cypress-screenshots
           path: cypress/screenshots
           if-no-files-found: ignore
+          # We tolerate higher diff in CI due to the missing fonts
+          env: pluginVisualRegressionDiffConfig={\"threshold\":0.3}
