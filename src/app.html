@@ -23,7 +23,8 @@
     -->
     <script>
       var savedTheme = localStorage.getItem('theme');
-      var preferredDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var preferredDark =
+        window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
       var theme = savedTheme || (preferredDark ? 'dark' : 'light');
 

@@ -18,6 +18,10 @@ const config = {
           secondary: '#0284c7',
 
           '--btn-text-case': 'none',
+
+          // Default has low contrast
+          '.btn-primary': { color: '#e0e7ff' },
+          '.text-primary-content': { color: '#e0e7ff' },
         },
         dark: {
           ...require('daisyui/src/theming/themes')['[data-theme=dark]'],

@@ -1,15 +1,6 @@
 describe('Home', () => {
   it('Contains welcome message and link to content', () => {
-    cy.visit('/', {
-      onBeforeLoad(win) {
-        cy.stub(win, 'matchMedia')
-          .withArgs('(prefers-color-scheme: dark)')
-          .returns({
-            matches: false,
-            addEventListener: () => 0,
-          });
-      },
-    });
+    cy.visit('/');
     cy.injectAxe();
 
     cy.contains('Wondering how computers work?');

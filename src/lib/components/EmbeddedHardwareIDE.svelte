@@ -22,7 +22,7 @@
   })();
 </script>
 
-<main
+<div
   class="not-prose relative flex flex-grow w-full 2xl:w-[260%] 2xl:-left-[80%] xl:w-[220%] xl:-left-[60%] lg:w-[174%] lg:-left-[37%] md:w-[120%] md:-left-[10%] min-h-[24rem] z-10 my-12"
   aria-live="polite"
 >
@@ -38,4 +38,4 @@
   {:catch error}
     <Problem message={error.message} />
   {/await}
-</main>
+</div>

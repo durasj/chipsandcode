@@ -37,6 +37,14 @@
 
 <main class="flex flex-grow border-t border-base-200" aria-live="polite">
   {#await experiment}
+    <h1 class="sr-only">New Experiment - Hardware IDE</h1>
+  {:then experiment}
+    <h1 class="sr-only">{experiment.name} - Hardware IDE</h1>
+  {:catch}
+    <h1 class="sr-only">Invalid Experiment - Hardware IDE</h1>
+  {/await}
+
+  {#await experiment}
     <Loading name="Experiment" />
   {:then experiment}
     <HardwareIDE {experiment} />

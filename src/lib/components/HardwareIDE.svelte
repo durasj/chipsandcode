@@ -439,6 +439,12 @@
 
       experiment = response.experiment;
 
+      window.history.replaceState(
+        experiment.id,
+        `${experiment.name} - Hardware IDE - Chips and Code`,
+        `/experiment/hardware-ide/${experiment.id}`,
+      );
+
       savingState = 'SAVED';
     } catch (e) {
       error = `Could not save: ${(e as Error)?.message || 'Unknown error'}`;
@@ -489,7 +495,7 @@
     removingState = true;
 
     try {
-      await api(`/experiment/${experiment?.id}`, {
+      await api(`/experiments/${experiment?.id}`, {
         method: 'DELETE',
         redirect: 'follow',
       });
@@ -689,22 +695,30 @@
         </div>
       {/if}
 
-      <div use:monacoEditor class="grow" aria-label={`${tabDescription[selectedTab]} editor`} />
+      <div
+        role="region"
+        use:monacoEditor
+        class="grow"
+        aria-label={`${tabDescription[selectedTab]} editor`}
+      />
     </TabGroup>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-3 content-start">
     <div class="flex justify-between items-center p-4 md:col-span-3">
-      <input
-        class={`bg-inherit text-lg font-bold grow rounded-sm${
-          controls ? ' hover:outline hover:outline-2 hover:outline-base-content' : ''
-        }`}
-        bind:value={name}
-        on:change={checkIsDirty}
-        disabled={!controls}
-        title="Experiment name"
-        aria-label="Experiment name"
-      />
+      <label>
+        <div class="sr-only">Experiment name</div>
+        <input
+          class={`bg-inherit text-lg font-bold grow rounded-sm${
+            controls ? ' hover:outline hover:outline-2 hover:outline-base-content' : ''
+          }`}
+          bind:value={name}
+          on:change={checkIsDirty}
+          disabled={!controls}
+          title="Experiment name"
+          aria-label="Experiment name"
+        />
+      </label>
 
       {#if controls}
         <div class="mt-5 flex lg:mt-0 lg:ml-4 gap-2">
@@ -822,12 +836,15 @@
                 </div>
 
                 <div class="input-group input-group-sm w-full">
-                  <input
-                    type="text"
-                    readonly
-                    class="input input-bordered input-sm"
-                    value={location.href}
-                  />
+                  <label>
+                    <div class="sr-only">Experiment URL</div>
+                    <input
+                      type="text"
+                      readonly
+                      class="input input-bordered input-sm"
+                      value={location.href}
+                    />
+                  </label>
                   <button
                     class="btn btn-square btn-sm w-fit px-2"
                     on:click={() => navigator.clipboard.writeText(location.href)}>Copy link</button
@@ -938,16 +955,19 @@
             {#each inputPins as pin}
               <tr>
                 <td class="border border-base-200 py-1 px-2">{pin.name}</td>
-                <td class="border border-base-200"
-                  ><input
-                    type="number"
-                    bind:value={pin.value}
-                    on:change={() => run()}
-                    min="0"
-                    max="1"
-                    required
-                    class="block w-full border-none py-1 px-2 bg-inherit hover:outline focus-visible:outline outline-base-content outline-2"
-                  /></td
+                <td class="border border-base-200">
+                  <label>
+                    <div class="sr-only">Value for {pin.name}</div>
+                    <input
+                      type="number"
+                      bind:value={pin.value}
+                      on:change={() => run()}
+                      min="0"
+                      max="1"
+                      required
+                      class="block w-full border-none py-1 px-2 bg-inherit hover:outline focus-visible:outline outline-base-content outline-2"
+                    /></label
+                  ></td
                 >
               </tr>
             {/each}

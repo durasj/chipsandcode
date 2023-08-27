@@ -45,7 +45,7 @@ const outputSpec = [
   },
 ] satisfies OutputSpecNode[];
 
-describe('API call abstraction', () => {
+describe('Output', () => {
   it('Allows adding and getting rows', async () => {
     const output = new Output([]);
 
@@ -60,7 +60,7 @@ describe('API call abstraction', () => {
     expect(new Output(outputSpec).getText()).toBe('|   a   |   b   |  out  |');
   });
 
-  it('Formats with defined rows', () => {
+  it('Formats added rows', () => {
     const output = new Output(outputSpec);
 
     output.addRow([false, false, true]);
