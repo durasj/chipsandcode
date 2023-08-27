@@ -1,32 +1,33 @@
 @{%
-    import moo from 'moo';
-    const lexer = moo.compile({
-        semicolon:      ';',
-        colon:          ':',
-        comma:          ',',
-        equals:         '=',
-        format: {
-          match: /%[BXDS][0-9]+\.[1-9][0-9]*\.[0-9]+/,
-          value: f => [f[1], ...f.substr(2).split('.').map(Number)],
-        },
-        identifier: {
-          match: /[a-zA-Z_][a-zA-Z0-9-_\.]*/,
-          type: moo.keywords({
-            keyword: ['load', 'output-file', 'compare-to', 'output-list', 'set', 'eval', 'output'],
-          }),
-        },
-        decimalValue: { match: /\d+/, value: (v) => +v },
-        // TODO: Add support for X, D, S values
-        binaryValue: {
-          match: /%B[01]+/,
-          value: f => ({ type: 'value', format: 'binary', value: f.substr(2).split('').map(Boolean)}),
-        },
-        whiteSpace:     { match: /\s+/, lineBreaks: true },
-        comment:        { match: /\/\/[^\n]*/, value: c => c.slice(2) },
-        commentBlock:   { match: /\/\*[\s\S]*?\*\//, lineBreaks: true, value: c => c.slice(2, -2) }
-    });
+  import moo from 'moo';
+  const lexer = moo.compile({
+    semicolon:      ';',
+    colon:          ':',
+    comma:          ',',
+    equals:         '=',
+    format: {
+      match: /%[BXDS][0-9]+\.[1-9][0-9]*\.[0-9]+/,
+      value: f => [f[1], ...f.substr(2).split('.').map(Number)],
+    },
+    identifier: {
+      match: /[a-zA-Z_][a-zA-Z0-9-_\.]*/,
+      type: moo.keywords({
+        keyword: ['load', 'output-file', 'compare-to', 'output-list', 'set', 'eval', 'output'],
+      }),
+    },
+    decimalValue: { match: /\d+/, value: (v) => +v },
+    // TODO: Add support for X, D, S values
+    binaryValue: {
+      match: /%B[01]+/,
+      value: f => ({ type: 'value', format: 'binary', value: f.substr(2).split('').map(Boolean)}),
+    },
+    whiteSpace:     { match: /\s+/, lineBreaks: true },
+    comment:        { match: /\/\/[^\n]*/, value: c => c.slice(2) },
+    commentBlock:   { match: /\/\*[\s\S]*?\*\//, lineBreaks: true, value: c => c.slice(2, -2) }
+  });
 
-    const getIdentifier = ({ value, col, line, lineBreaks, offset }) => ({ value, col, line, lineBreaks, offset });
+  const getIdentifier = ({ value, col, line, lineBreaks, offset }) =>
+    ({ value, col, line, lineBreaks, offset });
 %}
 
 @lexer lexer
@@ -67,7 +68,7 @@ value ->
     | %binaryValue  {% id %}
 
 caseInstruction ->
-      "set" _ %identifier _ value  {% ([kw, , name, , value]) => ({ type: 'set', name: getIdentifier(name), value: value.value, col: kw.col, line: kw.line }) %}
+      "set" _ %identifier _ value   {% ([kw, , name, , value]) => ({ type: 'set', name: getIdentifier(name), value: value.value, col: kw.col, line: kw.line }) %}
     | "eval"                        {% ([kw]) => ({ type: 'eval', col: kw.col, line: kw.line }) %}
     | "output"                      {% ([kw]) => ({ type: 'output', col: kw.col, line: kw.line }) %}
 
