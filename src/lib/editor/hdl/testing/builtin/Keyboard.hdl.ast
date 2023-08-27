@@ -12,16 +12,14 @@
       {
         "type": "output",
         "pins": [
-          [
-            {
-              "value": "out",
-              "col": 9,
-              "line": 18,
-              "lineBreaks": 0,
-              "offset": 557,
-              "width": 16
-            }
-          ]
+          {
+            "value": "out",
+            "col": 9,
+            "line": 18,
+            "lineBreaks": 0,
+            "offset": 557,
+            "width": 16
+          }
         ]
       },
       {

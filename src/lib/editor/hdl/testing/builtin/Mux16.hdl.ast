@@ -12,50 +12,42 @@
       {
         "type": "input",
         "pins": [
-          [
-            {
-              "value": "a",
-              "col": 9,
-              "line": 12,
-              "lineBreaks": 0,
-              "offset": 276,
-              "width": 16
-            }
-          ],
-          [
-            {
-              "value": "b",
-              "col": 16,
-              "line": 12,
-              "lineBreaks": 0,
-              "offset": 283,
-              "width": 16
-            }
-          ],
-          [
-            {
-              "value": "sel",
-              "col": 23,
-              "line": 12,
-              "lineBreaks": 0,
-              "offset": 290
-            }
-          ]
+          {
+            "value": "a",
+            "col": 9,
+            "line": 12,
+            "lineBreaks": 0,
+            "offset": 276,
+            "width": 16
+          },
+          {
+            "value": "b",
+            "col": 16,
+            "line": 12,
+            "lineBreaks": 0,
+            "offset": 283,
+            "width": 16
+          },
+          {
+            "value": "sel",
+            "col": 23,
+            "line": 12,
+            "lineBreaks": 0,
+            "offset": 290
+          }
         ]
       },
       {
         "type": "output",
         "pins": [
-          [
-            {
-              "value": "out",
-              "col": 9,
-              "line": 13,
-              "lineBreaks": 0,
-              "offset": 304,
-              "width": 16
-            }
-          ]
+          {
+            "value": "out",
+            "col": 9,
+            "line": 13,
+            "lineBreaks": 0,
+            "offset": 304,
+            "width": 16
+          }
         ]
       },
       {

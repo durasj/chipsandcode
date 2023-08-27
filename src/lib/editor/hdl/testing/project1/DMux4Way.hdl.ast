@@ -12,66 +12,54 @@
       {
         "type": "input",
         "pins": [
-          [
-            {
-              "value": "in",
-              "col": 8,
-              "line": 15,
-              "lineBreaks": 0,
-              "offset": 409
-            }
-          ],
-          [
-            {
-              "value": "sel",
-              "col": 12,
-              "line": 15,
-              "lineBreaks": 0,
-              "offset": 413,
-              "width": 2
-            }
-          ]
+          {
+            "value": "in",
+            "col": 8,
+            "line": 15,
+            "lineBreaks": 0,
+            "offset": 409
+          },
+          {
+            "value": "sel",
+            "col": 12,
+            "line": 15,
+            "lineBreaks": 0,
+            "offset": 413,
+            "width": 2
+          }
         ]
       },
       {
         "type": "output",
         "pins": [
-          [
-            {
-              "value": "a",
-              "col": 9,
-              "line": 16,
-              "lineBreaks": 0,
-              "offset": 429
-            }
-          ],
-          [
-            {
-              "value": "b",
-              "col": 12,
-              "line": 16,
-              "lineBreaks": 0,
-              "offset": 432
-            }
-          ],
-          [
-            {
-              "value": "c",
-              "col": 15,
-              "line": 16,
-              "lineBreaks": 0,
-              "offset": 435
-            }
-          ],
-          [
-            {
-              "value": "d",
-              "col": 18,
-              "line": 16,
-              "lineBreaks": 0,
-              "offset": 438
-            }
-          ]
+          {
+            "value": "a",
+            "col": 9,
+            "line": 16,
+            "lineBreaks": 0,
+            "offset": 429
+          },
+          {
+            "value": "b",
+            "col": 12,
+            "line": 16,
+            "lineBreaks": 0,
+            "offset": 432
+          },
+          {
+            "value": "c",
+            "col": 15,
+            "line": 16,
+            "lineBreaks": 0,
+            "offset": 435
+          },
+          {
+            "value": "d",
+            "col": 18,
+            "line": 16,
+            "lineBreaks": 0,
+            "offset": 438
+          }
         ]
       },
       {

@@ -6,15 +6,13 @@ exports[`HDL Parser > Parses minimal CHIP with only pin definition 1`] = `
     "body": [
       {
         "pins": [
-          [
-            {
-              "col": 15,
-              "line": 1,
-              "lineBreaks": 0,
-              "offset": 14,
-              "value": "a",
-            },
-          ],
+          {
+            "col": 15,
+            "line": 1,
+            "lineBreaks": 0,
+            "offset": 14,
+            "value": "a",
+          },
         ],
         "type": "input",
       },

@@ -12,58 +12,48 @@
       {
         "type": "input",
         "pins": [
-          [
-            {
-              "value": "in",
-              "col": 9,
-              "line": 17,
-              "lineBreaks": 0,
-              "offset": 456,
-              "width": 16
-            }
-          ],
-          [
-            {
-              "value": "load",
-              "col": 17,
-              "line": 17,
-              "lineBreaks": 0,
-              "offset": 464
-            }
-          ],
-          [
-            {
-              "value": "inc",
-              "col": 23,
-              "line": 17,
-              "lineBreaks": 0,
-              "offset": 470
-            }
-          ],
-          [
-            {
-              "value": "reset",
-              "col": 28,
-              "line": 17,
-              "lineBreaks": 0,
-              "offset": 475
-            }
-          ]
+          {
+            "value": "in",
+            "col": 9,
+            "line": 17,
+            "lineBreaks": 0,
+            "offset": 456,
+            "width": 16
+          },
+          {
+            "value": "load",
+            "col": 17,
+            "line": 17,
+            "lineBreaks": 0,
+            "offset": 464
+          },
+          {
+            "value": "inc",
+            "col": 23,
+            "line": 17,
+            "lineBreaks": 0,
+            "offset": 470
+          },
+          {
+            "value": "reset",
+            "col": 28,
+            "line": 17,
+            "lineBreaks": 0,
+            "offset": 475
+          }
         ]
       },
       {
         "type": "output",
         "pins": [
-          [
-            {
-              "value": "out",
-              "col": 9,
-              "line": 18,
-              "lineBreaks": 0,
-              "offset": 491,
-              "width": 16
-            }
-          ]
+          {
+            "value": "out",
+            "col": 9,
+            "line": 18,
+            "lineBreaks": 0,
+            "offset": 491,
+            "width": 16
+          }
         ]
       },
       {
@@ -79,42 +69,34 @@
       {
         "type": "clocked",
         "pins": [
-          [
-            {
-              "value": "in",
-              "col": 13,
-              "line": 21,
-              "lineBreaks": 0,
-              "offset": 532
-            }
-          ],
-          [
-            {
-              "value": "load",
-              "col": 17,
-              "line": 21,
-              "lineBreaks": 0,
-              "offset": 536
-            }
-          ],
-          [
-            {
-              "value": "inc",
-              "col": 23,
-              "line": 21,
-              "lineBreaks": 0,
-              "offset": 542
-            }
-          ],
-          [
-            {
-              "value": "reset",
-              "col": 28,
-              "line": 21,
-              "lineBreaks": 0,
-              "offset": 547
-            }
-          ]
+          {
+            "value": "in",
+            "col": 13,
+            "line": 21,
+            "lineBreaks": 0,
+            "offset": 532
+          },
+          {
+            "value": "load",
+            "col": 17,
+            "line": 21,
+            "lineBreaks": 0,
+            "offset": 536
+          },
+          {
+            "value": "inc",
+            "col": 23,
+            "line": 21,
+            "lineBreaks": 0,
+            "offset": 542
+          },
+          {
+            "value": "reset",
+            "col": 28,
+            "line": 21,
+            "lineBreaks": 0,
+            "offset": 547
+          }
         ]
       }
     ]

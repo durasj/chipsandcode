@@ -12,50 +12,42 @@
       {
         "type": "input",
         "pins": [
-          [
-            {
-              "value": "a",
-              "col": 8,
-              "line": 13,
-              "lineBreaks": 0,
-              "offset": 310,
-              "width": 16
-            }
-          ],
-          [
-            {
-              "value": "b",
-              "col": 15,
-              "line": 13,
-              "lineBreaks": 0,
-              "offset": 317,
-              "width": 16
-            }
-          ],
-          [
-            {
-              "value": "sel",
-              "col": 22,
-              "line": 13,
-              "lineBreaks": 0,
-              "offset": 324
-            }
-          ]
+          {
+            "value": "a",
+            "col": 8,
+            "line": 13,
+            "lineBreaks": 0,
+            "offset": 310,
+            "width": 16
+          },
+          {
+            "value": "b",
+            "col": 15,
+            "line": 13,
+            "lineBreaks": 0,
+            "offset": 317,
+            "width": 16
+          },
+          {
+            "value": "sel",
+            "col": 22,
+            "line": 13,
+            "lineBreaks": 0,
+            "offset": 324
+          }
         ]
       },
       {
         "type": "output",
         "pins": [
-          [
-            {
-              "value": "out",
-              "col": 9,
-              "line": 14,
-              "lineBreaks": 0,
-              "offset": 337,
-              "width": 16
-            }
-          ]
+          {
+            "value": "out",
+            "col": 9,
+            "line": 14,
+            "lineBreaks": 0,
+            "offset": 337,
+            "width": 16
+          }
         ]
       },
       {

@@ -12,29 +12,25 @@
       {
         "type": "input",
         "pins": [
-          [
-            {
-              "value": "in",
-              "col": 9,
-              "line": 12,
-              "lineBreaks": 0,
-              "offset": 237
-            }
-          ]
+          {
+            "value": "in",
+            "col": 9,
+            "line": 12,
+            "lineBreaks": 0,
+            "offset": 237
+          }
         ]
       },
       {
         "type": "output",
         "pins": [
-          [
-            {
-              "value": "out",
-              "col": 9,
-              "line": 13,
-              "lineBreaks": 0,
-              "offset": 250
-            }
-          ]
+          {
+            "value": "out",
+            "col": 9,
+            "line": 13,
+            "lineBreaks": 0,
+            "offset": 250
+          }
         ]
       },
       {

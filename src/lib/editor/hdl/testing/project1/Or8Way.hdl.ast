@@ -12,30 +12,26 @@
       {
         "type": "input",
         "pins": [
-          [
-            {
-              "value": "in",
-              "col": 8,
-              "line": 12,
-              "lineBreaks": 0,
-              "offset": 257,
-              "width": 8
-            }
-          ]
+          {
+            "value": "in",
+            "col": 8,
+            "line": 12,
+            "lineBreaks": 0,
+            "offset": 257,
+            "width": 8
+          }
         ]
       },
       {
         "type": "output",
         "pins": [
-          [
-            {
-              "value": "out",
-              "col": 9,
-              "line": 13,
-              "lineBreaks": 0,
-              "offset": 272
-            }
-          ]
+          {
+            "value": "out",
+            "col": 9,
+            "line": 13,
+            "lineBreaks": 0,
+            "offset": 272
+          }
         ]
       },
       {

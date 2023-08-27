@@ -12,31 +12,27 @@
       {
         "type": "input",
         "pins": [
-          [
-            {
-              "value": "address",
-              "col": 9,
-              "line": 26,
-              "lineBreaks": 0,
-              "offset": 1068,
-              "width": 15
-            }
-          ]
+          {
+            "value": "address",
+            "col": 9,
+            "line": 26,
+            "lineBreaks": 0,
+            "offset": 1068,
+            "width": 15
+          }
         ]
       },
       {
         "type": "output",
         "pins": [
-          [
-            {
-              "value": "out",
-              "col": 9,
-              "line": 27,
-              "lineBreaks": 0,
-              "offset": 1090,
-              "width": 16
-            }
-          ]
+          {
+            "value": "out",
+            "col": 9,
+            "line": 27,
+            "lineBreaks": 0,
+            "offset": 1090,
+            "width": 16
+          }
         ]
       },
       {

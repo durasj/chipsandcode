@@ -12,102 +12,82 @@
       {
         "type": "input",
         "pins": [
-          [
-            {
-              "value": "in",
-              "col": 8,
-              "line": 15,
-              "lineBreaks": 0,
-              "offset": 474
-            }
-          ],
-          [
-            {
-              "value": "sel",
-              "col": 12,
-              "line": 15,
-              "lineBreaks": 0,
-              "offset": 478,
-              "width": 3
-            }
-          ]
+          {
+            "value": "in",
+            "col": 8,
+            "line": 15,
+            "lineBreaks": 0,
+            "offset": 474
+          },
+          {
+            "value": "sel",
+            "col": 12,
+            "line": 15,
+            "lineBreaks": 0,
+            "offset": 478,
+            "width": 3
+          }
         ]
       },
       {
         "type": "output",
         "pins": [
-          [
-            {
-              "value": "a",
-              "col": 9,
-              "line": 16,
-              "lineBreaks": 0,
-              "offset": 494
-            }
-          ],
-          [
-            {
-              "value": "b",
-              "col": 12,
-              "line": 16,
-              "lineBreaks": 0,
-              "offset": 497
-            }
-          ],
-          [
-            {
-              "value": "c",
-              "col": 15,
-              "line": 16,
-              "lineBreaks": 0,
-              "offset": 500
-            }
-          ],
-          [
-            {
-              "value": "d",
-              "col": 18,
-              "line": 16,
-              "lineBreaks": 0,
-              "offset": 503
-            }
-          ],
-          [
-            {
-              "value": "e",
-              "col": 21,
-              "line": 16,
-              "lineBreaks": 0,
-              "offset": 506
-            }
-          ],
-          [
-            {
-              "value": "f",
-              "col": 24,
-              "line": 16,
-              "lineBreaks": 0,
-              "offset": 509
-            }
-          ],
-          [
-            {
-              "value": "g",
-              "col": 27,
-              "line": 16,
-              "lineBreaks": 0,
-              "offset": 512
-            }
-          ],
-          [
-            {
-              "value": "h",
-              "col": 30,
-              "line": 16,
-              "lineBreaks": 0,
-              "offset": 515
-            }
-          ]
+          {
+            "value": "a",
+            "col": 9,
+            "line": 16,
+            "lineBreaks": 0,
+            "offset": 494
+          },
+          {
+            "value": "b",
+            "col": 12,
+            "line": 16,
+            "lineBreaks": 0,
+            "offset": 497
+          },
+          {
+            "value": "c",
+            "col": 15,
+            "line": 16,
+            "lineBreaks": 0,
+            "offset": 500
+          },
+          {
+            "value": "d",
+            "col": 18,
+            "line": 16,
+            "lineBreaks": 0,
+            "offset": 503
+          },
+          {
+            "value": "e",
+            "col": 21,
+            "line": 16,
+            "lineBreaks": 0,
+            "offset": 506
+          },
+          {
+            "value": "f",
+            "col": 24,
+            "line": 16,
+            "lineBreaks": 0,
+            "offset": 509
+          },
+          {
+            "value": "g",
+            "col": 27,
+            "line": 16,
+            "lineBreaks": 0,
+            "offset": 512
+          },
+          {
+            "value": "h",
+            "col": 30,
+            "line": 16,
+            "lineBreaks": 0,
+            "offset": 515
+          }
         ]
       },
       {

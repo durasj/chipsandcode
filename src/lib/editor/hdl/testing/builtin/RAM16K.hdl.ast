@@ -12,50 +12,42 @@
       {
         "type": "input",
         "pins": [
-          [
-            {
-              "value": "in",
-              "col": 9,
-              "line": 19,
-              "lineBreaks": 0,
-              "offset": 724,
-              "width": 16
-            }
-          ],
-          [
-            {
-              "value": "load",
-              "col": 17,
-              "line": 19,
-              "lineBreaks": 0,
-              "offset": 732
-            }
-          ],
-          [
-            {
-              "value": "address",
-              "col": 23,
-              "line": 19,
-              "lineBreaks": 0,
-              "offset": 738,
-              "width": 14
-            }
-          ]
+          {
+            "value": "in",
+            "col": 9,
+            "line": 19,
+            "lineBreaks": 0,
+            "offset": 724,
+            "width": 16
+          },
+          {
+            "value": "load",
+            "col": 17,
+            "line": 19,
+            "lineBreaks": 0,
+            "offset": 732
+          },
+          {
+            "value": "address",
+            "col": 23,
+            "line": 19,
+            "lineBreaks": 0,
+            "offset": 738,
+            "width": 14
+          }
         ]
       },
       {
         "type": "output",
         "pins": [
-          [
-            {
-              "value": "out",
-              "col": 9,
-              "line": 20,
-              "lineBreaks": 0,
-              "offset": 760,
-              "width": 16
-            }
-          ]
+          {
+            "value": "out",
+            "col": 9,
+            "line": 20,
+            "lineBreaks": 0,
+            "offset": 760,
+            "width": 16
+          }
         ]
       },
       {
@@ -71,24 +63,20 @@
       {
         "type": "clocked",
         "pins": [
-          [
-            {
-              "value": "in",
-              "col": 13,
-              "line": 23,
-              "lineBreaks": 0,
-              "offset": 805
-            }
-          ],
-          [
-            {
-              "value": "load",
-              "col": 17,
-              "line": 23,
-              "lineBreaks": 0,
-              "offset": 809
-            }
-          ]
+          {
+            "value": "in",
+            "col": 13,
+            "line": 23,
+            "lineBreaks": 0,
+            "offset": 805
+          },
+          {
+            "value": "load",
+            "col": 17,
+            "line": 23,
+            "lineBreaks": 0,
+            "offset": 809
+          }
         ]
       }
     ]

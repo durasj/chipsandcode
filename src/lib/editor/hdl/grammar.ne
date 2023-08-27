@@ -65,8 +65,8 @@ clocked ->
     | "CLOCKED" _ pinList   {% ([, , pins]) => ({ type: 'clocked', pins }) %}
 
 pinDefinition ->
-      %identifier _ %busIndex            {% ([pin, , spec]) => [{ ...getIdentifier(pin), width: spec.value }] %}
-    | %identifier                       {% ([pin]) => [getIdentifier(pin)] %}
+      %identifier _ %busIndex            {% ([pin, , spec]) => ({ ...getIdentifier(pin), width: spec.value }) %}
+    | %identifier                        {% ([pin]) => getIdentifier(pin) %}
 pinList ->
       pinDefinition                       {% ([pin]) => [pin] %}
     | pinDefinition _ %comma _ pinList    {% ([pin, , , , acc]) => ([pin, ...acc]) %}

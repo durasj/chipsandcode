@@ -12,47 +12,39 @@
       {
         "type": "input",
         "pins": [
-          [
-            {
-              "value": "a",
-              "col": 9,
-              "line": 12,
-              "lineBreaks": 0,
-              "offset": 266
-            }
-          ],
-          [
-            {
-              "value": "b",
-              "col": 12,
-              "line": 12,
-              "lineBreaks": 0,
-              "offset": 269
-            }
-          ],
-          [
-            {
-              "value": "sel",
-              "col": 15,
-              "line": 12,
-              "lineBreaks": 0,
-              "offset": 272
-            }
-          ]
+          {
+            "value": "a",
+            "col": 9,
+            "line": 12,
+            "lineBreaks": 0,
+            "offset": 266
+          },
+          {
+            "value": "b",
+            "col": 12,
+            "line": 12,
+            "lineBreaks": 0,
+            "offset": 269
+          },
+          {
+            "value": "sel",
+            "col": 15,
+            "line": 12,
+            "lineBreaks": 0,
+            "offset": 272
+          }
         ]
       },
       {
         "type": "output",
         "pins": [
-          [
-            {
-              "value": "out",
-              "col": 9,
-              "line": 13,
-              "lineBreaks": 0,
-              "offset": 286
-            }
-          ]
+          {
+            "value": "out",
+            "col": 9,
+            "line": 13,
+            "lineBreaks": 0,
+            "offset": 286
+          }
         ]
       },
       {

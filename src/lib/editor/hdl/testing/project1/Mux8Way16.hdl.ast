@@ -12,111 +12,91 @@
       {
         "type": "input",
         "pins": [
-          [
-            {
-              "value": "a",
-              "col": 8,
-              "line": 15,
-              "lineBreaks": 0,
-              "offset": 325,
-              "width": 16
-            }
-          ],
-          [
-            {
-              "value": "b",
-              "col": 15,
-              "line": 15,
-              "lineBreaks": 0,
-              "offset": 332,
-              "width": 16
-            }
-          ],
-          [
-            {
-              "value": "c",
-              "col": 22,
-              "line": 15,
-              "lineBreaks": 0,
-              "offset": 339,
-              "width": 16
-            }
-          ],
-          [
-            {
-              "value": "d",
-              "col": 29,
-              "line": 15,
-              "lineBreaks": 0,
-              "offset": 346,
-              "width": 16
-            }
-          ],
-          [
-            {
-              "value": "e",
-              "col": 8,
-              "line": 16,
-              "lineBreaks": 0,
-              "offset": 360,
-              "width": 16
-            }
-          ],
-          [
-            {
-              "value": "f",
-              "col": 15,
-              "line": 16,
-              "lineBreaks": 0,
-              "offset": 367,
-              "width": 16
-            }
-          ],
-          [
-            {
-              "value": "g",
-              "col": 22,
-              "line": 16,
-              "lineBreaks": 0,
-              "offset": 374,
-              "width": 16
-            }
-          ],
-          [
-            {
-              "value": "h",
-              "col": 29,
-              "line": 16,
-              "lineBreaks": 0,
-              "offset": 381,
-              "width": 16
-            }
-          ],
-          [
-            {
-              "value": "sel",
-              "col": 8,
-              "line": 17,
-              "lineBreaks": 0,
-              "offset": 395,
-              "width": 3
-            }
-          ]
+          {
+            "value": "a",
+            "col": 8,
+            "line": 15,
+            "lineBreaks": 0,
+            "offset": 325,
+            "width": 16
+          },
+          {
+            "value": "b",
+            "col": 15,
+            "line": 15,
+            "lineBreaks": 0,
+            "offset": 332,
+            "width": 16
+          },
+          {
+            "value": "c",
+            "col": 22,
+            "line": 15,
+            "lineBreaks": 0,
+            "offset": 339,
+            "width": 16
+          },
+          {
+            "value": "d",
+            "col": 29,
+            "line": 15,
+            "lineBreaks": 0,
+            "offset": 346,
+            "width": 16
+          },
+          {
+            "value": "e",
+            "col": 8,
+            "line": 16,
+            "lineBreaks": 0,
+            "offset": 360,
+            "width": 16
+          },
+          {
+            "value": "f",
+            "col": 15,
+            "line": 16,
+            "lineBreaks": 0,
+            "offset": 367,
+            "width": 16
+          },
+          {
+            "value": "g",
+            "col": 22,
+            "line": 16,
+            "lineBreaks": 0,
+            "offset": 374,
+            "width": 16
+          },
+          {
+            "value": "h",
+            "col": 29,
+            "line": 16,
+            "lineBreaks": 0,
+            "offset": 381,
+            "width": 16
+          },
+          {
+            "value": "sel",
+            "col": 8,
+            "line": 17,
+            "lineBreaks": 0,
+            "offset": 395,
+            "width": 3
+          }
         ]
       },
       {
         "type": "output",
         "pins": [
-          [
-            {
-              "value": "out",
-              "col": 9,
-              "line": 18,
-              "lineBreaks": 0,
-              "offset": 411,
-              "width": 16
-            }
-          ]
+          {
+            "value": "out",
+            "col": 9,
+            "line": 18,
+            "lineBreaks": 0,
+            "offset": 411,
+            "width": 16
+          }
         ]
       },
       {
