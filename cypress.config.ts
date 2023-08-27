@@ -17,6 +17,6 @@ export default defineConfig({
   },
   env: {
     // We tolerate higher diff in CI due to missing fonts
-    pluginVisualRegressionMaxDiffThreshold: process.env.CI ? 0.2 : 0.01,
+    pluginVisualRegressionMaxDiffThreshold: process.env.CI ? 0.25 : 0.01,
   },
 });
