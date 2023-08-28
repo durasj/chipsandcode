@@ -4,6 +4,7 @@ const sideEffectImports = [
   'monaco-editor/esm/vs/editor/editor.all.js',
 
   'monaco-editor/esm/vs/editor/standalone/browser/accessibilityHelp/accessibilityHelp.js',
+  'monaco-editor/esm/vs/editor/standalone/browser/toggleHighContrast/toggleHighContrast.js',
   'monaco-editor/esm/vs/editor/standalone/browser/iPadShowKeyboard/iPadShowKeyboard.js',
   'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneHelpQuickAccess.js',
   'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneGotoLineQuickAccess.js',
