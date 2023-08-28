@@ -941,10 +941,11 @@
 
       <div class="self-stretch pt-4 md:pl-4 md:pt-0">
         <table class="table-auto w-full">
+          <caption class="caption-top bg-base-200 border-base-200 rounded-t-md font-bold"
+            >Input Pins</caption
+          >
+
           <thead>
-            <tr>
-              <th class="bg-base-200 border-base-200 rounded-t-md" colspan="2">Input Pins</th>
-            </tr>
             <tr
               ><th class="border border-base-200 py-1 px-2">Name</th><th
                 class="border border-base-200">Value</th
@@ -977,10 +978,11 @@
 
       <div class="self-stretch pt-4 md:pl-4 md:pt-0">
         <table class="table-auto w-full">
+          <caption class="caption-top bg-base-200 border-base-200 rounded-t-md font-bold"
+            >Internal Pins</caption
+          >
+
           <thead>
-            <tr>
-              <th class="bg-base-200 border-base-200 rounded-t-md" colspan="2">Internal Pins</th>
-            </tr>
             <tr
               ><th class="border border-base-200 py-1 px-2">Name</th><th
                 class="border border-base-200">Value</th
@@ -1000,10 +1002,11 @@
 
       <div class="self-stretch pt-4 pr-4 md:pl-4 md:pt-0">
         <table class="table-auto w-full">
+          <caption class="caption-top bg-base-200 border-base-200 rounded-t-md font-bold"
+            >Output Pins</caption
+          >
+
           <thead>
-            <tr>
-              <th class="bg-base-200 border-base-200 rounded-t-md" colspan="2">Output Pins</th>
-            </tr>
             <tr
               ><th class="border border-base-200 py-1 px-2">Name</th><th
                 class="border border-base-200 py-1 px-2">Value</th
