@@ -66,7 +66,7 @@
             devices (like tablets, Chromebooks, smartphones... -
             <a
               href="https://www.pewresearch.org/internet/2019/03/07/use-of-smartphones-and-social-media-is-common-across-most-emerging-economies/"
-              target="_blank">one third</a
+              target="_blank">one fourth</a
             > of people from developing countries relies on smartphones!). Chips and Code aims to reimplement
             the same functionality using the modern web with improved user experience.
           </p>

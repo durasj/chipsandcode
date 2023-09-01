@@ -705,11 +705,11 @@
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-3 content-start">
-    <div class="flex justify-between items-center p-4 md:col-span-3">
-      <label>
+    <div class="flex justify-between items-center p-4 md:col-span-3 max-w-full">
+      <label class="block grow">
         <div class="sr-only">Experiment name</div>
         <input
-          class={`bg-inherit text-lg font-bold grow rounded-sm${
+          class={`w-full bg-inherit text-lg font-bold rounded-sm${
             controls ? ' hover:outline hover:outline-2 hover:outline-base-content' : ''
           }`}
           bind:value={name}
@@ -721,7 +721,7 @@
       </label>
 
       {#if controls}
-        <div class="mt-5 flex lg:mt-0 lg:ml-4 gap-2">
+        <div class="flex lg:ml-4 gap-2">
           <div class="join">
             <button
               class="btn btn-sm btn-outline rounded-r-none join-item"

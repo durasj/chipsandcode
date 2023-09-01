@@ -21,8 +21,8 @@
   import ThemeSwitch from './ThemeSwitch.svelte';
 
   const logo = {
-    title: 'Chips and Code',
-    path: '/logo.svg',
+    title: 'Chips and Code preview',
+    path: '/logo_version.svg',
   };
 
   const desktopItems = [
