@@ -26,28 +26,9 @@
       label: 1.1,
     },
     {
-      name: 'Specification',
-      link: '/hardware/boolean-logic/background',
-      label: 1.2,
-      disabled: true,
-    },
-    {
-      name: 'Implementation',
-      link: '/hardware/boolean-logic/background',
-      label: 1.3,
-      disabled: true,
-    },
-    {
-      name: 'Perspective',
-      link: '/hardware/boolean-logic/background',
-      label: 1.4,
-      disabled: true,
-    },
-    {
       name: 'Project',
-      link: '/hardware/boolean-logic/background',
-      label: 1.5,
-      disabled: true,
+      link: '/hardware/boolean-logic/project',
+      label: 1.2,
     },
   ];
 

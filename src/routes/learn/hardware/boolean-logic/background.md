@@ -88,7 +88,12 @@ We see that any given logic gate can be viewed from two different perspectives: 
 
 Let us consider another logic design example—that of a Xor gate. As discussed before, Xor($a, b$) is 1 exactly when either $a$ is 1 and $b$ is 0, or when $a$ is 0 and $b$ is 1. Said otherwise, Xor($a, b$) $=$ Or(And($a$, Not($b$)), And(Not($a$), $b$)). This definition leads to the logic design shown in figure 1.5.
 
-Note that the gate _interface_ is unique: There is only one way to describe it, and this is normally done using a truth table, a Boolean expression, or some verbal specification. This interface, however, can be realized using many different _implementations_, some of which will be better than others in terms of cost, speed, and simplicity. For example, the Xor function can be implemented using four, rather than five, And, Or, and Not gates. Thus, from a functional standpoint, the fundamental requirement of logic design is that _the gate implementation will realize its stated interface, in one way or another_. From an efficiency standpoint, the general rule is to try to _do more with less_, that is, use as few gates as possible.
+Note that the gate _interface_ is unique: There is only one way to describe it, and this is normally done using a truth table, a Boolean expression, or some verbal specification.
+
+![Xor gate, along with a possible implementation.](/figures/figure1-5.svg 'Figure 1.5: Xor gate, along with a possible implementation.')
+_**Figure 1.5** Xor gate, along with a possible implementation._
+
+This interface, however, can be realized using many different _implementations_, some of which will be better than others in terms of cost, speed, and simplicity. For example, the Xor function can be implemented using four, rather than five, And, Or, and Not gates. Thus, from a functional standpoint, the fundamental requirement of logic design is that _the gate implementation will realize its stated interface, in one way or another_. From an efficiency standpoint, the general rule is to try to _do more with less_, that is, use as few gates as possible.
 
 To sum up, the art of logic design can be described as follows: Given a gate specification (interface), find an efficient way to implement it using other gates that were already implemented. This, in a nutshell, is what we will do in the rest of this chapter
 
