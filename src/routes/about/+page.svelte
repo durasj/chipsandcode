@@ -48,7 +48,16 @@
 
 <main class="flex-grow">
   <article>
-    <h1 class="text-center text-6xl font-bold my-12">Chips and Code</h1>
+    <h1 class="text-center text-5xl md:text-6xl font-bold my-12">Chips and Code</h1>
+
+    <p class="text-center mb-4">
+      <a href="https://github.com/durasj/chipsandcode/issues" target="_blank" class="btn m-1"
+        >Report Bug / Request Feature</a
+      >
+      <a href="https://github.com/durasj/chipsandcode/discussions" target="_blank" class="btn m-1"
+        >Discussions</a
+      >
+    </p>
 
     <div class="bg-base-200">
       <div class="prose max-w-7xl mx-auto px-8 py-16 flex flex-col sm:flex-row gap-4">
@@ -66,8 +75,8 @@
             devices (like tablets, Chromebooks, smartphones... -
             <a
               href="https://www.pewresearch.org/internet/2019/03/07/use-of-smartphones-and-social-media-is-common-across-most-emerging-economies/"
-              target="_blank">one fourth</a
-            > of people from developing countries relies on smartphones!). Chips and Code aims to reimplement
+              target="_blank">one-fourth</a
+            > of people from developing countries rely on smartphones!). Chips and Code aims to reimplement
             the same functionality using the modern web with improved user experience.
           </p>
         </div>

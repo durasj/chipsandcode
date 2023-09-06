@@ -26,6 +26,14 @@ describe('About', () => {
 
     cy.contains('h1', 'Chips and Code');
 
+    cy.contains('a', 'Report Bug / Request Feature')
+      .invoke('attr', 'href')
+      .should('equal', 'https://github.com/durasj/chipsandcode/issues');
+
+    cy.contains('a', 'Discussions')
+      .invoke('attr', 'href')
+      .should('equal', 'https://github.com/durasj/chipsandcode/discussions');
+
     cy.contains('reimagined');
     cy.contains('a', 'Nand2Tetris')
       .invoke('attr', 'href')
