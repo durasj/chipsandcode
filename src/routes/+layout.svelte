@@ -6,7 +6,10 @@
   import { theme } from 'src/stores';
 
   onMount(async () => {
-    if (pwaInfo) {
+    // @ts-ignore TODO: Any way to do this without polluting the bundle?
+    const isInCypress = window.Cypress;
+
+    if (pwaInfo && !isInCypress) {
       const { registerSW } = await import('virtual:pwa-register');
       registerSW({
         immediate: true,
