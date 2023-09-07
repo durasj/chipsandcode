@@ -41,8 +41,10 @@ const config = {
 const parseMarkdown = (doc: string) => {
   // Primitive way to support inline $math$ expressions
   // Markdoc doesn't support custom syntax like this
-  const expandedDoc = doc.replaceAll(/\$(.+?)\$/g, '{% Math expr="$1" /%}');
-
+  const expandedDoc = doc.replaceAll(
+    /\$(.+?)\$/g,
+    (_, expr) => `{% Math expr="${expr.replaceAll(/[\\"]/g, '\\$&')}" /%}`,
+  );
   const tokenizer = new Markdoc.Tokenizer({
     allowIndentation: true,
     allowComments: true,

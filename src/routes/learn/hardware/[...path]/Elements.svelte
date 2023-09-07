@@ -16,23 +16,12 @@
     !!node && typeof node === 'object' && 'children' in node;
 </script>
 
-{#each children as node}
-  {#if typeof node !== 'object'}{node}{/if}
-  {#if isTag(node)}
-    {#if node.name in components}
-      {#if node.children?.length}
-        <svelte:component this={components[node.name]} {...node.attributes}>
-          <svelte:self children={node.children} />
-        </svelte:component>
-      {:else}
-        <svelte:component this={components[node.name]} {...node.attributes} />
-      {/if}
-    {:else if node.children?.length}
-      <svelte:element this={node.name} {...node.attributes}>
-        <svelte:self children={node.children} />
-      </svelte:element>
-    {:else}
-      <svelte:element this={node.name} {...node.attributes} />
-    {/if}
-  {/if}
-{/each}
+{#each children as node}{#if typeof node !== 'object'}{node}{/if}{#if isTag(node)}{#if node.name in components}{#if node.children?.length}<svelte:component
+          this={components[node.name]}
+          {...node.attributes}><svelte:self children={node.children} /></svelte:component
+        >{:else}<svelte:component
+          this={components[node.name]}
+          {...node.attributes}
+        />{/if}{:else if node.children?.length}<svelte:element this={node.name} {...node.attributes}
+        ><svelte:self children={node.children} /></svelte:element
+      >{:else}<svelte:element this={node.name} {...node.attributes} />{/if}{/if}{/each}

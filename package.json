@@ -70,7 +70,7 @@
     "vitest": "^0.34.3"
   },
   "dependencies": {
-    "@markdoc/markdoc": "^0.3.0",
+    "@markdoc/markdoc": "^0.3.2",
     "@rgossiaux/svelte-headlessui": "^2.0.0",
     "@steeze-ui/heroicons": "^2.2.3",
     "@steeze-ui/remix-icons": "^1.1.0",

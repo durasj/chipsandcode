@@ -70,6 +70,9 @@ describe('Learn', () => {
         { id: 'empty-table-header', enabled: false },
         // Minor Monaco issue this project has no control over
         { id: 'landmark-unique', enabled: false },
+        // These are all within Monaco that has opt-in high contrast theme that we're bundling
+        // TODO: How to narrow this down?
+        { id: 'color-contrast', enabled: false },
       ],
     });
 
@@ -92,7 +95,7 @@ describe('Learn', () => {
 
     cy.findByAltText('Standard symbolic notation of some elementary logic gates.');
 
-    cy.contains('code', 'Not(...,out=nota)');
+    cy.contains('code', 'Not(..., out=nota)');
 
     cy.contains('1 Boolean Logic').click();
 
