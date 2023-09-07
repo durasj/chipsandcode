@@ -31,6 +31,8 @@ jobs:
           config: baseUrl=http://localhost:4173
           build: npm run build
           start: npm run preview
+        env:
+          VITE_API_PREFIX: /api
 
       - uses: actions/upload-artifact@v3
         if: failure()
