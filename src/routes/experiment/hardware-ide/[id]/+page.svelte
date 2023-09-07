@@ -6,10 +6,14 @@
   import Loading from '$lib/components/Loading.svelte';
   import Header from 'src/lib/components/Header.svelte';
   import type { PageData } from './$types';
+  import examples from 'src/lib/hardware-simulator/examples';
 
   export let data: PageData;
 
   $: experiment = (async () => {
+    const example = examples.find(({ id: exampleId }) => exampleId === data.id);
+    if (example) return example;
+
     try {
       const response = await api<{ experiment: Experiment }>(`/experiments/${data.id}`);
       return response.experiment;

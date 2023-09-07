@@ -2,11 +2,15 @@ export type Root = ChipNode[];
 
 export interface ChipNode extends Node<'chip'> {
   name: IdentifierNode;
-  body: Array<ChipIONode | ChipPartsNode>;
+  body: Array<ChipIONode | ChipBuiltinNode | ChipPartsNode>;
 }
 
 export interface ChipIONode extends Node<'input' | 'output'> {
   pins: (IdentifierNode | BusIdentifierNode)[];
+}
+
+export interface ChipBuiltinNode extends Node<'builtin'> {
+  template: IdentifierNode;
 }
 
 export interface ChipPartsNode extends Node<'parts'> {

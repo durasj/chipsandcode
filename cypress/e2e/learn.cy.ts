@@ -1,10 +1,4 @@
 describe('Learn', () => {
-  beforeEach(() => {
-    cy.intercept('GET', '*/experiments/nnDG6JRQjL0aNVb7AJHnmZrv02pHIINF', {
-      fixture: 'experiment.json',
-    });
-  });
-
   it('Can be navigated to from menu', () => {
     cy.visit('/');
     cy.injectAxe();
@@ -126,7 +120,7 @@ describe('Learn', () => {
     // TODO: Find a way to suppress dynamic ESM loading for Cypress tests
     cy.wait(1000);
 
-    cy.findByLabelText('Experiment name').should('have.value', 'XOR Gate');
+    cy.findByLabelText('Experiment name').should('have.value', 'Xor Gate');
 
     cy.findByLabelText('Value for a').clear().type('1').blur();
 

@@ -14,14 +14,18 @@ describe('API call abstraction', () => {
     const response = await apiCall('/smt');
 
     expect(response).toBe('Return value');
-    expect(fetch).toHaveBeenCalledWith('/api/smt', { credentials: 'include' });
+    expect(fetch).toHaveBeenCalledWith(`${process.env.VITE_API_PREFIX}/smt`, {
+      credentials: 'include',
+    });
   });
 
   it('Forwards options', async () => {
     const response = await apiCall('/smt');
 
     expect(response).toBe('Return value');
-    expect(fetch).toHaveBeenCalledWith('/api/smt', { credentials: 'include' });
+    expect(fetch).toHaveBeenCalledWith(`${process.env.VITE_API_PREFIX}/smt`, {
+      credentials: 'include',
+    });
   });
 
   it('Handles errors with explicit message', async () => {

@@ -10,11 +10,11 @@ describe('Experiment - Hardware IDE', () => {
       visibility: 'PUBLIC',
     };
 
-    cy.intercept('GET', '*/experiments/nnDG6JRQjL0aNVb7AJHnmZrv02pHIINF', {
+    cy.intercept('GET', '*/experiments/Xor', {
       fixture: 'experiment.json',
     }).as('getExperiment');
 
-    cy.intercept('DELETE', '*/experiments/nnDG6JRQjL0aNVb7AJHnmZrv02pHIINF', {
+    cy.intercept('DELETE', '*/experiments/Xor', {
       fixture: 'experiment.json',
     }).as('deleteExperiment');
 
@@ -63,7 +63,7 @@ describe('Experiment - Hardware IDE', () => {
         // Minor Monaco issue this project has no control over
         { id: 'landmark-unique', enabled: false },
         // These are all within Monaco that has opt-in high contrast theme that we're bundling
-        // TODO: How to approach this?
+        // TODO: How to narrow this down?
         { id: 'color-contrast', enabled: false },
       ],
     });
@@ -73,14 +73,11 @@ describe('Experiment - Hardware IDE', () => {
 
     cy.findByLabelText('Experiment name').should('have.value', 'Untitled Experiment');
 
-    cy.contains('a', 'XOR Gate').click();
+    cy.contains('a', 'Xor Gate').click();
 
-    cy.location('pathname').should(
-      'eq',
-      '/experiment/hardware-ide/nnDG6JRQjL0aNVb7AJHnmZrv02pHIINF',
-    );
+    cy.location('pathname').should('eq', '/experiment/hardware-ide/Xor');
 
-    cy.findByLabelText('Experiment name').should('have.value', 'XOR Gate');
+    cy.findByLabelText('Experiment name').should('have.value', 'Xor Gate');
 
     cy.contains('CHIP Xor');
 
@@ -92,7 +89,7 @@ describe('Experiment - Hardware IDE', () => {
   });
 
   it('Reacts to changes to input pins', () => {
-    cy.visit('/experiment/hardware-ide/nnDG6JRQjL0aNVb7AJHnmZrv02pHIINF');
+    cy.visit('/experiment/hardware-ide/Xor');
 
     // TODO: Find a way to suppress dynamic ESM loading for Cypress tests
     cy.wait(1000);
@@ -105,7 +102,7 @@ describe('Experiment - Hardware IDE', () => {
   });
 
   it('Reacts to changes in HDL', () => {
-    cy.visit('/experiment/hardware-ide/nnDG6JRQjL0aNVb7AJHnmZrv02pHIINF');
+    cy.visit('/experiment/hardware-ide/Xor');
 
     // TODO: Find a way to suppress dynamic ESM loading for Cypress tests
     cy.wait(1000);
@@ -132,7 +129,7 @@ describe('Experiment - Hardware IDE', () => {
   });
 
   it('Reacts to changes in Tests', () => {
-    cy.visit('/experiment/hardware-ide/nnDG6JRQjL0aNVb7AJHnmZrv02pHIINF');
+    cy.visit('/experiment/hardware-ide/Xor');
 
     // TODO: Find a way to suppress dynamic ESM loading for Cypress tests
     cy.wait(1000);
@@ -156,7 +153,7 @@ describe('Experiment - Hardware IDE', () => {
   });
 
   it('Reacts to changes in Output', () => {
-    cy.visit('/experiment/hardware-ide/nnDG6JRQjL0aNVb7AJHnmZrv02pHIINF');
+    cy.visit('/experiment/hardware-ide/Xor');
 
     // TODO: Find a way to suppress dynamic ESM loading for Cypress tests
     cy.wait(1000);
@@ -174,14 +171,14 @@ describe('Experiment - Hardware IDE', () => {
   });
 
   it('Works in dark mode', () => {
-    cy.visit('/experiment/hardware-ide/nnDG6JRQjL0aNVb7AJHnmZrv02pHIINF');
+    cy.visit('/experiment/hardware-ide/Xor');
 
     // TODO: Find a way to suppress dynamic ESM loading for Cypress tests
     cy.wait(1000);
 
     cy.contains('Color theme switch').click();
 
-    cy.findByLabelText('Experiment name').should('have.value', 'XOR Gate');
+    cy.findByLabelText('Experiment name').should('have.value', 'Xor Gate');
 
     // Wait for animation
     cy.wait(2000);
@@ -190,12 +187,12 @@ describe('Experiment - Hardware IDE', () => {
   });
 
   it('Allows opening, saving, and sharing a new experiment', () => {
-    cy.visit('/experiment/hardware-ide/nnDG6JRQjL0aNVb7AJHnmZrv02pHIINF');
+    cy.visit('/experiment/hardware-ide/Xor');
 
     // TODO: Find a way to suppress dynamic ESM loading for Cypress tests
     cy.wait(1000);
 
-    cy.findByLabelText('Experiment name').should('have.value', 'XOR Gate');
+    cy.findByLabelText('Experiment name').should('have.value', 'Xor Gate');
 
     cy.findByLabelText('Open/New').click();
 
@@ -238,12 +235,12 @@ describe('Experiment - Hardware IDE', () => {
   });
 
   it('Allows deleting existing experiment', () => {
-    cy.visit('/experiment/hardware-ide/nnDG6JRQjL0aNVb7AJHnmZrv02pHIINF');
+    cy.visit('/experiment/hardware-ide/Xor');
 
     // TODO: Find a way to suppress dynamic ESM loading for Cypress tests
     cy.wait(1000);
 
-    cy.findByLabelText('Experiment name').should('have.value', 'XOR Gate');
+    cy.findByLabelText('Experiment name').should('have.value', 'Xor Gate');
 
     cy.findByLabelText('More actions').click();
 

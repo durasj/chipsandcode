@@ -13,8 +13,8 @@ export const experimentSchema = z.object({
 export type ExperimentRequest = z.infer<typeof experimentSchema>;
 export type Experiment = ExperimentRequest & {
   id: string;
-  created: Date;
-  modified?: Date;
+  created: string;
+  updated?: string;
 };
 
 export const AUTH_KEY = 'auth';

@@ -1,4 +1,4 @@
-import type { ChipNode } from '../../editor/hdl/tree';
+import type { ChipBuiltinNode, ChipNode } from '../../editor/hdl/tree';
 import type { ChipPin } from './Chip';
 import type Chip from './Chip';
 import CustomChip from './CustomChip';
@@ -37,6 +37,17 @@ class ChipFactory {
     const name = node.name.value;
     const pins = new Map<string, ChipPin>();
     const parts = new Map<Chip, [string, string][]>();
+
+    // Built-in statement short-circuits the preparation
+    const isBuiltin = (statement: ChipNode['body'][0]): statement is ChipBuiltinNode =>
+      statement.type === 'builtin';
+    const builtIn = node.body.find(isBuiltin);
+    if (builtIn) {
+      const name = builtIn.template.value;
+      const defined = this.fromDefined(name);
+      if (!defined) throw new InvalidDesignError(`Unknown built-in chip "${name}".`);
+      return defined;
+    }
 
     // I/O must be processed first
     for (const conf of node.body) {

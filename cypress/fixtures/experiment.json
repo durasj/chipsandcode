@@ -1,7 +1,7 @@
 {
   "experiment": {
     "id": "nnDG6JRQjL0aNVb7AJHnmZrv02pHIINF",
-    "name": "XOR Gate",
+    "name": "Xor Gate",
     "type": "HARDWARE",
     "visibility": "PUBLIC",
     "code": "/**\n * XOR - Exclusive OR gate\n *\n * Outputs 1 only if both inputs differ\n * Else outputs 0\n */\nCHIP Xor {\n    IN a, b;\n    OUT out;\n\n    PARTS:\n    Not(in=a, out=nota);\n    Not(in=b, out=notb);\n    And(a=a, b=notb, out=w1);\n    And(a=nota, b=b, out=w2);\n    Or(a=w1, b=w2, out=out);\n}\n",

@@ -23,6 +23,9 @@ const config = {
         id: {
           type: String,
         },
+        celebrate: {
+          type: Boolean,
+        },
       },
     },
     EmbeddedVideo: {
@@ -31,6 +34,26 @@ const config = {
       selfClosing: true,
       attributes: {
         id: {
+          type: String,
+        },
+      },
+    },
+    LayoutRow: {
+      render: 'LayoutRow',
+      description: 'Row for a layout - should contain LayoutCol components',
+      selfClosing: false,
+      attributes: {
+        class: {
+          type: String,
+        },
+      },
+    },
+    LayoutCol: {
+      render: 'LayoutCol',
+      description: 'Col for a layout - must be a child of LayoutRow',
+      selfClosing: false,
+      attributes: {
+        class: {
           type: String,
         },
       },

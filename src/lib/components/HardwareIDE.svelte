@@ -27,6 +27,8 @@
   } from '@rgossiaux/svelte-headlessui';
   import { createPopperActions } from 'svelte-popperjs';
   import type zipType from '@zip.js/zip.js';
+  // @ts-ignore Upcoming version 1.3.0 that depends on Svelte 4 adds types
+  import { Confetti } from 'svelte-confetti';
 
   import { goto } from '$app/navigation';
   import parseHdl from '$lib/editor/hdl/parse';
@@ -36,7 +38,6 @@
     CompareNode,
     LoadNode,
     OutputFileNode,
-    OutputNode,
     Root as TSTRoot,
   } from '$lib/editor/tst/tree';
   import type Chip from '$lib/hardware-simulator/chips/Chip';
@@ -44,9 +45,10 @@
   import type { Experiment, ExperimentRequest } from 'src/lib/shared';
   import type { monaco, monaco as monacoApi } from '$lib/editor';
   import { theme } from 'src/stores';
-  import api from '$lib/api';
+  import api, { apiEnabled } from '$lib/api';
   import TestScript from '$lib/hardware-simulator/tests/TestScript';
   import InvalidDesignError from '../hardware-simulator/chips/InvalidDesignError';
+  import examples from '../hardware-simulator/examples';
 
   const [popperRef, popperContent] = createPopperActions();
   const popperOptions = {
@@ -121,17 +123,6 @@
       },
     };
   }
-
-  const examples = [
-    {
-      id: 'nnDG6JRQjL0aNVb7AJHnmZrv02pHIINF',
-      name: 'XOR Gate',
-    },
-    {
-      id: '456',
-      name: 'NOR Gate',
-    },
-  ];
 
   function handleEditorError(e: any, model: monacoApi.editor.ITextModel) {
     let line: number = e.token?.line;
@@ -266,7 +257,7 @@
           endLineNumber: line,
           severity: monaco.MarkerSeverity.Info,
           message:
-            'Specification of files is ignored. Only the loaded chip and comparison file specified via other tabs are used.',
+            'Specification of files is ignored. Only the loaded chip and the comparison file specified via Output tab are used.',
         },
       ]);
     }
@@ -312,6 +303,7 @@
 
   function reflectScriptResult(result: ReturnType<TestScript['run']>) {
     const oldDecorations = testStats?.decorations;
+    const oldSuccess = !!testStats?.passed && testStats.passed === testStats.total;
     testStats = undefined;
     const decorations = [];
 
@@ -359,6 +351,11 @@
     if (testStats) {
       testStats.decorations = tstModel.deltaDecorations(oldDecorations || [], decorations);
     }
+
+    const success = !!testStats?.passed && testStats.passed === testStats.total;
+    if (!oldSuccess && success) {
+      justSucceeded = true;
+    }
   }
 
   function reflectPins() {
@@ -393,6 +390,10 @@
    * Should the tests and output be in the assignment mode - meaning read-only
    */
   export let readOnlyAssignment: boolean = false;
+  /**
+   * Should we celebrate with animation when the tests pass
+   */
+  export let celebrateTestsPass: boolean = false;
 
   let monaco: typeof monacoApi;
   let editor: monacoApi.editor.IStandaloneCodeEditor | monacoApi.editor.IStandaloneDiffEditor;
@@ -414,6 +415,8 @@
 
   let name = experiment?.name || 'Untitled Experiment';
   let visibility = experiment?.visibility || 'PUBLIC';
+
+  let justSucceeded = false;
 
   let savingState: 'UNSAVED' | 'SAVING' | 'SAVED' | undefined = experiment ? 'SAVED' : undefined;
   async function save() {
@@ -552,7 +555,7 @@
     const local = JSON.parse(stored);
 
     const localAt = new Date(local.saved);
-    const remoteAt = new Date(experiment.modified || experiment.created);
+    const remoteAt = new Date(experiment.updated || experiment.created);
     if (localAt.valueOf() < remoteAt.valueOf()) return;
 
     return local[type] as string;
@@ -643,7 +646,7 @@
   on:keydown={(e) => {
     if (!controls) return;
 
-    if (e.ctrlKey && e.key === 's') {
+    if (e.ctrlKey && e.key === 's' && apiEnabled) {
       // Don't open default Save dialog
       e.preventDefault();
       save();
@@ -662,13 +665,16 @@
         <Tab
           class={({ selected }) =>
             `p-3 text-sm font-semibold ${selected ? 'bg-zinc-100 dark:bg-zinc-900' : ''}`}
-          >Tests {#if testStats?.passed}
+          >Tests {#if typeof testStats?.passed === 'number'}
             <div
               class="badge gap-2"
               class:badge-success={testStats.passed === testStats.total}
               class:badge-error={testStats.passed < testStats.total}
             >
               {testStats.passed} / {testStats.total}
+              {#if celebrateTestsPass && justSucceeded}
+                <div class="absolute top-0"><Confetti delay={[250, 750]} /></div>
+              {/if}
             </div>
           {/if}
         </Tab>
@@ -723,34 +729,47 @@
       {#if controls}
         <div class="flex lg:ml-4 gap-2">
           <div class="join">
-            <button
-              class="btn btn-sm btn-outline rounded-r-none join-item"
-              class:btn-warning={savingState === 'UNSAVED'}
-              on:click={save}
-              disabled={savingState === 'SAVING'}
-              aria-live={savingState === 'SAVING' ? 'assertive' : 'off'}
-              title={savingState === 'UNSAVED'
-                ? 'You have unsaved changes'
-                : savingState === 'SAVING'
-                ? 'Saving changes...'
-                : 'All changes are saved'}
-            >
-              {#if savingState === 'SAVED'}
-                <Icon src={CheckCircle} class="-ml-1 mr-2 h-5 w-5" />
+            {#if apiEnabled}
+              <button
+                class="btn btn-sm btn-outline rounded-r-none join-item"
+                class:btn-warning={savingState === 'UNSAVED'}
+                on:click={save}
+                disabled={savingState === 'SAVING'}
+                aria-live={savingState === 'SAVING' ? 'assertive' : 'off'}
+                title={savingState === 'UNSAVED'
+                  ? 'You have unsaved changes'
+                  : savingState === 'SAVING'
+                  ? 'Saving changes...'
+                  : 'All changes are saved'}
+              >
+                {#if savingState === 'SAVED'}
+                  <Icon src={CheckCircle} class="-ml-1 mr-2 h-5 w-5" />
 
-                Save
-              {:else if savingState === 'SAVING'}
-                <Icon src={EllipsisHorizontalCircle} class="-ml-1 mr-2 h-5 w-5" />
+                  Save
+                {:else if savingState === 'SAVING'}
+                  <Icon src={EllipsisHorizontalCircle} class="-ml-1 mr-2 h-5 w-5" />
 
-                Saving...
-              {:else if savingState === 'UNSAVED'}
-                <Icon src={ExclamationCircle} class="-ml-1 mr-2 h-5 w-5" />
+                  Saving...
+                {:else if savingState === 'UNSAVED'}
+                  <Icon src={ExclamationCircle} class="-ml-1 mr-2 h-5 w-5" />
 
-                Save
-              {:else}
-                Save
-              {/if}
-            </button>
+                  Save
+                {:else}
+                  Save
+                {/if}
+              </button>
+            {:else}
+              <a
+                href="data:"
+                class="btn btn-sm btn-outline rounded-r-none join-item"
+                on:click={download}
+              >
+                <Icon
+                  src={ArchiveBoxArrowDown}
+                  class="h-5 w-5 text-primary dark:text-base-content"
+                /> Download</a
+              >
+            {/if}
 
             <Menu>
               <MenuButton
@@ -768,25 +787,28 @@
                 use={[[popperContent, popperOptions]]}
                 class="menu menu-compact bg-base-100 dark:bg-neutral w-56 p-1.5 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
               >
-                {#await getUserExperiments()}
-                  <MenuItem as="li" class="menu-title" aria-live="polite" aria-busy="true">
-                    <span class="!text-base-content/60">Loading Your Experiments...</span></MenuItem
-                  >
-                {:then savedExperiments}
-                  <MenuItem as="li" class="menu-title" aria-live="polite" aria-busy="false">
-                    <span class="!text-base-content/60">Your Experiments</span>
-                  </MenuItem>
-
-                  {#each savedExperiments as saved}
-                    <MenuItem as="li" let:active>
-                      <a href="/experiment/hardware-ide/{saved.id}" class:active>{saved.name}</a>
+                {#if apiEnabled}
+                  {#await getUserExperiments()}
+                    <MenuItem as="li" class="menu-title" aria-live="polite" aria-busy="true">
+                      <span class="!text-base-content/60">Loading Your Experiments...</span
+                      ></MenuItem
+                    >
+                  {:then savedExperiments}
+                    <MenuItem as="li" class="menu-title" aria-live="polite" aria-busy="false">
+                      <span class="!text-base-content/60">Your Experiments</span>
                     </MenuItem>
-                  {/each}
-                {:catch error}
-                  <MenuItem as="li" aria-live="polite" aria-busy="false"
-                    ><span class="text-error">Loading failed: {error.message}</span></MenuItem
-                  >
-                {/await}
+
+                    {#each savedExperiments as saved}
+                      <MenuItem as="li" let:active>
+                        <a href="/experiment/hardware-ide/{saved.id}" class:active>{saved.name}</a>
+                      </MenuItem>
+                    {/each}
+                  {:catch error}
+                    <MenuItem as="li" aria-live="polite" aria-busy="false"
+                      ><span class="text-error">Loading failed: {error.message}</span></MenuItem
+                    >
+                  {/await}
+                {/if}
 
                 <MenuItem as="li" let:active>
                   <button on:click={openNewExperiment} class:active
@@ -805,95 +827,100 @@
               </MenuItems>
             </Menu>
 
-            <Popover>
-              <PopoverButton
-                as="button"
-                use={[popperRef]}
-                class="btn btn-square btn-sm btn-outline rounded-none border-l-0 join-item"
-                title="Share"
-                aria-label="Share"
-              >
-                <Icon src={Share} class="h-5" />
-              </PopoverButton>
+            {#if apiEnabled}
+              <Popover>
+                <PopoverButton
+                  as="button"
+                  use={[popperRef]}
+                  class="btn btn-square btn-sm btn-outline rounded-none border-l-0 join-item"
+                  title="Share"
+                  aria-label="Share"
+                >
+                  <Icon src={Share} class="h-5" />
+                </PopoverButton>
 
-              <PopoverPanel
-                use={[[popperContent, popperOptions]]}
-                class="bg-base-100 dark:bg-neutral rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 min-w-[20rem] p-4"
-              >
-                <div class="form-control">
-                  <label class="label cursor-pointer">
-                    <span class="label-text">Anyone with a link can view</span>
-                    <input
-                      type="checkbox"
-                      class="toggle"
-                      checked={visibility === 'PUBLIC'}
-                      on:change={() => {
-                        visibility = visibility === 'PUBLIC' ? 'PRIVATE' : 'PUBLIC';
-                        checkIsDirty();
-                      }}
-                    />
-                  </label>
-                </div>
+                <PopoverPanel
+                  use={[[popperContent, popperOptions]]}
+                  class="bg-base-100 dark:bg-neutral rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 min-w-[20rem] p-4"
+                >
+                  <div class="form-control">
+                    <label class="label cursor-pointer">
+                      <span class="label-text">Anyone with a link can view</span>
+                      <input
+                        type="checkbox"
+                        class="toggle"
+                        checked={visibility === 'PUBLIC'}
+                        on:change={() => {
+                          visibility = visibility === 'PUBLIC' ? 'PRIVATE' : 'PUBLIC';
+                          checkIsDirty();
+                        }}
+                      />
+                    </label>
+                  </div>
 
-                <div class="input-group input-group-sm w-full">
-                  <label>
-                    <div class="sr-only">Experiment URL</div>
-                    <input
-                      type="text"
-                      readonly
-                      class="input input-bordered input-sm"
-                      value={location.href}
-                    />
-                  </label>
-                  <button
-                    class="btn btn-square btn-sm w-fit px-2"
-                    on:click={() => navigator.clipboard.writeText(location.href)}>Copy link</button
-                  >
-                </div>
-              </PopoverPanel>
-            </Popover>
+                  <div class="input-group input-group-sm w-full">
+                    <label>
+                      <div class="sr-only">Experiment URL</div>
+                      <input
+                        type="text"
+                        readonly
+                        class="input input-bordered input-sm"
+                        value={location.href}
+                      />
+                    </label>
+                    <button
+                      class="btn btn-square btn-sm w-fit px-2"
+                      on:click={() => navigator.clipboard.writeText(location.href)}
+                      >Copy link</button
+                    >
+                  </div>
+                </PopoverPanel>
+              </Popover>
+            {/if}
 
-            <Menu>
-              <MenuButton
-                use={[popperRef]}
-                class="btn btn-square btn-sm btn-outline rounded-l-none border-l-0 join-item"
-                title="More actions"
-                aria-label="More actions"
-              >
-                <Icon src={EllipsisVertical} class="h-5" />
-              </MenuButton>
+            {#if apiEnabled}
+              <Menu>
+                <MenuButton
+                  use={[popperRef]}
+                  class="btn btn-square btn-sm btn-outline rounded-l-none border-l-0 join-item"
+                  title="More actions"
+                  aria-label="More actions"
+                >
+                  <Icon src={EllipsisVertical} class="h-5" />
+                </MenuButton>
 
-              <MenuItems
-                as="ul"
-                use={[[popperContent, popperOptions]]}
-                class="menu menu-compact bg-base-100 dark:bg-neutral w-56 p-1.5 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
-              >
-                <MenuItem as="li" let:active>
-                  <a href="data:" class:active on:click={download}>
-                    <Icon
-                      src={ArchiveBoxArrowDown}
-                      class="h-5 w-5 text-primary dark:text-base-content"
-                    /> Download</a
-                  >
-                </MenuItem>
-                <!-- <MenuItem as="li" disabled let:active>
+                <MenuItems
+                  as="ul"
+                  use={[[popperContent, popperOptions]]}
+                  class="menu menu-compact bg-base-100 dark:bg-neutral w-56 p-1.5 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
+                >
+                  <MenuItem as="li" let:active>
+                    <a href="data:" class:active on:click={download}>
+                      <Icon
+                        src={ArchiveBoxArrowDown}
+                        class="h-5 w-5 text-primary dark:text-base-content"
+                      /> Download</a
+                    >
+                  </MenuItem>
+                  <!-- <MenuItem as="li" disabled let:active>
                 <button type="button" class:active
                   ><Icon src={Cog} class="h-5 w-5 text-primary dark:text-base-content" /> Settings</button
                 >
               </MenuItem> -->
-                <MenuItem as="li" let:active>
-                  <button
-                    type="button"
-                    class:active
-                    on:click={remove}
-                    disabled={removingState}
-                    aria-live={removingState ? 'assertive' : 'off'}
-                    ><Icon src={Trash} class="h-5 w-5 text-primary dark:text-base-content" />
-                    {removingState ? 'Deleting...' : 'Delete'}</button
-                  >
-                </MenuItem>
-              </MenuItems>
-            </Menu>
+                  <MenuItem as="li" let:active>
+                    <button
+                      type="button"
+                      class:active
+                      on:click={remove}
+                      disabled={removingState}
+                      aria-live={removingState ? 'assertive' : 'off'}
+                      ><Icon src={Trash} class="h-5 w-5 text-primary dark:text-base-content" />
+                      {removingState ? 'Deleting...' : 'Delete'}</button
+                    >
+                  </MenuItem>
+                </MenuItems>
+              </Menu>
+            {/if}
           </div>
         </div>
       {/if}
@@ -1026,8 +1053,8 @@
     {:else if controls}
       <div class="italic md:col-span-3 p-4">
         Add CHIP to start or check one of the examples like the <a
-          href="/experiment/hardware-ide/{examples.find((e) => e.name === 'XOR Gate')?.id}"
-          class="link">XOR Gate</a
+          href="/experiment/hardware-ide/{examples.find((e) => e.id === 'Xor')?.id}"
+          class="link">Xor Gate</a
         >.
       </div>
     {/if}

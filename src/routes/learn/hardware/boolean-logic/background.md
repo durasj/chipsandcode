@@ -123,7 +123,7 @@ life cycle - from an optimized HDL program to mass production - is typically out
 
 As we have seen in Figures 1.2 and 1.5, one way to define _exclusive_ `Or` is Xor($a$, $b$) = Or(And($a$, Not($b$)), And(Not($a$), $b$)). This logic can be expressed either graphically, as a gate diagram, or textually, as an HDL program. The latter program is written in the HDL variant used throughout this course. See Simulator 1.1 for the details.
 
-{% EmbeddedHardwareIDE id="nnDG6JRQjL0aNVb7AJHnmZrv02pHIINF" /%}
+{% EmbeddedHardwareIDE id="Xor" /%}
 _**Simulator 1.1** `Xor` gate, along with a possible implementation._
 
 ## Explanation
