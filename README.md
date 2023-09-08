@@ -6,7 +6,7 @@
 
 Currently contains and fully supports the first week of Nand2Tetris.
 Can work offline and supports installation as a PWA.
-No cloud required for the basic functionality.
+No cloud dependency for the basic functionality.
 
 - Hardware IDE
   - Code editor with syntax highlighting
@@ -107,3 +107,16 @@ You need to change the account_id within `wrangler.toml` and sign up for Cloudfl
 ## Browser Support
 
 Chips and Code is designed for and tested on the latest stable versions of Chrome, Firefox, Edge, and Safari. It does not support any version of Internet Explorer.
+
+## Background
+
+For more information check out:
+
+- [chipsandcode.com/about](https://chipsandcode.com/about)
+- [thesis.chipsandcode.com](https://thesis.chipsandcode.com)
+
+## License
+
+Software: MIT License
+
+Learning Content: [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/)
