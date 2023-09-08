@@ -1,0 +1,30 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`HDL Parser > Parses minimal CHIP with only pin definition 1`] = `
+[
+  {
+    "body": [
+      {
+        "pins": [
+          {
+            "col": 15,
+            "line": 1,
+            "lineBreaks": 0,
+            "offset": 14,
+            "value": "a",
+          },
+        ],
+        "type": "input",
+      },
+    ],
+    "name": {
+      "col": 6,
+      "line": 1,
+      "lineBreaks": 0,
+      "offset": 5,
+      "value": "Foo",
+    },
+    "type": "chip",
+  },
+]
+`;

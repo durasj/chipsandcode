@@ -48,8 +48,16 @@ class CustomChip implements Chip {
    */
   setInput(name: string, value: boolean) {
     const pin = this.pins.get(name);
-    if (!pin)
-      throw new IllegalStateError(`Input pin '${name}' does not exist.`);
+    const isInput = pin?.type === 'input';
+    if (!isInput) {
+      const inputs = [...this.pins.entries()]
+        .filter(([, p]) => p.type === 'input')
+        .map(([name]) => name)
+        .join(', ');
+      throw new IllegalStateError(
+        `Input pin '${name}' does not exist on '${this.name}'. Input pins: ${inputs}.`,
+      );
+    }
     pin.state = value;
   }
 
@@ -58,8 +66,16 @@ class CustomChip implements Chip {
    */
   getOutput(name: string) {
     const pin = this.pins.get(name);
-    if (!pin)
-      throw new IllegalStateError(`Output pin '${name}' does not exist.`);
+    const isOutput = pin?.type === 'output';
+    if (!isOutput) {
+      const outputs = [...this.pins.entries()]
+        .filter(([, p]) => p.type === 'output')
+        .map(([name]) => name)
+        .join(', ');
+      throw new IllegalStateError(
+        `Output pin '${name}' does not exist on '${this.name}'. Output pins: ${outputs}.`,
+      );
+    }
     return pin.state;
   }
 
@@ -70,7 +86,6 @@ class CustomChip implements Chip {
    */
   public run() {
     // Execute using breadth-first exploring
-    const planned = new Set<Chip>();
     const queue = new Denque<Chip>();
 
     const explore = (pin: ChipPin) => {
@@ -78,8 +93,8 @@ class CustomChip implements Chip {
         // Set chip internal pin state
         chip.setInput(pinName, pin.state);
 
-        // Plan to visit the connected chip next if we didn't already see it
-        if (!planned.has(chip)) queue.push(chip);
+        // Plan to visit the connected chip next
+        queue.push(chip);
       }
     };
 
@@ -88,6 +103,11 @@ class CustomChip implements Chip {
       if (pin.type === 'input') explore(pin);
     }
 
+    // TODO: Find a better way to detect unstable output (loops)
+    // ...probably once there is a support for CLOCKED
+    let iterations = 0;
+    const MAX_ITERATIONS = 9999;
+
     let next = queue.shift();
     while (next) {
       // 1. Run the chip logic
@@ -95,16 +115,21 @@ class CustomChip implements Chip {
 
       // 2. Go over output pins from this chip
       for (const [source, target] of this.parts.get(next)!) {
-        // 2.1. Update connected input pin
+        // 2.1. Update connected pin
         const pin = this.pins.get(target);
         if (!pin)
           throw new InvalidDesignError(
-            `Output pin '${source}' is connected to non-existing pin '${target}'`,
+            `Output pin '${source}' is connected to a non-existing pin '${target}'`,
           );
         pin.state = next.getOutput(source);
 
         // 2.2. Explore target pin next
         explore(pin);
+      }
+
+      iterations++;
+      if (iterations > MAX_ITERATIONS) {
+        throw new InvalidDesignError(`Implementation contains a loop`);
       }
 
       next = queue.shift();

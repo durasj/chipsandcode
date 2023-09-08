@@ -29,7 +29,7 @@
           </h1>
           <p class="mt-4 text-xl opacity-90">
             Find out by embarking on the journey of building your own computer from scratch, from
-            chips to code. No prerequisites - start from the browser now.
+            chips to code. No prerequisites - start for free from the browser.
           </p>
         </div>
         <div>

@@ -1,0 +1,50 @@
+[
+  {
+    "type": "chip",
+    "name": {
+      "value": "ROM32K",
+      "col": 6,
+      "line": 24,
+      "lineBreaks": 0,
+      "offset": 1048
+    },
+    "body": [
+      {
+        "type": "input",
+        "pins": [
+          {
+            "value": "address",
+            "col": 9,
+            "line": 26,
+            "lineBreaks": 0,
+            "offset": 1068,
+            "width": 15
+          }
+        ]
+      },
+      {
+        "type": "output",
+        "pins": [
+          {
+            "value": "out",
+            "col": 9,
+            "line": 27,
+            "lineBreaks": 0,
+            "offset": 1090,
+            "width": 16
+          }
+        ]
+      },
+      {
+        "type": "builtin",
+        "template": {
+          "value": "ROM32K",
+          "col": 13,
+          "line": 29,
+          "lineBreaks": 0,
+          "offset": 1114
+        }
+      }
+    ]
+  }
+]

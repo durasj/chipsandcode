@@ -1,0 +1,62 @@
+[
+  {
+    "type": "chip",
+    "name": {
+      "value": "DMux",
+      "col": 6,
+      "line": 13,
+      "lineBreaks": 0,
+      "offset": 277
+    },
+    "body": [
+      {
+        "type": "input",
+        "pins": [
+          {
+            "value": "in",
+            "col": 9,
+            "line": 15,
+            "lineBreaks": 0,
+            "offset": 295
+          },
+          {
+            "value": "sel",
+            "col": 13,
+            "line": 15,
+            "lineBreaks": 0,
+            "offset": 299
+          }
+        ]
+      },
+      {
+        "type": "output",
+        "pins": [
+          {
+            "value": "a",
+            "col": 9,
+            "line": 16,
+            "lineBreaks": 0,
+            "offset": 313
+          },
+          {
+            "value": "b",
+            "col": 12,
+            "line": 16,
+            "lineBreaks": 0,
+            "offset": 316
+          }
+        ]
+      },
+      {
+        "type": "builtin",
+        "template": {
+          "value": "DMux",
+          "col": 13,
+          "line": 18,
+          "lineBreaks": 0,
+          "offset": 334
+        }
+      }
+    ]
+  }
+]

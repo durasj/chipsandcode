@@ -1,0 +1,62 @@
+[
+  {
+    "type": "chip",
+    "name": {
+      "value": "HalfAdder",
+      "col": 6,
+      "line": 11,
+      "lineBreaks": 0,
+      "offset": 314
+    },
+    "body": [
+      {
+        "type": "input",
+        "pins": [
+          {
+            "value": "a",
+            "col": 9,
+            "line": 13,
+            "lineBreaks": 0,
+            "offset": 337
+          },
+          {
+            "value": "b",
+            "col": 12,
+            "line": 13,
+            "lineBreaks": 0,
+            "offset": 340
+          }
+        ]
+      },
+      {
+        "type": "output",
+        "pins": [
+          {
+            "value": "sum",
+            "col": 9,
+            "line": 14,
+            "lineBreaks": 0,
+            "offset": 352
+          },
+          {
+            "value": "carry",
+            "col": 9,
+            "line": 15,
+            "lineBreaks": 0,
+            "offset": 384
+          }
+        ]
+      },
+      {
+        "type": "builtin",
+        "template": {
+          "value": "HalfAdder",
+          "col": 13,
+          "line": 17,
+          "lineBreaks": 0,
+          "offset": 422
+        }
+      }
+    ]
+  }
+]

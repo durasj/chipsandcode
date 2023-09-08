@@ -1,5 +1,7 @@
 import type { ErrorResponse } from './shared';
 
+export const apiEnabled = !!import.meta.env.VITE_API_PREFIX;
+
 export default async function api<T>(url: string, options?: RequestInit) {
   const resourceUrl = `${import.meta.env.VITE_API_PREFIX}${url}`;
 

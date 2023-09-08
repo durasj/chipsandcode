@@ -1,0 +1,84 @@
+[
+  {
+    "type": "chip",
+    "name": {
+      "value": "RAM512",
+      "col": 6,
+      "line": 17,
+      "lineBreaks": 0,
+      "offset": 707
+    },
+    "body": [
+      {
+        "type": "input",
+        "pins": [
+          {
+            "value": "in",
+            "col": 9,
+            "line": 19,
+            "lineBreaks": 0,
+            "offset": 727,
+            "width": 16
+          },
+          {
+            "value": "load",
+            "col": 17,
+            "line": 19,
+            "lineBreaks": 0,
+            "offset": 735
+          },
+          {
+            "value": "address",
+            "col": 23,
+            "line": 19,
+            "lineBreaks": 0,
+            "offset": 741,
+            "width": 9
+          }
+        ]
+      },
+      {
+        "type": "output",
+        "pins": [
+          {
+            "value": "out",
+            "col": 9,
+            "line": 20,
+            "lineBreaks": 0,
+            "offset": 762,
+            "width": 16
+          }
+        ]
+      },
+      {
+        "type": "builtin",
+        "template": {
+          "value": "RAM512",
+          "col": 13,
+          "line": 22,
+          "lineBreaks": 0,
+          "offset": 786
+        }
+      },
+      {
+        "type": "clocked",
+        "pins": [
+          {
+            "value": "in",
+            "col": 13,
+            "line": 23,
+            "lineBreaks": 0,
+            "offset": 807
+          },
+          {
+            "value": "load",
+            "col": 17,
+            "line": 23,
+            "lineBreaks": 0,
+            "offset": 811
+          }
+        ]
+      }
+    ]
+  }
+]

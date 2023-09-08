@@ -1,0 +1,564 @@
+{
+  "type": "script",
+  "preamble": [
+    {
+      "type": "load",
+      "file": {
+        "value": "Or16.hdl",
+        "col": 6,
+        "line": 6,
+        "lineBreaks": 0,
+        "offset": 179
+      }
+    },
+    {
+      "type": "output",
+      "file": {
+        "value": "Or16.out",
+        "col": 13,
+        "line": 7,
+        "lineBreaks": 0,
+        "offset": 202
+      }
+    },
+    {
+      "type": "compare",
+      "file": {
+        "value": "Or16.cmp",
+        "col": 12,
+        "line": 8,
+        "lineBreaks": 0,
+        "offset": 224
+      }
+    },
+    {
+      "type": "outputList",
+      "outputs": [
+        {
+          "type": "outputSpec",
+          "name": {
+            "value": "a",
+            "col": 13,
+            "line": 9,
+            "lineBreaks": 0,
+            "offset": 247
+          },
+          "format": "B",
+          "length": 16,
+          "padLeft": 1,
+          "padRight": 1
+        },
+        {
+          "type": "outputSpec",
+          "name": {
+            "value": "b",
+            "col": 23,
+            "line": 9,
+            "lineBreaks": 0,
+            "offset": 257
+          },
+          "format": "B",
+          "length": 16,
+          "padLeft": 1,
+          "padRight": 1
+        },
+        {
+          "type": "outputSpec",
+          "name": {
+            "value": "out",
+            "col": 33,
+            "line": 9,
+            "lineBreaks": 0,
+            "offset": 267
+          },
+          "format": "B",
+          "length": 16,
+          "padLeft": 1,
+          "padRight": 1
+        }
+      ]
+    }
+  ],
+  "cases": [
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "a",
+          "col": 5,
+          "line": 11,
+          "lineBreaks": 0,
+          "offset": 287
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 11
+      },
+      {
+        "type": "set",
+        "name": {
+          "value": "b",
+          "col": 5,
+          "line": 12,
+          "lineBreaks": 0,
+          "offset": 314
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 12
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 13
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 14
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "a",
+          "col": 5,
+          "line": 16,
+          "lineBreaks": 0,
+          "offset": 359
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 16
+      },
+      {
+        "type": "set",
+        "name": {
+          "value": "b",
+          "col": 5,
+          "line": 17,
+          "lineBreaks": 0,
+          "offset": 386
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 17
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 18
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 19
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "a",
+          "col": 5,
+          "line": 21,
+          "lineBreaks": 0,
+          "offset": 431
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 21
+      },
+      {
+        "type": "set",
+        "name": {
+          "value": "b",
+          "col": 5,
+          "line": 22,
+          "lineBreaks": 0,
+          "offset": 458
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 22
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 23
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 24
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "a",
+          "col": 5,
+          "line": 26,
+          "lineBreaks": 0,
+          "offset": 503
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 26
+      },
+      {
+        "type": "set",
+        "name": {
+          "value": "b",
+          "col": 5,
+          "line": 27,
+          "lineBreaks": 0,
+          "offset": 530
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 27
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 28
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 29
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "a",
+          "col": 5,
+          "line": 31,
+          "lineBreaks": 0,
+          "offset": 575
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 31
+      },
+      {
+        "type": "set",
+        "name": {
+          "value": "b",
+          "col": 5,
+          "line": 32,
+          "lineBreaks": 0,
+          "offset": 602
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 32
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 33
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 34
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "a",
+          "col": 5,
+          "line": 36,
+          "lineBreaks": 0,
+          "offset": 647
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 36
+      },
+      {
+        "type": "set",
+        "name": {
+          "value": "b",
+          "col": 5,
+          "line": 37,
+          "lineBreaks": 0,
+          "offset": 674
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 37
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 38
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 39
+      }
+    ]
+  ]
+}

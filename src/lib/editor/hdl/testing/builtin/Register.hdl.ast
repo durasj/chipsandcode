@@ -1,0 +1,76 @@
+[
+  {
+    "type": "chip",
+    "name": {
+      "value": "Register",
+      "col": 6,
+      "line": 12,
+      "lineBreaks": 0,
+      "offset": 309
+    },
+    "body": [
+      {
+        "type": "input",
+        "pins": [
+          {
+            "value": "in",
+            "col": 9,
+            "line": 14,
+            "lineBreaks": 0,
+            "offset": 331,
+            "width": 16
+          },
+          {
+            "value": "load",
+            "col": 17,
+            "line": 14,
+            "lineBreaks": 0,
+            "offset": 339
+          }
+        ]
+      },
+      {
+        "type": "output",
+        "pins": [
+          {
+            "value": "out",
+            "col": 9,
+            "line": 15,
+            "lineBreaks": 0,
+            "offset": 354,
+            "width": 16
+          }
+        ]
+      },
+      {
+        "type": "builtin",
+        "template": {
+          "value": "Register",
+          "col": 13,
+          "line": 17,
+          "lineBreaks": 0,
+          "offset": 378
+        }
+      },
+      {
+        "type": "clocked",
+        "pins": [
+          {
+            "value": "in",
+            "col": 13,
+            "line": 18,
+            "lineBreaks": 0,
+            "offset": 401
+          },
+          {
+            "value": "load",
+            "col": 17,
+            "line": 18,
+            "lineBreaks": 0,
+            "offset": 405
+          }
+        ]
+      }
+    ]
+  }
+]

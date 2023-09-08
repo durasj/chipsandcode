@@ -1,26 +1,33 @@
 @{%
-    import moo from 'moo';
-    const lexer = moo.compile({
-        leftBrace:      '{',
-        rightBrace:     '}',
-        leftParen:      '(',
-        rightParen:     ')',
-        leftBracket:    '[',
-        rightBracket:   ']',
-        semicolon:      ';',
-        colon:          ':',
-        comma:          ',',
-        equals:         '=',
-        percent:        '%',
-        format:         { match: /[BXDS][0-9]+.[1-9][0-9]*.[0-9]+/, value: f => [f[0], ...f.substr(1).split('.').map(Number)] },
-        identifier:     { match: /[a-zA-Z_][a-zA-Z0-9-_\.]*/, type: moo.keywords({
-          keyword: ['load', 'output-file', 'compare-to', 'output-list', 'set', 'eval', 'output'],
-        }) },
-        value:          { match: /[01]/, value: (v) => v === '1' },
-        whiteSpace:     { match: /\s+/, lineBreaks: true },
-        comment:        { match: /\/\/[^\n]*/, value: c => c.slice(2) },
-        commentBlock:   { match: /\/\*[\s\S]*?\*\//, lineBreaks: true, value: c => c.slice(2, -2) }
-    });
+  import moo from 'moo';
+  const lexer = moo.compile({
+    semicolon:      ';',
+    colon:          ':',
+    comma:          ',',
+    equals:         '=',
+    format: {
+      match: /%[BXDS][0-9]+\.[1-9][0-9]*\.[0-9]+/,
+      value: f => [f[1], ...f.substr(2).split('.').map(Number)],
+    },
+    identifier: {
+      match: /[a-zA-Z_][a-zA-Z0-9-_\.]*/,
+      type: moo.keywords({
+        keyword: ['load', 'output-file', 'compare-to', 'output-list', 'set', 'eval', 'output'],
+      }),
+    },
+    decimalValue: { match: /\d+/, value: (v) => +v },
+    // TODO: Add support for X, D, S values
+    binaryValue: {
+      match: /%B[01]+/,
+      value: f => ({ type: 'value', format: 'binary', value: f.substr(2).split('').map(Boolean)}),
+    },
+    whiteSpace:     { match: /\s+/, lineBreaks: true },
+    comment:        { match: /\/\/[^\n]*/, value: c => c.slice(2) },
+    commentBlock:   { match: /\/\*[\s\S]*?\*\//, lineBreaks: true, value: c => c.slice(2, -2) }
+  });
+
+  const getIdentifier = ({ value, col, line, lineBreaks, offset }) =>
+    ({ value, col, line, lineBreaks, offset });
 %}
 
 @lexer lexer
@@ -35,9 +42,9 @@ preamble ->
     | preambleInstruction _ "," _ preamble  {% ([instruction, , , , acc]) => ([instruction, ...acc]) %}
 
 preambleInstruction ->
-      "load" _ %identifier          {% ([, , file]) => ({ type: 'load', file }) %}
-    | "output-file" _ %identifier   {% ([, , file]) => ({ type: 'output', file }) %}
-    | "compare-to" _ %identifier    {% ([, , file]) => ({ type: 'compare', file }) %}
+      "load" _ %identifier          {% ([, , file]) => ({ type: 'load', file: getIdentifier(file) }) %}
+    | "output-file" _ %identifier   {% ([, , file]) => ({ type: 'output', file: getIdentifier(file) }) %}
+    | "compare-to" _ %identifier    {% ([, , file]) => ({ type: 'compare', file: getIdentifier(file) }) %}
     | "output-list" _ outputList    {% ([, , outputs]) => ({ type: 'outputList', outputs }) %}
 
 outputList ->
@@ -45,8 +52,8 @@ outputList ->
     | outputSpec _ outputList   {% ([spec, , acc]) => ([spec, ...acc]) %}
 
 outputSpec ->
-      %identifier               {% ([name]) => ({ type: 'outputSpec', name }) %}
-    | %identifier "%" %format   {% ([name, , f]) => ({ type: 'outputSpec', name, format: f.value[0], length: f.value[2], padLeft: f.value[1], padRight: f.value[3] }) %}
+      %identifier               {% ([name]) => ({ type: 'outputSpec', name: getIdentifier(name) }) %}
+    | %identifier %format       {% ([name, f]) => ({ type: 'outputSpec', name: getIdentifier(name), format: f.value[0], length: f.value[2], padLeft: f.value[1], padRight: f.value[3] }) %}
 
 cases ->
       caseSpec _ ";"            {% ([instructions]) => [instructions] %}
@@ -56,8 +63,12 @@ caseSpec ->
       caseInstruction                   {% ([instruction]) => [instruction] %}
     | caseInstruction _ "," _ caseSpec  {% ([instruction, , , , acc]) => ([instruction, ...acc]) %}
 
+value ->
+      %decimalValue {% id %}
+    | %binaryValue  {% id %}
+
 caseInstruction ->
-      "set" _ %identifier _ %value  {% ([kw, , name, , value]) => ({ type: 'set', name, value: value.value, col: kw.col, line: kw.line }) %}
+      "set" _ %identifier _ value   {% ([kw, , name, , value]) => ({ type: 'set', name: getIdentifier(name), value: value.value, col: kw.col, line: kw.line }) %}
     | "eval"                        {% ([kw]) => ({ type: 'eval', col: kw.col, line: kw.line }) %}
     | "output"                      {% ([kw]) => ({ type: 'output', col: kw.col, line: kw.line }) %}
 

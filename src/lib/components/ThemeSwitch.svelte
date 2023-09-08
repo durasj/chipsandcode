@@ -6,7 +6,7 @@
   import { theme } from 'src/stores';
 
   onMount(() => {
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    window.matchMedia?.('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
       theme.set(e.matches ? 'dark' : 'light');
     });
   });

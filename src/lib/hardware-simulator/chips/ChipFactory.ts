@@ -1,15 +1,20 @@
-import type { ChipNode } from 'src/editor/hdl/tree';
+import type { ChipBuiltinNode, ChipNode } from '../../editor/hdl/tree';
 import type { ChipPin } from './Chip';
 import type Chip from './Chip';
 import CustomChip from './CustomChip';
 import InvalidDesignError from './InvalidDesignError';
-import AndChip from './prebuilt/AndChip';
-import NandChip from './prebuilt/NandChip';
-import NotChip from './prebuilt/NotChip';
-import OrChip from './prebuilt/OrChip';
-import XorChip from './prebuilt/XorChip';
+import NotImplemented from './builtin/NotImplemented';
 
-export type BUILTIN_GATES = keyof typeof ChipFactory.BUILTIN;
+interface Type<T> extends Chip {
+  new (...args: unknown[]): T;
+}
+
+const BUILTIN = Object.fromEntries(
+  Object.entries(import.meta.glob('./builtin/*Chip.ts', { eager: true })).map(([file, chip]) => [
+    file.replace(/.*\/|Chip\.[^.]*$/g, ''),
+    (chip as { default: Type<Chip> }).default,
+  ]),
+);
 
 /**
  * Creates chips
@@ -18,13 +23,7 @@ class ChipFactory {
   /**
    * Built in chips
    */
-  public static readonly BUILTIN = {
-    And: AndChip,
-    Nand: NandChip,
-    Not: NotChip,
-    Or: OrChip,
-    Xor: XorChip,
-  };
+  public static readonly BUILTIN = BUILTIN;
 
   /**
    * Loaded custom chips
@@ -38,6 +37,17 @@ class ChipFactory {
     const name = node.name.value;
     const pins = new Map<string, ChipPin>();
     const parts = new Map<Chip, [string, string][]>();
+
+    // Built-in statement short-circuits the preparation
+    const isBuiltin = (statement: ChipNode['body'][0]): statement is ChipBuiltinNode =>
+      statement.type === 'builtin';
+    const builtIn = node.body.find(isBuiltin);
+    if (builtIn) {
+      const name = builtIn.template.value;
+      const defined = this.fromDefined(name);
+      if (!defined) throw new InvalidDesignError(`Unknown built-in chip "${name}".`);
+      return defined;
+    }
 
     // I/O must be processed first
     for (const conf of node.body) {
@@ -57,8 +67,12 @@ class ChipFactory {
       if (conf.type !== 'parts') continue;
 
       for (const statement of conf.statements) {
-        const partChip = this.fromDefined(statement.chip as BUILTIN_GATES);
-        if (!partChip) throw new InvalidDesignError(`Unknown chip '${statement.chip}'`);
+        const chipName = statement.chip.value;
+        const partChip = this.fromDefined(chipName);
+        if (!partChip)
+          throw new InvalidDesignError(
+            `Unknown chip '${chipName}'. Available chips: ${this.getAvailableChips().join(', ')}.`,
+          );
         const partConnections = [] as [string, string][];
         parts.set(partChip, partConnections);
         const partPins = partChip.getPins();
@@ -68,17 +82,17 @@ class ChipFactory {
           const right = connection.right.value;
           const pinType = partPins.get(left)?.type;
 
+          if (!pins.has(right)) {
+            pins.set(right, {
+              type: 'internal',
+              state: false,
+              connections: [],
+            });
+          }
+
           if (pinType === 'output') {
             partConnections.push([left, right]);
           } else {
-            if (!pins.has(right)) {
-              pins.set(right, {
-                type: 'internal',
-                state: false,
-                connections: [],
-              });
-            }
-
             const rightPin = pins.get(right)!;
             rightPin.connections.push([partChip, left]);
           }
@@ -95,11 +109,22 @@ class ChipFactory {
    * @param name Name of the wanted chip
    * @returns Chip or undefined if it was not found
    */
-  public fromDefined(name: BUILTIN_GATES) {
+  public fromDefined(name: string) {
     const DefinedChip = ChipFactory.BUILTIN[name];
     if (!DefinedChip) return undefined;
 
     return new DefinedChip();
+  }
+
+  /**
+   * Provides a list of name of available chips
+   *
+   * @returns List of names
+   */
+  public getAvailableChips() {
+    return Object.entries(ChipFactory.BUILTIN)
+      .filter(([, chip]) => !(new chip() instanceof NotImplemented))
+      .map(([name]) => name);
   }
 }
 

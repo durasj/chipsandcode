@@ -1,0 +1,736 @@
+{
+  "type": "script",
+  "preamble": [
+    {
+      "type": "load",
+      "file": {
+        "value": "DMux8Way.hdl",
+        "col": 6,
+        "line": 6,
+        "lineBreaks": 0,
+        "offset": 183
+      }
+    },
+    {
+      "type": "output",
+      "file": {
+        "value": "DMux8Way.out",
+        "col": 13,
+        "line": 7,
+        "lineBreaks": 0,
+        "offset": 210
+      }
+    },
+    {
+      "type": "compare",
+      "file": {
+        "value": "DMux8Way.cmp",
+        "col": 12,
+        "line": 8,
+        "lineBreaks": 0,
+        "offset": 236
+      }
+    },
+    {
+      "type": "outputList",
+      "outputs": [
+        {
+          "type": "outputSpec",
+          "name": {
+            "value": "in",
+            "col": 13,
+            "line": 9,
+            "lineBreaks": 0,
+            "offset": 263
+          },
+          "format": "B",
+          "length": 1,
+          "padLeft": 2,
+          "padRight": 2
+        },
+        {
+          "type": "outputSpec",
+          "name": {
+            "value": "sel",
+            "col": 23,
+            "line": 9,
+            "lineBreaks": 0,
+            "offset": 273
+          },
+          "format": "B",
+          "length": 3,
+          "padLeft": 2,
+          "padRight": 2
+        },
+        {
+          "type": "outputSpec",
+          "name": {
+            "value": "a",
+            "col": 34,
+            "line": 9,
+            "lineBreaks": 0,
+            "offset": 284
+          },
+          "format": "B",
+          "length": 1,
+          "padLeft": 2,
+          "padRight": 2
+        },
+        {
+          "type": "outputSpec",
+          "name": {
+            "value": "b",
+            "col": 43,
+            "line": 9,
+            "lineBreaks": 0,
+            "offset": 293
+          },
+          "format": "B",
+          "length": 1,
+          "padLeft": 2,
+          "padRight": 2
+        },
+        {
+          "type": "outputSpec",
+          "name": {
+            "value": "c",
+            "col": 52,
+            "line": 9,
+            "lineBreaks": 0,
+            "offset": 302
+          },
+          "format": "B",
+          "length": 1,
+          "padLeft": 2,
+          "padRight": 2
+        },
+        {
+          "type": "outputSpec",
+          "name": {
+            "value": "d",
+            "col": 61,
+            "line": 9,
+            "lineBreaks": 0,
+            "offset": 311
+          },
+          "format": "B",
+          "length": 1,
+          "padLeft": 2,
+          "padRight": 2
+        },
+        {
+          "type": "outputSpec",
+          "name": {
+            "value": "e",
+            "col": 70,
+            "line": 9,
+            "lineBreaks": 0,
+            "offset": 320
+          },
+          "format": "B",
+          "length": 1,
+          "padLeft": 2,
+          "padRight": 2
+        },
+        {
+          "type": "outputSpec",
+          "name": {
+            "value": "f",
+            "col": 79,
+            "line": 9,
+            "lineBreaks": 0,
+            "offset": 329
+          },
+          "format": "B",
+          "length": 1,
+          "padLeft": 2,
+          "padRight": 2
+        },
+        {
+          "type": "outputSpec",
+          "name": {
+            "value": "g",
+            "col": 88,
+            "line": 9,
+            "lineBreaks": 0,
+            "offset": 338
+          },
+          "format": "B",
+          "length": 1,
+          "padLeft": 2,
+          "padRight": 2
+        },
+        {
+          "type": "outputSpec",
+          "name": {
+            "value": "h",
+            "col": 97,
+            "line": 9,
+            "lineBreaks": 0,
+            "offset": 347
+          },
+          "format": "B",
+          "length": 1,
+          "padLeft": 2,
+          "padRight": 2
+        }
+      ]
+    }
+  ],
+  "cases": [
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "in",
+          "col": 5,
+          "line": 11,
+          "lineBreaks": 0,
+          "offset": 364
+        },
+        "value": 0,
+        "col": 1,
+        "line": 11
+      },
+      {
+        "type": "set",
+        "name": {
+          "value": "sel",
+          "col": 5,
+          "line": 12,
+          "lineBreaks": 0,
+          "offset": 375
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 12
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 13
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 14
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "sel",
+          "col": 5,
+          "line": 16,
+          "lineBreaks": 0,
+          "offset": 409
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 16
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 17
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 18
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "sel",
+          "col": 5,
+          "line": 20,
+          "lineBreaks": 0,
+          "offset": 443
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 20
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 21
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 22
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "sel",
+          "col": 5,
+          "line": 24,
+          "lineBreaks": 0,
+          "offset": 477
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 24
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 25
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 26
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "sel",
+          "col": 5,
+          "line": 28,
+          "lineBreaks": 0,
+          "offset": 511
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 28
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 29
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 30
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "sel",
+          "col": 5,
+          "line": 32,
+          "lineBreaks": 0,
+          "offset": 545
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 32
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 33
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 34
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "sel",
+          "col": 5,
+          "line": 36,
+          "lineBreaks": 0,
+          "offset": 579
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 36
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 37
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 38
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "sel",
+          "col": 5,
+          "line": 40,
+          "lineBreaks": 0,
+          "offset": 613
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 40
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 41
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 42
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "in",
+          "col": 5,
+          "line": 44,
+          "lineBreaks": 0,
+          "offset": 647
+        },
+        "value": 1,
+        "col": 1,
+        "line": 44
+      },
+      {
+        "type": "set",
+        "name": {
+          "value": "sel",
+          "col": 5,
+          "line": 45,
+          "lineBreaks": 0,
+          "offset": 658
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 45
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 46
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 47
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "sel",
+          "col": 5,
+          "line": 49,
+          "lineBreaks": 0,
+          "offset": 692
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 49
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 50
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 51
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "sel",
+          "col": 5,
+          "line": 53,
+          "lineBreaks": 0,
+          "offset": 726
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 53
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 54
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 55
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "sel",
+          "col": 5,
+          "line": 57,
+          "lineBreaks": 0,
+          "offset": 760
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 57
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 58
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 59
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "sel",
+          "col": 5,
+          "line": 61,
+          "lineBreaks": 0,
+          "offset": 794
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 61
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 62
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 63
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "sel",
+          "col": 5,
+          "line": 65,
+          "lineBreaks": 0,
+          "offset": 828
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 65
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 66
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 67
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "sel",
+          "col": 5,
+          "line": 69,
+          "lineBreaks": 0,
+          "offset": 862
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 69
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 70
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 71
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "sel",
+          "col": 5,
+          "line": 73,
+          "lineBreaks": 0,
+          "offset": 896
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 73
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 74
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 75
+      }
+    ]
+  ]
+}

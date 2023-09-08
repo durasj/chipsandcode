@@ -1,0 +1,106 @@
+[
+  {
+    "type": "chip",
+    "name": {
+      "value": "Not",
+      "col": 6,
+      "line": 11,
+      "lineBreaks": 0,
+      "offset": 211
+    },
+    "body": [
+      {
+        "type": "input",
+        "pins": [
+          {
+            "value": "in",
+            "col": 8,
+            "line": 12,
+            "lineBreaks": 0,
+            "offset": 224
+          }
+        ]
+      },
+      {
+        "type": "output",
+        "pins": [
+          {
+            "value": "out",
+            "col": 9,
+            "line": 13,
+            "lineBreaks": 0,
+            "offset": 236
+          }
+        ]
+      },
+      {
+        "type": "parts",
+        "statements": [
+          {
+            "type": "statement",
+            "chip": {
+              "value": "Nand",
+              "col": 5,
+              "line": 16,
+              "lineBreaks": 0,
+              "offset": 257
+            },
+            "connections": [
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "a",
+                  "col": 10,
+                  "line": 16,
+                  "lineBreaks": 0,
+                  "offset": 262
+                },
+                "right": {
+                  "value": "in",
+                  "col": 12,
+                  "line": 16,
+                  "lineBreaks": 0,
+                  "offset": 264
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "b",
+                  "col": 16,
+                  "line": 16,
+                  "lineBreaks": 0,
+                  "offset": 268
+                },
+                "right": {
+                  "value": "in",
+                  "col": 18,
+                  "line": 16,
+                  "lineBreaks": 0,
+                  "offset": 270
+                }
+              },
+              {
+                "type": "assignment",
+                "left": {
+                  "value": "out",
+                  "col": 22,
+                  "line": 16,
+                  "lineBreaks": 0,
+                  "offset": 274
+                },
+                "right": {
+                  "value": "out",
+                  "col": 26,
+                  "line": 16,
+                  "lineBreaks": 0,
+                  "offset": 278
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

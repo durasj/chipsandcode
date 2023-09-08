@@ -6,10 +6,14 @@
   import Loading from '$lib/components/Loading.svelte';
   import Header from 'src/lib/components/Header.svelte';
   import type { PageData } from './$types';
+  import examples from 'src/lib/hardware-simulator/examples';
 
   export let data: PageData;
 
   $: experiment = (async () => {
+    const example = examples.find(({ id: exampleId }) => exampleId === data.id);
+    if (example) return example;
+
     try {
       const response = await api<{ experiment: Experiment }>(`/experiments/${data.id}`);
       return response.experiment;
@@ -36,6 +40,14 @@
 <Header />
 
 <main class="flex flex-grow border-t border-base-200" aria-live="polite">
+  {#await experiment}
+    <h1 class="sr-only">New Experiment - Hardware IDE</h1>
+  {:then experiment}
+    <h1 class="sr-only">{experiment.name} - Hardware IDE</h1>
+  {:catch}
+    <h1 class="sr-only">Invalid Experiment - Hardware IDE</h1>
+  {/await}
+
   {#await experiment}
     <Loading name="Experiment" />
   {:then experiment}

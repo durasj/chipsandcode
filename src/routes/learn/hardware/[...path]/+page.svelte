@@ -14,42 +14,35 @@
 
   export let data: PageData;
 
+  type MenuItem = {
+    name: string;
+    link: string;
+    label: string;
+    disabled?: boolean;
+  };
+
   const menu = [
     {
       name: 'Boolean Logic',
       link: '/hardware/boolean-logic',
-      label: 1,
+      label: '1',
     },
     {
       name: 'Background',
       link: '/hardware/boolean-logic/background',
-      label: 1.1,
-    },
-    {
-      name: 'Specification',
-      link: '/hardware/boolean-logic/background',
-      label: 1.2,
-      disabled: true,
-    },
-    {
-      name: 'Implementation',
-      link: '/hardware/boolean-logic/background',
-      label: 1.3,
-      disabled: true,
-    },
-    {
-      name: 'Perspective',
-      link: '/hardware/boolean-logic/background',
-      label: 1.4,
-      disabled: true,
+      label: '1.1',
     },
     {
       name: 'Project',
-      link: '/hardware/boolean-logic/background',
-      label: 1.5,
-      disabled: true,
+      link: '/hardware/boolean-logic/project',
+      label: '1.2',
     },
-  ];
+    {
+      name: 'What Next?',
+      link: '/hardware/meta/what-next',
+      label: '2.0',
+    },
+  ] as MenuItem[];
 
   $: activeItemIndex = menu.findIndex((i) => $page.url.pathname.endsWith(i.link));
   $: prevItem = menu[activeItemIndex - 1];
@@ -61,7 +54,7 @@
 </script>
 
 <svelte:head>
-  <title>Learn - {data.meta.title} - Chips and Code</title>
+  <title>{data.meta.title} - Hardware - Chips and Code</title>
 </svelte:head>
 
 <Header />
@@ -86,14 +79,16 @@
 
     <div class="text-xs break-words mb-2">Last updated: {updatedHr}</div>
     <div class="text-xs break-words">
-      Adapted by <a href="https://jan.duras.me" class="link">Jan Duras</a> from
+      Adapted by <a href="https://johny.digital" class="link">Jan Duras</a> from
       <a href="https://www.nand2tetris.org/license" class="link">Nand to Tetris</a>
       by Shimon Schocken and Noam Nisan.
       <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" class="link">CC BY-NC-SA 3.0</a>
     </div>
   </nav>
 
-  <article class="prose dark:prose-invert px-4 sm:px-6 lg:px-8 lg:col-start-2 lg:col-end-5">
+  <article
+    class="prose dark:prose-invert px-4 sm:px-6 lg:px-8 lg:col-start-2 lg:col-end-5 prose-code:px-0 prose-code:font-normal [word-spacing:0.0625rem]"
+  >
     <h1>{data.meta.title}</h1>
 
     <Elements children={data.content} />

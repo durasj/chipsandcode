@@ -1,0 +1,37 @@
+[
+  {
+    "type": "chip",
+    "name": {
+      "value": "Keyboard",
+      "col": 6,
+      "line": 16,
+      "lineBreaks": 0,
+      "offset": 535
+    },
+    "body": [
+      {
+        "type": "output",
+        "pins": [
+          {
+            "value": "out",
+            "col": 9,
+            "line": 18,
+            "lineBreaks": 0,
+            "offset": 557,
+            "width": 16
+          }
+        ]
+      },
+      {
+        "type": "builtin",
+        "template": {
+          "value": "Keyboard",
+          "col": 13,
+          "line": 22,
+          "lineBreaks": 0,
+          "offset": 753
+        }
+      }
+    ]
+  }
+]

@@ -9,7 +9,10 @@
       >Jakub Duras</a
     >
   </div>
-  <div class="gap-4">
+
+  <div class="flex gap-4 items-center">
+    <a href="/accessibility-statement" class="link link-hover">Accessibility Statement</a>
+
     <a
       href="https://github.com/durasj/chipsandcode"
       target="_blank"

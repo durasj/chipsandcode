@@ -1,0 +1,58 @@
+[
+  {
+    "type": "chip",
+    "name": {
+      "value": "Or16",
+      "col": 6,
+      "line": 10,
+      "lineBreaks": 0,
+      "offset": 258
+    },
+    "body": [
+      {
+        "type": "input",
+        "pins": [
+          {
+            "value": "a",
+            "col": 9,
+            "line": 12,
+            "lineBreaks": 0,
+            "offset": 276,
+            "width": 16
+          },
+          {
+            "value": "b",
+            "col": 16,
+            "line": 12,
+            "lineBreaks": 0,
+            "offset": 283,
+            "width": 16
+          }
+        ]
+      },
+      {
+        "type": "output",
+        "pins": [
+          {
+            "value": "out",
+            "col": 9,
+            "line": 13,
+            "lineBreaks": 0,
+            "offset": 299,
+            "width": 16
+          }
+        ]
+      },
+      {
+        "type": "builtin",
+        "template": {
+          "value": "Or",
+          "col": 13,
+          "line": 15,
+          "lineBreaks": 0,
+          "offset": 323
+        }
+      }
+    ]
+  }
+]

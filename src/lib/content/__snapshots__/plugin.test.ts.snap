@@ -1,0 +1,29 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Markdown Content Vite Plugin > Processes markdown into code 1`] = `
+{
+  "code": "export default {
+	meta: {
+		foo: \\"bar\\"
+	},
+	content: {
+		$$mdtype: \\"Tag\\",
+		name: \\"article\\",
+		attributes: {
+		},
+		children: [
+			{
+				$$mdtype: \\"Tag\\",
+				name: \\"p\\",
+				attributes: {
+				},
+				children: [
+					\\"Content\\"
+				]
+			}
+		]
+	}
+};",
+  "map": null,
+}
+`;

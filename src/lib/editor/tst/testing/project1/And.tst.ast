@@ -1,0 +1,236 @@
+{
+  "type": "script",
+  "preamble": [
+    {
+      "type": "load",
+      "file": {
+        "value": "And.hdl",
+        "col": 6,
+        "line": 6,
+        "lineBreaks": 0,
+        "offset": 178
+      }
+    },
+    {
+      "type": "output",
+      "file": {
+        "value": "And.out",
+        "col": 13,
+        "line": 7,
+        "lineBreaks": 0,
+        "offset": 200
+      }
+    },
+    {
+      "type": "compare",
+      "file": {
+        "value": "And.cmp",
+        "col": 12,
+        "line": 8,
+        "lineBreaks": 0,
+        "offset": 221
+      }
+    },
+    {
+      "type": "outputList",
+      "outputs": [
+        {
+          "type": "outputSpec",
+          "name": {
+            "value": "a",
+            "col": 13,
+            "line": 9,
+            "lineBreaks": 0,
+            "offset": 243
+          },
+          "format": "B",
+          "length": 1,
+          "padLeft": 3,
+          "padRight": 3
+        },
+        {
+          "type": "outputSpec",
+          "name": {
+            "value": "b",
+            "col": 22,
+            "line": 9,
+            "lineBreaks": 0,
+            "offset": 252
+          },
+          "format": "B",
+          "length": 1,
+          "padLeft": 3,
+          "padRight": 3
+        },
+        {
+          "type": "outputSpec",
+          "name": {
+            "value": "out",
+            "col": 31,
+            "line": 9,
+            "lineBreaks": 0,
+            "offset": 261
+          },
+          "format": "B",
+          "length": 1,
+          "padLeft": 3,
+          "padRight": 3
+        }
+      ]
+    }
+  ],
+  "cases": [
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "a",
+          "col": 5,
+          "line": 11,
+          "lineBreaks": 0,
+          "offset": 280
+        },
+        "value": 0,
+        "col": 1,
+        "line": 11
+      },
+      {
+        "type": "set",
+        "name": {
+          "value": "b",
+          "col": 5,
+          "line": 12,
+          "lineBreaks": 0,
+          "offset": 290
+        },
+        "value": 0,
+        "col": 1,
+        "line": 12
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 13
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 14
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "a",
+          "col": 5,
+          "line": 16,
+          "lineBreaks": 0,
+          "offset": 318
+        },
+        "value": 0,
+        "col": 1,
+        "line": 16
+      },
+      {
+        "type": "set",
+        "name": {
+          "value": "b",
+          "col": 5,
+          "line": 17,
+          "lineBreaks": 0,
+          "offset": 328
+        },
+        "value": 1,
+        "col": 1,
+        "line": 17
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 18
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 19
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "a",
+          "col": 5,
+          "line": 21,
+          "lineBreaks": 0,
+          "offset": 356
+        },
+        "value": 1,
+        "col": 1,
+        "line": 21
+      },
+      {
+        "type": "set",
+        "name": {
+          "value": "b",
+          "col": 5,
+          "line": 22,
+          "lineBreaks": 0,
+          "offset": 366
+        },
+        "value": 0,
+        "col": 1,
+        "line": 22
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 23
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 24
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "a",
+          "col": 5,
+          "line": 26,
+          "lineBreaks": 0,
+          "offset": 394
+        },
+        "value": 1,
+        "col": 1,
+        "line": 26
+      },
+      {
+        "type": "set",
+        "name": {
+          "value": "b",
+          "col": 5,
+          "line": 27,
+          "lineBreaks": 0,
+          "offset": 404
+        },
+        "value": 1,
+        "col": 1,
+        "line": 27
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 28
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 29
+      }
+    ]
+  ]
+}

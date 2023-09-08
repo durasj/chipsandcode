@@ -10,5 +10,7 @@
 <Header />
 
 <main class="flex flex-grow border-t border-base-200" aria-live="polite" aria-busy="false">
+  <h1 class="sr-only">Hardware IDE - New Experiment</h1>
+
   <HardwareIDE />
 </main>

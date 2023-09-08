@@ -27,19 +27,28 @@
   } from '@rgossiaux/svelte-headlessui';
   import { createPopperActions } from 'svelte-popperjs';
   import type zipType from '@zip.js/zip.js';
+  // @ts-ignore Upcoming version 1.3.0 that depends on Svelte 4 adds types
+  import { Confetti } from 'svelte-confetti';
 
   import { goto } from '$app/navigation';
   import parseHdl from '$lib/editor/hdl/parse';
   import parseTst from '$lib/editor/tst/parse';
   import type { Root as HDLRoot } from '$lib/editor/hdl/tree';
-  import type { CompareNode, LoadNode, OutputNode, Root as TSTRoot } from '$lib/editor/tst/tree';
+  import type {
+    CompareNode,
+    LoadNode,
+    OutputFileNode,
+    Root as TSTRoot,
+  } from '$lib/editor/tst/tree';
   import type Chip from '$lib/hardware-simulator/chips/Chip';
   import ChipFactory from '$lib/hardware-simulator/chips/ChipFactory';
   import type { Experiment, ExperimentRequest } from 'src/lib/shared';
   import type { monaco, monaco as monacoApi } from '$lib/editor';
   import { theme } from 'src/stores';
-  import api from '$lib/api';
+  import api, { apiEnabled } from '$lib/api';
   import TestScript from '$lib/hardware-simulator/tests/TestScript';
+  import InvalidDesignError from '../hardware-simulator/chips/InvalidDesignError';
+  import examples from '../hardware-simulator/examples';
 
   const [popperRef, popperContent] = createPopperActions();
   const popperOptions = {
@@ -54,12 +63,22 @@
     (async () => {
       monaco = (await import('../editor')).monaco;
 
-      hdlModel = monaco.editor.createModel(experiment?.code || '', 'hdl');
-      hdlModel.onDidChangeContent(() => {
-        setup();
-        checkIsDirty();
+      // Prefer autosaved local data
+      const content = loadLocal('hdl') || experiment?.code || '';
 
-        runTestScript();
+      hdlModel = monaco.editor.createModel(content, 'hdl');
+      hdlModel.onDidChangeContent(() => {
+        const valid = setup();
+
+        if (valid) {
+          checkIsDirty();
+          runTestScript();
+          run();
+        }
+
+        if (autoSaveHdlLocally) {
+          saveLocally(hdlModel.getValue(), 'hdl');
+        }
       });
 
       tstModel = monaco.editor.createModel(experiment?.tests || '', 'tst');
@@ -87,6 +106,7 @@
         theme: themeName ? `vs-${themeName}` : 'vs-light',
         automaticLayout: true,
         model: hdlModel,
+        wordBasedSuggestions: false,
         accessibilityHelpUrl:
           'https://github.com/Microsoft/monaco-editor/wiki/Monaco-Editor-Accessibility-Guide',
       });
@@ -103,17 +123,6 @@
       },
     };
   }
-
-  const examples = [
-    {
-      id: 'nnDG6JRQjL0aNVb7AJHnmZrv02pHIINF',
-      name: 'XOR Gate',
-    },
-    {
-      id: '456',
-      name: 'NOR Gate',
-    },
-  ];
 
   function handleEditorError(e: any, model: monacoApi.editor.ITextModel) {
     let line: number = e.token?.line;
@@ -193,22 +202,24 @@
       return;
     }
 
+    error = '';
+
     try {
       const chipFactory = new ChipFactory();
       chip = chipFactory.fromAST(tree[0]);
     } catch (e) {
-      if (typeof e === 'string') {
-        error = e;
-      } else if (e instanceof Error) {
+      if (e instanceof InvalidDesignError) {
         error = e.message;
       } else {
         error = 'Loading of chip failed: ' + e;
       }
+
+      return false;
     }
 
-    error = '';
-
     reflectPins();
+
+    return true;
   }
 
   function setupTestScript() {
@@ -234,7 +245,7 @@
 
     const firstUnusedPreamble = preamble.find(
       (p) => p.type === 'compare' || p.type === 'load' || p.type === 'output',
-    ) as LoadNode | OutputNode | CompareNode;
+    ) as LoadNode | OutputFileNode | CompareNode;
     if (firstUnusedPreamble) {
       const line = firstUnusedPreamble.file.line;
       const col = firstUnusedPreamble.file.col;
@@ -246,7 +257,7 @@
           endLineNumber: line,
           severity: monaco.MarkerSeverity.Info,
           message:
-            'Specification of files is ignored. Only the loaded chip and comparison file specified via other tabs are used.',
+            'Specification of files is ignored. Only the loaded chip and the comparison file specified via Output tab are used.',
         },
       ]);
     }
@@ -255,12 +266,14 @@
   }
 
   function run() {
+    if (!chip) return;
+
     try {
       inputPins.forEach(({ name, value }) => {
-        chip?.setInput(name, !!value);
+        chip!.setInput(name, !!value);
       });
 
-      chip?.run();
+      chip.run();
 
       reflectPins();
 
@@ -290,6 +303,7 @@
 
   function reflectScriptResult(result: ReturnType<TestScript['run']>) {
     const oldDecorations = testStats?.decorations;
+    const oldSuccess = !!testStats?.passed && testStats.passed === testStats.total;
     testStats = undefined;
     const decorations = [];
 
@@ -337,13 +351,20 @@
     if (testStats) {
       testStats.decorations = tstModel.deltaDecorations(oldDecorations || [], decorations);
     }
+
+    const success = !!testStats?.passed && testStats.passed === testStats.total;
+    if (!oldSuccess && success) {
+      justSucceeded = true;
+    }
   }
 
   function reflectPins() {
+    if (!chip) return;
+
     const input = [] as { name: string; value: number }[];
     const internal = [] as { name: string; value: number }[];
     const output = [] as { name: string; value: number }[];
-    for (const [name, pin] of chip!.getPins()) {
+    for (const [name, pin] of chip.getPins()) {
       if (pin.type === 'input') input.push({ name, value: pin.state ? 1 : 0 });
       if (pin.type === 'internal') internal.push({ name, value: pin.state ? 1 : 0 });
       if (pin.type === 'output') output.push({ name, value: pin.state ? 1 : 0 });
@@ -361,6 +382,18 @@
    * Should show experiment-level controls like Save/Open/Share
    */
   export let controls: boolean = true;
+  /**
+   * Should the content of the HDL be autosaved locally to prevent loss of progress
+   */
+  export let autoSaveHdlLocally: boolean = false;
+  /**
+   * Should the tests and output be in the assignment mode - meaning read-only
+   */
+  export let readOnlyAssignment: boolean = false;
+  /**
+   * Should we celebrate with animation when the tests pass
+   */
+  export let celebrateTestsPass: boolean = false;
 
   let monaco: typeof monacoApi;
   let editor: monacoApi.editor.IStandaloneCodeEditor | monacoApi.editor.IStandaloneDiffEditor;
@@ -382,6 +415,8 @@
 
   let name = experiment?.name || 'Untitled Experiment';
   let visibility = experiment?.visibility || 'PUBLIC';
+
+  let justSucceeded = false;
 
   let savingState: 'UNSAVED' | 'SAVING' | 'SAVED' | undefined = experiment ? 'SAVED' : undefined;
   async function save() {
@@ -406,6 +441,12 @@
       );
 
       experiment = response.experiment;
+
+      window.history.replaceState(
+        experiment.id,
+        `${experiment.name} - Hardware IDE - Chips and Code`,
+        `/experiment/hardware-ide/${experiment.id}`,
+      );
 
       savingState = 'SAVED';
     } catch (e) {
@@ -457,7 +498,7 @@
     removingState = true;
 
     try {
-      await api(`/experiment/${experiment?.id}`, {
+      await api(`/experiments/${experiment?.id}`, {
         method: 'DELETE',
         redirect: 'follow',
       });
@@ -487,6 +528,37 @@
     } else {
       savingState = 'SAVED';
     }
+  }
+
+  function saveLocally(content: string, type: 'hdl') {
+    // Saving locally is possible only for drafts on existing experiments
+    if (!experiment) return;
+
+    const stored = localStorage.getItem(experiment.id);
+
+    const newSave = {
+      ...JSON.parse(stored || '{}'),
+      [type]: content,
+      saved: new Date().toISOString(),
+    };
+
+    localStorage.setItem(experiment.id, JSON.stringify(newSave));
+  }
+
+  function loadLocal(type: 'hdl') {
+    // Saving locally is possible only for drafts on existing experiments
+    if (!experiment) return;
+
+    const stored = localStorage.getItem(experiment.id);
+    if (!stored) return;
+
+    const local = JSON.parse(stored);
+
+    const localAt = new Date(local.saved);
+    const remoteAt = new Date(experiment.updated || experiment.created);
+    if (localAt.valueOf() < remoteAt.valueOf()) return;
+
+    return local[type] as string;
   }
 
   function openNewExperiment() {
@@ -541,6 +613,7 @@
       editor = monaco.editor.create(editor.getContainerDomNode(), {
         theme: themeName ? `vs-${themeName}` : 'vs-light',
         automaticLayout: true,
+        wordBasedSuggestions: false,
       });
     }
 
@@ -561,13 +634,19 @@
       }
     }
 
+    editor.updateOptions({
+      readOnly: detail !== EditorTab.HDL && readOnlyAssignment,
+    });
+
     editor.focus();
   }
 </script>
 
 <svelte:window
   on:keydown={(e) => {
-    if (e.ctrlKey && e.key === 's') {
+    if (!controls) return;
+
+    if (e.ctrlKey && e.key === 's' && apiEnabled) {
       // Don't open default Save dialog
       e.preventDefault();
       save();
@@ -586,13 +665,16 @@
         <Tab
           class={({ selected }) =>
             `p-3 text-sm font-semibold ${selected ? 'bg-zinc-100 dark:bg-zinc-900' : ''}`}
-          >Tests {#if testStats?.passed}
+          >Tests {#if typeof testStats?.passed === 'number'}
             <div
               class="badge gap-2"
               class:badge-success={testStats.passed === testStats.total}
               class:badge-error={testStats.passed < testStats.total}
             >
               {testStats.passed} / {testStats.total}
+              {#if celebrateTestsPass && justSucceeded}
+                <div class="absolute top-0"><Confetti delay={[250, 750]} /></div>
+              {/if}
             </div>
           {/if}
         </Tab>
@@ -605,66 +687,95 @@
 
       {#if selectedTab === EditorTab.DIFF}
         <div class="bg-zinc-100 dark:bg-zinc-900 flex justify-around" aria-hidden="true">
-          <span class="px-3 py-1">Actual output - read-only</span>
+          {#if readOnlyAssignment}
+            <span class="px-3 py-1">Actual output</span>
+          {:else}
+            <span class="px-3 py-1">Actual output - read-only</span>
+          {/if}
 
-          <span class="px-3 py-1">Expected output - editable</span>
+          {#if readOnlyAssignment}
+            <span class="px-3 py-1">Expected output</span>
+          {:else}
+            <span class="px-3 py-1">Expected output - editable</span>
+          {/if}
         </div>
       {/if}
 
-      <div use:monacoEditor class="grow" aria-label={`${tabDescription[selectedTab]} editor`} />
+      <div
+        role="region"
+        use:monacoEditor
+        class="grow"
+        aria-label={`${tabDescription[selectedTab]} editor`}
+      />
     </TabGroup>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-3 content-start">
-    <div class="flex justify-between items-center p-4 md:col-span-3">
-      <input
-        class={`bg-inherit text-lg font-bold grow rounded-sm${
-          controls ? ' hover:outline hover:outline-2 hover:outline-base-content' : ''
-        }`}
-        bind:value={name}
-        on:change={checkIsDirty}
-        disabled={!controls}
-        title="Experiment name"
-        aria-label="Experiment name"
-      />
+    <div class="flex justify-between items-center p-4 md:col-span-3 max-w-full">
+      <label class="block grow">
+        <div class="sr-only">Experiment name</div>
+        <input
+          class={`w-full bg-inherit text-lg font-bold rounded-sm${
+            controls ? ' hover:outline hover:outline-2 hover:outline-base-content' : ''
+          }`}
+          bind:value={name}
+          on:change={checkIsDirty}
+          disabled={!controls}
+          title="Experiment name"
+          aria-label="Experiment name"
+        />
+      </label>
 
       {#if controls}
-        <div class="mt-5 flex lg:mt-0 lg:ml-4 gap-2">
-          <div class="btn-group">
-            <button
-              class="btn btn-sm btn-outline rounded-r-none"
-              class:btn-warning={savingState === 'UNSAVED'}
-              on:click={save}
-              disabled={savingState === 'SAVING'}
-              aria-live={savingState === 'SAVING' ? 'assertive' : 'off'}
-              title={savingState === 'UNSAVED'
-                ? 'You have unsaved changes'
-                : savingState === 'SAVING'
-                ? 'Saving changes...'
-                : 'All changes are saved'}
-            >
-              {#if savingState === 'SAVED'}
-                <Icon src={CheckCircle} class="-ml-1 mr-2 h-5 w-5" />
+        <div class="flex lg:ml-4 gap-2">
+          <div class="join">
+            {#if apiEnabled}
+              <button
+                class="btn btn-sm btn-outline rounded-r-none join-item"
+                class:btn-warning={savingState === 'UNSAVED'}
+                on:click={save}
+                disabled={savingState === 'SAVING'}
+                aria-live={savingState === 'SAVING' ? 'assertive' : 'off'}
+                title={savingState === 'UNSAVED'
+                  ? 'You have unsaved changes'
+                  : savingState === 'SAVING'
+                  ? 'Saving changes...'
+                  : 'All changes are saved'}
+              >
+                {#if savingState === 'SAVED'}
+                  <Icon src={CheckCircle} class="-ml-1 mr-2 h-5 w-5" />
 
-                Save
-              {:else if savingState === 'SAVING'}
-                <Icon src={EllipsisHorizontalCircle} class="-ml-1 mr-2 h-5 w-5" />
+                  Save
+                {:else if savingState === 'SAVING'}
+                  <Icon src={EllipsisHorizontalCircle} class="-ml-1 mr-2 h-5 w-5" />
 
-                Saving...
-              {:else if savingState === 'UNSAVED'}
-                <Icon src={ExclamationCircle} class="-ml-1 mr-2 h-5 w-5" />
+                  Saving...
+                {:else if savingState === 'UNSAVED'}
+                  <Icon src={ExclamationCircle} class="-ml-1 mr-2 h-5 w-5" />
 
-                Save
-              {:else}
-                Save
-              {/if}
-            </button>
+                  Save
+                {:else}
+                  Save
+                {/if}
+              </button>
+            {:else}
+              <a
+                href="data:"
+                class="btn btn-sm btn-outline rounded-r-none join-item"
+                on:click={download}
+              >
+                <Icon
+                  src={ArchiveBoxArrowDown}
+                  class="h-5 w-5 text-primary dark:text-base-content"
+                /> Download</a
+              >
+            {/if}
 
             <Menu>
               <MenuButton
                 as="button"
                 use={[popperRef]}
-                class="btn btn-square btn-sm btn-outline rounded-none border-l-0"
+                class="btn btn-square btn-sm btn-outline rounded-none border-l-0 join-item"
                 title="Open/New"
                 aria-label="Open/New"
               >
@@ -676,25 +787,28 @@
                 use={[[popperContent, popperOptions]]}
                 class="menu menu-compact bg-base-100 dark:bg-neutral w-56 p-1.5 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
               >
-                {#await getUserExperiments()}
-                  <MenuItem as="li" class="menu-title" aria-live="polite" aria-busy="true">
-                    <span class="!text-base-content/60">Loading Your Experiments...</span></MenuItem
-                  >
-                {:then savedExperiments}
-                  <MenuItem as="li" class="menu-title" aria-live="polite" aria-busy="false">
-                    <span class="!text-base-content/60">Your Experiments</span>
-                  </MenuItem>
-
-                  {#each savedExperiments as saved}
-                    <MenuItem as="li" let:active>
-                      <a href="/experiment/hardware-ide/{saved.id}" class:active>{saved.name}</a>
+                {#if apiEnabled}
+                  {#await getUserExperiments()}
+                    <MenuItem as="li" class="menu-title" aria-live="polite" aria-busy="true">
+                      <span class="!text-base-content/60">Loading Your Experiments...</span
+                      ></MenuItem
+                    >
+                  {:then savedExperiments}
+                    <MenuItem as="li" class="menu-title" aria-live="polite" aria-busy="false">
+                      <span class="!text-base-content/60">Your Experiments</span>
                     </MenuItem>
-                  {/each}
-                {:catch error}
-                  <MenuItem as="li" aria-live="polite" aria-busy="false"
-                    ><span class="text-error">Loading failed: {error.message}</span></MenuItem
-                  >
-                {/await}
+
+                    {#each savedExperiments as saved}
+                      <MenuItem as="li" let:active>
+                        <a href="/experiment/hardware-ide/{saved.id}" class:active>{saved.name}</a>
+                      </MenuItem>
+                    {/each}
+                  {:catch error}
+                    <MenuItem as="li" aria-live="polite" aria-busy="false"
+                      ><span class="text-error">Loading failed: {error.message}</span></MenuItem
+                    >
+                  {/await}
+                {/if}
 
                 <MenuItem as="li" let:active>
                   <button on:click={openNewExperiment} class:active
@@ -713,92 +827,100 @@
               </MenuItems>
             </Menu>
 
-            <Popover>
-              <PopoverButton
-                as="button"
-                use={[popperRef]}
-                class="btn btn-square btn-sm btn-outline rounded-none border-l-0"
-                title="Share"
-                aria-label="Share"
-              >
-                <Icon src={Share} class="h-5" />
-              </PopoverButton>
+            {#if apiEnabled}
+              <Popover>
+                <PopoverButton
+                  as="button"
+                  use={[popperRef]}
+                  class="btn btn-square btn-sm btn-outline rounded-none border-l-0 join-item"
+                  title="Share"
+                  aria-label="Share"
+                >
+                  <Icon src={Share} class="h-5" />
+                </PopoverButton>
 
-              <PopoverPanel
-                use={[[popperContent, popperOptions]]}
-                class="bg-base-100 dark:bg-neutral rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 min-w-[20rem] p-4"
-              >
-                <div class="form-control">
-                  <label class="label cursor-pointer">
-                    <span class="label-text">Anyone with a link can view</span>
-                    <input
-                      type="checkbox"
-                      class="toggle"
-                      checked={visibility === 'PUBLIC'}
-                      on:change={() => {
-                        visibility = visibility === 'PUBLIC' ? 'PRIVATE' : 'PUBLIC';
-                        checkIsDirty();
-                      }}
-                    />
-                  </label>
-                </div>
+                <PopoverPanel
+                  use={[[popperContent, popperOptions]]}
+                  class="bg-base-100 dark:bg-neutral rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 min-w-[20rem] p-4"
+                >
+                  <div class="form-control">
+                    <label class="label cursor-pointer">
+                      <span class="label-text">Anyone with a link can view</span>
+                      <input
+                        type="checkbox"
+                        class="toggle"
+                        checked={visibility === 'PUBLIC'}
+                        on:change={() => {
+                          visibility = visibility === 'PUBLIC' ? 'PRIVATE' : 'PUBLIC';
+                          checkIsDirty();
+                        }}
+                      />
+                    </label>
+                  </div>
 
-                <div class="input-group input-group-sm w-full">
-                  <input
-                    type="text"
-                    readonly
-                    class="input input-bordered input-sm"
-                    value={location.href}
-                  />
-                  <button
-                    class="btn btn-square btn-sm w-fit px-2"
-                    on:click={() => navigator.clipboard.writeText(location.href)}>Copy link</button
-                  >
-                </div>
-              </PopoverPanel>
-            </Popover>
+                  <div class="input-group input-group-sm w-full">
+                    <label>
+                      <div class="sr-only">Experiment URL</div>
+                      <input
+                        type="text"
+                        readonly
+                        class="input input-bordered input-sm"
+                        value={location.href}
+                      />
+                    </label>
+                    <button
+                      class="btn btn-square btn-sm w-fit px-2"
+                      on:click={() => navigator.clipboard.writeText(location.href)}
+                      >Copy link</button
+                    >
+                  </div>
+                </PopoverPanel>
+              </Popover>
+            {/if}
 
-            <Menu>
-              <MenuButton
-                use={[popperRef]}
-                class="btn btn-square btn-sm btn-outline rounded-l-none border-l-0"
-                title="More actions"
-                aria-label="More actions"
-              >
-                <Icon src={EllipsisVertical} class="h-5" />
-              </MenuButton>
+            {#if apiEnabled}
+              <Menu>
+                <MenuButton
+                  use={[popperRef]}
+                  class="btn btn-square btn-sm btn-outline rounded-l-none border-l-0 join-item"
+                  title="More actions"
+                  aria-label="More actions"
+                >
+                  <Icon src={EllipsisVertical} class="h-5" />
+                </MenuButton>
 
-              <MenuItems
-                as="ul"
-                use={[[popperContent, popperOptions]]}
-                class="menu menu-compact bg-base-100 dark:bg-neutral w-56 p-1.5 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
-              >
-                <MenuItem as="li" let:active>
-                  <a href="data:" class:active on:click={download}>
-                    <Icon
-                      src={ArchiveBoxArrowDown}
-                      class="h-5 w-5 text-primary dark:text-base-content"
-                    /> Download</a
-                  >
-                </MenuItem>
-                <!-- <MenuItem as="li" disabled let:active>
+                <MenuItems
+                  as="ul"
+                  use={[[popperContent, popperOptions]]}
+                  class="menu menu-compact bg-base-100 dark:bg-neutral w-56 p-1.5 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
+                >
+                  <MenuItem as="li" let:active>
+                    <a href="data:" class:active on:click={download}>
+                      <Icon
+                        src={ArchiveBoxArrowDown}
+                        class="h-5 w-5 text-primary dark:text-base-content"
+                      /> Download</a
+                    >
+                  </MenuItem>
+                  <!-- <MenuItem as="li" disabled let:active>
                 <button type="button" class:active
                   ><Icon src={Cog} class="h-5 w-5 text-primary dark:text-base-content" /> Settings</button
                 >
               </MenuItem> -->
-                <MenuItem as="li" let:active>
-                  <button
-                    type="button"
-                    class:active
-                    on:click={remove}
-                    disabled={removingState}
-                    aria-live={removingState ? 'assertive' : 'off'}
-                    ><Icon src={Trash} class="h-5 w-5 text-primary dark:text-base-content" />
-                    {removingState ? 'Deleting...' : 'Delete'}</button
-                  >
-                </MenuItem>
-              </MenuItems>
-            </Menu>
+                  <MenuItem as="li" let:active>
+                    <button
+                      type="button"
+                      class:active
+                      on:click={remove}
+                      disabled={removingState}
+                      aria-live={removingState ? 'assertive' : 'off'}
+                      ><Icon src={Trash} class="h-5 w-5 text-primary dark:text-base-content" />
+                      {removingState ? 'Deleting...' : 'Delete'}</button
+                    >
+                  </MenuItem>
+                </MenuItems>
+              </Menu>
+            {/if}
           </div>
         </div>
       {/if}
@@ -825,13 +947,14 @@
     {/if}
 
     {#if chip}
-      <div class="flex justify-between items-center p-4 md:col-span-3">
-        <div class="col-span-2">Chip {chip?.name}</div>
+      <!-- TODO: Consider proper controls - run here is useless as it's done automatically -->
+      {#if controls && 1 === Math.round(3)}
+        <div class="flex justify-between items-center p-4 md:col-span-3">
+          <div class="col-span-2">Chip {chip?.name}</div>
 
-        <div class="col-span-2">
-          {#if chip && controls}
+          <div class="col-span-2">
             <span class="sm:ml-3">
-              <div class="btn-group">
+              <div class="join">
                 <button class="btn btn-sm btn-outline btn-primary" on:click={run}>
                   <div class="sr-only">Run</div>
 
@@ -839,16 +962,17 @@
                 </button>
               </div></span
             >
-          {/if}
+          </div>
         </div>
-      </div>
+      {/if}
 
       <div class="self-stretch pt-4 md:pl-4 md:pt-0">
         <table class="table-auto w-full">
+          <caption class="caption-top bg-base-200 border-base-200 rounded-t-md font-bold"
+            >Input Pins</caption
+          >
+
           <thead>
-            <tr>
-              <th class="bg-base-200 border-base-200 rounded-t-md" colspan="2">Input Pins</th>
-            </tr>
             <tr
               ><th class="border border-base-200 py-1 px-2">Name</th><th
                 class="border border-base-200">Value</th
@@ -859,14 +983,19 @@
             {#each inputPins as pin}
               <tr>
                 <td class="border border-base-200 py-1 px-2">{pin.name}</td>
-                <td class="border border-base-200"
-                  ><input
-                    type="number"
-                    bind:value={pin.value}
-                    min="0"
-                    max="1"
-                    class="block w-full border-none py-1 px-2 bg-inherit hover:outline focus-visible:outline outline-base-content outline-2"
-                  /></td
+                <td class="border border-base-200">
+                  <label>
+                    <div class="sr-only">Value for {pin.name}</div>
+                    <input
+                      type="number"
+                      bind:value={pin.value}
+                      on:change={() => run()}
+                      min="0"
+                      max="1"
+                      required
+                      class="block w-full border-none py-1 px-2 bg-inherit hover:outline focus-visible:outline outline-base-content outline-2"
+                    /></label
+                  ></td
                 >
               </tr>
             {/each}
@@ -876,10 +1005,11 @@
 
       <div class="self-stretch pt-4 md:pl-4 md:pt-0">
         <table class="table-auto w-full">
+          <caption class="caption-top bg-base-200 border-base-200 rounded-t-md font-bold"
+            >Internal Pins</caption
+          >
+
           <thead>
-            <tr>
-              <th class="bg-base-200 border-base-200 rounded-t-md" colspan="2">Internal Pins</th>
-            </tr>
             <tr
               ><th class="border border-base-200 py-1 px-2">Name</th><th
                 class="border border-base-200">Value</th
@@ -899,10 +1029,11 @@
 
       <div class="self-stretch pt-4 pr-4 md:pl-4 md:pt-0">
         <table class="table-auto w-full">
+          <caption class="caption-top bg-base-200 border-base-200 rounded-t-md font-bold"
+            >Output Pins</caption
+          >
+
           <thead>
-            <tr>
-              <th class="bg-base-200 border-base-200 rounded-t-md" colspan="2">Output Pins</th>
-            </tr>
             <tr
               ><th class="border border-base-200 py-1 px-2">Name</th><th
                 class="border border-base-200 py-1 px-2">Value</th
@@ -919,11 +1050,11 @@
           </tbody>
         </table>
       </div>
-    {:else}
+    {:else if controls}
       <div class="italic md:col-span-3 p-4">
         Add CHIP to start or check one of the examples like the <a
-          href="/experiment/hardware-ide/{examples.find((e) => e.name === 'XOR Gate')?.id}"
-          class="link">XOR Gate</a
+          href="/experiment/hardware-ide/{examples.find((e) => e.id === 'Xor')?.id}"
+          class="link">Xor Gate</a
         >.
       </div>
     {/if}

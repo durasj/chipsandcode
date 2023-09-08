@@ -1,0 +1,300 @@
+{
+  "type": "script",
+  "preamble": [
+    {
+      "type": "load",
+      "file": {
+        "value": "Not16.hdl",
+        "col": 6,
+        "line": 6,
+        "lineBreaks": 0,
+        "offset": 180
+      }
+    },
+    {
+      "type": "output",
+      "file": {
+        "value": "Not16.out",
+        "col": 13,
+        "line": 7,
+        "lineBreaks": 0,
+        "offset": 204
+      }
+    },
+    {
+      "type": "compare",
+      "file": {
+        "value": "Not16.cmp",
+        "col": 12,
+        "line": 8,
+        "lineBreaks": 0,
+        "offset": 227
+      }
+    },
+    {
+      "type": "outputList",
+      "outputs": [
+        {
+          "type": "outputSpec",
+          "name": {
+            "value": "in",
+            "col": 13,
+            "line": 9,
+            "lineBreaks": 0,
+            "offset": 251
+          },
+          "format": "B",
+          "length": 16,
+          "padLeft": 1,
+          "padRight": 1
+        },
+        {
+          "type": "outputSpec",
+          "name": {
+            "value": "out",
+            "col": 24,
+            "line": 9,
+            "lineBreaks": 0,
+            "offset": 262
+          },
+          "format": "B",
+          "length": 16,
+          "padLeft": 1,
+          "padRight": 1
+        }
+      ]
+    }
+  ],
+  "cases": [
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "in",
+          "col": 5,
+          "line": 11,
+          "lineBreaks": 0,
+          "offset": 282
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 11
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 12
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 13
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "in",
+          "col": 5,
+          "line": 15,
+          "lineBreaks": 0,
+          "offset": 328
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 15
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 16
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 17
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "in",
+          "col": 5,
+          "line": 19,
+          "lineBreaks": 0,
+          "offset": 374
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 19
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 20
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 21
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "in",
+          "col": 5,
+          "line": 23,
+          "lineBreaks": 0,
+          "offset": 420
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 23
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 24
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 25
+      }
+    ],
+    [
+      {
+        "type": "set",
+        "name": {
+          "value": "in",
+          "col": 5,
+          "line": 27,
+          "lineBreaks": 0,
+          "offset": 466
+        },
+        "value": {
+          "type": "value",
+          "format": "binary",
+          "value": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        "col": 1,
+        "line": 27
+      },
+      {
+        "type": "eval",
+        "col": 1,
+        "line": 28
+      },
+      {
+        "type": "output",
+        "col": 1,
+        "line": 29
+      }
+    ]
+  ]
+}

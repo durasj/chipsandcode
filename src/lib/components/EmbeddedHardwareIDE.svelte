@@ -1,36 +1,26 @@
 <script lang="ts">
-  import type { Experiment } from 'src/lib/shared';
   import Problem from '$lib/components/Problem.svelte';
   import HardwareIDE from '$lib/components/HardwareIDE.svelte';
-  import api from '$lib/api';
-  import Loading from '$lib/components/Loading.svelte';
+  import examples from '../hardware-simulator/examples';
 
   export let id: string;
+  export let celebrate: boolean;
 
-  $: experiment = (async () => {
-    try {
-      const response = await api<{ experiment: Experiment }>(`/experiments/${id}`);
-
-      return response.experiment;
-    } catch (e) {
-      if (e instanceof Error && e.message) {
-        throw new Error(`Loading failed: ${e.message}`);
-      } else {
-        throw new Error('Unable to load experiment');
-      }
-    }
-  })();
+  $: experiment = examples.find(({ id: exampleId }) => exampleId === id);
 </script>
 
-<main
-  class="not-prose relative flex flex-grow -left-80 w-[calc(100%+40rem)] z-10 my-12"
-  aria-live="polite"
+<div
+  class="not-prose relative flex flex-grow w-full 2xl:w-[260%] 2xl:-left-[80%] xl:w-[220%] xl:-left-[60%] lg:w-[174%] lg:-left-[37%] md:w-[120%] md:-left-[10%] min-h-[24rem] z-10 my-12"
 >
-  {#await experiment}
-    <Loading name="Experiment" />
-  {:then experiment}
-    <HardwareIDE {experiment} controls={false} />
-  {:catch error}
-    <Problem message={error.message} />
-  {/await}
-</main>
+  {#if experiment}
+    <HardwareIDE
+      {experiment}
+      controls={false}
+      autoSaveHdlLocally={true}
+      readOnlyAssignment={true}
+      celebrateTestsPass={celebrate}
+    />
+  {:else}
+    <Problem message="Unknown Experiment" />
+  {/if}
+</div>

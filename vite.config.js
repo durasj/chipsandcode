@@ -54,13 +54,23 @@ const config = defineConfig(() => {
             },
           ],
         },
-        devOptions: {
-          enabled: true,
+        workbox: {
+          // Increase the max size to 4MB to fit Monaco
+          maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
         },
       }),
     ],
     ssr: {
       noExternal: ['date-fns'],
+    },
+    test: {
+      clearMocks: true,
+      coverage: {
+        lines: 90,
+        functions: 90,
+        branches: 90,
+        statements: 90,
+      },
     },
   };
 });

@@ -1,4 +1,4 @@
-import type { OutputListNode, OutputSpecNode, Root } from 'src/editor/tst/tree';
+import type { OutputListNode, OutputSpecNode, Root } from '../../editor/tst/tree';
 import type Chip from '../chips/Chip';
 import Output from './Output';
 
@@ -22,7 +22,7 @@ export default class TestScript {
 
     return this.cases.map((testCase) =>
       testCase.map((instruction) => {
-        if (instruction.type === 'set') chip.setInput(instruction.name.value, instruction.value);
+        if (instruction.type === 'set') chip.setInput(instruction.name.value, !!instruction.value);
         if (instruction.type === 'eval') chip.run();
 
         if (instruction.type === 'output') {
