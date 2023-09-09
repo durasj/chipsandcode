@@ -1,0 +1,55 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DMux4Way Chip > Provides interface info 1`] = `
+Map {
+  "in" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "output",
+    "width": 1,
+  },
+  "sel" => {
+    "connections": [],
+    "state": [
+      false,
+      false,
+    ],
+    "type": "input",
+    "width": 2,
+  },
+  "a" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "input",
+    "width": 1,
+  },
+  "b" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "input",
+    "width": 1,
+  },
+  "c" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "input",
+    "width": 1,
+  },
+  "d" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "input",
+    "width": 1,
+  },
+}
+`;

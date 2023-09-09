@@ -76,7 +76,9 @@
           "lineBreaks": 0,
           "offset": 272
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 11
       },
@@ -101,7 +103,9 @@
           "lineBreaks": 0,
           "offset": 301
         },
-        "value": 1,
+        "value": [
+          true
+        ],
         "col": 1,
         "line": 15
       },

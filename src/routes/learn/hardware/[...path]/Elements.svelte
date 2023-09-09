@@ -5,6 +5,7 @@
   import Math from '$lib/components/Math.svelte';
   import LayoutRow from '$lib/components/LayoutRow.svelte';
   import LayoutCol from '$lib/components/LayoutCol.svelte';
+  import Figure from '$lib/components/Figure.svelte';
 
   export let children: RenderableTreeNode[] = [];
 
@@ -14,6 +15,7 @@
     Math,
     LayoutRow,
     LayoutCol,
+    Figure,
   };
 
   const isTag = (node: RenderableTreeNode): node is Tag =>

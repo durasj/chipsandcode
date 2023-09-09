@@ -7,7 +7,7 @@ export default class Output {
   /**
    * Values in the order of passed columns - OutputSpecNode[]
    */
-  private readonly rows: boolean[][] = [];
+  private readonly rows: boolean[][][] = [];
 
   constructor(private readonly columns: OutputSpecNode[]) {}
 
@@ -28,14 +28,16 @@ export default class Output {
     const output = new Output(columns);
 
     for (const line of lines.slice(1)) {
-      const row = [...line.matchAll(/\| *([01]+) */g)].map((m) => m[1] === '1');
+      const row = [...line.matchAll(/\| *([01]+) */g)].map((m) =>
+        m[1].split('').map((v) => v === '1'),
+      );
       if (row.length) output.addRow(row);
     }
 
     return output;
   }
 
-  public addRow(values: boolean[]) {
+  public addRow(values: boolean[][]) {
     return this.rows.push(values) - 1;
   }
 
@@ -83,7 +85,9 @@ export default class Output {
 
   // TODO: Implement other types of output
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private formatValue(value: boolean, spec: OutputSpecNode) {
-    return value ? 1 : 0;
+  private formatValue(value: boolean[], spec: OutputSpecNode) {
+    console.log(value);
+
+    return value.map((v) => (v ? '1' : '0')).join('');
   }
 }

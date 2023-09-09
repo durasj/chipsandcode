@@ -4,18 +4,27 @@ exports[`Xor Chip > Provides interface info 1`] = `
 Map {
   "a" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "b" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "out" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
 }
 `;

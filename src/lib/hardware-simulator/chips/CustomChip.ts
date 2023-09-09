@@ -4,6 +4,8 @@ import type Chip from './Chip';
 import IllegalStateError from './IllegalStateError';
 import InvalidDesignError from './InvalidDesignError';
 
+export type PartConnections = Array<[string, string] | [string, string, number | [number, number]]>;
+
 /**
  * Custom hardware chip representation
  *
@@ -24,13 +26,9 @@ class CustomChip implements Chip {
   /**
    * Parts of this chip with mapping between their output pins and target input pins of other chips
    */
-  protected readonly parts: Map<Chip, readonly [string, string][]>;
+  protected readonly parts: Map<Chip, PartConnections>;
 
-  constructor(
-    name: string,
-    pins: Map<string, ChipPin>,
-    parts: Map<Chip, readonly [string, string][]>,
-  ) {
+  constructor(name: string, pins: Map<string, ChipPin>, parts: Map<Chip, PartConnections>) {
     this.name = name;
     this.pins = pins;
     this.parts = parts;
@@ -46,7 +44,7 @@ class CustomChip implements Chip {
   /**
    * Set input pin value
    */
-  setInput(name: string, value: boolean) {
+  setInput(name: string, value: boolean[]) {
     const pin = this.pins.get(name);
     const isInput = pin?.type === 'input';
     if (!isInput) {
@@ -89,9 +87,20 @@ class CustomChip implements Chip {
     const queue = new Denque<Chip>();
 
     const explore = (pin: ChipPin) => {
-      for (const [chip, pinName] of pin.connections) {
-        // Set chip internal pin state
-        chip.setInput(pinName, pin.state);
+      for (const [chip, pinName, selection] of pin.connections) {
+        // Set input state on internal part
+        // const newState = chip.getPins().get(pinName)?.state.slice() || new Array(pin.width).fill(false);
+        let newState: boolean[];
+        if (typeof selection === 'number') {
+          newState = [pin.state[selection]];
+        } else if (Array.isArray(selection)) {
+          newState = pin.state.slice(selection[0], selection[1]);
+        } else {
+          newState = pin.state;
+        }
+        console.log('Setting', { pinName, newState });
+
+        chip.setInput(pinName, newState);
 
         // Plan to visit the connected chip next
         queue.push(chip);
@@ -114,14 +123,26 @@ class CustomChip implements Chip {
       next.run();
 
       // 2. Go over output pins from this chip
-      for (const [source, target] of this.parts.get(next)!) {
+      for (const [source, target, selection] of this.parts.get(next)!) {
         // 2.1. Update connected pin
         const pin = this.pins.get(target);
         if (!pin)
           throw new InvalidDesignError(
             `Output pin '${source}' is connected to a non-existing pin '${target}'`,
           );
-        pin.state = next.getOutput(source);
+
+        const output = next.getOutput(source);
+        let newState = pin.state.slice();
+        if (typeof selection === 'number') {
+          newState[selection] = output[0];
+        } else if (Array.isArray(selection)) {
+          for (let i = selection[0], j = 0; i <= selection[1]; i++, j++) {
+            newState[i] = output[j];
+          }
+        } else {
+          newState = output;
+        }
+        pin.state = newState;
 
         // 2.2. Explore target pin next
         explore(pin);

@@ -104,7 +104,9 @@
           "lineBreaks": 0,
           "offset": 291
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 11
       },
@@ -117,7 +119,9 @@
           "lineBreaks": 0,
           "offset": 301
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 12
       },
@@ -130,7 +134,9 @@
           "lineBreaks": 0,
           "offset": 311
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 13
       },
@@ -155,7 +161,9 @@
           "lineBreaks": 0,
           "offset": 341
         },
-        "value": 1,
+        "value": [
+          true
+        ],
         "col": 1,
         "line": 17
       },
@@ -180,7 +188,9 @@
           "lineBreaks": 0,
           "offset": 371
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 21
       },
@@ -193,7 +203,9 @@
           "lineBreaks": 0,
           "offset": 381
         },
-        "value": 1,
+        "value": [
+          true
+        ],
         "col": 1,
         "line": 22
       },
@@ -206,7 +218,9 @@
           "lineBreaks": 0,
           "offset": 391
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 23
       },
@@ -231,7 +245,9 @@
           "lineBreaks": 0,
           "offset": 421
         },
-        "value": 1,
+        "value": [
+          true
+        ],
         "col": 1,
         "line": 27
       },
@@ -256,7 +272,9 @@
           "lineBreaks": 0,
           "offset": 451
         },
-        "value": 1,
+        "value": [
+          true
+        ],
         "col": 1,
         "line": 31
       },
@@ -269,7 +287,9 @@
           "lineBreaks": 0,
           "offset": 461
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 32
       },
@@ -282,7 +302,9 @@
           "lineBreaks": 0,
           "offset": 471
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 33
       },
@@ -307,7 +329,9 @@
           "lineBreaks": 0,
           "offset": 501
         },
-        "value": 1,
+        "value": [
+          true
+        ],
         "col": 1,
         "line": 37
       },
@@ -332,7 +356,9 @@
           "lineBreaks": 0,
           "offset": 531
         },
-        "value": 1,
+        "value": [
+          true
+        ],
         "col": 1,
         "line": 41
       },
@@ -345,7 +371,9 @@
           "lineBreaks": 0,
           "offset": 541
         },
-        "value": 1,
+        "value": [
+          true
+        ],
         "col": 1,
         "line": 42
       },
@@ -358,7 +386,9 @@
           "lineBreaks": 0,
           "offset": 551
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 43
       },
@@ -383,7 +413,9 @@
           "lineBreaks": 0,
           "offset": 581
         },
-        "value": 1,
+        "value": [
+          true
+        ],
         "col": 1,
         "line": 47
       },

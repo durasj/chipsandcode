@@ -20,10 +20,31 @@ describe('Chip Factory', () => {
   it('Provides list of built-in chips', async () => {
     const factory = new ChipFactory();
 
-    expect(factory.getAvailableChips()).toStrictEqual(['And', 'Nand', 'Not', 'Or', 'Xor']);
+    expect(factory.getAvailableChips()).toStrictEqual([
+      'And16',
+      'And',
+      'DMux4Way',
+      'DMux8Way',
+      'DMux',
+      'Mux16',
+      'Mux4Way16',
+      'Mux4Way',
+      'Mux8Way16',
+      'Mux8Way',
+      'Mux',
+      'Nand',
+      'Not16',
+      'Not',
+      'Or16',
+      'Or8Way',
+      'Or',
+      'Xor',
+    ]);
   });
 
   it.todo('Throws with the list of available chips if unknown chip was used');
+
+  it.todo('Throws with the list of pins if unknown pin was used');
 
   // Built-in HDL files
   const builtInHdlAsts = import.meta.glob('$lib/editor/hdl/testing/builtin/*.hdl.ast', {

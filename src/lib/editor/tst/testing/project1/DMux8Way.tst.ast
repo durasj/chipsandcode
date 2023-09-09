@@ -188,7 +188,9 @@
           "lineBreaks": 0,
           "offset": 364
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 11
       },
@@ -201,15 +203,11 @@
           "lineBreaks": 0,
           "offset": 375
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          false,
+          false,
+          false
+        ],
         "col": 1,
         "line": 12
       },
@@ -234,15 +232,11 @@
           "lineBreaks": 0,
           "offset": 409
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          false,
+          false,
+          true
+        ],
         "col": 1,
         "line": 16
       },
@@ -267,15 +261,11 @@
           "lineBreaks": 0,
           "offset": 443
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          false,
+          true,
+          false
+        ],
         "col": 1,
         "line": 20
       },
@@ -300,15 +290,11 @@
           "lineBreaks": 0,
           "offset": 477
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          false,
+          true,
+          true
+        ],
         "col": 1,
         "line": 24
       },
@@ -333,15 +319,11 @@
           "lineBreaks": 0,
           "offset": 511
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          true,
+          false,
+          false
+        ],
         "col": 1,
         "line": 28
       },
@@ -366,15 +348,11 @@
           "lineBreaks": 0,
           "offset": 545
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          true,
+          false,
+          true
+        ],
         "col": 1,
         "line": 32
       },
@@ -399,15 +377,11 @@
           "lineBreaks": 0,
           "offset": 579
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          true,
+          true,
+          false
+        ],
         "col": 1,
         "line": 36
       },
@@ -432,15 +406,11 @@
           "lineBreaks": 0,
           "offset": 613
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          true,
+          true,
+          true
+        ],
         "col": 1,
         "line": 40
       },
@@ -465,7 +435,9 @@
           "lineBreaks": 0,
           "offset": 647
         },
-        "value": 1,
+        "value": [
+          true
+        ],
         "col": 1,
         "line": 44
       },
@@ -478,15 +450,11 @@
           "lineBreaks": 0,
           "offset": 658
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          false,
+          false,
+          false
+        ],
         "col": 1,
         "line": 45
       },
@@ -511,15 +479,11 @@
           "lineBreaks": 0,
           "offset": 692
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          false,
+          false,
+          true
+        ],
         "col": 1,
         "line": 49
       },
@@ -544,15 +508,11 @@
           "lineBreaks": 0,
           "offset": 726
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          false,
+          true,
+          false
+        ],
         "col": 1,
         "line": 53
       },
@@ -577,15 +537,11 @@
           "lineBreaks": 0,
           "offset": 760
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          false,
+          true,
+          true
+        ],
         "col": 1,
         "line": 57
       },
@@ -610,15 +566,11 @@
           "lineBreaks": 0,
           "offset": 794
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          true,
+          false,
+          false
+        ],
         "col": 1,
         "line": 61
       },
@@ -643,15 +595,11 @@
           "lineBreaks": 0,
           "offset": 828
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          true,
+          false,
+          true
+        ],
         "col": 1,
         "line": 65
       },
@@ -676,15 +624,11 @@
           "lineBreaks": 0,
           "offset": 862
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          true,
+          true,
+          false
+        ],
         "col": 1,
         "line": 69
       },
@@ -709,15 +653,11 @@
           "lineBreaks": 0,
           "offset": 896
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          true,
+          true,
+          true
+        ],
         "col": 1,
         "line": 73
       },

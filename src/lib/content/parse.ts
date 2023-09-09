@@ -58,6 +58,19 @@ const config = {
         },
       },
     },
+    Figure: {
+      render: 'Figure',
+      description: 'Figure with label',
+      selfClosing: false,
+      attributes: {
+        name: {
+          type: String,
+        },
+        label: {
+          type: String,
+        },
+      },
+    },
   },
 } satisfies Config;
 

@@ -90,7 +90,9 @@
           "lineBreaks": 0,
           "offset": 280
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 11
       },
@@ -103,7 +105,9 @@
           "lineBreaks": 0,
           "offset": 290
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 12
       },
@@ -128,7 +132,9 @@
           "lineBreaks": 0,
           "offset": 318
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 16
       },
@@ -141,7 +147,9 @@
           "lineBreaks": 0,
           "offset": 328
         },
-        "value": 1,
+        "value": [
+          true
+        ],
         "col": 1,
         "line": 17
       },
@@ -166,7 +174,9 @@
           "lineBreaks": 0,
           "offset": 356
         },
-        "value": 1,
+        "value": [
+          true
+        ],
         "col": 1,
         "line": 21
       },
@@ -179,7 +189,9 @@
           "lineBreaks": 0,
           "offset": 366
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 22
       },
@@ -204,7 +216,9 @@
           "lineBreaks": 0,
           "offset": 394
         },
-        "value": 1,
+        "value": [
+          true
+        ],
         "col": 1,
         "line": 26
       },
@@ -217,7 +231,9 @@
           "lineBreaks": 0,
           "offset": 404
         },
-        "value": 1,
+        "value": [
+          true
+        ],
         "col": 1,
         "line": 27
       },

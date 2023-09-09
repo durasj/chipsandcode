@@ -49,9 +49,9 @@ describe('Output', () => {
   it('Allows adding and getting rows', async () => {
     const output = new Output([]);
 
-    output.addRow([true, false, true]);
+    output.addRow([[true], [false], [true]]);
 
-    expect(output.getRow(0)).toStrictEqual([true, false, true]);
+    expect(output.getRow(0)).toStrictEqual([[true], [false], [true]]);
   });
 
   it('Formats without any rows', () => {
@@ -63,8 +63,8 @@ describe('Output', () => {
   it('Formats added rows', () => {
     const output = new Output(outputSpec);
 
-    output.addRow([false, false, true]);
-    output.addRow([true, false, true]);
+    output.addRow([[false], [false], [true]]);
+    output.addRow([[true], [false], [true]]);
 
     expect(output.getText()).toBe(`|   a   |   b   |  out  |
 |   0   |   0   |   1   |
@@ -76,8 +76,8 @@ describe('Output', () => {
     |   0   |   0   |   1   |
     |   1   |   0   |   1   |`);
 
-    expect(output.getRow(0)).toStrictEqual([false, false, true]);
-    expect(output.getRow(1)).toStrictEqual([true, false, true]);
+    expect(output.getRow(0)).toStrictEqual([[false], [false], [true]]);
+    expect(output.getRow(1)).toStrictEqual([[true], [false], [true]]);
 
     expect(output.getText()).toBe(`| a | b |out|
 | 0 | 0 | 1 |

@@ -188,7 +188,9 @@
           "lineBreaks": 0,
           "offset": 378
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 11
       },
@@ -201,7 +203,9 @@
           "lineBreaks": 0,
           "offset": 388
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 12
       },
@@ -214,7 +218,9 @@
           "lineBreaks": 0,
           "offset": 398
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 13
       },
@@ -227,7 +233,9 @@
           "lineBreaks": 0,
           "offset": 408
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 14
       },
@@ -240,7 +248,9 @@
           "lineBreaks": 0,
           "offset": 418
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 15
       },
@@ -253,7 +263,9 @@
           "lineBreaks": 0,
           "offset": 428
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 16
       },
@@ -266,7 +278,9 @@
           "lineBreaks": 0,
           "offset": 438
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 17
       },
@@ -279,7 +293,9 @@
           "lineBreaks": 0,
           "offset": 448
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 18
       },
@@ -292,7 +308,9 @@
           "lineBreaks": 0,
           "offset": 458
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 19
       },
@@ -317,7 +335,9 @@
           "lineBreaks": 0,
           "offset": 488
         },
-        "value": 1,
+        "value": [
+          true
+        ],
         "col": 1,
         "line": 23
       },
@@ -342,7 +362,9 @@
           "lineBreaks": 0,
           "offset": 518
         },
-        "value": 2,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 27
       },
@@ -367,7 +389,9 @@
           "lineBreaks": 0,
           "offset": 548
         },
-        "value": 3,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 31
       },
@@ -392,7 +416,9 @@
           "lineBreaks": 0,
           "offset": 578
         },
-        "value": 4,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 35
       },
@@ -417,7 +443,9 @@
           "lineBreaks": 0,
           "offset": 608
         },
-        "value": 5,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 39
       },
@@ -442,7 +470,9 @@
           "lineBreaks": 0,
           "offset": 638
         },
-        "value": 6,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 43
       },
@@ -467,7 +497,9 @@
           "lineBreaks": 0,
           "offset": 668
         },
-        "value": 7,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 47
       },
@@ -492,28 +524,24 @@
           "lineBreaks": 0,
           "offset": 698
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          true,
+          true,
+          false,
+          true,
+          false,
+          false
+        ],
         "col": 1,
         "line": 51
       },
@@ -526,28 +554,24 @@
           "lineBreaks": 0,
           "offset": 725
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          true,
+          true,
+          false,
+          true,
+          false,
+          false,
+          false,
+          true,
+          false,
+          true
+        ],
         "col": 1,
         "line": 52
       },
@@ -560,28 +584,24 @@
           "lineBreaks": 0,
           "offset": 752
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          false,
+          false,
+          true,
+          true,
+          false,
+          true,
+          false,
+          false,
+          false,
+          true,
+          false,
+          true,
+          false,
+          true,
+          true,
+          false
+        ],
         "col": 1,
         "line": 53
       },
@@ -594,28 +614,24 @@
           "lineBreaks": 0,
           "offset": 779
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          false,
+          true,
+          false,
+          false,
+          false,
+          true,
+          false,
+          true,
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          true,
+          true
+        ],
         "col": 1,
         "line": 54
       },
@@ -628,28 +644,24 @@
           "lineBreaks": 0,
           "offset": 806
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          false,
+          true,
+          false,
+          true,
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false
+        ],
         "col": 1,
         "line": 55
       },
@@ -662,28 +674,24 @@
           "lineBreaks": 0,
           "offset": 833
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          true
+        ],
         "col": 1,
         "line": 56
       },
@@ -696,28 +704,24 @@
           "lineBreaks": 0,
           "offset": 860
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          false,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          true,
+          true,
+          false,
+          true,
+          false
+        ],
         "col": 1,
         "line": 57
       },
@@ -730,28 +734,24 @@
           "lineBreaks": 0,
           "offset": 887
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          true,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          true,
+          true,
+          false,
+          true,
+          false,
+          true,
+          false,
+          true,
+          true
+        ],
         "col": 1,
         "line": 58
       },
@@ -764,7 +764,9 @@
           "lineBreaks": 0,
           "offset": 914
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 59
       },
@@ -789,7 +791,9 @@
           "lineBreaks": 0,
           "offset": 944
         },
-        "value": 1,
+        "value": [
+          true
+        ],
         "col": 1,
         "line": 63
       },
@@ -814,7 +818,9 @@
           "lineBreaks": 0,
           "offset": 974
         },
-        "value": 2,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 67
       },
@@ -839,7 +845,9 @@
           "lineBreaks": 0,
           "offset": 1004
         },
-        "value": 3,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 71
       },
@@ -864,7 +872,9 @@
           "lineBreaks": 0,
           "offset": 1034
         },
-        "value": 4,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 75
       },
@@ -889,7 +899,9 @@
           "lineBreaks": 0,
           "offset": 1064
         },
-        "value": 5,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 79
       },
@@ -914,7 +926,9 @@
           "lineBreaks": 0,
           "offset": 1094
         },
-        "value": 6,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 83
       },
@@ -939,7 +953,9 @@
           "lineBreaks": 0,
           "offset": 1124
         },
-        "value": 7,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 87
       },

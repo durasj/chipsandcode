@@ -29,7 +29,7 @@ export interface OutputSpecNode extends Node<'outputSpec'> {
 
 export interface SetNode extends Node<'set'> {
   name: IdentifierNode;
-  value: number;
+  value: boolean[];
   line: number;
   col: number;
 }

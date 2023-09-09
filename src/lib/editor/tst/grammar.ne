@@ -15,11 +15,14 @@
         keyword: ['load', 'output-file', 'compare-to', 'output-list', 'set', 'eval', 'output'],
       }),
     },
-    decimalValue: { match: /\d+/, value: (v) => +v },
+    decimalValue: {
+      match: /\d+/,
+      value: (v) => v.toString(2).split('').map(v => v === '1')
+    },
     // TODO: Add support for X, D, S values
     binaryValue: {
       match: /%B[01]+/,
-      value: f => ({ type: 'value', format: 'binary', value: f.substr(2).split('').map(Boolean)}),
+      value: f => f.substr(2).split('').map(v => v === '1'),
     },
     whiteSpace:     { match: /\s+/, lineBreaks: true },
     comment:        { match: /\/\/[^\n]*/, value: c => c.slice(2) },

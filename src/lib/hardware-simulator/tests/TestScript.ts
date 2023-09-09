@@ -22,13 +22,16 @@ export default class TestScript {
 
     return this.cases.map((testCase) =>
       testCase.map((instruction) => {
-        if (instruction.type === 'set') chip.setInput(instruction.name.value, !!instruction.value);
+        if (instruction.type === 'set') chip.setInput(instruction.name.value, instruction.value);
         if (instruction.type === 'eval') chip.run();
 
         if (instruction.type === 'output') {
           const pins = chip.getPins();
 
-          const row = this.outputs.map((o) => pins.get(o.name.value)?.state || false);
+          const row = this.outputs.map((o) => {
+            const pin = pins.get(o.name.value);
+            return pin?.state || new Array(pin?.width || 1).fill(false);
+          });
           const index = output.addRow(row);
 
           onSideEffect({ type: 'output', output: output.getText() });
@@ -41,7 +44,13 @@ export default class TestScript {
             if (row.length !== expectedRow.length) {
               return { ...instruction, error: `Number of columns doesn't match` };
             }
-            if (!row.every((value, index) => value === expectedRow[index])) {
+            if (
+              !row.every((value, colIndex) => {
+                if (value.length !== expectedRow[colIndex].length) return false;
+
+                return value.every((v, bitIndex) => v === expectedRow[colIndex][bitIndex]);
+              })
+            ) {
               return { ...instruction, error: `Values don't match` };
             }
             return { ...instruction, error: false };

@@ -8,14 +8,19 @@ export interface ChipPin {
   readonly type: 'input' | 'output' | 'internal';
 
   /**
-   * Mutable current pin state
+   * Width of the pin - number of lanes
    */
-  state: boolean;
+  width: number;
 
   /**
-   * List of connections from this pin as tuple Chip, pin name
+   * Mutable current pin state
    */
-  readonly connections: Array<[Chip, string]>;
+  state: boolean[];
+
+  /**
+   * List of connections from this pin as tuple Chip, pin name, selection?
+   */
+  readonly connections: Array<[Chip, string] | [Chip, string, number | [number, number]]>;
 }
 
 /**
@@ -30,12 +35,12 @@ interface Chip {
   /**
    * Set input pin value
    */
-  setInput(name: string, value: boolean): void;
+  setInput(name: string, value: boolean[]): void;
 
   /**
    * Get output pin value
    */
-  getOutput(name: string): boolean;
+  getOutput(name: string): boolean[];
 
   /**
    * Get pin configuration and state

@@ -1,28 +1,25 @@
 import type { ChipPin } from '../Chip';
 import type Chip from '../Chip';
-import IllegalStateError from '../IllegalStateError';
 
 /**
  * NOT gate implemented natively
  */
 class NotChip implements Chip {
-  public readonly name = 'Not';
+  public readonly name = 'Not' as string;
 
-  private in = false;
-  private out = true;
+  private in: boolean[];
+  private out: boolean[];
 
-  setInput(name: string, value: boolean) {
-    if (name !== 'in')
-      throw new IllegalStateError(`Input pin '${name}' does not exist on 'Not'. Input pins: in.`);
+  constructor(private width = 1) {
+    this.in = new Array(width).fill(false);
+    this.out = new Array(width).fill(false);
+  }
 
+  setInput(_: string, value: boolean[]) {
     this.in = value;
   }
 
-  getOutput(name: string) {
-    if (name !== 'out')
-      throw new IllegalStateError(
-        `Output pin '${name}' does not exist on 'Not'. Output pins: out.`,
-      );
+  getOutput() {
     return this.out;
   }
 
@@ -31,13 +28,13 @@ class NotChip implements Chip {
     // Pin inspection is less performance sensitive than actual execution
 
     return new Map([
-      ['in', { type: 'input', state: this.in, connections: [] }],
-      ['out', { type: 'output', state: this.out, connections: [] }],
+      ['in', { type: 'input', width: this.width, state: this.in, connections: [] }],
+      ['out', { type: 'output', width: this.width, state: this.out, connections: [] }],
     ]);
   }
 
   public run() {
-    this.out = !this.in;
+    this.out = this.in.map((b) => !b);
   }
 }
 

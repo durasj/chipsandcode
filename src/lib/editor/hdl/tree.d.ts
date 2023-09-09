@@ -31,8 +31,8 @@ export interface ChipClockedNode extends Node<'clocked'> {
 }
 
 export interface AssignmentNode extends Node<'assignment'> {
-  left: IdentifierNode;
-  right: IdentifierNode;
+  left: IdentifierNode | BusSelectionNode;
+  right: IdentifierNode | BusSelectionNode;
 }
 
 export interface IdentifierNode extends Node<'identifier'> {
@@ -44,7 +44,11 @@ export interface IdentifierNode extends Node<'identifier'> {
 }
 
 export interface BusIdentifierNode extends IdentifierNode {
-  length: number;
+  width: number;
+}
+
+export interface BusSelectionNode extends IdentifierNode {
+  selection: number | [number, number];
 }
 
 export interface Node<type extends string> {

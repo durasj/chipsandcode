@@ -13,18 +13,18 @@ Boolean algebra deals with Boolean (also called binary) values that are typicall
 
 The simplest way to specify a Boolean function is to enumerate all the possible values of the function's input variables, along with the function's output for each set of inputs. This is called the _truth table_ representation of the function, illustrated in Figure 1.1.
 
-|  x  |  y  |  z  | $f(x, y, z)$ |
+{% Figure name="Figure 1.1" label="Truth table representation of a Boolean function (example)." %}
+| x | y | z | $f(x, y, z)$ |
 | :-: | :-: | :-: | :----------: |
-|  0  |  0  |  0  |      0       |
-|  0  |  0  |  1  |      0       |
-|  0  |  1  |  0  |      1       |
-|  0  |  1  |  1  |      0       |
-|  1  |  0  |  0  |      1       |
-|  1  |  0  |  1  |      0       |
-|  1  |  1  |  0  |      1       |
-|  1  |  1  |  1  |      0       |
-
-_**Figure 1.1** Truth table representation of a Boolean function (example)._
+| 0 | 0 | 0 | 0 |
+| 0 | 0 | 1 | 0 |
+| 0 | 1 | 0 | 1 |
+| 0 | 1 | 1 | 0 |
+| 1 | 0 | 0 | 1 |
+| 1 | 0 | 1 | 0 |
+| 1 | 1 | 0 | 1 |
+| 1 | 1 | 1 | 0 |
+{% /Figure %}
 
 The first three columns of Figure 1.1 enumerate all the possible binary values of the function's variables. For each one of the $2^n$ possible tuples $v_1 ... v_n$ (here $n = 3$), the last column gives the value of $f(v_1 ... v_n)$.
 
@@ -49,18 +49,18 @@ As it turns out, every Boolean function can be expressed using at least one Bool
 
 An inspection of Figure 1.1 reveals that the number of Boolean functions that can be defined over $n$ binary variables is ${2^2}^n$. For example, the sixteen Boolean functions spanned by two variables are listed in Figure 1.2. These functions were constructed systematically, by enumerating all the possible 4-wise combinations of binary values in the four right columns. Each function has a conventional name that seeks to describe its underlying operation.
 
-| Function |  y  |  z  | $f(x, y, z)$ |
+{% Figure name="Figure 1.2" label="All the Boolean functions of two variables." %}
+| Function | y | z | $f(x, y, z)$ |
 | :------: | :-: | :-: | :----------: |
-|    0     |  0  |  0  |      0       |
-|    0     |  0  |  1  |      0       |
-|    0     |  1  |  0  |      1       |
-|    0     |  1  |  1  |      0       |
-|    1     |  0  |  0  |      1       |
-|    1     |  0  |  1  |      0       |
-|    1     |  1  |  0  |      1       |
-|    1     |  1  |  1  |      0       |
-
-_**Figure 1.2** All the Boolean functions of two variables_
+| 0 | 0 | 0 | 0 |
+| 0 | 0 | 1 | 0 |
+| 0 | 1 | 0 | 1 |
+| 0 | 1 | 1 | 0 |
+| 1 | 0 | 0 | 1 |
+| 1 | 0 | 1 | 0 |
+| 1 | 1 | 0 | 1 |
+| 1 | 1 | 1 | 0 |
+{% /Figure %}
 
 Here are some examples: The name of the `Nor` function is shorthand for `Not`-`Or`: Take the `Or` of $x$ and $y$, then negate the result. The `Xor` function -- shorthand for "exclusive `Or`" -- returns 1 when its two variables have opposing truth-values and 0 otherwise. Conversely, the Equivalence function returns 1 when the two variables have identical truth-values. The If-$x$-then-$y$ function (also known as $x \rightarrow y$, or "$x$ Implies $y$") returns 1 when $x$ is 0 or when both $x$ and $y$ are 1. The other functions are self-explanatory.
 
@@ -77,11 +77,13 @@ binary data from one gate to another, any alternative technology permitting swit
 
 The availability of alternative switching technology options, on the one hand, and the observation that Boolean algebra can be used to abstract the behavior of _any_ such technology, on the other, is extremely important. Basically, it implies that computer scientists don’t have to worry about physical things like electricity, circuits, switches, relays, and power supply. Instead, computer scientists can be content with the abstract notions of Boolean algebra and gate logic, trusting that someone else (the physicists and electrical engineers—bless their souls) will Figure out how to actually realize them in hardware. Hence, a _primitive gate_ (see Figure 1.3) can be viewed as a black box device that implements an elementary logical operation in one way or another—we don’t care how. A hardware designer starts from such primitive gates and designs more complicated functionality by interconnecting them, leading to the construction of _composite_ gates.
 
-![Standard symbolic notation of some elementary logic gates.](/figures/figure1-3.svg 'Figure 1.3: Standard symbolic notation of some elementary logic gates.')
-_**Figure 1.3** Standard symbolic notation of some elementary logic gates._
+{% Figure name="Figure 1.3" label="Standard symbolic notation of some elementary logic gates." %}
+![Standard symbolic notation of some elementary logic gates.](/figures/figure1-3.svg)
+{% /Figure %}
 
-![Composite implementation of a three-way And gate. The rectangle on the right defines the conceptual boundaries of the gate interface.](/figures/figure1-4.svg 'Figure 1.4: Composite implementation of a three-way And gate. The rectangle on the right defines the conceptual boundaries of the gate interface.')
-_**Figure 1.4** Composite implementation of a three-way `And` gate. The rectangle on the right defines the conceptual boundaries of the gate interface._
+{% Figure name="Figure 1.4" label="Composite implementation of a three-way And gate. The rectangle on the right defines the conceptual boundaries of the gate interface." %}
+![Composite implementation of a three-way And gate. The rectangle on the right defines the conceptual boundaries of the gate interface.](/figures/figure1-4.svg)
+{% /Figure %}
 
 ## Primitive and Composite Gates
 
@@ -93,8 +95,9 @@ We see that any given logic gate can be viewed from two different perspectives: 
 
 Let us consider another logic design example—that of a `Xor` gate. As discussed before, Xor($a$, $b$) is 1 exactly when either $a$ is 1 and $b$ is 0, or when $a$ is 0 and $b$ is 1. Said otherwise, Xor($a$, $b$) = Or(And($a$, Not($b$)), And(Not($a$), $b$)). This definition leads to the logic design shown in Figure 1.5.
 
-![Xor gate, along with a possible implementation.](/figures/figure1-5.svg 'Figure 1.5: Xor gate, along with a possible implementation.')
-_**Figure 1.5** `Xor` gate, along with a possible implementation._
+{% Figure name="Figure 1.5" label="Xor gate, along with a possible implementation." %}
+![Xor gate, along with a possible implementation.](/figures/figure1-5.svg)
+{% /Figure %}
 
 Note that the gate _interface_ is unique: There is only one way to describe it, and this is normally done using a truth table, a Boolean expression, or some verbal specification.
 
@@ -123,8 +126,9 @@ life cycle - from an optimized HDL program to mass production - is typically out
 
 As we have seen in Figures 1.2 and 1.5, one way to define _exclusive_ `Or` is Xor($a$, $b$) = Or(And($a$, Not($b$)), And(Not($a$), $b$)). This logic can be expressed either graphically, as a gate diagram, or textually, as an HDL program. The latter program is written in the HDL variant used throughout this course. See Simulator 1.1 for the details.
 
+{% Figure name="Simulator 1.1" label="Xor gate, along with a possible implementation." %}
 {% EmbeddedHardwareIDE id="Xor" /%}
-_**Simulator 1.1** `Xor` gate, along with a possible implementation._
+{% /Figure %}
 
 ## Explanation
 

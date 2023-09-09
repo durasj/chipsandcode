@@ -18,18 +18,27 @@ exports[`Chip Factory > Creates Chip from Built-In And.hdl 2`] = `
 Map {
   "a" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "b" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "out" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
 }
 `;
@@ -40,18 +49,27 @@ exports[`Chip Factory > Creates Chip from Built-In And16.hdl 2`] = `
 Map {
   "a" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "b" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "out" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
 }
 `;
@@ -66,15 +84,187 @@ exports[`Chip Factory > Creates Chip from Built-In DFF.hdl 2`] = `Map {}`;
 
 exports[`Chip Factory > Creates Chip from Built-In DMux.hdl 1`] = `"DMux"`;
 
-exports[`Chip Factory > Creates Chip from Built-In DMux.hdl 2`] = `Map {}`;
+exports[`Chip Factory > Creates Chip from Built-In DMux.hdl 2`] = `
+Map {
+  "in" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "output",
+    "width": 1,
+  },
+  "sel" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "input",
+    "width": 1,
+  },
+  "a" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "input",
+    "width": 1,
+  },
+  "b" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "input",
+    "width": 1,
+  },
+}
+`;
 
 exports[`Chip Factory > Creates Chip from Built-In DMux4Way.hdl 1`] = `"DMux4Way"`;
 
-exports[`Chip Factory > Creates Chip from Built-In DMux4Way.hdl 2`] = `Map {}`;
+exports[`Chip Factory > Creates Chip from Built-In DMux4Way.hdl 2`] = `
+Map {
+  "in" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "output",
+    "width": 1,
+  },
+  "sel" => {
+    "connections": [],
+    "state": [
+      false,
+      false,
+    ],
+    "type": "input",
+    "width": 2,
+  },
+  "a" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "input",
+    "width": 1,
+  },
+  "b" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "input",
+    "width": 1,
+  },
+  "c" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "input",
+    "width": 1,
+  },
+  "d" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "input",
+    "width": 1,
+  },
+}
+`;
 
 exports[`Chip Factory > Creates Chip from Built-In DMux8Way.hdl 1`] = `"DMux8Way"`;
 
-exports[`Chip Factory > Creates Chip from Built-In DMux8Way.hdl 2`] = `Map {}`;
+exports[`Chip Factory > Creates Chip from Built-In DMux8Way.hdl 2`] = `
+Map {
+  "in" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "output",
+    "width": 1,
+  },
+  "sel" => {
+    "connections": [],
+    "state": [
+      false,
+      false,
+      false,
+    ],
+    "type": "input",
+    "width": 3,
+  },
+  "a" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "input",
+    "width": 1,
+  },
+  "b" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "input",
+    "width": 1,
+  },
+  "c" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "input",
+    "width": 1,
+  },
+  "d" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "input",
+    "width": 1,
+  },
+  "e" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "input",
+    "width": 1,
+  },
+  "f" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "input",
+    "width": 1,
+  },
+  "g" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "input",
+    "width": 1,
+  },
+  "h" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "input",
+    "width": 1,
+  },
+}
+`;
 
 exports[`Chip Factory > Creates Chip from Built-In DRegister.hdl 1`] = `"DRegister"`;
 
@@ -98,19 +288,436 @@ exports[`Chip Factory > Creates Chip from Built-In Keyboard.hdl 2`] = `Map {}`;
 
 exports[`Chip Factory > Creates Chip from Built-In Mux.hdl 1`] = `"Mux"`;
 
-exports[`Chip Factory > Creates Chip from Built-In Mux.hdl 2`] = `Map {}`;
+exports[`Chip Factory > Creates Chip from Built-In Mux.hdl 2`] = `
+Map {
+  "a" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "input",
+    "width": 1,
+  },
+  "b" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "input",
+    "width": 1,
+  },
+  "sel" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "input",
+    "width": 1,
+  },
+  "out" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "output",
+    "width": 1,
+  },
+}
+`;
 
-exports[`Chip Factory > Creates Chip from Built-In Mux4Way16.hdl 1`] = `"Mux4Way"`;
+exports[`Chip Factory > Creates Chip from Built-In Mux4Way16.hdl 1`] = `"Mux4Way16"`;
 
-exports[`Chip Factory > Creates Chip from Built-In Mux4Way16.hdl 2`] = `Map {}`;
+exports[`Chip Factory > Creates Chip from Built-In Mux4Way16.hdl 2`] = `
+Map {
+  "a" => {
+    "connections": [],
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
+    "type": "input",
+    "width": 16,
+  },
+  "b" => {
+    "connections": [],
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
+    "type": "input",
+    "width": 16,
+  },
+  "c" => {
+    "connections": [],
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
+    "type": "input",
+    "width": 16,
+  },
+  "d" => {
+    "connections": [],
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
+    "type": "input",
+    "width": 16,
+  },
+  "sel" => {
+    "connections": [],
+    "state": [
+      false,
+      false,
+    ],
+    "type": "input",
+    "width": 2,
+  },
+  "out" => {
+    "connections": [],
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
+    "type": "output",
+    "width": 16,
+  },
+}
+`;
 
 exports[`Chip Factory > Creates Chip from Built-In Mux8Way16.hdl 1`] = `"Mux8Way16"`;
 
-exports[`Chip Factory > Creates Chip from Built-In Mux8Way16.hdl 2`] = `Map {}`;
+exports[`Chip Factory > Creates Chip from Built-In Mux8Way16.hdl 2`] = `
+Map {
+  "a" => {
+    "connections": [],
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
+    "type": "input",
+    "width": 16,
+  },
+  "b" => {
+    "connections": [],
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
+    "type": "input",
+    "width": 16,
+  },
+  "c" => {
+    "connections": [],
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
+    "type": "input",
+    "width": 16,
+  },
+  "d" => {
+    "connections": [],
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
+    "type": "input",
+    "width": 16,
+  },
+  "e" => {
+    "connections": [],
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
+    "type": "input",
+    "width": 16,
+  },
+  "f" => {
+    "connections": [],
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
+    "type": "input",
+    "width": 16,
+  },
+  "g" => {
+    "connections": [],
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
+    "type": "input",
+    "width": 16,
+  },
+  "h" => {
+    "connections": [],
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
+    "type": "input",
+    "width": 16,
+  },
+  "sel" => {
+    "connections": [],
+    "state": [
+      false,
+      false,
+      false,
+    ],
+    "type": "input",
+    "width": 3,
+  },
+  "out" => {
+    "connections": [],
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
+    "type": "output",
+    "width": 16,
+  },
+}
+`;
 
 exports[`Chip Factory > Creates Chip from Built-In Mux16.hdl 1`] = `"Mux"`;
 
-exports[`Chip Factory > Creates Chip from Built-In Mux16.hdl 2`] = `Map {}`;
+exports[`Chip Factory > Creates Chip from Built-In Mux16.hdl 2`] = `
+Map {
+  "a" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "input",
+    "width": 1,
+  },
+  "b" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "input",
+    "width": 1,
+  },
+  "sel" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "input",
+    "width": 1,
+  },
+  "out" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "output",
+    "width": 1,
+  },
+}
+`;
 
 exports[`Chip Factory > Creates Chip from Built-In Nand.hdl 1`] = `"Nand"`;
 
@@ -118,18 +725,27 @@ exports[`Chip Factory > Creates Chip from Built-In Nand.hdl 2`] = `
 Map {
   "a" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "b" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "out" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
 }
 `;
@@ -140,20 +756,75 @@ exports[`Chip Factory > Creates Chip from Built-In Not.hdl 2`] = `
 Map {
   "in" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "out" => {
     "connections": [],
-    "state": true,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
 }
 `;
 
 exports[`Chip Factory > Creates Chip from Built-In Not16.hdl 1`] = `"Not16"`;
 
-exports[`Chip Factory > Creates Chip from Built-In Not16.hdl 2`] = `Map {}`;
+exports[`Chip Factory > Creates Chip from Built-In Not16.hdl 2`] = `
+Map {
+  "in" => {
+    "connections": [],
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
+    "type": "input",
+    "width": 16,
+  },
+  "out" => {
+    "connections": [],
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
+    "type": "output",
+    "width": 16,
+  },
+}
+`;
 
 exports[`Chip Factory > Creates Chip from Built-In Or.hdl 1`] = `"Or"`;
 
@@ -161,25 +832,60 @@ exports[`Chip Factory > Creates Chip from Built-In Or.hdl 2`] = `
 Map {
   "a" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "b" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "out" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
 }
 `;
 
 exports[`Chip Factory > Creates Chip from Built-In Or8Way.hdl 1`] = `"Or8Way"`;
 
-exports[`Chip Factory > Creates Chip from Built-In Or8Way.hdl 2`] = `Map {}`;
+exports[`Chip Factory > Creates Chip from Built-In Or8Way.hdl 2`] = `
+Map {
+  "in" => {
+    "connections": [],
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
+    "type": "input",
+    "width": 8,
+  },
+  "out" => {
+    "connections": [],
+    "state": [
+      false,
+    ],
+    "type": "output",
+    "width": 8,
+  },
+}
+`;
 
 exports[`Chip Factory > Creates Chip from Built-In Or16.hdl 1`] = `"Or"`;
 
@@ -187,18 +893,27 @@ exports[`Chip Factory > Creates Chip from Built-In Or16.hdl 2`] = `
 Map {
   "a" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "b" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "out" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
 }
 `;
@@ -245,18 +960,27 @@ exports[`Chip Factory > Creates Chip from Built-In Xor.hdl 2`] = `
 Map {
   "a" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "b" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "out" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
 }
 `;
@@ -269,60 +993,100 @@ Map {
     "connections": [
       [
         NandChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Nand",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "b" => {
     "connections": [
       [
         NandChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Nand",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "out" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
   "i1" => {
     "connections": [
       [
         NandChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Nand",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
       [
         NandChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Nand",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "internal",
+    "width": 1,
   },
 }
 `;
@@ -335,306 +1099,616 @@ Map {
     "connections": [
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        0,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        1,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        2,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        3,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        4,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        5,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        6,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        7,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        8,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        9,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        10,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        11,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        12,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        13,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        14,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        15,
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "input",
+    "width": 16,
   },
   "b" => {
     "connections": [
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        0,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        1,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        2,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        3,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        4,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        5,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        6,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        7,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        8,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        9,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        10,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        11,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        12,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        13,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        14,
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        15,
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "input",
+    "width": 16,
   },
   "out" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "output",
+    "width": 16,
   },
 }
 `;
@@ -647,73 +1721,121 @@ Map {
     "connections": [
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "sel" => {
     "connections": [
       [
         NotChip {
-          "in": false,
+          "in": [
+            false,
+          ],
           "name": "Not",
-          "out": true,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "in",
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "a" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
   "b" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
   "negSel" => {
     "connections": [
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "internal",
+    "width": 1,
   },
 }
 `;
@@ -723,124 +1845,250 @@ exports[`Chip Factory > Creates Chip from Project 1 DMux4Way.hdl 1`] = `"DMux4Wa
 exports[`Chip Factory > Creates Chip from Project 1 DMux4Way.hdl 2`] = `
 Map {
   "in" => {
-    "connections": [
-      [
-        DMuxChip {
-          "name": "DMux",
-        },
-        "in",
-      ],
+    "connections": [],
+    "state": [
+      false,
     ],
-    "state": false,
     "type": "input",
+    "width": 1,
   },
   "sel" => {
     "connections": [
       [
         DMuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
+          "in": [
+            false,
+          ],
           "name": "DMux",
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "sel",
+        1,
       ],
       [
         DMuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
+          "in": [
+            false,
+          ],
           "name": "DMux",
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "sel",
+        0,
       ],
       [
         DMuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
+          "in": [
+            false,
+          ],
           "name": "DMux",
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "sel",
+        0,
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+    ],
     "type": "input",
+    "width": 2,
   },
   "a" => {
     "connections": [
       [
         DMuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
+          "in": [
+            false,
+          ],
           "name": "DMux",
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
   "b" => {
     "connections": [
       [
         DMuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
+          "in": [
+            false,
+          ],
           "name": "DMux",
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
   "c" => {
     "connections": [
       [
         DMuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
+          "in": [
+            false,
+          ],
           "name": "DMux",
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
   "d" => {
     "connections": [
       [
         DMuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
+          "in": [
+            false,
+          ],
           "name": "DMux",
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
   "dm0" => {
     "connections": [
       [
         DMuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
+          "in": [
+            false,
+          ],
           "name": "DMux",
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
-      [
-        DMuxChip {
-          "name": "DMux",
-        },
-        "in",
-      ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "internal",
+    "width": 1,
   },
   "dm1" => {
     "connections": [
       [
         DMuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
+          "in": [
+            false,
+          ],
           "name": "DMux",
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
       ],
-      [
-        DMuxChip {
-          "name": "DMux",
-        },
-        "in",
-      ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "internal",
+    "width": 1,
   },
 }
 `;
@@ -850,172 +2098,439 @@ exports[`Chip Factory > Creates Chip from Project 1 DMux8Way.hdl 1`] = `"DMux8Wa
 exports[`Chip Factory > Creates Chip from Project 1 DMux8Way.hdl 2`] = `
 Map {
   "in" => {
-    "connections": [
-      [
-        DMuxChip {
-          "name": "DMux",
-        },
-        "in",
-      ],
+    "connections": [],
+    "state": [
+      false,
     ],
-    "state": false,
     "type": "input",
+    "width": 1,
   },
   "sel" => {
     "connections": [
       [
         DMuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
+          "in": [
+            false,
+          ],
           "name": "DMux",
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "sel",
+        2,
       ],
       [
         DMux4WayChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
+          "c": [
+            false,
+          ],
+          "d": [
+            false,
+          ],
+          "in": [
+            false,
+          ],
           "name": "DMux4Way",
+          "sel": [
+            false,
+            false,
+          ],
+          "width": 1,
         },
         "sel",
+        [
+          0,
+          1,
+        ],
       ],
       [
         DMux4WayChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
+          "c": [
+            false,
+          ],
+          "d": [
+            false,
+          ],
+          "in": [
+            false,
+          ],
           "name": "DMux4Way",
+          "sel": [
+            false,
+            false,
+          ],
+          "width": 1,
         },
         "sel",
+        [
+          0,
+          1,
+        ],
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+    ],
     "type": "input",
+    "width": 3,
   },
   "a" => {
     "connections": [
       [
         DMux4WayChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
+          "c": [
+            false,
+          ],
+          "d": [
+            false,
+          ],
+          "in": [
+            false,
+          ],
           "name": "DMux4Way",
+          "sel": [
+            false,
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
   "b" => {
     "connections": [
       [
         DMux4WayChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
+          "c": [
+            false,
+          ],
+          "d": [
+            false,
+          ],
+          "in": [
+            false,
+          ],
           "name": "DMux4Way",
+          "sel": [
+            false,
+            false,
+          ],
+          "width": 1,
         },
         "b",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
   "c" => {
     "connections": [
       [
         DMux4WayChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
+          "c": [
+            false,
+          ],
+          "d": [
+            false,
+          ],
+          "in": [
+            false,
+          ],
           "name": "DMux4Way",
+          "sel": [
+            false,
+            false,
+          ],
+          "width": 1,
         },
         "c",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
   "d" => {
     "connections": [
       [
         DMux4WayChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
+          "c": [
+            false,
+          ],
+          "d": [
+            false,
+          ],
+          "in": [
+            false,
+          ],
           "name": "DMux4Way",
+          "sel": [
+            false,
+            false,
+          ],
+          "width": 1,
         },
         "d",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
   "e" => {
     "connections": [
       [
         DMux4WayChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
+          "c": [
+            false,
+          ],
+          "d": [
+            false,
+          ],
+          "in": [
+            false,
+          ],
           "name": "DMux4Way",
+          "sel": [
+            false,
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
   "f" => {
     "connections": [
       [
         DMux4WayChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
+          "c": [
+            false,
+          ],
+          "d": [
+            false,
+          ],
+          "in": [
+            false,
+          ],
           "name": "DMux4Way",
+          "sel": [
+            false,
+            false,
+          ],
+          "width": 1,
         },
         "b",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
   "g" => {
     "connections": [
       [
         DMux4WayChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
+          "c": [
+            false,
+          ],
+          "d": [
+            false,
+          ],
+          "in": [
+            false,
+          ],
           "name": "DMux4Way",
+          "sel": [
+            false,
+            false,
+          ],
+          "width": 1,
         },
         "c",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
   "h" => {
     "connections": [
       [
         DMux4WayChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
+          "c": [
+            false,
+          ],
+          "d": [
+            false,
+          ],
+          "in": [
+            false,
+          ],
           "name": "DMux4Way",
+          "sel": [
+            false,
+            false,
+          ],
+          "width": 1,
         },
         "d",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
   "dm1" => {
     "connections": [
       [
         DMuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
+          "in": [
+            false,
+          ],
           "name": "DMux",
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
-      [
-        DMux4WayChip {
-          "name": "DMux4Way",
-        },
-        "in",
-      ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "internal",
+    "width": 1,
   },
   "dm2" => {
     "connections": [
       [
         DMuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
+          "in": [
+            false,
+          ],
           "name": "DMux",
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
       ],
-      [
-        DMux4WayChip {
-          "name": "DMux4Way",
-        },
-        "in",
-      ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "internal",
+    "width": 1,
   },
 }
 `;
@@ -1028,104 +2543,172 @@ Map {
     "connections": [
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "b" => {
     "connections": [
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "sel" => {
     "connections": [
       [
         NotChip {
-          "in": false,
+          "in": [
+            false,
+          ],
           "name": "Not",
-          "out": true,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "in",
       ],
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "out" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
   "negSel" => {
     "connections": [
       [
         AndChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "And",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "internal",
+    "width": 1,
   },
   "choiceA" => {
     "connections": [
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "internal",
+    "width": 1,
   },
   "choiceB" => {
     "connections": [
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "internal",
+    "width": 1,
   },
 }
 `;
@@ -1138,121 +2721,757 @@ Map {
     "connections": [
       [
         Mux16Chip {
+          "a": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "b": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
           "name": "Mux16",
+          "out": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 16,
         },
         "a",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "input",
+    "width": 16,
   },
   "b" => {
     "connections": [
       [
         Mux16Chip {
+          "a": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "b": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
           "name": "Mux16",
+          "out": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 16,
         },
         "b",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "input",
+    "width": 16,
   },
   "c" => {
     "connections": [
       [
         Mux16Chip {
+          "a": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "b": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
           "name": "Mux16",
+          "out": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 16,
         },
         "a",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "input",
+    "width": 16,
   },
   "d" => {
     "connections": [
       [
         Mux16Chip {
+          "a": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "b": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
           "name": "Mux16",
+          "out": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 16,
         },
         "b",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "input",
+    "width": 16,
   },
   "sel" => {
     "connections": [
       [
         Mux16Chip {
+          "a": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "b": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
           "name": "Mux16",
+          "out": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 16,
         },
         "sel",
+        0,
       ],
       [
         Mux16Chip {
+          "a": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "b": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
           "name": "Mux16",
+          "out": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 16,
         },
         "sel",
+        0,
       ],
       [
         Mux16Chip {
+          "a": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "b": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
           "name": "Mux16",
+          "out": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 16,
         },
         "sel",
+        1,
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+    ],
     "type": "input",
+    "width": 2,
   },
   "out" => {
-    "connections": [
-      [
-        Mux16Chip {
-          "name": "Mux16",
-        },
-        "out",
-      ],
+    "connections": [],
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
     ],
-    "state": false,
     "type": "output",
+    "width": 16,
   },
   "ab" => {
     "connections": [
       [
         Mux16Chip {
+          "a": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "b": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
           "name": "Mux16",
-        },
-        "out",
-      ],
-      [
-        Mux16Chip {
-          "name": "Mux16",
+          "out": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 16,
         },
         "a",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "internal",
+    "width": 16,
   },
   "cd" => {
     "connections": [
       [
         Mux16Chip {
+          "a": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "b": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
           "name": "Mux16",
-        },
-        "out",
-      ],
-      [
-        Mux16Chip {
-          "name": "Mux16",
+          "out": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 16,
         },
         "b",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "internal",
+    "width": 16,
   },
 }
 `;
@@ -1264,170 +3483,1487 @@ Map {
   "a" => {
     "connections": [
       [
-        Mux4WayChip {
-          "name": "Mux4Way",
+        Mux4Way16Chip {
+          "a": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "b": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "c": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "d": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "name": "Mux4Way16",
+          "out": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "sel": [
+            false,
+            false,
+          ],
+          "width": 16,
         },
         "a",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "input",
+    "width": 16,
   },
   "b" => {
     "connections": [
       [
-        Mux4WayChip {
-          "name": "Mux4Way",
+        Mux4Way16Chip {
+          "a": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "b": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "c": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "d": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "name": "Mux4Way16",
+          "out": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "sel": [
+            false,
+            false,
+          ],
+          "width": 16,
         },
         "b",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "input",
+    "width": 16,
   },
   "c" => {
     "connections": [
       [
-        Mux4WayChip {
-          "name": "Mux4Way",
+        Mux4Way16Chip {
+          "a": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "b": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "c": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "d": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "name": "Mux4Way16",
+          "out": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "sel": [
+            false,
+            false,
+          ],
+          "width": 16,
         },
         "c",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "input",
+    "width": 16,
   },
   "d" => {
     "connections": [
       [
-        Mux4WayChip {
-          "name": "Mux4Way",
+        Mux4Way16Chip {
+          "a": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "b": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "c": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "d": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "name": "Mux4Way16",
+          "out": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "sel": [
+            false,
+            false,
+          ],
+          "width": 16,
         },
         "d",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "input",
+    "width": 16,
   },
   "e" => {
     "connections": [
       [
-        Mux4WayChip {
-          "name": "Mux4Way",
+        Mux4Way16Chip {
+          "a": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "b": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "c": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "d": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "name": "Mux4Way16",
+          "out": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "sel": [
+            false,
+            false,
+          ],
+          "width": 16,
         },
         "a",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "input",
+    "width": 16,
   },
   "f" => {
     "connections": [
       [
-        Mux4WayChip {
-          "name": "Mux4Way",
+        Mux4Way16Chip {
+          "a": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "b": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "c": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "d": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "name": "Mux4Way16",
+          "out": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "sel": [
+            false,
+            false,
+          ],
+          "width": 16,
         },
         "b",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "input",
+    "width": 16,
   },
   "g" => {
     "connections": [
       [
-        Mux4WayChip {
-          "name": "Mux4Way",
+        Mux4Way16Chip {
+          "a": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "b": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "c": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "d": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "name": "Mux4Way16",
+          "out": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "sel": [
+            false,
+            false,
+          ],
+          "width": 16,
         },
         "c",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "input",
+    "width": 16,
   },
   "h" => {
     "connections": [
       [
-        Mux4WayChip {
-          "name": "Mux4Way",
+        Mux4Way16Chip {
+          "a": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "b": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "c": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "d": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "name": "Mux4Way16",
+          "out": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "sel": [
+            false,
+            false,
+          ],
+          "width": 16,
         },
         "d",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "input",
+    "width": 16,
   },
   "sel" => {
     "connections": [
       [
-        Mux4WayChip {
-          "name": "Mux4Way",
+        Mux4Way16Chip {
+          "a": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "b": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "c": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "d": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "name": "Mux4Way16",
+          "out": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "sel": [
+            false,
+            false,
+          ],
+          "width": 16,
         },
         "sel",
+        [
+          0,
+          1,
+        ],
       ],
       [
-        Mux4WayChip {
-          "name": "Mux4Way",
+        Mux4Way16Chip {
+          "a": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "b": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "c": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "d": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "name": "Mux4Way16",
+          "out": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "sel": [
+            false,
+            false,
+          ],
+          "width": 16,
         },
         "sel",
+        [
+          0,
+          1,
+        ],
       ],
       [
         Mux16Chip {
+          "a": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "b": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
           "name": "Mux16",
+          "out": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 16,
         },
         "sel",
+        2,
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+    ],
     "type": "input",
+    "width": 3,
   },
   "out" => {
-    "connections": [
-      [
-        Mux16Chip {
-          "name": "Mux16",
-        },
-        "out",
-      ],
+    "connections": [],
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
     ],
-    "state": false,
     "type": "output",
+    "width": 16,
   },
   "m0" => {
     "connections": [
       [
-        Mux4WayChip {
-          "name": "Mux4Way",
-        },
-        "out",
-      ],
-      [
         Mux16Chip {
+          "a": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "b": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
           "name": "Mux16",
+          "out": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 16,
         },
         "a",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "internal",
+    "width": 16,
   },
   "m1" => {
     "connections": [
       [
-        Mux4WayChip {
-          "name": "Mux4Way",
-        },
-        "out",
-      ],
-      [
         Mux16Chip {
+          "a": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "b": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
           "name": "Mux16",
+          "out": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 16,
         },
         "b",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "internal",
+    "width": 16,
   },
 }
 `;
@@ -1440,409 +4976,1025 @@ Map {
     "connections": [
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        0,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        1,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        2,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        3,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        4,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        5,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        6,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        7,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        8,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        9,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        10,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        11,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        12,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        13,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        14,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        15,
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "input",
+    "width": 16,
   },
   "b" => {
     "connections": [
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        0,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        1,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        2,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        3,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        4,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        5,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        6,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        7,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        8,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        9,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        10,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        11,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        12,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        13,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        14,
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        15,
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "input",
+    "width": 16,
   },
   "sel" => {
     "connections": [
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "sel",
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "sel",
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "sel",
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "sel",
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "sel",
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "sel",
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "sel",
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "sel",
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "sel",
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "sel",
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "sel",
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "sel",
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "sel",
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "sel",
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "sel",
       ],
       [
         MuxChip {
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Mux",
+          "out": [
+            false,
+          ],
+          "sel": [
+            false,
+          ],
+          "width": 1,
         },
         "sel",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "out" => {
-    "connections": [
-      [
-        MuxChip {
-          "name": "Mux",
-        },
-        "out",
-      ],
-      [
-        MuxChip {
-          "name": "Mux",
-        },
-        "out",
-      ],
-      [
-        MuxChip {
-          "name": "Mux",
-        },
-        "out",
-      ],
-      [
-        MuxChip {
-          "name": "Mux",
-        },
-        "out",
-      ],
-      [
-        MuxChip {
-          "name": "Mux",
-        },
-        "out",
-      ],
-      [
-        MuxChip {
-          "name": "Mux",
-        },
-        "out",
-      ],
-      [
-        MuxChip {
-          "name": "Mux",
-        },
-        "out",
-      ],
-      [
-        MuxChip {
-          "name": "Mux",
-        },
-        "out",
-      ],
-      [
-        MuxChip {
-          "name": "Mux",
-        },
-        "out",
-      ],
-      [
-        MuxChip {
-          "name": "Mux",
-        },
-        "out",
-      ],
-      [
-        MuxChip {
-          "name": "Mux",
-        },
-        "out",
-      ],
-      [
-        MuxChip {
-          "name": "Mux",
-        },
-        "out",
-      ],
-      [
-        MuxChip {
-          "name": "Mux",
-        },
-        "out",
-      ],
-      [
-        MuxChip {
-          "name": "Mux",
-        },
-        "out",
-      ],
-      [
-        MuxChip {
-          "name": "Mux",
-        },
-        "out",
-      ],
-      [
-        MuxChip {
-          "name": "Mux",
-        },
-        "out",
-      ],
+    "connections": [],
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
     ],
-    "state": false,
     "type": "output",
+    "width": 16,
   },
 }
 `;
@@ -1855,30 +6007,50 @@ Map {
     "connections": [
       [
         NandChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Nand",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
       [
         NandChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Nand",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "out" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
 }
 `;
@@ -1891,140 +6063,272 @@ Map {
     "connections": [
       [
         NotChip {
-          "in": false,
+          "in": [
+            false,
+          ],
           "name": "Not",
-          "out": true,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "in",
+        0,
       ],
       [
         NotChip {
-          "in": false,
+          "in": [
+            false,
+          ],
           "name": "Not",
-          "out": true,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "in",
+        1,
       ],
       [
         NotChip {
-          "in": false,
+          "in": [
+            false,
+          ],
           "name": "Not",
-          "out": true,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "in",
+        2,
       ],
       [
         NotChip {
-          "in": false,
+          "in": [
+            false,
+          ],
           "name": "Not",
-          "out": true,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "in",
+        3,
       ],
       [
         NotChip {
-          "in": false,
+          "in": [
+            false,
+          ],
           "name": "Not",
-          "out": true,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "in",
+        4,
       ],
       [
         NotChip {
-          "in": false,
+          "in": [
+            false,
+          ],
           "name": "Not",
-          "out": true,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "in",
+        5,
       ],
       [
         NotChip {
-          "in": false,
+          "in": [
+            false,
+          ],
           "name": "Not",
-          "out": true,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "in",
+        6,
       ],
       [
         NotChip {
-          "in": false,
+          "in": [
+            false,
+          ],
           "name": "Not",
-          "out": true,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "in",
+        7,
       ],
       [
         NotChip {
-          "in": false,
+          "in": [
+            false,
+          ],
           "name": "Not",
-          "out": true,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "in",
+        8,
       ],
       [
         NotChip {
-          "in": false,
+          "in": [
+            false,
+          ],
           "name": "Not",
-          "out": true,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "in",
+        9,
       ],
       [
         NotChip {
-          "in": false,
+          "in": [
+            false,
+          ],
           "name": "Not",
-          "out": true,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "in",
+        10,
       ],
       [
         NotChip {
-          "in": false,
+          "in": [
+            false,
+          ],
           "name": "Not",
-          "out": true,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "in",
+        11,
       ],
       [
         NotChip {
-          "in": false,
+          "in": [
+            false,
+          ],
           "name": "Not",
-          "out": true,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "in",
+        12,
       ],
       [
         NotChip {
-          "in": false,
+          "in": [
+            false,
+          ],
           "name": "Not",
-          "out": true,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "in",
+        13,
       ],
       [
         NotChip {
-          "in": false,
+          "in": [
+            false,
+          ],
           "name": "Not",
-          "out": true,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "in",
+        14,
       ],
       [
         NotChip {
-          "in": false,
+          "in": [
+            false,
+          ],
           "name": "Not",
-          "out": true,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "in",
+        15,
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "input",
+    "width": 16,
   },
   "out" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "output",
+    "width": 16,
   },
 }
 `;
@@ -2037,84 +6341,141 @@ Map {
     "connections": [
       [
         NandChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Nand",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
       [
         NandChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Nand",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "b" => {
     "connections": [
       [
         NandChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Nand",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
       [
         NandChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Nand",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "out" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
   "negA" => {
     "connections": [
       [
         NandChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Nand",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "internal",
+    "width": 1,
   },
   "negB" => {
     "connections": [
       [
         NandChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Nand",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "internal",
+    "width": 1,
   },
 }
 `;
@@ -2127,174 +6488,311 @@ Map {
     "connections": [
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        0,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        1,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        2,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        3,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        4,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        5,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        6,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        7,
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "input",
+    "width": 8,
   },
   "out" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
   "i1" => {
     "connections": [
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "internal",
+    "width": 1,
   },
   "i2" => {
     "connections": [
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "internal",
+    "width": 1,
   },
   "i3" => {
     "connections": [
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "internal",
+    "width": 1,
   },
   "i4" => {
     "connections": [
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "internal",
+    "width": 1,
   },
   "i5" => {
     "connections": [
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "internal",
+    "width": 1,
   },
   "i6" => {
     "connections": [
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "internal",
+    "width": 1,
   },
 }
 `;
@@ -2307,306 +6805,616 @@ Map {
     "connections": [
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        0,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        1,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        2,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        3,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        4,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        5,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        6,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        7,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        8,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        9,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        10,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        11,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        12,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        13,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        14,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
+        15,
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "input",
+    "width": 16,
   },
   "b" => {
     "connections": [
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        0,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        1,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        2,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        3,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        4,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        5,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        6,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        7,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        8,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        9,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        10,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        11,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        12,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        13,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        14,
       ],
       [
         OrChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Or",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
+        15,
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "input",
+    "width": 16,
   },
   "out" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ],
     "type": "output",
+    "width": 16,
   },
 }
 `;
@@ -2619,108 +7427,182 @@ Map {
     "connections": [
       [
         NandChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Nand",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
       [
         NandChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Nand",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "b" => {
     "connections": [
       [
         NandChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Nand",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
       ],
       [
         NandChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Nand",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "input",
+    "width": 1,
   },
   "out" => {
     "connections": [],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "output",
+    "width": 1,
   },
   "i1" => {
     "connections": [
       [
         NandChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Nand",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
       ],
       [
         NandChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Nand",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "internal",
+    "width": 1,
   },
   "i2" => {
     "connections": [
       [
         NandChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Nand",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "a",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "internal",
+    "width": 1,
   },
   "i3" => {
     "connections": [
       [
         NandChip {
-          "a": false,
-          "b": false,
+          "a": [
+            false,
+          ],
+          "b": [
+            false,
+          ],
           "name": "Nand",
-          "out": false,
+          "out": [
+            false,
+          ],
+          "width": 1,
         },
         "b",
       ],
     ],
-    "state": false,
+    "state": [
+      false,
+    ],
     "type": "internal",
+    "width": 1,
   },
 }
 `;

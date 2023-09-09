@@ -10,9 +10,9 @@ const name = 'Foo';
 const firstNot = new NotChip();
 const secondNot = new NotChip();
 const pins = new Map<string, ChipPin>([
-  ['a', { state: false, type: 'input', connections: [[firstNot, 'in']] }],
-  ['i1', { state: false, type: 'internal', connections: [[secondNot, 'in']] }],
-  ['out', { state: false, type: 'output', connections: [] }],
+  ['a', { width: 1, state: [false], type: 'input', connections: [[firstNot, 'in']] }],
+  ['i1', { width: 1, state: [false], type: 'internal', connections: [[secondNot, 'in']] }],
+  ['out', { width: 1, state: [false], type: 'output', connections: [] }],
 ]);
 const parts = new Map<Chip, readonly [string, string][]>([
   [firstNot, [['out', 'i1']]],
@@ -30,39 +30,39 @@ describe('Custom Chip', () => {
   it('Allows setting inputs', async () => {
     const chip = new CustomChip(name, pins, parts);
 
-    expect(chip.getPins().get('a')?.state).toBe(false);
+    expect(chip.getPins().get('a')?.state).toStrictEqual([false]);
 
-    chip.setInput('a', true);
+    chip.setInput('a', [true]);
 
-    expect(chip.getPins().get('a')?.state).toBe(true);
+    expect(chip.getPins().get('a')?.state).toStrictEqual([true]);
   });
 
   it('Provides output', async () => {
     const chip = new CustomChip(name, pins, parts);
 
-    expect(chip.getOutput('out')).toBe(false);
+    expect(chip.getOutput('out')).toStrictEqual([false]);
   });
 
   it('Runs internal logic', async () => {
     const chip = new CustomChip(name, pins, parts);
 
-    chip.setInput('a', false);
+    chip.setInput('a', [false]);
     chip.run();
-    expect(chip.getOutput('out')).toBe(false);
+    expect(chip.getOutput('out')).toStrictEqual([false]);
 
-    chip.setInput('a', true);
+    chip.setInput('a', [true]);
     chip.run();
-    expect(chip.getOutput('out')).toBe(true);
+    expect(chip.getOutput('out')).toStrictEqual([true]);
   });
 
   it('Provides helpful error if setting input on an unknown pin', () => {
     const chip = new CustomChip(name, pins, parts);
 
-    expect(() => chip.setInput('b', true)).toThrowError(
+    expect(() => chip.setInput('b', [true])).toThrowError(
       `Input pin 'b' does not exist on 'Foo'. Input pins: a.`,
     );
 
-    expect(() => chip.setInput('out', true)).toThrowError(
+    expect(() => chip.setInput('out', [true])).toThrowError(
       `Input pin 'out' does not exist on 'Foo'. Input pins: a.`,
     );
   });

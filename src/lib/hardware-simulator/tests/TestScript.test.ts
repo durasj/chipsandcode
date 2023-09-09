@@ -17,7 +17,7 @@ const andTst = {
           value: 'a',
         },
         type: 'set',
-        value: 0,
+        value: [false],
       },
       {
         col: 1,
@@ -29,7 +29,7 @@ const andTst = {
           value: 'b',
         },
         type: 'set',
-        value: 0,
+        value: [false],
       },
       {
         col: 1,
@@ -53,7 +53,7 @@ const andTst = {
           value: 'a',
         },
         type: 'set',
-        value: 0,
+        value: [false],
       },
       {
         col: 1,
@@ -65,7 +65,7 @@ const andTst = {
           value: 'b',
         },
         type: 'set',
-        value: 1,
+        value: [true],
       },
       {
         col: 1,
@@ -89,7 +89,7 @@ const andTst = {
           value: 'a',
         },
         type: 'set',
-        value: 1,
+        value: [true],
       },
       {
         col: 1,
@@ -101,7 +101,7 @@ const andTst = {
           value: 'b',
         },
         type: 'set',
-        value: 0,
+        value: [false],
       },
       {
         col: 1,
@@ -125,7 +125,7 @@ const andTst = {
           value: 'a',
         },
         type: 'set',
-        value: 1,
+        value: [true],
       },
       {
         col: 1,
@@ -137,7 +137,7 @@ const andTst = {
           value: 'b',
         },
         type: 'set',
-        value: 1,
+        value: [true],
       },
       {
         col: 1,
@@ -240,7 +240,7 @@ const brokenAndOut = `|   a   |   b   |  out  |
 |   0   |   1   |
 |   1   |   0   |   0   |`;
 
-describe('API call abstraction', () => {
+describe('Test Script', () => {
   it('Runs empty script', async () => {
     const output = new TestScript([], []);
 

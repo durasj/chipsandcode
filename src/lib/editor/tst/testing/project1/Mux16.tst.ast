@@ -104,7 +104,9 @@
           "lineBreaks": 0,
           "offset": 302
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 11
       },
@@ -117,7 +119,9 @@
           "lineBreaks": 0,
           "offset": 312
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 12
       },
@@ -130,7 +134,9 @@
           "lineBreaks": 0,
           "offset": 322
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 13
       },
@@ -155,7 +161,9 @@
           "lineBreaks": 0,
           "offset": 352
         },
-        "value": 1,
+        "value": [
+          true
+        ],
         "col": 1,
         "line": 17
       },
@@ -180,28 +188,24 @@
           "lineBreaks": 0,
           "offset": 382
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
         "col": 1,
         "line": 21
       },
@@ -214,28 +218,24 @@
           "lineBreaks": 0,
           "offset": 409
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          true,
+          true,
+          false,
+          true,
+          false,
+          false
+        ],
         "col": 1,
         "line": 22
       },
@@ -248,7 +248,9 @@
           "lineBreaks": 0,
           "offset": 436
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 23
       },
@@ -273,7 +275,9 @@
           "lineBreaks": 0,
           "offset": 466
         },
-        "value": 1,
+        "value": [
+          true
+        ],
         "col": 1,
         "line": 27
       },
@@ -298,28 +302,24 @@
           "lineBreaks": 0,
           "offset": 496
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          true,
+          false,
+          false,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          false
+        ],
         "col": 1,
         "line": 31
       },
@@ -332,28 +332,24 @@
           "lineBreaks": 0,
           "offset": 523
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
         "col": 1,
         "line": 32
       },
@@ -366,7 +362,9 @@
           "lineBreaks": 0,
           "offset": 550
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 33
       },
@@ -391,7 +389,9 @@
           "lineBreaks": 0,
           "offset": 580
         },
-        "value": 1,
+        "value": [
+          true
+        ],
         "col": 1,
         "line": 37
       },
@@ -416,28 +416,24 @@
           "lineBreaks": 0,
           "offset": 610
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          true,
+          false,
+          true,
+          false,
+          true,
+          false,
+          true,
+          false,
+          true,
+          false,
+          true,
+          false,
+          true,
+          false,
+          true,
+          false
+        ],
         "col": 1,
         "line": 41
       },
@@ -450,28 +446,24 @@
           "lineBreaks": 0,
           "offset": 637
         },
-        "value": {
-          "type": "value",
-          "format": "binary",
-          "value": [
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true
-          ]
-        },
+        "value": [
+          false,
+          true,
+          false,
+          true,
+          false,
+          true,
+          false,
+          true,
+          false,
+          true,
+          false,
+          true,
+          false,
+          true,
+          false,
+          true
+        ],
         "col": 1,
         "line": 42
       },
@@ -484,7 +476,9 @@
           "lineBreaks": 0,
           "offset": 664
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 43
       },
@@ -509,7 +503,9 @@
           "lineBreaks": 0,
           "offset": 694
         },
-        "value": 1,
+        "value": [
+          true
+        ],
         "col": 1,
         "line": 47
       },

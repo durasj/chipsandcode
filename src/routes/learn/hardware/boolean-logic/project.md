@@ -155,17 +155,29 @@ For example, to refer to individual bits in a 16-bit bus named $data$, we use th
 
 An $n$-bit `Not` gate applies the Boolean operation `Not` to every one of the bits in its $n$-bit input bus.
 
+{% EmbeddedHardwareIDE id="ExerciseNot16" celebrate="true" /%}
+_**Simulator 1.9** `Not16` gate with missing implementation._
+
 ## Multi-Bit And
 
 An $n$-bit `And` gate applies the Boolean operation `And` to every one of the $n$ bit-pairs arrayed in its two $n$-bit input buses.
+
+{% EmbeddedHardwareIDE id="ExerciseAnd16" celebrate="true" /%}
+_**Simulator 1.10** `And16` gate with missing implementation._
 
 ## Multi-Bit Or
 
 An $n$-bit `Or` gate applies the Boolean operation `Or` to every one of the $n$ bit-pairs arrayed in its two $n$-bit input buses.
 
+{% EmbeddedHardwareIDE id="ExerciseOr16" celebrate="true" /%}
+_**Simulator 1.11** `Or16` gate with missing implementation._
+
 ## Multi-Bit Multiplexor
 
 An $n$-bit multiplexor is exactly the same as the binary multiplexor described in Figure 1.6, except that the two inputs are each $n$-bit wide; the selector is a single bit.
+
+{% EmbeddedHardwareIDE id="ExerciseMux16" celebrate="true" /%}
+_**Simulator 1.11** `Mux16` gate with missing implementation._
 
 # Multi-Way Versions of Basic Gates
 

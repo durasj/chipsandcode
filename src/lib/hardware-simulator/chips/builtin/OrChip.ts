@@ -1,27 +1,27 @@
 import type { ChipPin } from '../Chip';
 import type Chip from '../Chip';
-import IllegalStateError from '../IllegalStateError';
 
 /**
  * OR gate implemented natively
  */
 class OrChip implements Chip {
-  public readonly name = 'Or';
+  public readonly name = 'Or' as string;
 
-  private a = false;
-  private b = false;
-  private out = false;
+  private a: boolean[];
+  private b: boolean[];
+  private out: boolean[];
 
-  setInput(name: 'a' | 'b', value: boolean) {
-    if (name !== 'a' && name !== 'b')
-      throw new IllegalStateError(`Input pin '${name}' does not exist on 'Or'. Input pins: a, b.`);
+  constructor(private width = 1) {
+    this.a = new Array(width).fill(false);
+    this.b = new Array(width).fill(false);
+    this.out = new Array(width).fill(false);
+  }
 
+  setInput(name: 'a' | 'b', value: boolean[]) {
     this[name] = value;
   }
 
-  getOutput(name: string) {
-    if (name !== 'out')
-      throw new IllegalStateError(`Output pin '${name}' does not exist on 'Or'. Output pins: out.`);
+  getOutput() {
     return this.out;
   }
 
@@ -30,14 +30,14 @@ class OrChip implements Chip {
     // Pin inspection is less performance sensitive than actual execution
 
     return new Map([
-      ['a', { type: 'input', state: this.a, connections: [] }],
-      ['b', { type: 'input', state: this.b, connections: [] }],
-      ['out', { type: 'output', state: this.out, connections: [] }],
+      ['a', { type: 'input', width: this.width, state: this.a, connections: [] }],
+      ['b', { type: 'input', width: this.width, state: this.b, connections: [] }],
+      ['out', { type: 'output', width: this.width, state: this.out, connections: [] }],
     ]);
   }
 
   public run() {
-    this.out = this.a || this.b;
+    this.out = this.a.map((a, i) => a || this.b[i]);
   }
 }
 

@@ -49,6 +49,7 @@
   import TestScript from '$lib/hardware-simulator/tests/TestScript';
   import InvalidDesignError from '../hardware-simulator/chips/InvalidDesignError';
   import examples from '../hardware-simulator/examples';
+  import BinaryInput from './BinaryInput.svelte';
 
   const [popperRef, popperContent] = createPopperActions();
   const popperOptions = {
@@ -270,7 +271,9 @@
 
     try {
       inputPins.forEach(({ name, value }) => {
-        chip!.setInput(name, !!value);
+        console.log('Setting on input', { name, value });
+
+        chip!.setInput(name, value);
       });
 
       chip.run();
@@ -279,6 +282,8 @@
 
       error = '';
     } catch (e) {
+      console.trace('Here');
+
       error = e instanceof Error ? e.message : `Chip execution failed: ${e}`;
     }
   }
@@ -361,13 +366,13 @@
   function reflectPins() {
     if (!chip) return;
 
-    const input = [] as { name: string; value: number }[];
-    const internal = [] as { name: string; value: number }[];
-    const output = [] as { name: string; value: number }[];
+    const input = [] as typeof inputPins;
+    const internal = [] as typeof internalPins;
+    const output = [] as typeof outputPins;
     for (const [name, pin] of chip.getPins()) {
-      if (pin.type === 'input') input.push({ name, value: pin.state ? 1 : 0 });
-      if (pin.type === 'internal') internal.push({ name, value: pin.state ? 1 : 0 });
-      if (pin.type === 'output') output.push({ name, value: pin.state ? 1 : 0 });
+      if (pin.type === 'input') input.push({ name, width: pin.width, value: pin.state });
+      if (pin.type === 'internal') internal.push({ name, width: pin.width, value: pin.state });
+      if (pin.type === 'output') output.push({ name, width: pin.width, value: pin.state });
     }
     inputPins = input;
     internalPins = internal;
@@ -406,9 +411,9 @@
 
   let chip: Chip | undefined;
   let error: string = '';
-  let inputPins: { name: string; value: number }[] = [];
-  let internalPins: { name: string; value: number }[] = [];
-  let outputPins: { name: string; value: number }[] = [];
+  let inputPins: { name: string; width: number; value: boolean[] }[] = [];
+  let internalPins: { name: string; width: number; value: boolean[] }[] = [];
+  let outputPins: { name: string; width: number; value: boolean[] }[] = [];
 
   let tests: TestScript | undefined;
   let testStats: { total: number; passed: number; decorations: string[] } | undefined;
@@ -785,7 +790,7 @@
               <MenuItems
                 as="ul"
                 use={[[popperContent, popperOptions]]}
-                class="menu menu-compact bg-base-100 dark:bg-neutral w-56 p-1.5 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
+                class="menu menu-compact bg-base-100 dark:bg-neutral w-56 p-1.5 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 z-10"
               >
                 {#if apiEnabled}
                   {#await getUserExperiments()}
@@ -799,8 +804,8 @@
                     </MenuItem>
 
                     {#each savedExperiments as saved}
-                      <MenuItem as="li" let:active>
-                        <a href="/experiment/hardware-ide/{saved.id}" class:active>{saved.name}</a>
+                      <MenuItem as="li">
+                        <a href="/experiment/hardware-ide/{saved.id}">{saved.name}</a>
                       </MenuItem>
                     {/each}
                   {:catch error}
@@ -810,8 +815,8 @@
                   {/await}
                 {/if}
 
-                <MenuItem as="li" let:active>
-                  <button on:click={openNewExperiment} class:active
+                <MenuItem as="li">
+                  <button on:click={openNewExperiment}
                     ><Icon src={Plus} class="h-5 w-5 text-primary dark:text-base-content" />Open new</button
                   >
                 </MenuItem>
@@ -820,8 +825,8 @@
                   <span class="!text-base-content/60">Examples</span>
                 </MenuItem>
                 {#each examples as example (example.id)}
-                  <MenuItem as="li" let:active>
-                    <a href="/experiment/hardware-ide/{example.id}" class:active>{example.name}</a>
+                  <MenuItem as="li">
+                    <a href="/experiment/hardware-ide/{example.id}">{example.name}</a>
                   </MenuItem>
                 {/each}
               </MenuItems>
@@ -841,7 +846,7 @@
 
                 <PopoverPanel
                   use={[[popperContent, popperOptions]]}
-                  class="bg-base-100 dark:bg-neutral rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 min-w-[20rem] p-4"
+                  class="bg-base-100 dark:bg-neutral rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 min-w-[20rem] p-4 z-10"
                 >
                   <div class="form-control">
                     <label class="label cursor-pointer">
@@ -892,7 +897,7 @@
                 <MenuItems
                   as="ul"
                   use={[[popperContent, popperOptions]]}
-                  class="menu menu-compact bg-base-100 dark:bg-neutral w-56 p-1.5 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
+                  class="menu menu-compact bg-base-100 dark:bg-neutral w-56 p-1.5 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 z-10"
                 >
                   <MenuItem as="li" let:active>
                     <a href="data:" class:active on:click={download}>
@@ -966,89 +971,94 @@
         </div>
       {/if}
 
-      <div class="self-stretch pt-4 md:pl-4 md:pt-0">
-        <table class="table-auto w-full">
-          <caption class="caption-top bg-base-200 border-base-200 rounded-t-md font-bold"
-            >Input Pins</caption
-          >
+      <div role="group" aria-labelledby="input-pins" class="self-stretch pt-4 md:pl-4 md:pt-0">
+        <div id="input-pins" class="bg-base-200 border border-base-200 font-bold text-center">
+          Input Pins
+        </div>
 
-          <thead>
-            <tr
-              ><th class="border border-base-200 py-1 px-2">Name</th><th
-                class="border border-base-200">Value</th
-              ></tr
+        {#each inputPins as pin, index}
+          <div
+            class="flex flex-row w-full border border-base-200"
+            class:border-t-0={index === 0 || index === inputPins.length - 1}
+          >
+            <label
+              for={`input-${pin.name}`}
+              class="flex items-center px-2 min-w-[2.75rem] border-r border-base-200"
+              >{pin.name}</label
             >
-          </thead>
-          <tbody>
-            {#each inputPins as pin}
-              <tr>
-                <td class="border border-base-200 py-1 px-2">{pin.name}</td>
-                <td class="border border-base-200">
-                  <label>
-                    <div class="sr-only">Value for {pin.name}</div>
-                    <input
-                      type="number"
-                      bind:value={pin.value}
-                      on:change={() => run()}
-                      min="0"
-                      max="1"
-                      required
-                      class="block w-full border-none py-1 px-2 bg-inherit hover:outline focus-visible:outline outline-base-content outline-2"
-                    /></label
-                  ></td
-                >
-              </tr>
-            {/each}
-          </tbody>
-        </table>
+
+            <div class="flex-1 overflow-x-auto">
+              <BinaryInput
+                id={`input-${pin.name}`}
+                width={pin.width}
+                bind:value={pin.value}
+                on:change={() => run()}
+              />
+            </div>
+          </div>
+        {/each}
       </div>
 
-      <div class="self-stretch pt-4 md:pl-4 md:pt-0">
-        <table class="table-auto w-full">
-          <caption class="caption-top bg-base-200 border-base-200 rounded-t-md font-bold"
-            >Internal Pins</caption
-          >
+      <div role="group" aria-labelledby="internal-pins" class="self-stretch pt-4 md:pl-4 md:pt-0">
+        <div id="internal-pins" class="bg-base-200 border border-base-200 font-bold text-center">
+          Internal Pins
+        </div>
 
-          <thead>
-            <tr
-              ><th class="border border-base-200 py-1 px-2">Name</th><th
-                class="border border-base-200">Value</th
-              ></tr
+        {#each internalPins as pin, index}
+          <div
+            class="flex flex-row border border-base-200"
+            class:border-b-0={index < internalPins.length - 1}
+          >
+            <label
+              for={`internal-${pin.name}`}
+              class="flex items-center px-2 min-w-[2.75rem] border-r border-base-200"
+              >{pin.name}</label
             >
-          </thead>
-          <tbody>
-            {#each internalPins as pin}
-              <tr>
-                <td class="border border-base-200 py-1 px-2">{pin.name}</td>
-                <td class="border border-base-200 py-1 px-2">{pin.value ? '1' : '0'}</td>
-              </tr>
-            {/each}
-          </tbody>
-        </table>
+
+            <div class="flex-1 overflow-x-auto">
+              <BinaryInput
+                id={`internal-${pin.name}`}
+                width={pin.width}
+                readonly={true}
+                bind:value={pin.value}
+                on:change={() => run()}
+              />
+            </div>
+          </div>
+        {/each}
       </div>
 
-      <div class="self-stretch pt-4 pr-4 md:pl-4 md:pt-0">
-        <table class="table-auto w-full">
-          <caption class="caption-top bg-base-200 border-base-200 rounded-t-md font-bold"
-            >Output Pins</caption
-          >
+      <div
+        role="group"
+        aria-labelledby="output-pins"
+        class="self-stretch pt-4 pr-4 md:pl-4 md:pt-0"
+      >
+        <div id="output-pins" class="bg-base-200 border border-base-200 font-bold text-center">
+          Output Pins
+        </div>
 
-          <thead>
-            <tr
-              ><th class="border border-base-200 py-1 px-2">Name</th><th
-                class="border border-base-200 py-1 px-2">Value</th
-              ></tr
+        {#each outputPins as pin, index}
+          <div
+            class="flex flex-row border border-base-200"
+            class:border-b-0={index < outputPins.length - 1}
+          >
+            <label
+              for={`output-${pin.name}`}
+              class="flex items-center px-2 min-w-[2.75rem] border-r border-base-200"
+              >{pin.name}</label
             >
-          </thead>
-          <tbody>
-            {#each outputPins as pin}
-              <tr>
-                <td class="border border-base-200 py-1 px-2">{pin.name}</td>
-                <td class="border border-base-200 py-1 px-2">{pin.value ? '1' : '0'}</td>
-              </tr>
-            {/each}
-          </tbody>
-        </table>
+
+            <div class="flex-1 overflow-x-auto">
+              <BinaryInput
+                id={`output-${pin.name}`}
+                width={pin.width}
+                readonly={true}
+                bind:value={pin.value}
+                on:change={() => run()}
+              />
+            </div>
+          </div>
+        {/each}
       </div>
     {:else if controls}
       <div class="italic md:col-span-3 p-4">

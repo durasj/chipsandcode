@@ -104,7 +104,9 @@
           "lineBreaks": 0,
           "offset": 294
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 11
       },
@@ -117,7 +119,9 @@
           "lineBreaks": 0,
           "offset": 305
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 12
       },
@@ -142,7 +146,9 @@
           "lineBreaks": 0,
           "offset": 335
         },
-        "value": 1,
+        "value": [
+          true
+        ],
         "col": 1,
         "line": 16
       },
@@ -167,7 +173,9 @@
           "lineBreaks": 0,
           "offset": 365
         },
-        "value": 1,
+        "value": [
+          true
+        ],
         "col": 1,
         "line": 20
       },
@@ -180,7 +188,9 @@
           "lineBreaks": 0,
           "offset": 376
         },
-        "value": 0,
+        "value": [
+          false
+        ],
         "col": 1,
         "line": 21
       },
@@ -205,7 +215,9 @@
           "lineBreaks": 0,
           "offset": 406
         },
-        "value": 1,
+        "value": [
+          true
+        ],
         "col": 1,
         "line": 25
       },

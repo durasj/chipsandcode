@@ -1,10 +1,14 @@
-import NotImplemented from './NotImplemented';
+import Mux4WayChip from './Mux4WayChip';
 
 /**
- * Mux4Way chip implemented natively
+ * Mux4Way16 chip implemented natively
  */
-class Mux4WayChip extends NotImplemented {
-  public readonly name = 'Mux4Way';
+class Mux4Way16Chip extends Mux4WayChip {
+  public readonly name = 'Mux4Way16';
+
+  constructor() {
+    super(16);
+  }
 }
 
-export default Mux4WayChip;
+export default Mux4Way16Chip;
