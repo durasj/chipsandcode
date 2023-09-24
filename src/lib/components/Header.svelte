@@ -18,6 +18,7 @@
   } from '@rgossiaux/svelte-headlessui';
 
   import { page } from '$app/stores';
+  import { navigating } from '$app/stores';
   import ThemeSwitch from './ThemeSwitch.svelte';
 
   const logo = {
@@ -74,6 +75,26 @@
     },
     [],
   );
+
+  // For when navigation is taking longer than 200ms
+  let slowNavigation = false;
+  let slowNavigationTimeout: number | undefined = undefined;
+  $: {
+    const isClientSide = typeof window !== 'undefined';
+
+    if (isClientSide && $navigating && !slowNavigationTimeout) {
+      slowNavigationTimeout = window.setTimeout(() => {
+        slowNavigation = true;
+        slowNavigationTimeout = undefined;
+      }, 200);
+    } else if (isClientSide) {
+      slowNavigation = false;
+      if (slowNavigationTimeout) {
+        window.clearInterval(slowNavigationTimeout);
+        slowNavigationTimeout = undefined;
+      }
+    }
+  }
 </script>
 
 <div class="relative">
@@ -83,6 +104,10 @@
         <a href="/" title={`${logo.title} home`} aria-label={`${logo.title} home`}>
           <img class="h-8 w-auto sm:h-10" src={logo.path} alt="" />
         </a>
+
+        {#if slowNavigation}
+          <span class="loading loading-dots loading-md ml-4" />
+        {/if}
       </div>
 
       <Popover class="relative md:hidden">
