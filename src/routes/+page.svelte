@@ -4,13 +4,13 @@
   import Header from 'src/lib/components/Header.svelte';
   import Footer from 'src/lib/components/Footer.svelte';
 
-  import binary from '$lib/images/binary.png?run&width=176';
-  import chip from '$lib/images/chip.png?run&width=176';
-  import hdl from '$lib/images/hdl.png?run&width=176';
-  import keyboard from '$lib/images/keyboard.png?run&width=176';
-  import matrix from '$lib/images/matrix.png?run&width=176';
-  import pcb from '$lib/images/pcb.png?run&width=176';
-  import pixels from '$lib/images/pixels.png?run&width=176';
+  import binary from '$lib/images/binary.png?as=run&w=176';
+  import chip from '$lib/images/chip.png?as=run&w=176';
+  import hdl from '$lib/images/hdl.png?as=run&w=176';
+  import keyboard from '$lib/images/keyboard.png?as=run&w=176';
+  import matrix from '$lib/images/matrix.png?as=run&w=176';
+  import pcb from '$lib/images/pcb.png?as=run&w=176';
+  import pixels from '$lib/images/pixels.png?as=run&w=176';
 </script>
 
 <svelte:head>
