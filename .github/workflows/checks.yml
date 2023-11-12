@@ -19,6 +19,11 @@ jobs:
         env:
           VITE_API_PREFIX: /api
 
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
   cypress-run:
     runs-on: ubuntu-22.04
     steps:

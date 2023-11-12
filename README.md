@@ -1,8 +1,26 @@
-# Chips and Code
+<p align="center">
+  <a href="https://chipsandcode.com/">
+    <img src="https://chipsandcode.com/logo_version.svg" alt="Chips and Code logo" width="72" height="72">
+  </a>
+</p>
 
-<img src="./demo.gif" width="100%">
+<h3 align="center">Chips and Code</h3>
+
+<p align="center">
+  Wondering how computers work? Find out by embarking on the journey of building your own computer from scratch, from chips to code. No prerequisites and for free from the browser.
+  <br>
+  <a href="https://chipsandcode.com/"><strong>Visit »</strong></a>
+</p>
+
+<p align="center">
+  <a href="https://snyk.io/test/github/durasj/chipsandcode"><img src="https://snyk.io/test/github/durasj/chipsandcode/badge.svg" alt="Known Vulnerabilities"></a>
+  <a href="https://codeclimate.com/github/durasj/chipsandcode"><img src="https://img.shields.io/codeclimate/maintainability/durasj/chipsandcode" alt="Maintainability rating"></a>
+  <a href="https://codecov.io/gh/durasj/chipsandcode"><img src="https://img.shields.io/codecov/c/gh/durasj/chipsandcode" alt="Unit test code coverage"></a>
+</p>
 
 ## Features
+
+<img src="./demo.gif" width="100%">
 
 Currently contains and fully supports the first week of Nand2Tetris.
 Can work offline and supports installation as a PWA.
