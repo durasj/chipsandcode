@@ -15,7 +15,7 @@
 <p align="center">
   <a href="https://snyk.io/test/github/durasj/chipsandcode"><img src="https://snyk.io/test/github/durasj/chipsandcode/badge.svg" alt="Known Vulnerabilities"></a>
   <a href="https://codeclimate.com/github/durasj/chipsandcode"><img src="https://img.shields.io/codeclimate/maintainability/durasj/chipsandcode" alt="Maintainability rating"></a>
-  <a href="https://codecov.io/gh/durasj/chipsandcode"><img src="https://img.shields.io/codecov/c/gh/durasj/chipsandcode" alt="Unit test code coverage"></a>
+  <a href="https://codecov.io/gh/durasj/chipsandcode" ><img src="https://codecov.io/gh/durasj/chipsandcode/graph/badge.svg?token=OJXSAPR87F" alt="Unit Test Coverage"/></a>
 </p>
 
 ## Features
