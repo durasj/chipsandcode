@@ -224,6 +224,28 @@ describe('Chips and Code workbench', () => {
     cy.findByLabelText('Chip output out').should('have.value', 'g1');
   });
 
+  it('Explains an unwired extra part and recovers when it is removed', () => {
+    openNotWorkbench();
+    cy.findByRole('button', { name: /^Nand\b/ }).click();
+    cy.findByRole('button', { name: /^Nand\b/ }).click();
+    cy.findByRole('button', { name: 'Select source input in' }).click();
+    cy.findByRole('button', { name: 'Connect to part 1 Nand input a' }).click();
+    cy.findByRole('button', { name: 'Connect to part 1 Nand input b' }).click();
+    cy.findByRole('button', { name: 'Select source part 1 Nand output' }).click();
+    cy.findByRole('button', { name: 'Connect chip output out' }).click();
+    cy.contains(
+      'Part 2 (Nand) still needs input a. Connect it, or remove that part in Connections.',
+    ).should('be.visible');
+    cy.findByRole('button', { name: 'Test circuit' }).should('not.exist');
+    cy.findByRole('button', { name: 'Continue' }).should('not.exist');
+    openConnections();
+    cy.findByRole('button', { name: 'Remove part 2, Nand' }).click();
+    cy.findByLabelText('Part 2 Nand input a').should('not.exist');
+    cy.findByRole('button', { name: 'Test circuit' }).click();
+    cy.contains('2 of 2 combinations work.');
+    cy.findByRole('button', { name: 'Continue' }).should('be.visible');
+  });
+
   it('Solves in code and keeps visual and HDL representations synchronized', () => {
     openNotWorkbench();
     cy.findByRole('combobox', { name: 'Editor view' }).should('have.value', 'visual');

@@ -51,10 +51,36 @@
   let undoCircuit: Circuit | null = null;
   let missionHeading: HTMLHeadingElement;
   let continueButton: HTMLButtonElement | undefined = undefined;
-  $: guidedInstruction = nextBuildInstruction(circuit, selectedSource, report?.success === true);
+  $: guidedInstruction = nextBuildInstruction(
+    circuit,
+    selectedSource,
+    report?.success === true,
+    !!live.result,
+    live.error,
+    codeError,
+    wiringMessage,
+  );
 
-  function nextBuildInstruction(value: Circuit, source: string, passed: boolean) {
-    if (missionId !== 'not' || completed.includes('not')) return wiringMessage;
+  function nextBuildInstruction(
+    value: Circuit,
+    source: string,
+    passed: boolean,
+    runnable: boolean,
+    simulationError: string,
+    sourceError: string,
+    currentWiringMessage: string,
+  ) {
+    if (sourceError) return 'Fix the HDL error above to resume the circuit.';
+    const outputsConnected = mission.outputs.every((pin) => !!value.outputs[pin]);
+    if (outputsConnected) {
+      for (const [index, gate] of value.gates.entries()) {
+        const missingPin = gatePins(gate.type).find((pin) => !gate.inputs[pin]);
+        if (missingPin)
+          return `Part ${index + 1} (${gate.type}) still needs input ${missingPin}. Connect it, or remove that part in Connections.`;
+      }
+      if (!runnable && simulationError) return `Check the connections: ${simulationError}`;
+    }
+    if (missionId !== 'not' || completed.includes('not')) return currentWiringMessage;
     if (passed) return 'Both input values work. Your first circuit is ready.';
     if (!value.gates.length) return 'Start by adding one NAND gate above.';
     const part = value.gates[0];
@@ -70,6 +96,10 @@
       return source === part.id
         ? 'Now select the output circle on the right to finish the connection.'
         : 'Select the output dot on the right of the NAND gate.';
+    if (!runnable)
+      return simulationError
+        ? `Check the connections: ${simulationError}`
+        : 'Complete every connection before testing.';
     return 'The circuit is connected. Test it with both possible input values.';
   }
 
@@ -811,6 +841,9 @@
                 disabled={!code}>{copied ? 'Copied' : 'Copy code'}</button
               >
             </div>
+            {#if editorMode === 'code' && !live.result && !codeError && mission.outputs.every((pin) => !!circuit.outputs[pin])}
+              <div class="wiring-instruction"><p aria-live="polite">{guidedInstruction}</p></div>
+            {/if}
             <div class="code-editor" class:has-error={!!codeError}>
               <div class="line-numbers" aria-hidden="true">
                 <div style={`transform: translateY(-${codeScroll}px)`}>

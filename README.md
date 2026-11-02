@@ -34,7 +34,7 @@ A separate 48-second visual introduction is available through a quiet link at th
 
 See the [interaction design](docs/computer-layers-design.md), [art direction](docs/art-direction.md), and [content audit](docs/content-audit.md) for the design, its relationship to the existing material, and implementation boundaries.
 
-The animation below shows the original hardware IDE, which remains accessible from the application footer.
+The animation below shows the original hardware IDE, which remains accessible from Menu.
 
 <img src="./demo.gif" width="100%">
 
