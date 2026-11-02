@@ -20,25 +20,26 @@
 
 ## Features
 
-### Build from signals to software
+### Break down the magic of computers
 
-The homepage retains the original invitation: **“Wondering how computers work?”** A quiet, scroll-driven journey moves from dark signals and logic to light software. One learning action starts at the foundation. Parallax diagrams explain the relationship between the layers without a mission picker, playback dashboard, or editor controls on the homepage. Reduced motion uses a static presentation; mobile layouts keep each explanation with its diagram.
+The homepage is a native-scroll visual journey: a complete computer separates into its screen, board, memory, and processor, then the view moves inside the chip to binary signals. Mobile and reduced-motion layouts show the same sequence without requiring animation. The original chip/code mark and indigo branding remain.
 
-Learning starts with a single signal. Turn it on and off, then explore a supplied NAND gate one input combination at a time. Continue into NOT, AND, OR, XOR, Mux, and DMux. The first construction introduces adding a part, choosing a source, connecting pins, and testing the result through instructions that follow the actual circuit state.
+One shared navigation—**Learn, Tools, About**—covers the entire site. Old simulator and reading URLs redirect to the new interface, preserving saved experiment IDs and bookmarks. No legacy course or IDE chrome is exposed.
 
-The construction workspace begins in Visual mode. A compact view selector makes Code and Split available when wanted; saved view preferences are retained. Direct visual wiring and real HDL share one circuit model, parser, and simulator. Connection menus, hints, reference explanations, and signal analysis stay secondary. Test every input case before saving a chip. Invalid code stays editable and cannot pass a test against an older circuit.
+**Learn** starts with one signal, introduces NOT and AND through observation, then explains NAND and why it is a useful primitive. Six construction exercises follow: NOT, AND, OR, XOR, Mux, and DMux. Visual, Code, and Split share the actual HDL parser and simulator. Wiring guidance, exhaustive tests, recoverable drafts, and optional theory support the same progression. Progress and learning drafts remain on the current device.
 
-Progress and drafts are stored on the current device. Optional reference material, original reading, and the full hardware IDE remain accessible. The current playable material is single-bit logic; arithmetic, memory, architecture, and software are the path ahead, not implemented construction layers.
+Short reference entries link to complete, corrected explanations in the same visual style. All existing Boolean logic material is covered: functions and canonical expressions, gate composition, HDL and testing, 16-bit buses, multi-way routing, and design tradeoffs. Sources and CC BY-NC-SA attribution remain visible.
 
-A separate 48-second visual introduction is available through a quiet link at the end of the homepage. It has native video controls, captions, and a text transcript. The current film is silent; see [intro production](docs/intro-production.md) for its assets and narration status.
+**Tools** contains three working workspaces:
 
-See the [interaction design](docs/computer-layers-design.md), [art direction](docs/art-direction.md), and [content audit](docs/content-audit.md) for the design, its relationship to the existing material, and implementation boundaries.
+- **Hardware simulator:** Monaco HDL and test editing, signal inspection, expected/actual output, examples, local drafts, saved experiment links, and ZIP export.
+- **Boolean functions:** all sixteen two-input functions, editable truth tables, canonical expressions, equivalence checks, and NAND-only HDL. Every generated function is tested through the existing parser and simulator.
+- **Buses & routing:** Not16, And16, Or16, Mux16, Or8Way, Mux4Way16, Mux8Way16, DMux4Way, and DMux8Way, with validated inputs, selectors, and live outputs. These are dedicated logic models; the general HDL simulator does not yet support bus construction.
 
-The animation below shows the original hardware IDE, which remains accessible from Menu.
+The existing material ends at Boolean logic. Arithmetic, clocked memory, processors, assembly, and higher-level software remain future layers. A separate optional 48-second introductory film has captions and a transcript; its current master is silent. See [intro production](docs/intro-production.md).
 
-<img src="./demo.gif" width="100%">
+See the [interaction design](docs/computer-layers-design.md), [art direction](docs/art-direction.md), and [content audit](docs/content-audit.md) for behavior, source coverage, and boundaries.
 
-Contains the existing first-week Boolean logic material and six executable single-bit construction exercises. Bus and multi-way extensions are described in the reference; their construction support is planned.
 Can work offline and supports installation as a PWA.
 No cloud dependency for the basic functionality.
 
@@ -87,7 +88,7 @@ npm ci
 npm run dev
 ```
 
-The app uses Svelte 5, SvelteKit 3, Vite 8, and TypeScript 6 (the current version supported by SvelteKit and svelte-check). The editor uses Monaco 0.57. UI menus and tabs use Bits UI. Tailwind 3 and daisyUI 3 support the existing course and IDE pages. The layered landing and workbench use component styles with the original indigo brand.
+The app uses Svelte 5, SvelteKit 3, Vite 8, and TypeScript 6 (the current version supported by SvelteKit and svelte-check). The editor uses Monaco 0.57. UI menus and tabs use Bits UI. Tailwind 3 and daisyUI 3 support the existing course and IDE pages. The shared shell, narrative landing, learning workspace, full reading, and tools use explicit high-contrast component styles with the original indigo brand.
 
 Lessons, built-in examples, the simulator, local drafts and ZIP downloads work without a database. Saved experiments use the same-origin SvelteKit `/api/experiments` routes and require `DATABASE_URL` from a Neon Postgres database. Copy `.env.template` to `.env.local` and set the URL locally when working on persistence. Never commit credentials or migration exports.
 

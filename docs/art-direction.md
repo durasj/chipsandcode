@@ -1,55 +1,41 @@
 # Chips and Code: visual direction
 
-## Identity
+## Identity and composition
 
-Use the original Chips and Code logo assets and indigo `#4f46e5`. The product remains Chips and Code. The redesign should feel precise, capable, and intriguing: an interactive machine that exposes its structure. Technical details are part of the visual identity, not decorative text scattered over a generic game skin.
+Keep the original chip/code mark and indigo `#4f46e5`. Use a mature, precise visual language: technical illustration, clear typography, responsive signals, and restrained depth. Avoid fictional geography, currency, mascots, ornamental counters, and gamification unrelated to constructing a computer.
 
-## A page made of computer layers
+The landing opens “Break down the magic of computers” with “By building your own.” A recognizable computer is the main visual. Native scrolling separates its actual components, then the view moves into the processor and resolves into signals. This is one connected visual transformation, not a succession of unrelated cards. The pale conclusion points from signals back toward software.
 
-The original homepage question—“Wondering how computers work?”—leads the experience. Keep its promise: build from chips to code, with no prerequisites, free in the browser. Avoid introducing HDL, chip selection, test controls, and progress statistics before the visitor has begun.
+One learning action is repeated at the end. Learn, Tools, About stay visible as the main navigation. The optional film is a secondary text link. No chapter tabs, autoplay timeline, or playback dashboard appears in the landing.
 
-The homepage follows native scrolling through a dark logic foundation toward light software. A sticky technical diagram changes with the current layer and moves at different rates from its supporting planes. Each section adds one idea and one short explanation. Mobile and reduced-motion layouts keep static diagrams next to their descriptions. Do not hijack scrolling, require animation, or add chapter tabs, playback buttons, or timecodes.
+## Palette
 
-Use one prominent learning action in the opening, repeated at the conclusion. Both enter the same foundational learning flow. Keep navigation in one quiet menu and the separate 48-second introduction behind a text link at the end. Its media production and narration status remain documented in [intro production](intro-production.md).
+| Role | Typical color |
+| --- | --- |
+| Shared canvas | `#080b13` |
+| Working panel | `#131725` |
+| Primary ink | `#f4f3ff` |
+| Secondary ink | `#b8bfd1` |
+| Original brand | `#4f46e5` |
+| Bright signal/link | `#c0b7ff` |
+| Inactive functional wire | `#747d99` |
+| Pale narrative surface | `#f1eff8` |
+| Ink on pale surface | `#161327` |
 
-Connected traces, registers, instruction patterns, and code should explain the current layer. Make the dependency from simple to complex legible. The later layers show the intended journey; a concise availability note explains that logic is playable today. Animation must follow scrolling and support the explanation, not compete with it.
+These are explicit foreground/background pairs. Do not let a browser theme preference change only one side of a pair. Keep ordinary text at least 4.5:1 and meaningful non-text states/controls at least 3:1 against their surroundings. Dividers and decorative traces may be subtler, but an inactive signal must still be visible. Focus rings must work on their surrounding surface; a light CTA needs a dark external ring.
 
-The result should feel closer to a schematic, instrument panel, or software development environment than a miniature landscape. Avoid fictional place names, collectible gems, mascots, scenery, and unrelated reward metaphors.
+## Typography and interaction
 
-## Palette and material
+Use a clean sans-serif for navigation, explanations, and body copy. Monospace belongs to values, signals, code, and compact technical labels. Large headlines are sparse; reading paragraphs use comfortable line lengths and line spacing. Avoid decorative jargon and tiny labels used to fit redundant content.
 
-| Role                  | Color     |
-| --------------------- | --------- |
-| Deep background       | `#0b0d14` |
-| Working surface       | `#12151f` |
-| Primary text          | `#f0f0f7` |
-| Secondary text        | `#a1a5b6` |
-| Dividers              | `#303446` |
-| Original brand        | `#4f46e5` |
-| Bright signal / focus | `#a79fff` |
+Learning adds one idea at a time: signal, NOT, AND, NAND, then construction. Keep the current instruction close to its diagram. Show advanced controls and longer theory when requested. Visual and HDL remain equal authoring views through one compact selector, with a useful desktop Split layout and readable single views on mobile.
 
-Use restrained indigo illumination against dark neutral surfaces. Higher stack layers introduce pale surfaces as a meaningful shift in abstraction. Keep the workbench low-glare and high-contrast. Active signals must include readable `0`/`1` values and names; glow alone is insufficient.
+Tools have the same canvas, type, boundaries, and focus behavior as Learn. The simulator can expose editing and debugging detail because that is its task; its default screen should still emphasize code and signal behavior. Full reading uses the same visual style and contextual tool links, not legacy course chrome.
 
-Small corner radii, fine borders, deliberate spacing, and flat technical controls keep the interface coherent. Avoid oversized rounded cards or ornamental skeuomorphism. Let visual depth concentrate in the hero and explanatory diagrams, with working panels remaining visually stable.
+## Motion, access, and small screens
 
-## Typography
+Scroll owns the landing animation. Do not hijack scrolling or add continuous decorative movement. Mobile and reduced-motion views show a static sequence with the same explanations. Values and names accompany state colors. Meaningful diagrams have textual equivalents.
 
-Use the same clean sans-serif family throughout navigation, instructions, and the reference, with strong but restrained headline scale. Body and instructional copy should be readable at ordinary viewing distances; avoid shrinking labels to fit redundant content. Use monospace for code, pin names, binary values, layer numbers, and compact instrument labels. Prefer concrete terms—signals, gates, interface, test, verify—to fictional mission language.
+Native controls provide switches, selectors, disclosures, and video playback. Keep a visible focus indicator and a stable progression after each action. Layouts fit 320px; code and broad circuit surfaces may scroll within their own boundaries. No page-level horizontal overflow should be required.
 
-## Workbench
-
-Reveal tools as their purpose becomes clear. The first screen has one signal switch. The next introduces two NAND inputs and asks the learner to read one output at a time. The first constructed chip provides a concrete next instruction based on its current wiring.
-
-The editable circuit and HDL remain peers. Start a new workspace in Visual mode and offer Code or Split through one compact selector; retain an existing preference. Split view shows the relationship between a pin assignment and a wire without shrinking either into a decorative inset. Preserve readable single-view options on narrow screens.
-
-Present the chip contract once, make direct wiring the main construction action, and keep alternate connection menus in a disclosure. Test evidence appears when testing is relevant. Put signal analysis, hints, and explanations behind explicit secondary actions. A verified circuit has one save action. Invalid code is an ordinary, recoverable state with a concise diagnostic.
-
-## Reference
-
-The reference uses the same dark technical surfaces and indigo selection states. The interactive models keep signals, expressions, and truth-table rows connected. Use source examples and diagrams without pretending they are new construction levels. Preserve the original source links and licensing.
-
-## Accessibility and responsiveness
-
-Native controls provide the signal switches, view selection, disclosures, video controls, and wiring actions. Visible labels should match their accessible names. Focus must remain obvious on dark and light surfaces. Numerical and textual state accompany color. Responsive layouts must work at 320px without making the entire page overflow; a clearly bounded code or schematic surface may scroll internally.
-
-Animations should explain selection or a real signal state. Honor reduced motion and keep sound optional. No decorative motion should compete with reading code or tracing a connection.
+See [interaction design](computer-layers-design.md) and [film production](intro-production.md).

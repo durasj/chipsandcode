@@ -1,3 +1,5 @@
+import { checkAccessibility, expectNoPageOverflow, exploreNotAnd } from '../support/checks';
+
 const inverterHDL = `CHIP Not {
     IN in;
     OUT out;
@@ -6,7 +8,7 @@ const inverterHDL = `CHIP Not {
 }`;
 
 function visitGame(progress: string[] = ['nand']) {
-  cy.visit('/', {
+  cy.visit('/learn', {
     onBeforeLoad(window) {
       window.localStorage.clear();
       if (progress.length) {
@@ -18,7 +20,6 @@ function visitGame(progress: string[] = ['nand']) {
 }
 
 function openNotWorkbench() {
-  cy.get('.opening').findByRole('button', { name: 'Continue learning' }).click();
   cy.findByRole('heading', { name: 'Invert a signal' }).should('be.visible');
 }
 
@@ -50,44 +51,15 @@ function buildInverter() {
 }
 
 function openReference() {
-  cy.contains('summary', 'Menu').click();
-  cy.findByRole('navigation', { name: 'Workspace menu' })
-    .findByRole('button', { name: 'Reference' })
-    .click();
+  cy.findByRole('button', { name: 'Reference' }).click();
   cy.findByRole('heading', { level: 1, name: 'Reference' }).should('have.focus');
-}
-
-function expectNoPageOverflow() {
-  cy.document().should((document) => {
-    const viewport = document.documentElement.clientWidth;
-    const pageWidth = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth);
-    expect(pageWidth, 'page content fits the viewport').to.be.at.most(viewport + 1);
-  });
-}
-
-function checkWorkbenchAccessibility() {
-  cy.checkA11y(undefined, undefined, (violations) => {
-    if (violations.length) {
-      throw new Error(
-        violations
-          .map(
-            (violation) =>
-              `${violation.id}:\n${violation.nodes
-                .map((node) => `${JSON.stringify(node.target)}\n${node.failureSummary}`)
-                .join('\n')}`,
-          )
-          .join('\n\n'),
-      );
-    }
-  });
 }
 
 describe('Chips and Code workbench', () => {
   beforeEach(() => visitGame());
 
-  it('Starts with one signal, adds NAND, and continues to the first circuit in order', () => {
+  it('Explores signal, NOT and AND before NAND, then builds the first circuit in order', () => {
     visitGame([]);
-    cy.get('.opening').findByRole('button', { name: 'Start learning' }).click();
     cy.findByRole('heading', { name: 'A computer starts with a signal.' }).should('be.visible');
     cy.findByRole('button', { name: 'Continue' }).should('not.exist');
     cy.findByRole('switch', { name: 'Signal' })
@@ -105,7 +77,7 @@ describe('Chips and Code workbench', () => {
       .should('have.attr', 'aria-checked', 'false');
     cy.findByRole('img', { name: 'Output 0' }).should('be.visible');
     cy.findByRole('button', { name: 'Continue' }).click();
-    cy.findByRole('heading', { name: 'Two signals. One rule.' }).should('be.visible');
+    exploreNotAnd();
     cy.findByLabelText('HDL source').should('not.exist');
     cy.findByLabelText('Editor view').should('not.exist');
     cy.screenshot('nand-guided-experiment', { capture: 'viewport' });
@@ -126,9 +98,29 @@ describe('Chips and Code workbench', () => {
     cy.findByRole('button', { name: 'Input b 1' }).click();
     cy.findByRole('button', { name: 'Output 1' }).click();
     cy.contains('NAND outputs 0 only when both inputs are 1.');
+    cy.findByRole('heading', { name: 'Why build from NAND?' }).should('be.visible');
+    cy.contains('summary', 'Go deeper: why NAND is universal').click();
+    cy.contains('summary', 'See its code').parent('details').should('not.have.attr', 'open');
     cy.injectAxe();
-    checkWorkbenchAccessibility();
+    checkAccessibility();
+    cy.findByRole('link', { name: /Read the full explanation/ }).click();
+    cy.location('pathname').should('eq', '/learn/reference/boolean-logic/background');
+    cy.location('hash').should('eq', '#universality');
+    cy.window().then((window) => {
+      expect(
+        JSON.parse(window.localStorage.getItem('chipsandcode.progress.v1') || '[]'),
+      ).not.to.include('nand');
+    });
+    cy.findByRole('navigation', { name: 'Main navigation' })
+      .findByRole('link', { name: 'Learn' })
+      .click();
+    cy.get('.computer-game').should('have.attr', 'data-ready', 'true');
+    cy.findByRole('heading', { name: 'Why build from NAND?' }).should('be.visible');
     cy.findByRole('button', { name: 'Continue' }).click();
+    cy.window()
+      .its('sessionStorage')
+      .invoke('getItem', 'chipsandcode.nand-observation.v1')
+      .should('eq', null);
     cy.findByRole('heading', { name: 'NAND, explored.' }).should('be.visible');
     cy.window()
       .its('localStorage')
@@ -161,14 +153,11 @@ describe('Chips and Code workbench', () => {
     cy.findByRole('heading', { name: 'NOT works.' }).should('be.visible');
     cy.reload();
     cy.get('.computer-game').should('have.attr', 'data-ready', 'true');
-    cy.contains('summary', 'Menu').click();
-    cy.findByRole('navigation', { name: 'Workspace menu' })
-      .findByRole('button', { name: 'Your chips' })
-      .click();
+    cy.findByRole('button', { name: 'Your chips' }).click();
     cy.findByRole('button', { name: /^Reopen Not/ }).should('be.visible');
     cy.findByRole('button', { name: /^Reopen And/ }).should('not.exist');
     cy.injectAxe();
-    checkWorkbenchAccessibility();
+    checkAccessibility();
     cy.findByRole('button', { name: 'Continue learning' }).click();
     cy.findByRole('heading', { name: 'Combine conditions' }).should('be.visible');
   });
@@ -280,7 +269,7 @@ describe('Chips and Code workbench', () => {
     cy.findByRole('button', { name: 'Test circuit' }).click();
     cy.contains('2 of 2 combinations work.');
     cy.injectAxe();
-    checkWorkbenchAccessibility();
+    checkAccessibility();
     cy.screenshot('computer-workbench-split', { capture: 'fullPage' });
   });
 
@@ -313,10 +302,9 @@ describe('Chips and Code workbench', () => {
   });
 
   [320, 1280].forEach((width) => {
-    it(`Keeps the homepage and editor views within a ${width}px viewport`, () => {
+    it(`Keeps every editor view within a ${width}px viewport`, () => {
       cy.viewport(width, 900);
       expectNoPageOverflow();
-      if (width === 320) cy.screenshot('minimal-home-mobile', { capture: 'fullPage' });
       openNotWorkbench();
       expectNoPageOverflow();
       buildInverter();

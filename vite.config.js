@@ -27,7 +27,7 @@ const config = defineConfig(() => {
           adapter: adapter({ runtime: 'nodejs26.x' }),
           preprocess: vitePreprocess({ script: true }),
           prerender: {
-            entries: ['*', '/learn/hardware/boolean-logic'],
+            entries: ['*', '/learn/reference', '/learn/reference/boolean-logic', '/learn/hardware/boolean-logic'],
           },
           serviceWorker: { register: false },
         },

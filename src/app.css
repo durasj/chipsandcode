@@ -3,46 +3,186 @@
 @tailwind components;
 @tailwind utilities;
 
-*:focus {
-    @apply !outline-primary;
+:root {
+  color-scheme: dark;
+  background: #080b13;
+  color: #f4f3ff;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+}
+body {
+  margin: 0;
+  min-width: 280px;
+}
+.app-shell {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  background: #080b13;
+  color: #f4f3ff;
+}
+#page-content {
+  flex: 1;
+  min-width: 0;
+}
+#page-content:focus {
+  outline: none;
+}
+*:focus-visible {
+  outline: 2px solid #c5bdff;
+  outline-offset: 4px;
+}
+[hidden] {
+  display: none !important;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+button,
+summary,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+button:not(:disabled),
+summary {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: default;
+}
+.page-prose {
+  max-width: 1000px;
+  margin: auto;
+  padding: 60px max(24px, 5%) 100px;
+  color: #e9ecf6;
+}
+.page-prose .eyebrow {
+  margin: 0 0 24px;
+  color: #b8afff;
+  font:
+    12px ui-monospace,
+    monospace;
+  letter-spacing: 0.08em;
+}
+.page-prose h1 {
+  font-size: clamp(38px, 5vw, 64px);
+  line-height: 1.06;
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  margin: 0 0 28px;
+  color: #f6f4ff;
+}
+.page-prose h2 {
+  font-size: 25px;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  margin: 46px 0 16px;
+  color: #f6f4ff;
+}
+.page-prose h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 28px 0 12px;
+}
+.page-prose p,
+.page-prose li {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #bac3d8;
+}
+.page-prose p {
+  margin: 0 0 18px;
+}
+.page-prose .lead {
+  max-width: 650px;
+  font-size: clamp(18px, 2vw, 21px);
+  line-height: 1.6;
+  color: #d0d6e7;
+}
+.page-prose a {
+  color: #c0b7ff;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.page-prose a:hover {
+  color: #eeeaff;
+}
+.page-prose ul {
+  list-style: disc;
+  padding-left: 23px;
+}
+.page-prose section {
+  scroll-margin-top: 30px;
+}
+.page-prose details {
+  border-top: 1px solid #414a63;
+  margin: 28px 0;
+  padding-top: 18px;
+}
+.page-prose summary {
+  min-height: 44px;
+  color: #e0dfff;
+}
+@media (max-width: 520px) {
+  .page-prose {
+    padding: 36px 20px 70px;
+  }
 }
 
 /* Overrides for DaisyUI components */
 
 .btn {
-    @apply font-semibold text-base;
+  @apply font-semibold text-base;
 }
 
 .btn.btn-link {
-    @apply no-underline text-base-content no-animation;
+  @apply no-underline text-base-content no-animation;
 }
-.btn.btn-link.btn-active, .btn.btn-link:hover {
-    @apply text-primary;
+.btn.btn-link.btn-active,
+.btn.btn-link:hover {
+  @apply text-primary;
 }
-[data-theme="dark"] .btn.btn-link.btn-active,  [data-theme="dark"] .btn.btn-link:hover {
-    @apply text-white;
+[data-theme='dark'] .btn.btn-link.btn-active,
+[data-theme='dark'] .btn.btn-link:hover {
+  @apply text-white;
 }
 
 .btn.btn-outline {
-    @apply border-gray-200 shadow-sm;
+  @apply border-gray-200 shadow-sm;
 }
-.btn.btn-outline:hover, .btn.btn-outline.btn-active {
-    @apply bg-base-200 text-primary;
+.btn.btn-outline:hover,
+.btn.btn-outline.btn-active {
+  @apply bg-base-200 text-primary;
 }
-[data-theme="dark"] .btn.btn-outline {
-    @apply border-zinc-500 bg-neutral;
+[data-theme='dark'] .btn.btn-outline {
+  @apply border-zinc-500 bg-neutral;
 }
-[data-theme="dark"] .btn.btn-outline:hover, [data-theme="dark"] .btn.btn-outline.btn-active {
-    @apply bg-base-100 text-white;
-}
-
-.btn.btn-outline.btn-success, .btn.btn-outline.btn-warning, .btn.btn-outline.btn-error {
-    @apply border-gray-200;
-}
-[data-theme="dark"] .btn.btn-outline.btn-success, [data-theme="dark"] .btn.btn-outline.btn-warning, [data-theme="dark"] .btn.btn-outline.btn-error {
-    @apply border-zinc-500 bg-neutral;
+[data-theme='dark'] .btn.btn-outline:hover,
+[data-theme='dark'] .btn.btn-outline.btn-active {
+  @apply bg-base-100 text-white;
 }
 
-.menu :where(li:not(.menu-title):not(:empty)) > :where(:not(ul).active), .menu :where(li:not(.menu-title):not(:empty)) > :where(*:not(ul):active) {
-    @apply bg-base-content/10 text-base-content;
+.btn.btn-outline.btn-success,
+.btn.btn-outline.btn-warning,
+.btn.btn-outline.btn-error {
+  @apply border-gray-200;
+}
+[data-theme='dark'] .btn.btn-outline.btn-success,
+[data-theme='dark'] .btn.btn-outline.btn-warning,
+[data-theme='dark'] .btn.btn-outline.btn-error {
+  @apply border-zinc-500 bg-neutral;
+}
+
+.menu :where(li:not(.menu-title):not(:empty)) > :where(:not(ul).active),
+.menu :where(li:not(.menu-title):not(:empty)) > :where(*:not(ul):active) {
+  @apply bg-base-content/10 text-base-content;
 }

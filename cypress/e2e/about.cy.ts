@@ -1,68 +1,54 @@
+import { checkAccessibility, expectMainNavigation, expectNoPageOverflow } from '../support/checks';
+
 describe('About', () => {
-  it('Can be navigated to from menu', () => {
+  it('Uses the shared navigation and preserves project background and attribution', () => {
     cy.visit('/');
+    cy.findByRole('navigation', { name: 'Main navigation' })
+      .findByRole('link', { name: 'About' })
+      .click();
+    cy.location('pathname').should('eq', '/about');
+    expectMainNavigation();
+    cy.findByRole('heading', { level: 1, name: 'Understand it by building it.' }).should(
+      'be.visible',
+    );
+    cy.findByRole('link', { name: 'University of Galway' }).should(
+      'have.attr',
+      'href',
+      'https://www.universityofgalway.ie',
+    );
+    cy.findByRole('link', { name: 'Read the research' }).should(
+      'have.attr',
+      'href',
+      'https://thesis.chipsandcode.com',
+    );
+    cy.findByRole('link', { name: 'Nand2Tetris' }).should(
+      'have.attr',
+      'href',
+      'https://www.nand2tetris.org',
+    );
+    cy.findByRole('link', { name: 'CC BY-NC-SA 3.0' }).should(
+      'have.attr',
+      'href',
+      'https://creativecommons.org/licenses/by-nc-sa/3.0/',
+    );
+    cy.contains('not affiliated with or endorsed by Nand2Tetris');
+    cy.findByRole('link', { name: 'report a bug or request a feature' }).should(
+      'have.attr',
+      'href',
+      'https://github.com/durasj/chipsandcode/issues',
+    );
+    cy.contains('summary', 'Thank you to the research participants').click();
+    cy.contains('Viktoria, Kyryl, Matus');
     cy.injectAxe();
-
-    // TODO: Find a way to suppress dynamic ESM loading for Cypress tests
-    cy.wait(1500);
-
-    cy.contains('footer a', 'About').click();
-
-    cy.contains('Chips and Code');
-
-    cy.matchImage();
-
-    cy.scrollTo('bottom');
-    cy.matchImage();
-
-    // ... and screenshots cause the app to reload which may take some time
-    cy.wait(500);
-
-    cy.checkA11y();
+    checkAccessibility();
+    cy.screenshot('about-unified', { capture: 'fullPage' });
   });
 
-  it('Contains all important information and links', () => {
+  it('Reflows the project explanation at a narrow width', () => {
+    cy.viewport(320, 760);
     cy.visit('/about');
-
-    cy.contains('h1', 'Chips and Code');
-
-    cy.contains('a', 'Report Bug / Request Feature')
-      .invoke('attr', 'href')
-      .should('equal', 'https://github.com/durasj/chipsandcode/issues');
-
-    cy.contains('a', 'Discussions')
-      .invoke('attr', 'href')
-      .should('equal', 'https://github.com/durasj/chipsandcode/discussions');
-
-    cy.contains('reimagined');
-    cy.contains('a', 'Nand2Tetris')
-      .invoke('attr', 'href')
-      .should('equal', 'https://nand2tetris.org');
-
-    cy.contains('not affiliated or endorsed by them');
-
-    cy.contains(`master's thesis at the`);
-    cy.contains('a', 'University of Galway')
-      .invoke('attr', 'href')
-      .should('equal', 'https://www.universityofgalway.ie');
-
-    cy.contains('a', 'Research Behind')
-      .invoke('attr', 'href')
-      .should('equal', 'https://thesis.chipsandcode.com');
-
-    cy.contains('a', 'Code Repository')
-      .invoke('attr', 'href')
-      .should('equal', 'https://github.com/durasj/chipsandcode');
-
-    cy.contains('Credits');
-    cy.contains('Open source');
-    cy.contains(
-      'Nand2Tetris content licensed under the CC BY-NC-SA 3.0, Svelte framework, Tailwind and DaisyUI styling libraries, Nearley parser toolkit, and Monaco Editor, all licensed under the MIT license',
-    );
-
-    cy.contains('participants');
-    cy.contains(
-      'Thank you Jan, Matej, Patrik, Pavol, Stefan, Michal, Masa, Michal, Sasa, Jozef, Peter, Matus, Brano, Robert, Lubo, Max, Viktoria, Kyryl, Matus, Lukas, Martina, Karolina, Lubos, Martin, Erik, Filip',
-    );
+    expectNoPageOverflow();
+    cy.injectAxe();
+    checkAccessibility();
   });
 });

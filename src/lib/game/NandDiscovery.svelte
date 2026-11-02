@@ -8,6 +8,7 @@
 
   const mission = getMission('nand');
   const circuit = createCircuit(mission);
+  const observationKey = 'chipsandcode.nand-observation.v1';
   // One switch changes between cases, so the learner can follow its effect.
   const cases = [
     { a: false, b: false },
@@ -36,7 +37,29 @@
         ? `Set input b to ${Number(target.b)}.`
         : 'Read the output. What value comes out?';
 
-  onMount(() => heading?.focus());
+  onMount(() => {
+    try {
+      // Only the completed observation is retained; never deserialize circuit state.
+      if (sessionStorage.getItem(observationKey) === 'complete') {
+        inputs = { a: true, b: false };
+        step = 3;
+        confirmed = true;
+        feedback = 'With a at 1 and b at 0, the output is 1.';
+      }
+    } catch {
+      // Reading and learning still work when browser storage is unavailable.
+    }
+    heading?.focus({ preventScroll: true });
+  });
+
+  function rememberObservation() {
+    if (!finished) return;
+    try {
+      sessionStorage.setItem(observationKey, 'complete');
+    } catch {
+      // The optional theory remains accessible without storage.
+    }
+  }
 
   function toggle(pin: 'a' | 'b') {
     if (confirmed) return;
@@ -60,6 +83,11 @@
     if (!confirmed) return;
     if (finished) {
       oncomplete();
+      try {
+        sessionStorage.removeItem(observationKey);
+      } catch {
+        // Completion is managed by the parent independently of this temporary state.
+      }
       return;
     }
     step += 1;
@@ -75,9 +103,9 @@
   <button class="back-link" on:click={onclose}><span aria-hidden="true">←</span> Back</button>
   <header>
     <p class="step-label">SIGNALS & LOGIC</p>
-    <h1 bind:this={heading} tabindex="-1">Two signals. One rule.</h1>
+    <h1 bind:this={heading} tabindex="-1">AND, with its answer flipped.</h1>
     <p class="introduction">
-      A gate gives an answer from two inputs. This one is called <strong>NAND</strong>.
+      <strong>NAND</strong> means NOT AND. It flips the answer of an AND gate. Try the same inputs.
     </p>
   </header>
 
@@ -121,6 +149,39 @@
       <p class="feedback" aria-live="polite">{feedback}</p>
       {#if finished}
         <p class="takeaway">NAND outputs 0 only when both inputs are 1.</p>
+        <section class="nand-rationale" aria-labelledby="why-nand-title">
+          <h2 id="why-nand-title">Why build from NAND?</h2>
+          <p>
+            One kind of gate is enough to build every Boolean function. We’ll use NAND as our
+            starting part, then build the NOT and AND gates you just explored.
+          </p>
+          <details class="theory-note">
+            <summary>Go deeper: why NAND is universal</summary>
+            <p>
+              Connect the same signal to both NAND inputs. Its answer is now always the opposite:
+              you have made NOT.
+            </p>
+            <code>NOT(a) = NAND(a, a)</code>
+            <p>
+              Next, flip the output of a NAND. That restores the AND answer. This uses two NAND
+              gates: one to combine the inputs, one with its inputs tied together to invert.
+            </p>
+            <code>n = NAND(a, b)<br />AND(a, b) = NAND(n, n)</code>
+            <p>
+              Invert both inputs before a NAND and you get OR. Any truth table can be written using
+              AND, OR, and NOT, so these three recipes let NAND express any Boolean function.
+            </p>
+            <code>OR(a, b) = NAND(NAND(a, a), NAND(b, b))</code>
+            <p>
+              This describes combinational logic: outputs depend on the inputs now. Remembering an
+              earlier value adds state, which comes later.
+            </p>
+            <a
+              href="/learn/reference/boolean-logic/background#universality"
+              on:click={rememberObservation}>Read the full explanation →</a
+            >
+          </details>
+        </section>
       {/if}
       <button class="continue-button" bind:this={nextButton} on:click={advance}
         >{finished ? 'Continue' : 'Next combination'}
@@ -155,14 +216,15 @@
     max-width: 840px;
     margin: 0 auto;
     padding: 16px 32px 72px;
-    color: #eeedf6;
+    color: #f5f4fc;
   }
   button {
     font: inherit;
     cursor: pointer;
   }
   button:focus-visible,
-  summary:focus-visible {
+  summary:focus-visible,
+  a:focus-visible {
     outline: 2px solid #b7adff !important;
     outline-offset: 5px;
   }
@@ -172,7 +234,7 @@
     min-height: 44px;
     gap: 10px;
     padding: 0;
-    color: #b0b2c3;
+    color: #bcc0d2;
     font-size: 13px;
   }
   header {
@@ -186,7 +248,7 @@
       SFMono-Regular,
       monospace;
     letter-spacing: 0.08em;
-    color: #a5a3bd;
+    color: #b6b3cd;
   }
   h1 {
     margin: 0;
@@ -200,7 +262,7 @@
   }
   .introduction {
     max-width: 520px;
-    color: #b2b2c4;
+    color: #bcc0d2;
     font-size: 15px;
     line-height: 1.7;
     margin: 17px 0 0;
@@ -230,10 +292,10 @@
     width: 68px;
     min-height: 48px;
     padding: 11px 12px;
-    border: 1px solid #505166;
+    border: 1px solid #8289a3;
     border-radius: 5px;
     background: #141621;
-    color: #c5c5d6;
+    color: #d1d4e4;
     font-family: ui-monospace, SFMono-Regular, monospace;
   }
   .signal-switch span,
@@ -264,7 +326,7 @@
   }
   .wire {
     fill: none;
-    stroke: #626177;
+    stroke: #8289a3;
     stroke-width: 1.5;
   }
   .wire.high {
@@ -302,7 +364,7 @@
     min-width: 110px;
     min-height: 46px;
     padding: 11px 18px;
-    border: 1px solid #58506f;
+    border: 1px solid #9187ab;
     border-radius: 4px;
     background: #1b182a;
     color: #e5dfff;
@@ -328,6 +390,55 @@
     font-size: 16px;
     line-height: 1.6;
     margin: 16px 0;
+  }
+  .nand-rationale {
+    max-width: 600px;
+    margin: 29px 0 10px;
+  }
+  .nand-rationale h2 {
+    margin: 0 0 10px;
+    color: #f5f4fc;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: -0.025em;
+  }
+  .nand-rationale p {
+    color: #c4c5d7;
+    font-size: 14px;
+    line-height: 1.75;
+    margin: 10px 0;
+  }
+  .theory-note {
+    margin-top: 12px;
+    color: #d5ccff;
+    font-size: 13px;
+  }
+  .theory-note summary {
+    min-height: 44px;
+    padding: 11px 0;
+    cursor: pointer;
+    line-height: 1.7;
+  }
+  .theory-note code {
+    display: block;
+    padding: 12px 14px;
+    background: #151824;
+    border-left: 2px solid #b7adff;
+    color: #e7e0ff;
+    font:
+      12px/1.8 ui-monospace,
+      SFMono-Regular,
+      monospace;
+    overflow-wrap: anywhere;
+  }
+  .theory-note a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: #d5ccff;
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
   .continue-button {
     display: inline-flex;

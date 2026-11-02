@@ -1,130 +1,156 @@
-describe('Learn', () => {
-  it('Can be navigated to from menu', () => {
-    cy.visit('/');
-    cy.injectAxe();
+import { checkAccessibility, expectMainNavigation, expectNoPageOverflow } from '../support/checks';
 
-    // TODO: Find a way to suppress dynamic ESM loading for Cypress tests
-    cy.wait(1500);
+const pages = [
+  ['boolean-logic', 'From signals to logic'],
+  ['boolean-logic/background', 'Logic, composition, and HDL'],
+  ['boolean-logic/project', 'Gate contracts and larger buses'],
+  ['meta/what-next', 'Beyond the logic layer'],
+];
 
-    cy.contains('summary', 'Menu').click();
-    cy.findByRole('navigation', { name: 'Workspace menu' })
-      .findByRole('link', { name: 'Original reading' })
-      .click();
-
-    cy.contains('Boolean Logic');
-
-    cy.matchImage();
-    // ... and screenshots cause the app to reload which may take some time
-    cy.wait(500);
-
-    cy.checkA11y();
+function visitFreshLearning() {
+  cy.visit('/learn', {
+    onBeforeLoad(window) {
+      window.localStorage.clear();
+      window.sessionStorage.clear();
+    },
   });
+  cy.get('.computer-game').should('have.attr', 'data-ready', 'true');
+}
 
-  it('Can be navigated using side menu', () => {
-    cy.visit('/learn/hardware/boolean-logic');
-
-    // TODO: Find a way to suppress dynamic ESM loading for Cypress tests
-    cy.wait(1000);
-
-    cy.contains('h1', 'Boolean Logic');
-
-    cy.contains('nav a', 'Background').click();
-
-    cy.location('pathname').should('eq', '/learn/hardware/boolean-logic/background');
-
-    cy.contains('h1', 'Background');
-  });
-
-  it('Contains Boolean Logic text with a "next" button', () => {
-    cy.visit('/learn/hardware/boolean-logic');
-
-    // TODO: Find a way to suppress dynamic ESM loading for Cypress tests
-    cy.wait(1000);
-
-    cy.contains('h1', 'Boolean Logic');
-
-    cy.contains('blockquote', 'so complex it defeats us, Almost');
-
-    cy.contains('p', 'Every digital device');
-
-    cy.contains('p', 'section on hardware description and simulation tools');
-
-    cy.contains('a', '1.1 Background').click();
-
-    cy.location('pathname').should('eq', '/learn/hardware/boolean-logic/background');
-
-    cy.contains('h1', 'Background');
-  });
-
-  it('Contains Hardware Background text with a "prev" button', () => {
-    cy.visit('/learn/hardware/boolean-logic/background');
-    cy.injectAxe();
-    cy.configureAxe({
-      rules: [
-        // MathML is accessible but aXe doesn't properly detect that
-        { id: 'empty-table-header', enabled: false },
-        // Minor Monaco issue this project has no control over
-        { id: 'landmark-unique', enabled: false },
-        // These are all within Monaco that has opt-in high contrast theme that we're bundling
-        // TODO: How to narrow this down?
-        { id: 'color-contrast', enabled: false },
-      ],
+describe('Unified learning and full explanations', () => {
+  it('Starts Learn at the foundation and opens optional reference in the same interface', () => {
+    cy.visit('/', {
+      onBeforeLoad(window) {
+        window.localStorage.clear();
+      },
     });
-
-    // TODO: Find a way to suppress dynamic ESM loading for Cypress tests
-    cy.wait(1000);
-
-    cy.contains('h1', 'Background');
-
-    cy.matchImage();
-    // ... and screenshots cause the app to reload which may take some time
-    cy.wait(500);
-
-    cy.checkA11y();
-
-    cy.contains('p', 'construction of a family of simple chips called Boolean gates');
-
-    cy.contains('math', '2^n');
-
-    cy.contains('math', 'f(x, y, z)');
-
-    cy.findByAltText('Standard symbolic notation of some elementary logic gates.');
-
-    cy.contains('code', 'Not(..., out=nota)');
-
-    cy.contains('1 Boolean Logic').click();
-
-    cy.location('pathname').should('eq', '/learn/hardware/boolean-logic');
-
-    cy.contains('h1', 'Boolean Logic');
+    cy.findByRole('navigation', { name: 'Main navigation' })
+      .findByRole('link', { name: 'Learn' })
+      .click();
+    cy.location('pathname').should('eq', '/learn');
+    cy.findByRole('heading', { name: 'A computer starts with a signal.' }).should('be.visible');
+    cy.findByRole('button', { name: 'Reference' }).click();
+    cy.findByRole('heading', { level: 1, name: 'Reference' }).should('have.focus');
+    cy.findByRole('button', { name: 'NOT' }).should('have.attr', 'aria-pressed', 'true');
+    cy.findByRole('link', { name: 'Read the full explanation' }).click();
+    cy.location('pathname').should('eq', '/learn/reference/boolean-logic/background');
+    cy.findByRole('heading', { level: 1, name: 'Logic, composition, and HDL' }).should(
+      'be.visible',
+    );
+    expectMainNavigation();
+    cy.findByRole('link', { name: 'Color theme switch' }).should('not.exist');
   });
 
-  it('Works in dark mode', () => {
-    cy.visit('/learn/hardware/boolean-logic/background');
-
-    // TODO: Find a way to suppress dynamic ESM loading for Cypress tests
-    cy.wait(1000);
-
-    cy.contains('Color theme switch').click();
-
-    cy.contains('h1', 'Background');
-
-    // Wait for animation
-    cy.wait(2000);
-
-    cy.matchImage();
+  it('Keeps every reference chapter accessible with contextual deeper reading', () => {
+    visitFreshLearning();
+    cy.findByRole('button', { name: 'Reference' }).click();
+    cy.injectAxe();
+    const chapters = [
+      ['Signals & gates', 'Signals and gates'],
+      ['Expressions', 'Boolean expressions'],
+      ['HDL & composition', 'Interfaces and implementation'],
+      ['Buses & selectors', 'Buses and selectors'],
+      ['Read more', 'Source material'],
+    ];
+    chapters.forEach(([button, heading]) => {
+      cy.findByRole('navigation', { name: 'Reference chapters' })
+        .findByRole('button', { name: new RegExp(button) })
+        .click();
+      cy.findByRole('heading', { name: heading }).should('be.visible');
+      checkAccessibility();
+    });
+    cy.findByRole('button', { name: 'Back' }).click();
+    cy.findByRole('heading', { name: 'A computer starts with a signal.' }).should('be.visible');
   });
 
-  it('Has working embedded Hardware IDE with Xor', () => {
-    cy.visit('/learn/hardware/boolean-logic/background');
+  it('Redirects every legacy article into the adapted, consistently styled reading', () => {
+    pages.forEach(([path, title]) => {
+      cy.visit(`/learn/hardware/${path}`);
+      cy.location('pathname').should('eq', `/learn/reference/${path}`);
+      cy.findByRole('heading', { level: 1, name: title }).should('be.visible');
+      expectMainNavigation();
+      cy.get('main')
+        .find('a[href^="/experiment/"], a[href^="/learn/hardware/"]')
+        .should('not.exist');
+      cy.get('.monaco-editor').should('not.exist');
+      cy.injectAxe();
+      checkAccessibility();
+    });
+  });
 
-    // TODO: Find a way to suppress dynamic ESM loading for Cypress tests
-    cy.wait(1000);
+  it('Covers complete theory and moves through the full explanations without old course chrome', () => {
+    cy.visit('/learn/reference/boolean-logic');
+    cy.findByRole('navigation', { name: 'Continue reading' })
+      .findByRole('link', { name: /Next/ })
+      .click();
+    cy.location('pathname').should('eq', '/learn/reference/boolean-logic/background');
+    [
+      'Signals and Boolean operations',
+      'Truth tables',
+      'Canonical representation',
+      'All two-input functions',
+      'Universality',
+      'Interfaces and composition',
+      'A worked XOR circuit',
+      'Reading HDL',
+      'Testing a construction',
+    ].forEach((name) => {
+      cy.findByRole('heading', { name }).should('exist');
+    });
+    cy.get('#all-two-input-functions')
+      .nextAll('.reference-table')
+      .first()
+      .find('tbody tr')
+      .should('have.length', 16);
+    cy.contains('summary', 'In this explanation').click();
+    cy.findByRole('navigation', { name: 'On this page' })
+      .findByRole('link', { name: 'Universality' })
+      .click();
+    cy.location('hash').should('eq', '#universality');
+    cy.get('#universality').should('be.visible');
+    cy.findByRole('navigation', { name: 'Continue reading' })
+      .findByRole('link', { name: /Next/ })
+      .click();
+    cy.location('pathname').should('eq', '/learn/reference/boolean-logic/project');
+    cy.findByRole('heading', { name: 'Buses' }).should('exist');
+    cy.findByRole('heading', { name: 'Multi-way operations' }).should('exist');
+    cy.findByRole('heading', { name: 'Correctness, then efficiency' }).should('exist');
+    cy.contains('summary', 'Full explanations').click();
+    cy.findByRole('navigation', { name: 'Full explanations' })
+      .findByRole('link', { name: 'Overview' })
+      .click();
+    cy.location('pathname').should('eq', '/learn/reference/boolean-logic');
+  });
 
-    cy.findByLabelText('Experiment name').should('have.value', 'Xor Gate');
-
+  it('Links full reading to the working simulator and additional tools', () => {
+    cy.visit('/learn/reference/boolean-logic/background');
+    cy.findByRole('link', { name: 'Open the worked XOR in the hardware simulator' }).click();
+    cy.location('pathname').should('eq', '/tools/hardware-simulator/Xor');
+    cy.get('.hardware-workspace', { timeout: 20000 }).should('have.attr', 'data-ready', 'true');
     cy.findByLabelText('Value for a').clear().type('1').blur();
-
     cy.contains('tr', 'out').contains('td', '1');
+    cy.visit('/learn/reference/meta/what-next');
+    cy.findByRole('link', { name: 'Explore all sixteen two-input functions' }).should(
+      'have.attr',
+      'href',
+      '/tools/boolean-functions',
+    );
+    cy.findByRole('link', { name: 'Work with buses and routing' }).click();
+    cy.location('pathname').should('eq', '/tools/buses');
+    cy.findByTestId('bus-output').should('have.text', '65295');
+  });
+
+  it('Keeps complete explanations readable on a narrow screen with keyboard-scrollable tables', () => {
+    cy.viewport(320, 760);
+    cy.visit('/learn/reference/boolean-logic/background');
+    expectNoPageOverflow();
+    cy.get('.reference-table')
+      .first()
+      .should('have.attr', 'tabindex', '0')
+      .focus()
+      .should('have.focus');
+    cy.injectAxe();
+    checkAccessibility();
+    cy.screenshot('full-explanation-mobile', { capture: 'fullPage' });
   });
 });

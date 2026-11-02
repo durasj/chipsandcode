@@ -394,8 +394,7 @@
 {:else}
   <section class="bench" aria-label={`${mission.chip} workbench`}>
     <header class="bench-header">
-      <button class="world-back" on:click={onclose}><span aria-hidden="true">←</span> Layers</button
-      >
+      <button class="world-back" on:click={onclose}><span aria-hidden="true">←</span> Home</button>
       <button
         class="notes-trigger"
         aria-expanded={showGuide}
@@ -412,10 +411,10 @@
         </div>
         <h2>{mission.chip}, under the hood.</h2>
         <p>{mission.explanation}</p>
-        <a href="/learn/hardware/boolean-logic/background"
+        <a href="/learn/reference/boolean-logic/background"
           >Read the full background <span aria-hidden="true">↗</span></a
-        ><a href="/learn/hardware/boolean-logic/project"
-          >Original gate specifications <span aria-hidden="true">↗</span></a
+        ><a href="/learn/reference/boolean-logic/project"
+          >Gate specifications <span aria-hidden="true">↗</span></a
         >
       </section>{/if}
 
@@ -872,8 +871,8 @@
                 ? 'NAND is supplied by the simulator; its HDL is read-only.'
                 : 'Edit either view. Visual edits rewrite the HDL.'}
             </p>
-            <a href="/experiment/hardware-ide"
-              >Open full hardware IDE <span aria-hidden="true">↗</span></a
+            <a href="/tools/hardware-simulator"
+              >Open Hardware simulator <span aria-hidden="true">↗</span></a
             >
           </section>
         {/if}

@@ -1,123 +1,56 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import LayerScene from './LayerScene.svelte';
+  import ComputerJourney from './ComputerJourney.svelte';
 
   export let onstart: () => void;
   export let onwatch: () => void;
   export let continuing = false;
 
   const chapters = [
+    { id: 'computer', label: 'THE WHOLE MACHINE' },
     {
-      id: 'logic',
-      name: 'Signals & logic',
-      title: 'Start with a signal.',
-      body: 'Off or on. Zero or one. Begin with a single bit, then connect simple gates.',
-      color: '#080a11',
-      ink: '#ffffff',
-      accent: '#b3aaff',
+      id: 'components',
+      label: 'LOOK CLOSER',
+      title: 'Take it apart.',
+      body: 'A screen. A board. Memory. A processor. Each piece has a job. None of it is magic.',
     },
     {
-      id: 'arithmetic',
-      name: 'Arithmetic',
-      title: 'Make it add.',
-      body: 'The gates you build become the parts of a calculator.',
-      color: '#191d31',
-      ink: '#ffffff',
-      accent: '#b3aaff',
+      id: 'chip',
+      label: 'INSIDE THE PROCESSOR',
+      title: 'Keep going.',
+      body: 'Beneath the surface of a chip, tiny switches and connections do the work.',
     },
     {
-      id: 'memory',
-      name: 'Memory',
-      title: 'Give it a memory.',
-      body: 'Hold on to a value. Use it again when the next signal arrives.',
-      color: '#424963',
-      ink: '#ffffff',
-      accent: '#e2dcff',
-    },
-    {
-      id: 'architecture',
-      name: 'Architecture',
-      title: 'Bring it together.',
-      body: 'Connect calculation, memory, and control. A computer begins to take shape.',
-      color: '#b5b9ca',
-      ink: '#10121d',
-      accent: '#4338ca',
-    },
-    {
-      id: 'software',
-      name: 'Software',
-      title: 'Tell it what to do.',
-      body: 'Write a program for the machine you understand, from the signals up.',
-      color: '#f2f1f7',
-      ink: '#10121d',
-      accent: '#4f46e5',
+      id: 'signals',
+      label: 'THE FOUNDATION',
+      title: 'We start with the very basics.',
+      body: 'Off or on. Zero or one. Change a signal. See what happens. Build from there.',
     },
   ];
-
-  let story: HTMLElement;
+  let journey: HTMLElement;
+  let progress = 0;
   let reducedMotion = false;
-  let activeLayer = 0;
-  let travel = 0;
-  let heroTravel = 0;
-  let background = chapters[0].color;
-  let foreground = chapters[0].ink;
-  let accent = chapters[0].accent;
-  let localTravel = [0, 0, 0, 0, 0];
-
-  const clamp = (value: number, min = 0, max = 1) => Math.max(min, Math.min(max, value));
-  const channels = (hex: string) =>
-    [1, 3, 5].map((index) => parseInt(hex.slice(index, index + 2), 16));
-  function blend(from: string, to: string, amount: number) {
-    const a = channels(from);
-    const b = channels(to);
-    const values = a.map((value, index) => Math.round(value + (b[index] - value) * amount));
-    const linear = values.map((value) => {
-      const v = value / 255;
-      return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
-    });
-    const luminance = linear[0] * 0.2126 + linear[1] * 0.7152 + linear[2] * 0.0722;
-    return {
-      color: `rgb(${values.join(',')})`,
-      ink: luminance > 0.18 ? '#000000' : '#ffffff',
-      light: luminance > 0.18,
-    };
-  }
+  $: activePhase = chapters[Math.min(3, Math.max(0, Math.round(progress)))].id;
 
   onMount(() => {
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
     reducedMotion = preference.matches;
-    const sections = Array.from(story.querySelectorAll<HTMLElement>('[data-layer]'));
+    const sections = Array.from(journey.querySelectorAll<HTMLElement>('[data-journey-step]'));
     let frame = 0;
-
     function update() {
       frame = 0;
-      const height = window.innerHeight;
-      const center = height * 0.5;
+      const center = window.innerHeight * 0.5;
       const centers = sections.map((section) => {
-        const box = section.getBoundingClientRect();
-        return box.top + box.height * 0.5;
+        const rect = section.getBoundingClientRect();
+        return rect.top + rect.height * 0.5;
       });
-      localTravel = centers.map((position) => clamp((center - position) / height, -1, 1));
-      const closest = centers.reduce(
-        (best, position, index) =>
-          Math.abs(position - center) < Math.abs(centers[best] - center) ? index : best,
-        0,
-      );
-      activeLayer = closest;
-      travel = reducedMotion ? 0 : localTravel[closest];
-      heroTravel = reducedMotion ? 0 : clamp(window.scrollY / height, 0, 1);
-      const lower = Math.max(0, centers.findIndex((position) => position >= center) - 1);
-      let progress = 0;
-      if (center >= centers[centers.length - 1]) progress = chapters.length - 1;
-      else if (center > centers[0])
-        progress = lower + clamp((center - centers[lower]) / (centers[lower + 1] - centers[lower]));
-      const index = Math.floor(progress);
-      const next = Math.min(chapters.length - 1, index + 1);
-      const palette = blend(chapters[index].color, chapters[next].color, progress - index);
-      background = palette.color;
-      foreground = palette.ink;
-      // Keep schematic accents distinct while text always has full contrast.
-      accent = palette.light ? '#4338ca' : '#c0b5ff';
+      if (center <= centers[0]) progress = 0;
+      else if (center >= centers[centers.length - 1]) progress = chapters.length - 1;
+      else {
+        const upper = centers.findIndex((position) => position > center);
+        progress =
+          upper - 1 + (center - centers[upper - 1]) / (centers[upper] - centers[upper - 1]);
+      }
     }
     function schedule() {
       if (!frame) frame = requestAnimationFrame(update);
@@ -139,489 +72,576 @@
   });
 </script>
 
-<div class="quiet-landing" class:reduced-motion={reducedMotion}>
-  <section class="opening" aria-labelledby="journey-heading">
-    <div class="opening-copy">
-      <h1 id="journey-heading" tabindex="-1">Wondering how{' '}<br />computers <em>work?</em></h1>
-      <p>Build your own computer from scratch,<br class="desktop-break" /> from chips to code.</p>
-      <button class="start-button" onclick={onstart}
-        >{continuing ? 'Continue learning' : 'Start learning'}<span aria-hidden="true">↗</span
-        ></button
-      >
-      <span class="opening-note">No prerequisites. Free in your browser.</span>
-    </div>
-    <div class="opening-art" aria-hidden="true">
-      <svg viewBox="0 0 720 650" fill="none">
-        <path d="M356 100V552" class="stack-axis" />
-        {#each [0, 1, 2, 3, 4] as index}
-          <g transform={`translate(0,${index * -57 + heroTravel * (index + 1) * -13})`}>
-            <path
-              d="M73 447 318 302 658 437 413 582Z"
-              class="stack-plane"
-              class:foundation={index === 0}
-              style={`--plane-opacity:${0.4 + index * 0.1}`}
-            />
+<div class="computer-journey" class:reduced-motion={reducedMotion}>
+  <div class="journey-layout" bind:this={journey}>
+    <div class="journey-copy">
+      {#each chapters as chapter, index}
+        <section
+          id={`journey-${chapter.id}`}
+          class="journey-chapter"
+          class:opening={index === 0}
+          data-journey-step={index}
+          aria-labelledby={index === 0 ? 'journey-heading' : `heading-${chapter.id}`}
+        >
+          <div class="chapter-copy">
             {#if index === 0}
-              <path d="M162 450 272 385 407 438 483 393 567 426" class="stack-trace" />
-              <circle cx="162" cy="450" r="4" class="stack-node" /><circle
-                cx="567"
-                cy="426"
-                r="4"
-                class="stack-node"
-              />
-            {:else if index === 1}
-              <path d="M232 445 320 393 464 449 376 501Z" class="stack-detail" />
-              <path d="M274 424 418 480M290 410 434 466M306 400 450 456" class="stack-detail" />
-            {:else if index === 2}
-              <path
-                d="M251 422 317 383 460 440 394 479ZM280 433 346 394M309 445 375 406M338 456 404 418M367 467 433 429"
-                class="stack-detail"
-              />
-            {:else if index === 3}
-              <path
-                d="M250 425 330 378 466 432 386 479ZM278 420 334 387 438 428 382 461Z"
-                class="stack-detail"
-              />
+              <h1 id="journey-heading" tabindex="-1">
+                Break down the <em>magic</em> of computers.
+              </h1>
+              <p class="opening-promise">By building your own.</p>
+              <button class="start-button" onclick={onstart}
+                >{continuing ? 'Continue learning' : 'Start learning'}<span aria-hidden="true"
+                  >↗</span
+                ></button
+              >
+              <p class="opening-note">No prerequisites. Free in your browser.</p>
             {:else}
-              <path d="m303 403-30 18 27 11m77-38 26 11-30 18m-18-36-31 49" class="stack-code" />
-            {/if}
-          </g>
-        {/each}
-      </svg>
-    </div>
-    <p class="scroll-note"><span aria-hidden="true">↓</span> A computer, one layer at a time</p>
-  </section>
-
-  <div
-    class="layer-story"
-    bind:this={story}
-    style={`--story-bg:${background};--story-ink:${foreground};--story-accent:${accent}`}
-  >
-    <div class="story-layout">
-      <div class="story-copy">
-        {#each chapters as chapter, index}
-          <section
-            id={`layer-${chapter.id}`}
-            class="story-chapter"
-            data-layer={index}
-            aria-labelledby={`title-${chapter.id}`}
-            style={`--chapter-bg:${chapter.color};--chapter-ink:${chapter.ink};--chapter-accent:${chapter.accent}`}
-          >
-            <div class="chapter-copy">
-              <p class="chapter-name">
-                <span aria-hidden="true">{String(index).padStart(2, '0')}</span>{chapter.name}
-              </p>
-              <h2 id={`title-${chapter.id}`}>{chapter.title}</h2>
+              <p class="chapter-label"><span aria-hidden="true">0{index}</span>{chapter.label}</p>
+              <h2 id={`heading-${chapter.id}`}>{chapter.title}</h2>
               <p class="chapter-description">{chapter.body}</p>
-            </div>
-            <div class="inline-scene">
-              <LayerScene layer={index} travel={localTravel[index]} {reducedMotion} />
-            </div>
-          </section>
-        {/each}
-      </div>
-      <div class="visual-column" aria-hidden={reducedMotion ? 'true' : undefined}>
-        <div class="parallax-stage" data-active-layer={chapters[activeLayer].id}>
-          <LayerScene layer={activeLayer} {travel} {reducedMotion} />
+            {/if}
+          </div>
+          <div class="inline-scene">
+            <ComputerJourney progress={index} instance={`inline-computer-${index}`} />
+          </div>
+          {#if index === 0}<p class="scroll-note">
+              <span aria-hidden="true">↓</span> Scroll to look inside
+            </p>{/if}
+        </section>
+      {/each}
+    </div>
+    <div class="visual-column" aria-hidden="true">
+      <div class="computer-stage" data-phase={activePhase} data-progress={progress.toFixed(3)}>
+        <ComputerJourney {progress} instance="scroll-computer" />
+        <div class="scene-caption" aria-hidden="true">
+          <span>CHIPS AND CODE</span>
+          <span>{String(Math.min(3, Math.max(0, Math.round(progress)))).padStart(2, '0')} / 03</span
+          >
         </div>
       </div>
     </div>
   </div>
 
   <section class="journey-start" aria-labelledby="start-heading">
-    <p class="closing-label">Start at the beginning</p>
-    <h2 id="start-heading">One signal.{' '}<br />Then the next.</h2>
-    <p>We’ll introduce each idea and tool as you need it.</p>
-    <button class="start-button" onclick={onstart}
-      >{continuing ? 'Continue learning' : 'Start learning'}<span aria-hidden="true">↗</span
-      ></button
+    <div class="closing-copy">
+      <p class="chapter-label">FROM SIGNALS TO SOFTWARE</p>
+      <h2 id="start-heading">Then build it{' '}<br />back up.</h2>
+      <p>
+        Combine signals with gates. Build working circuits. Understand what your code is
+        built on.
+      </p>
+      <button class="start-button" onclick={onstart}
+        >{continuing ? 'Continue learning' : 'Start learning'}<span aria-hidden="true">↗</span
+        ></button
+      >
+      <p class="availability-note">
+        Start with signals and logic. Higher computer layers are still being built.
+      </p>
+      <button class="intro-link" onclick={onwatch}
+        >Watch the introduction <span aria-hidden="true">↗</span></button
+      >
+    </div>
+    <div
+      class="build-up"
+      aria-label="Gates process signals, circuits combine gates, and computers use circuits to run code"
+      role="img"
     >
-    <p class="availability-note">
-      Begin with logic today. The higher layers are the journey ahead.
-    </p>
-    <button class="intro-link" onclick={onwatch}
-      >Watch the introduction <span aria-hidden="true">↗</span></button
-    >
+      <div class="build-layer code-layer">
+        <span class="layer-symbol" aria-hidden="true">&lt;/&gt;</span><span>Code</span>
+      </div>
+      <div class="build-layer computer-layer">
+        <span class="layer-symbol" aria-hidden="true"
+          ><svg viewBox="0 0 32 28"
+            ><rect x="3" y="2" width="26" height="18" rx="2" /><path d="M16 20v6m-7 0h14" /></svg
+          ></span
+        ><span>Computer</span>
+      </div>
+      <div class="build-layer circuit-layer">
+        <span class="layer-symbol" aria-hidden="true"
+          ><svg viewBox="0 0 32 28"
+            ><rect x="10" y="7" width="12" height="14" rx="1" /><path
+              d="M2 4h4v7h4M2 24h4v-7h4m12-6h5V4h3m-8 13h5v7h3"
+            /></svg
+          ></span
+        ><span>Circuits</span>
+      </div>
+      <div class="build-layer gates-layer">
+        <span class="layer-symbol" aria-hidden="true"
+          ><svg viewBox="0 0 32 28"
+            ><path d="M8 4h5a10 10 0 0 1 0 20H8ZM1 9h7m-7 10h7m19-5h5" /><circle
+              cx="25"
+              cy="14"
+              r="2"
+            /></svg
+          ></span
+        ><span>Gates</span>
+      </div>
+      <div class="build-layer signal-layer">
+        <span class="layer-symbol" aria-hidden="true">0 1</span><span>Signals</span><span
+          class="you-start">You start here</span
+        >
+      </div>
+    </div>
   </section>
 </div>
 
 <style>
-  .quiet-landing {
-    background: #080a11;
-    color: #f5f4fc;
+  .computer-journey {
+    background: #080b15;
+    color: #f4f2fc;
   }
-  .quiet-landing *,
-  .quiet-landing *::before,
-  .quiet-landing *::after {
+  .computer-journey *,
+  .computer-journey *::before,
+  .computer-journey *::after {
     box-sizing: border-box;
   }
   button {
-    font-family: inherit;
+    font: inherit;
     cursor: pointer;
     touch-action: manipulation;
   }
   button:focus-visible {
-    outline: 2px solid currentColor !important;
-    outline-offset: 6px;
+    outline: 3px solid currentColor !important;
+    outline-offset: 5px;
   }
-  .opening {
-    position: relative;
-    max-width: 1480px;
-    margin: auto;
-    min-height: min(790px, calc(100svh - 80px));
+  .journey-layout {
     display: grid;
-    grid-template-columns: 1fr 1.1fr;
-    align-items: center;
-    gap: 2%;
-    padding: 65px 5% 104px;
-    overflow: hidden;
+    grid-template-columns: 0.88fr 1.3fr;
+    gap: 0;
+    max-width: 1600px;
+    margin: auto;
+    padding: 0 4.5%;
   }
-  .opening-copy {
+  .journey-copy {
+    min-width: 0;
+  }
+  .journey-chapter {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    padding: 100px 0;
+  }
+  .journey-chapter.opening {
+    min-height: calc(100svh - 84px);
+    padding: 64px 0 115px;
+  }
+  .chapter-copy {
+    max-width: 450px;
     position: relative;
     z-index: 1;
   }
   h1 {
-    font-size: clamp(42px, 4.6vw, 70px);
-    line-height: 1.06;
+    font-size: clamp(46px, 5.1vw, 79px);
+    line-height: 1.015;
     font-weight: 500;
-    letter-spacing: -0.055em;
+    letter-spacing: -0.065em;
     margin: 0;
   }
   h1 em {
-    color: #b3aaff;
     font-style: normal;
+    color: #c3b2ff;
   }
-  .opening-copy > p {
-    font-size: clamp(15px, 1.3vw, 18px);
-    line-height: 1.7;
-    margin: 26px 0 30px;
-    color: #b7b9ca;
+  .opening-promise {
+    margin: 27px 0 32px;
+    font-size: clamp(20px, 1.85vw, 28px);
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+    color: #c4c5d6;
   }
   .start-button {
-    min-height: 48px;
     display: inline-flex;
     align-items: center;
-    justify-content: space-between;
     gap: 35px;
-    border: 1px solid #746bf6;
+    min-height: 49px;
+    padding: 14px 20px;
+    background: #6350e9;
+    border: 1px solid #a395ff;
     border-radius: 3px;
-    background: #4f46e5;
     color: #fff;
-    padding: 13px 19px;
     font-size: 14px;
-    font-weight: 550;
+    font-weight: 600;
+    text-decoration: none;
   }
   .start-button:hover {
-    background: #5b50ec;
+    background: #705be8;
   }
   .start-button > span {
-    font-size: 19px;
-    line-height: 1;
+    font-size: 20px;
+    line-height: 0.9;
   }
   .opening-note {
-    display: block;
-    margin-top: 17px;
+    color: #b6b8cd;
     font-size: 12px;
-    color: #aeb0c2;
-  }
-  .opening-art {
-    width: 100%;
-    max-width: 690px;
-    justify-self: end;
-  }
-  .opening-art svg {
-    width: 100%;
-    display: block;
-    overflow: visible;
-  }
-  .stack-axis {
-    stroke: #55516f;
-    stroke-dasharray: 2 6;
-    stroke-opacity: 0.3;
-  }
-  .stack-plane {
-    fill: #0f1020;
-    fill-opacity: 0.82;
-    stroke: #8880b6;
-    stroke-width: 1;
-    stroke-opacity: var(--plane-opacity);
-  }
-  .stack-plane.foundation {
-    stroke: #a79aff;
-    stroke-opacity: 0.9;
-  }
-  .stack-trace {
-    stroke: #b3aaff;
-    stroke-width: 1.8;
-  }
-  .stack-node {
-    fill: #b3aaff;
-  }
-  .stack-detail {
-    stroke: #9189b9;
-    stroke-opacity: 0.65;
-    stroke-width: 1;
-  }
-  .stack-code {
-    stroke: #c8c0ff;
-    stroke-width: 2;
+    line-height: 1.6;
+    margin: 18px 0 0;
   }
   .scroll-note {
     position: absolute;
-    bottom: 34px;
-    left: 5%;
+    bottom: 32px;
+    left: 0;
     margin: 0;
     display: flex;
-    gap: 14px;
     align-items: center;
+    gap: 12px;
     font-size: 11px;
-    color: #aeb0c2;
+    color: #b6b8cd;
   }
-  .scroll-note > span {
-    color: #b3aaff;
-    font-size: 16px;
+  .scroll-note span {
+    color: #cabaff;
+    font-size: 19px;
   }
-  .layer-story {
-    background: var(--story-bg);
-    color: var(--story-ink);
-  }
-  .story-layout {
-    max-width: 1480px;
-    margin: auto;
-    display: grid;
-    grid-template-columns: 0.85fr 1.15fr;
-    gap: 5%;
-    padding: 0 5%;
-  }
-  .story-chapter {
-    min-height: 74svh;
-    min-height: max(470px, 74svh);
+  .chapter-label {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 70px 0;
-    scroll-margin-top: 0;
-  }
-  .chapter-copy {
-    max-width: 385px;
-  }
-  .chapter-name {
+    gap: 20px;
+    align-items: center;
     font:
-      12px ui-monospace,
+      11px/1.5 ui-monospace,
       SFMono-Regular,
       Menlo,
       monospace;
-    display: flex;
-    align-items: center;
-    gap: 19px;
-    margin: 0 0 30px;
+    letter-spacing: 0.07em;
+    color: #b6b8cd;
+    margin: 0 0 26px;
   }
-  .chapter-name > span {
-    font-size: 10px;
+  .chapter-label > span {
+    color: #d3c7ff;
   }
   .chapter-copy h2 {
-    font-size: clamp(34px, 3.6vw, 55px);
-    line-height: 1.09;
-    letter-spacing: -0.045em;
-    font-weight: 500;
     margin: 0;
+    font-size: clamp(38px, 4.25vw, 64px);
+    font-weight: 500;
+    line-height: 1.06;
+    letter-spacing: -0.055em;
   }
   .chapter-description {
-    font-size: 16px;
+    font-size: clamp(16px, 1.4vw, 19px);
+    color: #c4c5d6;
     line-height: 1.7;
-    margin: 24px 0 0;
-    max-width: 340px;
+    max-width: 335px;
+    margin: 27px 0 0;
   }
   .visual-column {
     min-width: 0;
   }
-  .parallax-stage {
+  .computer-stage {
     position: sticky;
-    top: max(20px, calc(50svh - 250px));
+    top: max(34px, calc(50svh - 335px));
     display: flex;
-    align-items: center;
-    height: min(500px, 80svh);
+    justify-content: center;
+    flex-direction: column;
+    width: calc(100% + 5%);
+    margin-left: -1%;
+    height: min(690px, 92svh);
+  }
+  .computer-stage :global(svg) {
     width: 100%;
+    max-height: calc(100% - 30px);
+  }
+  .scene-caption {
+    display: flex;
+    justify-content: space-between;
+    margin: 8px 9% 0;
+    color: #9697b0;
+    font:
+      9px/1.5 ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      monospace;
+    letter-spacing: 0.12em;
   }
   .inline-scene {
     display: none;
   }
   .journey-start {
-    background: #f2f1f7;
-    color: #10121d;
-    text-align: center;
-    padding: 100px 24px 90px;
-    border-top: 1px solid #dcdbe6;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 10%;
+    color: #181629;
+    background: #f1eff8;
+    border-top: 1px solid #d7d2e6;
+    padding: 110px max(6%, calc((100vw - 1320px) / 2));
   }
-  .closing-label {
-    font:
-      12px ui-monospace,
-      SFMono-Regular,
-      Menlo,
-      monospace;
-    color: #525269;
-    margin: 0 0 28px;
+  .journey-start .chapter-label {
+    color: #4e4766;
   }
   .journey-start h2 {
-    font-size: clamp(40px, 5vw, 64px);
-    line-height: 1.06;
-    letter-spacing: -0.055em;
+    font-size: clamp(44px, 5.6vw, 78px);
+    line-height: 1.02;
     font-weight: 500;
+    letter-spacing: -0.06em;
     margin: 0;
   }
-  .journey-start > p:not(.closing-label):not(.availability-note) {
-    font-size: 16px;
+  .closing-copy > p:not(.chapter-label):not(.availability-note) {
+    color: #4b465d;
+    font-size: 17px;
     line-height: 1.7;
-    margin: 24px auto 29px;
-    max-width: 350px;
-    color: #505166;
+    max-width: 375px;
+    margin: 29px 0 30px;
+  }
+  .journey-start .start-button {
+    background: #4f3dd1;
+    border-color: #4f3dd1;
+  }
+  .journey-start .start-button:focus-visible {
+    outline-color: #4432b0 !important;
+  }
+  .journey-start .start-button:hover {
+    background: #3e2db8;
   }
   .availability-note {
     font-size: 12px;
-    line-height: 1.7;
+    line-height: 1.6;
+    color: #565068;
     max-width: 320px;
-    margin: 26px auto 12px;
-    color: #57596f;
+    margin: 25px 0 10px;
   }
   .intro-link {
-    color: #4338ca;
+    padding: 12px 0;
+    color: #4432b0;
     font-size: 12px;
-    padding: 12px 3px;
     text-decoration: underline;
-    text-decoration-color: #b8b3de;
     text-underline-offset: 5px;
+    text-decoration-color: #ada5cf;
   }
   .intro-link span {
-    margin-left: 7px;
+    margin-left: 6px;
+  }
+  .build-up {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    padding: 15px 0;
+  }
+  .build-layer {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    min-height: 68px;
+    border-top: 1px solid #bbb5ce;
+    border-bottom: 1px solid #d4cee3;
+    padding: 13px 24px;
+    color: #49415c;
+    background: #e9e6f2;
+    transform: skewY(-6deg);
+  }
+  .build-layer > * {
+    transform: skewY(6deg);
+  }
+  .layer-symbol {
+    width: 43px;
+    color: #655c7c;
+    font:
+      21px/1 ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      monospace;
+  }
+  .layer-symbol svg {
+    width: 30px;
+    height: 27px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.2;
+  }
+  .build-layer > span:nth-child(2) {
+    font-size: 15px;
+  }
+  .computer-layer {
+    margin-left: 11px;
+    margin-right: -11px;
+    background: #ded9ed;
+  }
+  .circuit-layer {
+    margin-left: 22px;
+    margin-right: -22px;
+    background: #d2cce5;
+  }
+  .gates-layer {
+    margin-left: 33px;
+    margin-right: -33px;
+    background: #c3bbda;
+    color: #302742;
+  }
+  .signal-layer {
+    margin-left: 44px;
+    margin-right: -44px;
+    background: #19162d;
+    border-color: #5c507e;
+    color: #f2edff;
+  }
+  .signal-layer .layer-symbol {
+    color: #cfbdff;
+  }
+  .you-start {
+    margin-left: auto;
+    font:
+      10px/1.5 ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      monospace;
+    color: #d2c8e7;
   }
   .reduced-motion .visual-column {
     display: none;
   }
-  .reduced-motion .story-layout {
+  .reduced-motion .journey-layout {
     display: block;
-    max-width: none;
-    padding: 0;
   }
-  .reduced-motion .story-chapter {
+  .reduced-motion .journey-chapter {
     display: grid;
-    grid-template-columns: 0.85fr 1.15fr;
-    align-items: center;
-    gap: 5%;
-    padding: 45px max(5%, calc((100vw - 1332px) / 2));
-    min-height: 580px;
-    background: var(--chapter-bg);
-    color: var(--chapter-ink);
+    grid-template-columns: 0.88fr 1.3fr;
+    gap: 0;
+    min-height: 660px;
+    padding: 55px 0;
   }
   .reduced-motion .inline-scene {
     display: block;
-    --story-bg: var(--chapter-bg);
-    --story-ink: var(--chapter-ink);
-    --story-accent: var(--chapter-accent);
+  }
+  .reduced-motion .scroll-note {
+    display: none;
   }
   @media (min-width: 1600px) {
-    .story-chapter {
-      min-height: 670px;
+    .journey-chapter {
+      min-height: 950px;
     }
   }
-  @media (max-width: 900px) {
-    .opening {
-      min-height: 650px;
-      padding-top: 35px;
-      padding-bottom: 100px;
-    }
-    .opening-art {
-      margin-right: -50px;
-      width: calc(100% + 70px);
-    }
-    .chapter-copy h2 {
-      font-size: 39px;
-    }
-    .chapter-description {
-      font-size: 15px;
-    }
-    .story-layout {
-      gap: 2%;
-      grid-template-columns: 0.9fr 1.1fr;
-    }
-  }
-  @media (max-width: 680px) {
-    .opening {
-      grid-template-columns: 1fr;
-      min-height: auto;
-      padding: 57px 7% 74px;
-      gap: 25px;
+  @media (max-width: 1040px) {
+    .journey-layout {
+      grid-template-columns: 1fr 1.1fr;
+      padding: 0 4%;
     }
     h1 {
-      font-size: clamp(40px, 8.3vw, 57px);
+      font-size: clamp(44px, 5.8vw, 61px);
     }
-    .opening-copy > p {
-      font-size: 15px;
-      margin: 24px 0;
+    .computer-stage {
+      width: 114%;
+      margin-left: -6%;
     }
-    .opening-note {
-      font-size: 11px;
+    .journey-start {
+      gap: 6%;
+      padding: 85px 6%;
     }
-    .opening-art {
-      width: min(100%, 440px);
-      margin: -8px auto -3px;
-      justify-self: center;
+    .build-layer {
+      padding: 12px 16px;
+      gap: 15px;
     }
-    .opening-art svg {
-      max-height: 310px;
+    .build-up {
+      margin-right: 35px;
     }
-    .scroll-note {
-      left: 7%;
-      bottom: 29px;
-      font-size: 10px;
-      gap: 10px;
+    .you-start {
+      font-size: 9px;
     }
-    .story-layout,
-    .reduced-motion .story-layout {
+  }
+  @media (max-width: 720px) {
+    .journey-layout,
+    .reduced-motion .journey-layout {
       display: block;
       padding: 0;
     }
     .visual-column {
       display: none;
     }
-    .story-chapter,
-    .reduced-motion .story-chapter {
+    .journey-chapter,
+    .journey-chapter.opening,
+    .reduced-motion .journey-chapter {
       display: flex;
+      flex-direction: column;
+      align-items: stretch;
       min-height: 0;
-      padding: 59px 7% 24px;
-      gap: 0;
-      background: var(--chapter-bg);
-      color: var(--chapter-ink);
+      padding: 65px 7% 20px;
+    }
+    .journey-chapter.opening {
+      padding-top: 46px;
     }
     .chapter-copy {
-      max-width: 410px;
+      max-width: 520px;
     }
-    .chapter-name {
+    h1 {
+      max-width: 520px;
+      font-size: clamp(46px, 9.3vw, 66px);
+    }
+    .opening-promise {
+      font-size: 22px;
+      margin: 23px 0 26px;
+    }
+    .opening-note {
       font-size: 11px;
-      margin-bottom: 23px;
     }
-    .chapter-copy h2 {
-      font-size: clamp(34px, 7vw, 44px);
-    }
-    .chapter-description {
-      font-size: 15px;
-      margin-top: 21px;
-      max-width: 340px;
+    .scroll-note {
+      position: static;
+      margin: -4px 0 22px;
+      font-size: 10px;
     }
     .inline-scene {
       display: block;
-      width: calc(100% + 12%);
-      max-width: 520px;
-      margin: 12px -6% -4px;
-      align-self: center;
-      --story-bg: var(--chapter-bg);
-      --story-ink: var(--chapter-ink);
-      --story-accent: var(--chapter-accent);
+      width: calc(100% + 10%);
+      margin: 12px -5% 0;
+    }
+    .chapter-label {
+      margin-bottom: 20px;
+      font-size: 10px;
+    }
+    .chapter-copy h2 {
+      font-size: clamp(36px, 7.7vw, 52px);
+      max-width: 420px;
+    }
+    .chapter-description {
+      font-size: 16px;
+      max-width: 390px;
+      margin-top: 22px;
+    }
+    .journey-chapter + .journey-chapter {
+      border-top: 1px solid #24283b;
     }
     .journey-start {
-      padding: 75px 7% 65px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 45px;
+      padding: 70px 7%;
     }
-    .journey-start > p:not(.closing-label):not(.availability-note) {
-      font-size: 15px;
+    .journey-start h2 {
+      font-size: clamp(45px, 9.5vw, 68px);
+    }
+    .closing-copy > p:not(.chapter-label):not(.availability-note) {
+      font-size: 16px;
+    }
+    .build-up {
+      margin: 0 30px 12px 0;
+      gap: 10px;
+    }
+    .build-layer {
+      min-height: 55px;
+      gap: 13px;
+      padding: 10px 14px;
+    }
+    .build-layer > span:nth-child(2) {
+      font-size: 13px;
+    }
+    .layer-symbol {
+      font-size: 19px;
+      width: 35px;
+    }
+    .computer-layer {
+      margin-left: 7px;
+      margin-right: -7px;
+    }
+    .circuit-layer {
+      margin-left: 14px;
+      margin-right: -14px;
+    }
+    .gates-layer {
+      margin-left: 21px;
+      margin-right: -21px;
+    }
+    .signal-layer {
+      margin-left: 28px;
+      margin-right: -28px;
+    }
+    .you-start {
+      font-size: 8px;
     }
   }
 </style>

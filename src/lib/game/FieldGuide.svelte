@@ -7,17 +7,17 @@
     { id: 'expressions', number: '02', title: 'Expressions' },
     { id: 'blueprints', number: '03', title: 'HDL & composition' },
     { id: 'scale', number: '04', title: 'Buses & selectors' },
-    { id: 'origins', number: '05', title: 'Sources' },
+    { id: 'origins', number: '05', title: 'Read more' },
   ];
   let chapter = 'signals';
-  let gate: Gate = 'NAND';
+  let gate: Gate = 'NOT';
   let a = false;
   let b = false;
   let c = false;
   let bus = [true, false, true, true, false, false, true, false];
   let selector = 0;
   const words = ['1010', '0110', '1100', '0001'];
-  const gates: Gate[] = ['NAND', 'NOT', 'AND', 'OR', 'XOR'];
+  const gates: Gate[] = ['NOT', 'AND', 'NAND', 'OR', 'XOR'];
   const descriptions: Record<Gate, string> = {
     NAND: 'Outputs 0 only when both inputs are 1. Every gate in this layer can be built from NAND.',
     NOT: 'Inverts its input: 0 becomes 1, and 1 becomes 0.',
@@ -48,6 +48,24 @@
   $: result = evaluate(gate, a, b);
   $: expressionResult = (a || b) && !c;
   $: terms = [!a && b && !c, a && !b && !c, a && b && !c];
+  const fullExplanations: Record<string, { href: string; label: string }> = {
+    signals: {
+      href: '/learn/reference/boolean-logic/background#signals-and-boolean-operations',
+      label: 'Signals, truth tables, and why NAND is enough',
+    },
+    expressions: {
+      href: '/learn/reference/boolean-logic/background#canonical-representation',
+      label: 'Canonical form and all sixteen two-input functions',
+    },
+    blueprints: {
+      href: '/learn/reference/boolean-logic/background#interfaces-and-composition',
+      label: 'Composition, a worked XOR, HDL, and testing',
+    },
+    scale: {
+      href: '/learn/reference/boolean-logic/project#buses',
+      label: 'Multi-bit gates and multi-way routing',
+    },
+  };
   const notHDL = `CHIP Not {
     IN in;
     OUT out;
@@ -285,7 +303,8 @@
         <h2>Buses and selectors</h2>
         <p class="intro">
           A word groups several bits. A selector routes one of several inputs. Explore both models
-          below; construction exercises for these components are planned.
+          below, or open the buses and routing tool for 16-bit operations and 4-way or 8-way
+          routing.
         </p>
         <h3>A bus carries several bits</h3>
         <p>
@@ -347,27 +366,25 @@
         </div>
       {:else}
         <h2>Source material</h2>
-        <p class="intro">Read the original material or open the full hardware IDE.</p>
+        <p class="intro">Go deeper in the full explanations, or try the tools.</p>
         <div class="reading-links">
-          <a href="/learn/hardware/boolean-logic/intro"
+          <a href="/learn/reference/boolean-logic"
             ><span>INTRODUCTION</span><strong>Why build a computer from gates?</strong><b
               aria-hidden="true">↗</b
             ></a
           >
-          <a href="/learn/hardware/boolean-logic/background"
+          <a href="/learn/reference/boolean-logic/background"
             ><span>BACKGROUND</span><strong>Boolean logic, HDL & simulation</strong><b
               aria-hidden="true">↗</b
             ></a
           >
-          <a href="/learn/hardware/boolean-logic/project"
+          <a href="/learn/reference/boolean-logic/project"
             ><span>EXERCISES</span><strong>Gate specifications & exercises</strong><b
               aria-hidden="true">↗</b
             ></a
           >
-          <a href="/experiment/hardware-ide"
-            ><span>HARDWARE IDE</span><strong>Open the hardware IDE</strong><b aria-hidden="true"
-              >↗</b
-            ></a
+          <a href="/tools/hardware-simulator"
+            ><span>TOOLS</span><strong>Hardware simulator</strong><b aria-hidden="true">↗</b></a
           >
         </div>
         <div class="note-card credits">
@@ -390,6 +407,23 @@
           </p>
         </div>
       {/if}
+      {#if fullExplanations[chapter]}
+        <div class="full-explanation">
+          <a href={fullExplanations[chapter].href}
+            >Read the full explanation <span aria-hidden="true">→</span></a
+          >
+          <p>{fullExplanations[chapter].label}</p>
+          {#if chapter === 'expressions'}
+            <a class="tool-link" href="/tools/boolean-functions">Try the Boolean functions tool</a>
+          {:else if chapter === 'scale'}
+            <a class="tool-link" href="/tools/buses">Try the buses and routing tool</a>
+          {:else if chapter === 'blueprints'}
+            <a class="tool-link" href="/tools/hardware-simulator/Xor"
+              >Inspect the worked XOR in the simulator</a
+            >
+          {/if}
+        </div>
+      {/if}
       <footer class="page-footer">
         <span>CHIPS AND CODE / REFERENCE</span><span
           >{chapters.find((item) => item.id === chapter)?.number} — 05</span
@@ -403,9 +437,9 @@
   .field-guide {
     --ink: #f0f0f7;
     --paper: #12151f;
-    --muted: #a1a5b6;
-    --line: #303446;
-    --signal: #a79fff;
+    --muted: #bbc0d1;
+    --line: #454d65;
+    --signal: #c0b7ff;
     background: #0b0d14;
     color: var(--ink);
     min-height: 100vh;
@@ -556,7 +590,7 @@
     flex-wrap: wrap;
   }
   .gate-picker button {
-    border: 1px solid var(--line);
+    border: 1px solid #747d99;
     border-radius: 4px;
     background: #1a1d2a;
     padding: 12px 16px;
@@ -567,7 +601,7 @@
   .gate-picker button.chosen {
     background: #30285a;
     color: #ddd8ff;
-    border-color: #7266b7;
+    border-color: #b5a9ff;
   }
   .experiment {
     display: flex;
@@ -602,7 +636,7 @@
     min-height: 90px;
     padding: 12px;
     background: #191d2a;
-    border: 1px solid #3d4359;
+    border: 1px solid #747d99;
     border-radius: 4px;
     color: #b9bdcf;
   }
@@ -636,7 +670,7 @@
     height: 2px;
     min-width: 12px;
     flex: 1;
-    background: #4b5168;
+    background: #747d99;
     position: relative;
   }
   .wire.live {
@@ -663,7 +697,7 @@
     text-align: center;
     gap: 12px;
     min-width: 100px;
-    border: 1px solid #686184;
+    border: 1px solid #747d99;
     box-shadow:
       0 0 0 4px #10121d,
       0 0 0 5px #39364c;
@@ -928,7 +962,7 @@
     justify-content: center;
     gap: 5px;
     background: #1a1e2b;
-    border: 1px solid #41475c;
+    border: 1px solid #747d99;
     border-radius: 3px;
     font: 21px monospace;
     color: #bbc1d8;
@@ -968,7 +1002,7 @@
     justify-content: space-between;
     gap: 12px;
     background: #10131e;
-    border: 1px solid var(--line);
+    border: 1px solid #747d99;
     border-radius: 3px;
     padding: 12px;
     font: 12px monospace;
@@ -1030,6 +1064,28 @@
   }
   .credits p {
     font-size: 12px;
+  }
+  .full-explanation {
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 1px solid #454d65;
+  }
+  .full-explanation > a:first-child {
+    font-size: 15px;
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    min-height: 44px;
+  }
+  .full-explanation p {
+    color: #c0c4d5;
+    font-size: 13px;
+    margin-top: 4px;
+  }
+  .full-explanation .tool-link {
+    font-size: 13px;
+    display: inline-block;
+    padding: 10px 0;
   }
   .page-footer {
     display: flex;

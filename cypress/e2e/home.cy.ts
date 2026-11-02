@@ -1,9 +1,15 @@
+import {
+  checkAccessibility,
+  expectMainNavigation,
+  expectNoPageOverflow,
+  exploreNotAnd,
+} from '../support/checks';
+
 function visitLanding(reducedMotion = false) {
   cy.visit('/', {
     onBeforeLoad(window) {
       window.localStorage.clear();
       const originalMatchMedia = window.matchMedia.bind(window);
-      // The shared visit command already stubs matchMedia for the light theme.
       window.matchMedia = (query: string) => {
         const result = originalMatchMedia(query);
         if (query === '(prefers-reduced-motion: reduce)') {
@@ -13,47 +19,37 @@ function visitLanding(reducedMotion = false) {
       };
     },
   });
-  cy.get('.computer-game').should('have.attr', 'data-ready', 'true');
+  cy.get('.landing-page').should('have.attr', 'data-ready', 'true');
 }
 
-function checkAccessibility() {
-  cy.checkA11y(undefined, undefined, (violations) => {
-    if (violations.length) {
-      const details = violations.map(
-        (violation) =>
-          `${violation.id}:\n${violation.nodes
-            .map((node) => `${JSON.stringify(node.target)}\n${node.failureSummary}`)
-            .join('\n')}`,
-      );
-      throw new Error(`Accessibility violations:\n${details.join('\n\n')}`);
-    }
-  });
-}
+const phases = ['computer', 'components', 'chip', 'signals'];
 
-function scrollToLayer(layer: string) {
-  cy.get(`#layer-${layer}`).then(($section) => {
+function scrollToPhase(phase: string, fraction = 0.5) {
+  cy.get(`#journey-${phase}`).then(($section) => {
     cy.window().then((window) => {
-      const section = $section[0].getBoundingClientRect();
+      const box = $section[0].getBoundingClientRect();
       window.scrollTo({
-        top: window.scrollY + section.top + section.height / 2 - window.innerHeight / 2,
+        top: window.scrollY + box.top + box.height * fraction - window.innerHeight / 2,
         behavior: 'instant',
       });
     });
   });
 }
 
-describe('Chips and Code landing', () => {
-  it('Keeps the original invitation and presents one clear first step', () => {
+describe('Computer journey landing', () => {
+  it('Offers one clear start with Learn, Tools and About navigation', () => {
     visitLanding();
-    cy.findByRole('heading', { level: 1, name: 'Wondering how computers work?' }).should(
+    expectMainNavigation();
+    cy.findByRole('heading', { level: 1, name: 'Break down the magic of computers.' }).should(
       'be.visible',
     );
-    cy.contains('Build your own computer from scratch');
     cy.get('.opening')
       .findByRole('button', { name: 'Start learning' })
       .then(($button) => {
-        const bounds = $button[0].getBoundingClientRect();
-        expect(bounds.bottom, 'learning starts without scrolling').to.be.at.most(720);
+        expect(
+          $button[0].getBoundingClientRect().bottom,
+          'learning starts without scrolling',
+        ).to.be.at.most(720);
       });
     cy.window().then((window) => {
       const visibleControls = [
@@ -72,79 +68,81 @@ describe('Chips and Code landing', () => {
       });
       expect(
         visibleControls.map((element) => element.textContent?.trim()),
-        'only the brand, menu, and learning action occupy the opening viewport',
-      ).to.have.length.at.most(3);
+        'only the brand, three main links, and start action occupy the opening',
+      ).to.have.length.at.most(5);
     });
     cy.findByRole('navigation', { name: 'Workspace menu' }).should('not.exist');
-    cy.findByRole('region', { name: 'Logic challenges' }).should('not.exist');
-    cy.findByRole('navigation', { name: 'Explore computer layers' }).should('not.exist');
     cy.findByRole('button', { name: /Play layer journey|Pause layer journey/ }).should('not.exist');
-    cy.screenshot('minimal-home-desktop', { capture: 'viewport' });
+    cy.screenshot('computer-home-desktop', { capture: 'viewport' });
     cy.injectAxe();
     checkAccessibility();
-
     cy.get('.opening').findByRole('button', { name: 'Start learning' }).click();
+    cy.location('pathname').should('eq', '/learn');
     cy.findByRole('heading', { name: 'A computer starts with a signal.' }).should('be.visible');
-    cy.findByRole('switch', { name: 'Signal' }).should('have.attr', 'aria-checked', 'false');
     cy.findByLabelText('HDL source').should('not.exist');
     cy.findByLabelText('Editor view').should('not.exist');
-    cy.screenshot('first-signal-desktop', { capture: 'viewport' });
-    checkAccessibility();
   });
 
-  it('Moves through the computer layers by scrolling, without adding navigation controls', () => {
+  it('Disassembles the computer and zooms to signals through native scrolling', () => {
     visitLanding();
-    const layers = ['logic', 'arithmetic', 'memory', 'architecture', 'software'];
-    layers.forEach((layer) => {
-      scrollToLayer(layer);
-      cy.get('.parallax-stage').should('have.attr', 'data-active-layer', layer);
-      cy.get(`#layer-${layer}`).findByRole('heading', { level: 2 }).should('be.visible');
-      if (layer === 'memory' || layer === 'software') {
-        cy.screenshot(`parallax-${layer}`, { capture: 'viewport' });
-      }
-    });
-    cy.findByRole('button', { name: /Play layer journey|Pause layer journey/ }).should('not.exist');
     cy.injectAxe();
+    phases.forEach((phase) => {
+      scrollToPhase(phase);
+      cy.get('.computer-stage').should('have.attr', 'data-phase', phase);
+      cy.get(`#journey-${phase}`)
+        .findByRole('heading', { level: phase === 'computer' ? 1 : 2 })
+        .should('be.visible');
+      checkAccessibility();
+      cy.screenshot(`computer-journey-${phase}`, { capture: 'viewport' });
+    });
+    cy.get('.computer-stage')
+      .invoke('attr', 'data-progress')
+      .then((progress) => {
+        expect(Number(progress), 'scene reaches the chip-level signal view').to.be.greaterThan(2.5);
+      });
+    // Intermediate scroll positions must remain readable too, not only settled phases.
+    ['computer', 'components', 'chip'].forEach((phase) => {
+      scrollToPhase(phase, 0.95);
+      checkAccessibility();
+    });
+    cy.get('.journey-start').scrollIntoView();
     checkAccessibility();
-    // Every entry point starts a new visitor at the physical foundation.
     cy.get('.journey-start').findByRole('button', { name: 'Start learning' }).click();
+    cy.location('pathname').should('eq', '/learn');
     cy.findByRole('heading', { name: 'A computer starts with a signal.' }).should('be.visible');
   });
 
-  it('Presents every layer as a readable still when reduced motion is requested', () => {
+  it('Provides readable stills for every phase with reduced motion', () => {
     visitLanding(true);
-    cy.get('.quiet-landing').should('have.class', 'reduced-motion');
-    ['logic', 'arithmetic', 'memory', 'architecture', 'software'].forEach((layer) => {
-      cy.get(`#layer-${layer}`).within(() => {
-        cy.findByRole('heading', { level: 2 }).should('be.visible');
+    cy.get('.computer-journey').should('have.class', 'reduced-motion');
+    phases.forEach((phase) => {
+      cy.get(`#journey-${phase}`).within(() => {
+        cy.findByRole('heading', { level: phase === 'computer' ? 1 : 2 }).should('be.visible');
         cy.findByRole('img').should('be.visible');
       });
     });
-    cy.screenshot('layers-reduced-motion', { capture: 'fullPage' });
+    cy.screenshot('computer-journey-reduced-motion', { capture: 'fullPage' });
     cy.injectAxe();
     checkAccessibility();
   });
 
-  it('Introduces one signal and then NAND without overflowing a narrow screen', () => {
+  it('Introduces signals, NOT and AND before NAND on a narrow screen', () => {
     cy.viewport(320, 760);
     visitLanding(true);
+    expectMainNavigation();
+    expectNoPageOverflow();
+    cy.screenshot('computer-home-mobile', { capture: 'fullPage' });
     cy.get('.opening').findByRole('button', { name: 'Start learning' }).click();
     cy.findByRole('heading', { name: 'A computer starts with a signal.' }).should('be.visible');
     cy.screenshot('first-signal-mobile', { capture: 'viewport' });
-    cy.findByRole('switch', { name: 'Signal' })
-      .click()
-      .should('have.attr', 'aria-checked', 'true')
-      .click()
-      .should('have.attr', 'aria-checked', 'false');
-    cy.findByRole('button', { name: 'Continue' }).click();
-    cy.findByRole('heading', { name: 'Two signals. One rule.' }).should('be.visible');
-    cy.document().should((document) => {
-      expect(
-        Math.max(document.documentElement.scrollWidth, document.body.scrollWidth),
-      ).to.be.at.most(document.documentElement.clientWidth + 1);
-    });
-    cy.screenshot('nand-experiment-mobile', { capture: 'viewport' });
     cy.injectAxe();
+    checkAccessibility();
+    cy.findByRole('switch', { name: 'Signal' }).click();
+    cy.findByRole('switch', { name: 'Signal' }).click();
+    cy.findByRole('button', { name: 'Continue' }).click();
+    exploreNotAnd();
+    expectNoPageOverflow();
+    cy.screenshot('nand-after-foundations-mobile', { capture: 'viewport' });
     checkAccessibility();
   });
 
@@ -185,34 +183,5 @@ describe('Chips and Code landing', () => {
     cy.findByRole('button', { name: 'Close introduction' }).click();
     cy.findByRole('dialog').should('not.exist');
     cy.findByRole('button', { name: 'Watch the introduction' }).should('have.focus');
-  });
-
-  it('Keeps reference material available on demand and accessible across chapters', () => {
-    visitLanding(true);
-    cy.contains('summary', 'Menu').click();
-    cy.findByRole('navigation', { name: 'Workspace menu' })
-      .findByRole('button', { name: 'Reference' })
-      .click();
-    cy.findByRole('region', { name: 'Logic reference' }).should('be.visible');
-    cy.findByRole('heading', { name: 'Signals and gates' }).should('be.visible');
-    cy.injectAxe();
-    checkAccessibility();
-    const chapters = [
-      { button: 'Expressions', heading: 'Boolean expressions' },
-      { button: 'HDL & composition', heading: 'Interfaces and implementation' },
-      { button: 'Buses & selectors', heading: 'Buses and selectors' },
-      { button: 'Sources', heading: 'Source material' },
-    ];
-    chapters.forEach(({ button, heading }) => {
-      cy.findByRole('navigation', { name: 'Reference chapters' })
-        .findByRole('button', { name: new RegExp(button) })
-        .click();
-      cy.findByRole('heading', { name: heading }).should('be.visible');
-      checkAccessibility();
-    });
-    cy.findByRole('button', { name: 'Back' }).click();
-    cy.findByRole('heading', { level: 1, name: 'Wondering how computers work?' }).should(
-      'be.visible',
-    );
   });
 });

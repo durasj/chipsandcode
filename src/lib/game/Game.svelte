@@ -1,22 +1,18 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
-  import Landing from './Landing.svelte';
+  import { goto } from '$app/navigation';
   import SignalIntro from './SignalIntro.svelte';
-  import IntroVideo from './IntroVideo.svelte';
   import MissionWorkbench from './MissionWorkbench.svelte';
   import FieldGuide from './FieldGuide.svelte';
   import { missions, getMission, type MissionId } from './missions';
 
-  type View = 'world' | 'signal' | 'workbench' | 'guide' | 'collection' | 'milestone';
+  type View = 'signal' | 'workbench' | 'guide' | 'collection' | 'milestone';
   const introKey = 'chipsandcode.signal-intro.v1';
-  let view: View = 'world';
-  let referenceReturn: View = 'world';
+  let view: View = 'signal';
+  let referenceReturn: View = 'signal';
   let selected: MissionId = 'nand';
-  let introOpen = false;
   let introSeen = false;
   let content: HTMLElement;
-  let menu: HTMLDetailsElement;
-  let menuOpen = false;
   let completed: MissionId[] = [];
   let lastCompleted: MissionId = 'nand';
   let notice = '';
@@ -48,29 +44,13 @@
     } catch {
       notice = 'Your progress can only be kept for this session.';
     }
-    selected = missions.find((mission) => !completed.includes(mission.id))?.id ?? 'nand';
+    const pending = missions.find((mission) => !completed.includes(mission.id));
+    selected = pending?.id ?? 'nand';
     ready = true;
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && menuOpen) {
-        menuOpen = false;
-        menu?.querySelector('summary')?.focus();
-      }
-    };
-    const closeOnOutside = (event: PointerEvent) => {
-      if (menuOpen && event.target instanceof Node && !menu?.contains(event.target))
-        menuOpen = false;
-    };
-    document.addEventListener('keydown', closeOnEscape);
-    document.addEventListener('pointerdown', closeOnOutside);
-    return () => {
-      document.removeEventListener('keydown', closeOnEscape);
-      document.removeEventListener('pointerdown', closeOnOutside);
-    };
+    void setView(!introSeen ? 'signal' : pending ? 'workbench' : 'collection');
   });
 
   async function setView(next: View) {
-    menuOpen = false;
-    introOpen = false;
     view = next;
     await tick();
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -131,33 +111,17 @@
 </script>
 
 <div class="computer-game" data-ready={ready}>
-  <a class="skip-game" href="#game-content">Skip to content</a>
-  <header class="game-header">
-    <button class="wordmark" onclick={() => setView('world')} aria-label="Chips and Code home">
-      <img src="/logo.svg" alt="" width="34" height="34" />
-      <span>Chips <span class="brand-and">and</span> Code</span>
-    </button>
-    <details class="workspace-menu" bind:this={menu} bind:open={menuOpen}>
-      <summary>Menu <span aria-hidden="true">+</span></summary>
-      <nav aria-label="Workspace menu">
-        <button onclick={() => setView('world')}>The computer</button>
-        <button onclick={startLearning}
-          >{continuing ? 'Continue learning' : 'Start learning'}</button
-        >
-        {#if completed.length}<button onclick={() => setView('collection')}>Your chips</button>{/if}
-        <button onclick={openReference}>Reference</button>
-        <div class="menu-resources">
-          <a href="/experiment/hardware-ide">Hardware IDE ↗</a>
-          <a href="/learn/hardware/boolean-logic">Original reading</a>
-        </div>
-      </nav>
-    </details>
-  </header>
+  <nav class="learning-links" aria-label="Learning resources">
+    {#if view !== 'collection' && completed.length}<button onclick={() => setView('collection')}
+        >Your chips</button
+      >{/if}
+    <button onclick={openReference}>Reference</button>
+  </nav>
 
   <main id="game-content" bind:this={content}>
     {#if view === 'signal' || (view === 'guide' && referenceReturn === 'signal')}
       <div class="learning-session" hidden={view !== 'signal'}>
-        <SignalIntro oncomplete={finishSignalIntro} onclose={() => setView('world')} />
+        <SignalIntro oncomplete={finishSignalIntro} onclose={() => goto('/')} />
       </div>
     {/if}
     {#if view === 'workbench' || (view === 'guide' && referenceReturn === 'workbench')}
@@ -166,13 +130,11 @@
             missionId={selected}
             {completed}
             oncomplete={completeMission}
-            onclose={() => setView('world')}
+            onclose={() => goto('/')}
           />{/key}
       </div>
     {/if}
-    {#if view === 'world'}
-      <Landing {continuing} onstart={startLearning} onwatch={() => (introOpen = true)} />
-    {:else if view === 'guide'}
+    {#if view === 'guide'}
       <FieldGuide onclose={() => setView(referenceReturn)} />
     {:else if view === 'milestone'}
       <section class="learning-milestone" aria-labelledby="milestone-title">
@@ -198,11 +160,14 @@
           >
         {:else}
           <div class="next-concept">
-            <h2>The logic layer is yours.</h2>
+            <h2>Take logic further.</h2>
             <p>
-              Six circuits, built from one primitive. Arithmetic is the next layer; it is still
-              being built.
+              Six circuits, built from one primitive. Next, use the same ideas with whole words of
+              bits and multi-way routing.
             </p>
+            <a class="next-reading" href="/learn/reference/boolean-logic/project#buses"
+              >Continue with buses and selectors →</a
+            >
           </div>
           <button class="learning-action" onclick={() => setView('collection')}
             >Review your chips <span aria-hidden="true">→</span></button
@@ -233,16 +198,7 @@
     {/if}
   </main>
 
-  <footer class="game-footer" class:light-footer={view === 'world'}>
-    <span>Chips and Code</span>
-    <div>
-      <a href="/about">About</a>
-      <a href="/accessibility-statement">Accessibility Statement</a>
-      <a href="/signin" aria-label="User account">Account</a>
-    </div>
-  </footer>
   {#if notice}<p class="storage-notice" role="status">{notice}</p>{/if}
-  {#if introOpen}<IntroVideo onclose={() => (introOpen = false)} />{/if}
 </div>
 
 <style>
@@ -257,8 +213,8 @@
     --copper: #a49cff;
     --action: #4f46e5;
     --signal: #a49cff;
-    min-height: 100vh;
-    background: #090b11;
+    min-height: calc(100svh - 84px);
+    background: #080b13;
     color: var(--ink);
     color-scheme: dark;
     font-family:
@@ -293,112 +249,30 @@
   .learning-session[hidden] {
     display: none;
   }
-  button,
-  summary {
+  button {
     cursor: pointer;
   }
   a {
     text-decoration: none;
   }
-  .skip-game {
-    position: absolute;
-    left: 20px;
-    top: -100px;
-    z-index: 100;
-    background: #e9e8ff;
-    color: #131320;
-    padding: 12px;
-  }
-  .skip-game:focus {
-    top: 8px;
-  }
-  .game-header {
-    min-height: 84px;
-    padding: 12px 4%;
+  .learning-links {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     gap: 24px;
+    padding: 5px 4% 0;
   }
-  .wordmark {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    font-size: 19px;
-    letter-spacing: -0.7px;
-    font-weight: 700;
-    text-align: left;
-    white-space: nowrap;
+  .learning-links button {
+    min-height: 40px;
+    color: #bac2d7;
+    font-size: 12px;
   }
-  .wordmark img {
-    width: 34px;
-    height: 34px;
+  .learning-links button:hover {
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 5px;
   }
-  .brand-and {
-    font-weight: 400;
-    color: #a1a5b6;
-  }
-  .workspace-menu {
-    position: relative;
-    z-index: 30;
-  }
-  .workspace-menu summary {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 12px 0 12px 16px;
-    min-height: 44px;
-    font-size: 13px;
-    color: #c4c6d3;
-    list-style: none;
-  }
-  .workspace-menu summary::-webkit-details-marker {
-    display: none;
-  }
-  .workspace-menu summary > span {
-    font-size: 20px;
-    transition: transform 0.15s;
-  }
-  .workspace-menu[open] summary > span {
-    transform: rotate(45deg);
-  }
-  .workspace-menu nav {
-    position: absolute;
-    right: 0;
-    top: calc(100% + 9px);
-    width: 228px;
-    max-width: calc(100vw - 32px);
-    padding: 10px;
-    border: 1px solid #353747;
-    border-radius: 5px;
-    background: #12151f;
-    box-shadow: 0 16px 48px #0006;
-  }
-  .workspace-menu:not([open]) nav {
-    display: none;
-  }
-  .workspace-menu nav button,
-  .workspace-menu nav a {
-    display: block;
-    width: 100%;
-    padding: 11px 12px;
-    color: #d3d4e0;
-    font-size: 13px;
-    text-align: left;
-    border-radius: 3px;
-  }
-  .workspace-menu nav button:hover,
-  .workspace-menu nav a:hover {
-    background: #252338;
-    color: white;
-  }
-  .menu-resources {
-    border-top: 1px solid #303446;
-    margin-top: 8px;
-    padding-top: 8px;
-  }
-  .menu-resources a {
-    color: #b1b5c6;
+  .computer-game[data-ready='false'] main {
+    visibility: hidden;
   }
   .learning-milestone {
     width: min(620px, 100%);
@@ -499,36 +373,13 @@
   .verified-chip > :last-child {
     color: #a49cff;
   }
-  .game-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 18px;
-    padding: 27px 4%;
-    border-top: 1px solid #242735;
-    color: #a1a5b6;
-    font-size: 12px;
-  }
-  .game-footer > div {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 22px;
-  }
-  .game-footer a:hover {
-    color: white;
-  }
-  .light-footer {
-    background: #f2f1f7;
-    color: #55576b;
-    border-color: #d7d7e1;
-    color-scheme: light;
-  }
-  .light-footer a:hover {
-    color: #4f46e5;
-  }
-  .light-footer :global(a:focus-visible) {
-    outline-color: #4f46e5 !important;
+  .next-reading {
+    display: inline-block;
+    color: #c0b7ff;
+    text-decoration: underline;
+    text-underline-offset: 5px;
+    padding: 14px 0;
+    font-size: 14px;
   }
   .storage-notice {
     padding: 12px 4%;
@@ -537,29 +388,15 @@
   }
   @media (max-width: 520px) {
     main {
-      min-height: calc(100svh - 72px);
+      min-height: calc(100svh - 148px);
     }
-    .game-header {
-      min-height: 72px;
-      padding: 12px 20px;
-      gap: 15px;
-    }
-    .wordmark {
-      gap: 7px;
-      font-size: 16px;
-    }
-    .wordmark img {
-      width: 28px;
-      height: 28px;
-    }
-    .workspace-menu summary {
-      gap: 10px;
-      font-size: 12px;
+    .learning-links {
+      padding: 4px 20px 0;
     }
     .learning-milestone,
     .collection-view {
-      padding-left: 24px;
-      padding-right: 24px;
+      padding-left: 20px;
+      padding-right: 20px;
     }
     .verified-chip {
       grid-template-columns: 60px 1fr auto;
@@ -567,19 +404,6 @@
     }
     .chip-purpose {
       font-size: 13px;
-    }
-    .game-footer {
-      padding: 24px;
-      font-size: 11px;
-      gap: 15px;
-    }
-    .game-footer > div {
-      gap: 15px;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .workspace-menu summary > span {
-      transition: none;
     }
   }
 </style>

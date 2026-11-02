@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="en" class="transition-colors">
+<!doctype html>
+<html lang="en" class="dark" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -7,32 +7,13 @@
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" href="/logo.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFFFF" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#292524" />
+    <meta name="theme-color" content="#080b13" />
 
     <meta
       name="description"
       content="Find out how computers work by embarking on the journey of building your own computer from scratch, from chips to code. No prerequisites - start from the browser now."
     />
     <title>Chips and Code</title>
-
-    <!--
-    Theme handling is done client-side here because:
-    - It allows to use prerendering
-    - It prevents flicker as it's applied as s blocking script
-    -->
-    <script>
-      var savedTheme = localStorage.getItem('theme');
-      var preferredDark =
-        window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-      var theme = savedTheme || (preferredDark ? 'dark' : 'light');
-
-      document.documentElement.setAttribute('data-theme', theme);
-      if (theme === 'dark') {
-        document.documentElement.classList.add('dark');
-      }
-    </script>
 
     %sveltekit.head%
   </head>

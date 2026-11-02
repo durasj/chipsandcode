@@ -1,56 +1,68 @@
-# Chips and Code: content and simulator audit
+# Chips and Code: complete source adaptation
 
-Baseline audit of the `main` branch of [durasj/chipsandcode](https://github.com/durasj/chipsandcode) through the GitHub connector on 2 November 2026, before the interface redesign. This inventory distinguishes source content from executable simulator support. Release verification is reported separately.
+The repository contained one Boolean logic chapter: `intro.md` (14 lines), `background.md` (143), `project.md` (237), and `meta/what-next.md` (17). This audit covers all 411 source lines from the pre-redesign course. Later README chapter names were plans, not additional learning material.
 
-## Actual shipped scope
+The four documents now contain corrected full explanations, rendered at `/learn/reference/...` in the same visual system as Learn and Tools. The compact reference links into the relevant full-text section. The former course routes redirect to these pages; they do not expose a second interface. Embedded legacy editors have been replaced by contextual links to the simulator under Tools.
 
-The baseline README described a browser-based, no-prerequisites, free experience and claimed the first week of Nand2Tetris. The actual project page contains a supplied NAND demonstration, **six embedded construction exercises**, and descriptions of multi-bit and multi-way gates. Treat those as distinct levels of support.
+## Source-to-experience coverage
 
-| Existing source                                         | Verified contents                                                                                                                                                               | Layer / interaction treatment                                                                            |
-| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `src/routes/learn/hardware/boolean-logic/intro.md`      | Build gates from NAND; later processing/storage chapters described as coming soon                                                                                               | Logic foundation: construct a computer from binary signals                                               |
-| `src/routes/learn/hardware/boolean-logic/background.md` | Binary values, truth tables, expressions, canonical representation, gate abstraction/composition, physical construction context, HDL and simulation/testing; worked XOR example | Contextual reference entries; inspect signals and truth-table evidence; optional algebra/HDL explanation |
-| `src/routes/learn/hardware/boolean-logic/project.md`    | NAND demo; NOT, AND, OR, XOR, Mux, DMux exercises; descriptive bus/multi-way extensions; perspective on alternative primitives and optimization                                 | Six construction missions after a short NAND discovery, then explicitly marked expansion plans           |
-| `src/lib/hardware-simulator/examples/BuiltinNand.ts`    | Supplied NAND with test and comparison fixtures                                                                                                                                 | Onboarding device that players probe; do not award construction mastery for merely toggling it           |
-| `src/lib/hardware-simulator/examples/ExerciseNot.ts`    | Empty NOT implementation; 2 input cases                                                                                                                                         | Inverter: output is the opposite of its input                                                            |
-| `src/lib/hardware-simulator/examples/ExerciseAnd.ts`    | Empty AND implementation; all 4 cases                                                                                                                                           | Conjunction: output high only when both inputs are high                                                  |
-| `src/lib/hardware-simulator/examples/ExerciseOr.ts`     | Empty OR implementation; all 4 cases                                                                                                                                            | Disjunction: output high when either input is high                                                       |
-| `src/lib/hardware-simulator/examples/ExerciseXor.ts`    | Empty XOR implementation; all 4 cases                                                                                                                                           | Difference detector: output high when the inputs disagree                                                |
-| `src/lib/hardware-simulator/examples/ExerciseMux.ts`    | Empty Mux implementation; all 8 cases                                                                                                                                           | Receiver selects one of two input signals; selector routes data, rather than acting as an enable         |
-| `src/lib/hardware-simulator/examples/ExerciseDMux.ts`   | Empty DMux implementation; 4 cases and 2 expected output pins                                                                                                                   | Router sends an input signal to one of two destinations; inactive destination must remain 0              |
+| Source material                                                                     | Adapted explanation                                                        | Interaction or tool                                                              |
+| ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Introduction: binary building blocks and constructing a computer from gates         | `/learn/reference/boolean-logic`                                           | Guided signals → supplied NOT → supplied AND → NAND, then circuit construction   |
+| Boolean algebra: two values, NOT, AND, OR, XOR, NAND, NOR                           | `/learn/reference/boolean-logic/background#signals-and-boolean-operations` | Foundational exploration and compact reference gate controls                     |
+| Three-variable truth table and `(a OR b) AND NOT c`                                 | `background#truth-tables`                                                  | Compact reference exposes inputs and intermediate values                         |
+| Canonical representation, literals, and sum of products                             | `background#canonical-representation`                                      | `/tools/boolean-functions` edits table outputs and derives canonical expressions |
+| All sixteen two-input functions, equivalence, implication, and function count       | `background#all-two-input-functions`                                       | Boolean functions tool evaluates every two-input truth table                     |
+| NAND and NOR universality, NOT/AND/OR constructions                                 | `background#universality`                                                  | NAND's optional deeper explanation and Boolean functions tool                    |
+| Physical gates, transistors, silicon, alternate switching technologies, abstraction | `background#gates-and-physical-signals`                                    | Precise distinction between logical signals and electrical quantities            |
+| Primitive/composite gates, interfaces, internal signals, three-input AND, fan-out   | `background#interfaces-and-composition`                                    | Visual/code workbench and compact reference                                      |
+| Worked XOR implementation and alternate designs                                     | `background#a-worked-xor-circuit`                                          | `/tools/hardware-simulator/Xor` retains the source example and fixture           |
+| HDL header, part interfaces, named internal wires, structural interpretation        | `background#reading-hdl`                                                   | Same simulator and parser, now under Tools                                       |
+| Test scripts, expected/actual values, exhaustive testing and its limits             | `background#testing-a-construction`                                        | Guided exhaustive tests plus simulator Tests and Output views                    |
+| Why model before fabrication; timing, power, and cost limits                        | `background#from-a-model-to-physical-hardware`                             | Explicit simulator boundary; no fabricated physical measurements                 |
+| Project objective and supplied NAND contract                                        | `/learn/reference/boolean-logic/project#the-supplied-nand-primitive`       | NAND observation; `/tools/hardware-simulator/BuiltinNand`                        |
+| NOT, AND, OR, XOR contracts and hints                                               | `project#single-bit-gates`                                                 | Six guided builds retain existing scalar contracts and exercise IDs              |
+| Full Mux truth table and selector meaning                                           | `project#selecting-and-routing`                                            | Guided Mux construction and `ExerciseMux` simulator fixture                      |
+| DMux contract and all inactive outputs                                              | `project#dmux-choose-one-output`                                           | Guided DMux construction and `ExerciseDMux` fixture                              |
+| Bus notation, word width, Not16, And16, Or16, Mux16                                 | `project#buses`                                                            | `/tools/buses` evaluates the multi-bit behavior                                  |
+| Or8Way versus bitwise OR                                                            | `project#multi-way-operations`                                             | Buses and routing tool evaluates reduction                                       |
+| 4/8-way 16-bit mux, selector width, composition trees                               | `project#multi-way-multiplexors`                                           | Buses and routing tool routes actual words                                       |
+| 4/8-way 1-bit demux, inactive zero outputs                                          | `project#multi-way-demultiplexors`                                         | Buses and routing tool evaluates every output                                    |
+| Alternative primitives and efficiency considerations                                | `project#correctness-then-efficiency`                                      | Optional comparison after correct constructions; no timing claims                |
+| What next, contribution links, wider Nand2Tetris curriculum                         | `/learn/reference/meta/what-next`                                          | Links to available labs, simulator, and official external continuation           |
 
-## Existing simulation capabilities and limits
+Paths beginning with `background#` and `project#` are relative to `/learn/reference/boolean-logic/`.
 
-The existing simulator is a valuable reusable implementation. `ChipFactory.ts` builds composite chips from HDL AST parts and internal wires; `CustomChip.ts` runs a network of those parts. Real implementations exist for `Nand`, `Not`, `And`, `Or`, and `Xor` in `src/lib/hardware-simulator/chips/builtin/`.
+## Corrections made during adaptation
 
-**Mux and DMux native classes are placeholders**, both extending `NotImplemented`. That does not prevent constructing their composite HDL from working NOT/AND/OR/NAND parts, which is what their exercise fixtures request. The workbench must not instantiate a built-in Mux/DMux to stand in for a player's completed construction without implementing it or using that construction.
+- Replaced the incorrectly duplicated three-input table under “Two-Input Boolean Functions” with all sixteen actual two-input functions. Output strings consistently use row order 00, 01, 10, 11.
+- Corrected the number of Boolean functions of n inputs to `2^(2^n)`, distinguishing it from the `2^n` input combinations.
+- Introduced ordinary NOT and AND behavior before NAND. Explained NAND as NOT-AND and justified its role through functional completeness.
+- Used **inverter**, not “converter,” for NOT.
+- Explained HDL accurately; removed the incorrect expansion of VHDL as “Virtual.” Distinguished this educational syntax from VHDL and Verilog.
+- Corrected the 8-way, 1-bit **demultiplexor** reference that previously said multiplexor.
+- Distinguished bitwise operations from arithmetic and multi-bit width from multi-way alternatives.
+- Clarified that a selector routes data rather than enabling power; a 0 input remains 0 along the chosen route.
+- Separated logical fan-out from real electrical loading and logical circuit depth from physical propagation time.
+- Qualified exhaustive testing as a guarantee of the modeled finite truth table, not a proof of physical fabrication, timing, or simulator correctness.
+- Replaced unsupported claims that the existing simulator could build the full computer. Later chapters are explicitly still to be authored.
+- Removed the claim that six scalar constructions complete the entire original first project, which also includes multi-bit construction work.
+- Preserved source attribution and content licensing while removing dated update text, decorative quotations, and the legacy editor embeds.
 
-**The player's reusable chip library is not implemented in the factory.** `ChipFactory.LOADED` is an unused empty object; `fromDefined` resolves only `ChipFactory.BUILTIN`. Reusing actual player-authored designs as component packages needs registration with dependency resolution or equivalent graph flattening. A badge or inventory label alone does not provide this functionality. Restricting available primitives by mission also needs explicit enforcement because the current factory exposes its built-ins independently of progression.
+## Executable scope and limits
 
-**Multi-bit and later computer stages are future work.** `CustomChip.ts` explicitly lists support for words and clocked behavior as TODOs. `Not16Chip.ts` is a `NotImplemented` class. Descriptive bus and multi-way content can be covered through an interactive reference model now, but full construction missions require simulator and fixture work. Do not present ALU, RAM, CPU, assembler, or later weeks as playable based on README aspirations.
+The guided workbench constructs and verifies NOT, AND, OR, XOR, Mux, and DMux after exploration of supplied primitive behavior. Visual and code views share the same scalar, feed-forward circuit representation, parser, and simulator. All truth-table cases, including both DMux outputs, are checked.
 
-**Animation is an interpretation of combinational evaluation.** The existing runtime uses breadth-first propagation and a 9,999 iteration loop guard, not modeled physical electrical delay. Show an educational signal trace, not claims about measured voltage, timing, energy, or real current. The shared visual/code graph must reject cycles, missing connections and unsupported parts and keep failures recoverable.
+The hardware simulator remains the existing HDL/test-script environment, integrated under Tools. NAND, NOT, AND, OR, and XOR have real built-in implementations. Mux and DMux construction fixtures use composite networks; their built-in classes remain placeholders. The simulator does not gain support for every placeholder class simply because its interface is redesigned.
 
-## Recommended playable slice
+The Boolean functions tool and buses/routing tool are executable behavioral explorations of the previously descriptive material. They extend what a learner can manipulate and inspect. They do not assert that arbitrary multi-bit HDL designs have been compiled or that a player's custom 16-bit gate has passed a construction exercise.
 
-The workbench must provide complete construction and verification for the existing contracts. Let players inspect the target behavior, build a network, toggle inputs, see intermediate 0/1 states, and run exhaustive tests. A mission completes only if the player's network passes all required input combinations and both outputs where applicable. Keep expected and actual values visible, including an actionable counterexample on failure.
+The factory does not yet register the player's earlier custom implementations as reusable chip packages. The workbench supplies primitive equivalents of permitted previously introduced gates. Both the full text and product avoid claiming a custom reusable library exists.
 
-The six existing fixtures already define reliable small-machine contracts. Preserve those contracts and exercise IDs, with their technical chip names visible throughout. The signal monitor must visualize the actual output of the same circuit; it must not be a disconnected animation triggered by a success button.
+Arithmetic, sequential state, memory, CPU construction, machine language, an assembler, and high-level software are future layers. Their names and conceptual relationship appear in the landing journey, not as working chapters or tools.
 
-## Known source corrections handled in the adapted reference
+## Licensing and continuity
 
-- The background section titled “Two-Input Boolean Functions” contains an eight-row, three-input table copied from the earlier example. It does **not** show all sixteen two-input functions as its caption claims. The adapted reference omits this incorrect table and uses complete gate truth tables.
-- Its function-count formula is rendered as `${2^2}^n`; the correct count for Boolean functions of `n` inputs is `2^(2^n)`.
-- The background expands VHDL as “Virtual”; that expansion is incorrect. In the adapted content, simply call the project's syntax “HDL” and explain what it describes.
-- The project calls NOT a “converter”; use the conventional “inverter.”
-- `ExerciseAnd.ts` starts its comment with “Not gate”; the adapted challenge uses the correct AND name; the legacy fixture is separate.
-- The project’s multi-way demultiplexor prose ends with “8-way 1-bit multiplexor”; the context indicates demultiplexor. Keep this a documented future capability until implemented.
-- The introduction's descriptions of uniform chapter structure and later chapters are aspirations rather than shipped navigation. The adapted reference links only to available sections.
+Software remains MIT licensed. Adapted learning content remains **CC BY-NC-SA 3.0**, credited to the existing Chips and Code material by Jan Duras and its Nand2Tetris source by Noam Nisan and Shimon Schocken. The full-text pages preserve license links and the statement that Chips and Code is not affiliated with or endorsed by Nand2Tetris.
 
-## Attribution and continuity
-
-`README.md` states **software: MIT; learning content: CC BY-NC-SA 3.0**. `src/routes/about/+page.svelte` explicitly credits Nand2Tetris content under that license and says Chipsandcode is not affiliated with or endorsed by Nand2Tetris. Retain the applicable credits and license links when adapting existing explanations, diagrams, exercises, and source text. Keep original interface artwork identifiable separately from adapted course material. Preserve existing `/learn/hardware/...` links as deep links into or alongside the reference, and keep the Hardware IDE accessible for free exploration.
-
-## Sources inspected
-
-`README.md`; `src/routes/about/+page.svelte`; the three Boolean logic Markdown files listed above; `BuiltinNand.ts`; the six exercise fixtures listed above; `src/lib/hardware-simulator/chips/ChipFactory.ts`; `CustomChip.ts`; `builtin/{NotImplemented,NandChip,NotChip,AndChip,OrChip,XorChip,MuxChip,DMuxChip,Not16Chip}.ts`.
+Existing `/learn/hardware/...` addresses are compatibility redirects into the new reference, and `/experiment/hardware-ide/...` addresses resolve into Tools. Canonical links within the adapted experience use `/learn`, `/learn/reference/...`, and `/tools/...` only.
