@@ -2,7 +2,7 @@ describe('Accessibility Statement', () => {
   it('Can be navigated to via Footer and contains everything important', () => {
     cy.visit('/');
 
-    cy.contains('a', 'Accessibility Statement').click();
+    cy.contains('footer a', 'Accessibility Statement').click();
 
     cy.contains('h1', 'Accessibility');
     cy.location('pathname').should('eq', '/accessibility-statement');

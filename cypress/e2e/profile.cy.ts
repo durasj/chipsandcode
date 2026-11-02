@@ -6,7 +6,7 @@ describe('Profile', () => {
     // TODO: Find a way to suppress dynamic ESM loading for Cypress tests
     cy.wait(1500);
 
-    cy.findByLabelText('User account').click();
+    cy.get('footer').findByLabelText('User account').click();
 
     cy.contains('Hi, Anonym');
 

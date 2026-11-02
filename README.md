@@ -20,6 +20,16 @@
 
 ## Features
 
+### Signal Isles: the playable redesign
+
+The home screen is now a miniature world restored by building real logic circuits. Seven stations cover the supplied NAND gate and the existing NOT, AND, OR, XOR, Mux and DMux exercises. Tap a signal source and a destination pin to connect them, or use the labeled connection controls. Test the complete truth table before restoring a station. Drafts, discoveries and completed inventions are stored in this browser; no account or database is required to play.
+
+The visual builder generates HDL and runs the existing hardware simulator. The field guide provides optional interactive explanations of Boolean expressions, composition, HDL, buses and multi-way selectors. The original reading and full hardware IDE remain available. Multi-bit circuits, arithmetic, memory and CPU construction are future work, not playable campaign stages.
+
+See the [game design](docs/signal-isles-game-design.md), [art direction](docs/signal-isles-art-direction.md), and [content audit](docs/signal-isles-content-audit.md) for the redesign, its relationship to the existing material, and the boundary between the current implementation and later ideas.
+
+The animation below shows the original hardware IDE, which remains accessible from the game footer.
+
 <img src="./demo.gif" width="100%">
 
 Currently contains and fully supports the first week of Nand2Tetris.

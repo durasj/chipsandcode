@@ -1,21 +1,22 @@
 describe('Home', () => {
-  it('Contains welcome message and link to content', () => {
+  it('Introduces the Signal Isles and opens the first playable workshop', () => {
     cy.visit('/');
+    cy.contains('Progress saved on this device');
     cy.injectAxe();
 
-    cy.contains('Wondering how computers work?');
-    cy.contains('Find out by embarking on the journey of building your own computer');
-
-    // Unfortunately, images take a bit to load
-    cy.wait(1000);
-    cy.matchImage();
-    // ... and screenshots cause the app to reload which may take some time
-    cy.wait(500);
-
+    cy.findByRole('heading', { name: /A little logic\.\s*A living world\./ }).should('be.visible');
+    cy.findByRole('region', {
+      name: 'Signal Isles world map. Select a station to open its mission.',
+    }).should('be.visible');
+    cy.findByRole('region', { name: 'Stations, list view' })
+      .findAllByRole('button')
+      .should('have.length', 7);
+    cy.contains('0 OF 7 SYSTEMS RESTORED');
     cy.checkA11y();
 
-    cy.contains('Start Learning').click();
-
-    cy.location('pathname').should('eq', '/learn/hardware/boolean-logic');
+    cy.findByRole('button', { name: 'Bring it to life' }).click();
+    cy.findByRole('heading', { name: 'Find the first signal' }).should('be.visible');
+    cy.findByRole('region', { name: 'Discover NAND' }).should('be.visible');
+    cy.location('pathname').should('eq', '/');
   });
 });

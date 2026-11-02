@@ -6,7 +6,7 @@ describe('About', () => {
     // TODO: Find a way to suppress dynamic ESM loading for Cypress tests
     cy.wait(1500);
 
-    cy.contains('nav a', 'About').click();
+    cy.contains('footer a', 'About').click();
 
     cy.contains('Chips and Code');
 
