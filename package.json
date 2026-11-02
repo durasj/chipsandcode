@@ -81,7 +81,7 @@
     "@steeze-ui/svelte-icon": "1.6.2",
     "@zip.js/zip.js": "^2.7.20",
     "bits-ui": "2.20.3",
-    "daisyui": "^3.5.0",
+    "daisyui": "^4.0.0",
     "date-fns": "4.4.0",
     "denque": "^2.1.0",
     "monaco-editor": "0.57.0",
