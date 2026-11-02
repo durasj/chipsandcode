@@ -37,7 +37,7 @@
     "@testing-library/svelte": "5.4.2",
     "@types/katex": "^0.16.2",
     "@types/nearley": "^2.11.2",
-    "@types/node": "^24.0.0",
+    "@types/node": "^26.6.6",
     "@vite-pwa/assets-generator": "2.0.0",
     "@vite-pwa/sveltekit": "2.0.0",
     "@vitest/browser": "5.1.0",
@@ -99,7 +99,7 @@
   },
   "type": "module",
   "engines": {
-    "node": "24.x"
+    "node": "26.x"
   },
   "imports": {
     "#lib/*": "./src/lib/*",
