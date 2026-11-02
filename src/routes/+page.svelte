@@ -3,10 +3,10 @@
 </script>
 
 <svelte:head>
-  <title>Chips and Code — Bring a world to life, one chip at a time</title>
+  <title>Chips and Code — From signal to software</title>
   <meta
     name="description"
-    content="A hands-on adventure into how computers work. Explore the Signal Isles, build real logic circuits, and bring a tiny world back to life. Free, in your browser, with no prerequisites."
+    content="Build your understanding of a computer from the inside out. Explore its layers, wire real logic circuits, or write HDL. Visual and code, side by side."
   />
 </svelte:head>
 <Game />

@@ -19,7 +19,7 @@
   const words = ['1010', '0110', '1100', '0001'];
   const gates: Gate[] = ['NAND', 'NOT', 'AND', 'OR', 'XOR'];
   const descriptions: Record<Gate, string> = {
-    NAND: 'Outputs 0 only when both inputs are 1. This is your supplied primitive: every gate in the first expedition can be built from copies of it.',
+    NAND: 'Outputs 0 only when both inputs are 1. This is your supplied primitive: every gate in the logic layer can be built from copies of it.',
     NOT: 'Inverts one input. A 0 becomes 1; a 1 becomes 0. Also called an inverter.',
     AND: 'Outputs 1 only when both inputs are 1. Think of a machine that needs two safety switches.',
     OR: 'Outputs 1 when at least one input is 1. Both inputs being 1 still produces 1.',
@@ -57,19 +57,19 @@
 }`;
 </script>
 
-<section class="field-guide" aria-label="Field guide">
+<section class="field-guide" aria-label="Logic reference">
   <header class="guide-header">
-    <div class="guide-mark" aria-hidden="true">⌘</div>
+    <div class="guide-mark" aria-hidden="true">01</div>
     <div class="guide-heading">
-      <p class="eyebrow">Chips & Code / Explorer's edition</p>
-      <h1>Field notes.</h1>
+      <p class="eyebrow">CHIPS AND CODE / REFERENCE</p>
+      <h1>Under the surface.</h1>
     </div>
-    <button type="button" class="back-button" onclick={onclose}>← Back to the isles</button>
+    <button type="button" class="back-button" onclick={onclose}>← Back to layers</button>
   </header>
 
   <div class="notebook">
-    <nav class="chapter-nav" aria-label="Field guide chapters">
-      <span class="nav-caption">The small ideas behind big machines</span>
+    <nav class="chapter-nav" aria-label="Reference chapters">
+      <span class="nav-caption">LAYER 00 / LOGIC</span>
       {#each chapters as item}
         <button
           type="button"
@@ -82,14 +82,14 @@
         >
       {/each}
       <p class="margin-note">
-        Open when curious.<br />Take what you need.<br />Go build something.
+        Inspect the behavior.<br />Understand the model.<br />Return to your design.
       </p>
     </nav>
 
     <div class="paper">
       {#if chapter === 'signals'}
-        <p class="eyebrow">Note 01 / A language with two words</p>
-        <h2>Everything starts<br />with a little on & off.</h2>
+        <p class="eyebrow">01 / BOOLEAN SIGNALS</p>
+        <h2>Two states.<br />Every possibility.</h2>
         <p class="intro">
           A Boolean signal has two values: <strong>0</strong> and <strong>1</strong>. Gates
           transform those signals. Flip an input and follow what changes.
@@ -113,9 +113,8 @@
               class="signal-toggle"
               class:high={a}
               aria-pressed={a}
-              aria-label={`Input ${gate === 'NOT' ? 'in' : 'A'}: ${Number(a)}`}
               onclick={() => (a = !a)}
-              ><span>{gate === 'NOT' ? 'in' : 'A'}</span><b>{Number(a)}</b><small>flip signal</small
+              ><span>{gate === 'NOT' ? 'in' : 'A'}</span><b>{Number(a)}</b><small>toggle</small
               ></button
             >
             {#if gate !== 'NOT'}
@@ -124,9 +123,8 @@
                 class="signal-toggle"
                 class:high={b}
                 aria-pressed={b}
-                aria-label={`Input B: ${Number(b)}`}
                 onclick={() => (b = !b)}
-                ><span>B</span><b>{Number(b)}</b><small>flip signal</small></button
+                ><span>B</span><b>{Number(b)}</b><small>toggle</small></button
               >
             {/if}
           </div>
@@ -145,7 +143,7 @@
 
         <div class="two-columns">
           <div>
-            <h3>No guessing. Every possibility.</h3>
+            <h3>The complete contract.</h3>
             <p>
               A truth table lists every possible input and its output. The highlighted row is the
               state you're exploring. For a two-input gate there are four cases; for a three-input
@@ -174,8 +172,8 @@
           </table>
         </div>
       {:else if chapter === 'expressions'}
-        <p class="eyebrow">Note 02 / Same idea, different views</p>
-        <h2>A machine can be<br />a sentence, too.</h2>
+        <p class="eyebrow">02 / BOOLEAN EXPRESSIONS</p>
+        <h2>Same function.<br />Different representations.</h2>
         <p class="intro">
           “A or B is on, and C is off.” That is a complete specification. We can write it as an
           expression, draw connected gates, or list its truth table.
@@ -187,24 +185,21 @@
             class="signal-toggle"
             class:high={a}
             aria-pressed={a}
-            onclick={() => (a = !a)}
-            ><span>a</span><b>{Number(a)}</b><small>flip signal</small></button
+            onclick={() => (a = !a)}><span>a</span><b>{Number(a)}</b><small>toggle</small></button
           >
           <button
             type="button"
             class="signal-toggle"
             class:high={b}
             aria-pressed={b}
-            onclick={() => (b = !b)}
-            ><span>b</span><b>{Number(b)}</b><small>flip signal</small></button
+            onclick={() => (b = !b)}><span>b</span><b>{Number(b)}</b><small>toggle</small></button
           >
           <button
             type="button"
             class="signal-toggle"
             class:high={c}
             aria-pressed={c}
-            onclick={() => (c = !c)}
-            ><span>c</span><b>{Number(c)}</b><small>flip signal</small></button
+            onclick={() => (c = !c)}><span>c</span><b>{Number(c)}</b><small>toggle</small></button
           >
           <div class="signal-output" class:high={expressionResult} aria-live="polite">
             <span>f</span><b>{Number(expressionResult)}</b><small>output</small>
@@ -232,8 +227,8 @@
           those gates can itself be built from NAND.
         </p>
       {:else if chapter === 'blueprints'}
-        <p class="eyebrow">Note 03 / Look inside the black box</p>
-        <h2>Small parts.<br />Bigger possibilities.</h2>
+        <p class="eyebrow">03 / COMPOSITION & HDL</p>
+        <h2>An interface outside.<br />A circuit inside.</h2>
         <p class="intro">
           A chip has an interface—named inputs, outputs, and promised behavior. Its implementation
           is the network of parts inside. The same interface can have more than one correct
@@ -255,7 +250,7 @@
         </div>
         <div class="two-columns blueprint-columns">
           <div>
-            <h3>A blueprint the simulator can read.</h3>
+            <h3>Structure, expressed as code.</h3>
             <p>
               HDL means <strong>hardware description language</strong>. It describes the structure
               of a circuit, rather than a sequence of instructions.
@@ -273,7 +268,7 @@
             </dl>
           </div>
           <div class="code-card">
-            <span>Not.hdl / example blueprint</span>
+            <span>Not.hdl / worked example</span>
             <pre><code>{notHDL}</code></pre>
           </div>
         </div>
@@ -290,13 +285,13 @@
           combination. Fewer parts can be an optional design challenge after correctness.
         </p>
       {:else if chapter === 'scale'}
-        <p class="eyebrow">Note 04 / A preview beyond the expedition</p>
-        <h2>One signal.<br />Then a whole bundle.</h2>
+        <p class="eyebrow">04 / BUSES & SELECTORS</p>
+        <h2>From a bit<br />to a word.</h2>
         <p class="intro">
-          The current expedition builds single-bit gates. These interactive sketches explain where
+          The current logic layer builds single-bit gates. These interactive models explain where
           the existing reading goes next: buses and multi-way selectors.
         </p>
-        <div class="concept-label">Concept sketch / not a construction mission</div>
+        <div class="concept-label">Concept preview / construction planned</div>
         <h3>A bus carries many bits together.</h3>
         <p>
           An 8-bit NOT applies the same inversion to each bit independently. Flip any bit below. A
@@ -357,11 +352,11 @@
           </div>
         </div>
       {:else}
-        <p class="eyebrow">Note 05 / Keep exploring</p>
-        <h2>Follow the<br />wires further.</h2>
+        <p class="eyebrow">05 / SOURCES & FURTHER READING</p>
+        <h2>Go deeper<br />into the design.</h2>
         <p class="intro">
-          The expedition puts the machines first. The original reading and hardware editor are here
-          whenever you want more detail or a blank workbench.
+          Explore the original explanations, inspect the exercise contracts, or open the full
+          hardware IDE for an unconstrained workspace.
         </p>
         <div class="reading-links">
           <a href="/learn/hardware/boolean-logic/intro"
@@ -370,14 +365,14 @@
             ></a
           >
           <a href="/learn/hardware/boolean-logic/background"
-            ><span>02 / THE ORIGINAL FIELD NOTES</span><strong
+            ><span>02 / BOOLEAN LOGIC REFERENCE</span><strong
               >Boolean logic, HDL & simulation</strong
             ><b aria-hidden="true">↗</b></a
           >
           <a href="/learn/hardware/boolean-logic/project"
-            ><span>03 / THE CONSTRUCTION CONTRACTS</span><strong
-              >Gate specifications & exercises</strong
-            ><b aria-hidden="true">↗</b></a
+            ><span>03 / CHIP SPECIFICATIONS</span><strong>Gate specifications & exercises</strong><b
+              aria-hidden="true">↗</b
+            ></a
           >
           <a href="/experiment/hardware-ide"
             ><span>04 / FREE EXPLORATION</span><strong>Open the hardware IDE</strong><b
@@ -386,9 +381,9 @@
           >
         </div>
         <div class="note-card credits">
-          <h3>Built on good ideas.</h3>
+          <h3>Sources and attribution.</h3>
           <p>
-            These notes adapt the existing Chips and Code Boolean logic material, based on <a
+            This reference adapts the existing Chips and Code Boolean logic material, based on <a
               href="https://www.nand2tetris.org/"
               target="_blank"
               rel="noreferrer">Nand2Tetris</a
@@ -397,7 +392,8 @@
               href="https://creativecommons.org/licenses/by-nc-sa/3.0/"
               target="_blank"
               rel="noreferrer">CC BY-NC-SA 3.0</a
-            >. The explanations and interactive presentation have been adapted for this field guide.
+            >. The explanations and interactive presentation have been adapted for this interactive
+            reference.
           </p>
           <p>
             Chips and Code is not affiliated with or endorsed by Nand2Tetris. Software is MIT
@@ -406,7 +402,7 @@
         </div>
       {/if}
       <footer class="page-footer">
-        <span>CHIPS & CODE / FIELD NOTES</span><span
+        <span>CHIPS AND CODE / REFERENCE</span><span
           >{chapters.find((item) => item.id === chapter)?.number} — 05</span
         >
       </footer>
@@ -416,53 +412,49 @@
 
 <style>
   .field-guide {
-    --ink: #173641;
-    --paper: #f7f2e4;
-    --muted: #647373;
-    --mint: #b8ebc9;
-    --line: #d9d5c8;
-    background: #112d38;
+    --ink: #f0f0f7;
+    --paper: #12151f;
+    --muted: #a1a5b6;
+    --line: #303446;
+    --signal: #a79fff;
+    background: #0b0d14;
     color: var(--ink);
     min-height: 100vh;
-    padding: 34px clamp(16px, 5vw, 80px) 60px;
+    padding: 36px clamp(16px, 4vw, 64px) 64px;
     font-family: Arial, Helvetica, sans-serif;
   }
   .guide-header {
-    max-width: 1240px;
-    margin: 0 auto 30px;
+    max-width: 1280px;
+    margin: 0 auto 28px;
     display: flex;
     align-items: center;
     gap: 18px;
-    color: var(--paper);
   }
   .guide-mark {
-    width: 54px;
-    height: 54px;
-    border: 1px solid #698088;
-    border-radius: 14px;
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--line);
     display: grid;
     place-items: center;
-    font-size: 34px;
-    color: #b8ebc9;
+    color: var(--signal);
+    font: 14px monospace;
+    background: #181928;
   }
   .guide-heading {
     flex: 1;
   }
   .eyebrow {
-    font-size: 10px;
-    letter-spacing: 0.16em;
-    font-weight: 700;
+    font: 10px monospace;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     margin: 0 0 10px;
-  }
-  .guide-heading .eyebrow {
-    color: #b1c4c5;
+    color: var(--muted);
   }
   .guide-heading h1 {
-    font-size: 32px;
-    letter-spacing: -1.2px;
+    font-size: 30px;
+    letter-spacing: -0.9px;
     margin: 0;
-    font-weight: 700;
+    font-weight: 600;
   }
   button,
   a {
@@ -474,109 +466,103 @@
   }
   button:focus-visible,
   a:focus-visible {
-    outline: 3px solid #cc613f !important;
+    outline: 2px solid #b5afff !important;
     outline-offset: 4px;
   }
   .back-button {
-    border: 1px solid #70878a;
-    border-radius: 7px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
     padding: 12px 16px;
-    color: var(--paper);
-    background: transparent;
+    color: var(--ink);
+    background: #171a26;
     font-size: 12px;
-    font-weight: 700;
     min-height: 44px;
   }
   .back-button:hover {
-    background: #294650;
+    background: #25283b;
   }
   .notebook {
-    max-width: 1240px;
+    max-width: 1280px;
     margin: auto;
     display: grid;
-    grid-template-columns: 235px minmax(0, 1fr);
-    border-radius: 12px;
+    grid-template-columns: 224px minmax(0, 1fr);
+    border: 1px solid var(--line);
+    border-radius: 5px;
     overflow: hidden;
     background: var(--paper);
-    box-shadow: 0 25px 70px #0003;
   }
   .chapter-nav {
-    padding: 35px 15px;
-    background: #eae7da;
-    border-right: 1px solid #d7d3c6;
+    padding: 30px 12px;
+    background: #0f111a;
+    border-right: 1px solid var(--line);
   }
   .nav-caption {
-    font-size: 10px;
+    font: 10px monospace;
     line-height: 1.7;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    letter-spacing: 0.1em;
     display: block;
-    padding: 0 14px;
-    margin-bottom: 30px;
-    color: #526968;
+    padding: 0 13px;
+    margin-bottom: 24px;
+    color: var(--muted);
   }
   .chapter-nav button {
     display: flex;
     align-items: center;
     width: 100%;
-    padding: 16px 12px;
-    min-height: 52px;
-    gap: 11px;
+    padding: 15px 11px;
+    min-height: 50px;
+    gap: 10px;
     background: transparent;
-    border: 0;
-    border-radius: 5px;
+    border: 1px solid transparent;
+    border-radius: 4px;
     text-align: left;
-    color: #526665;
+    color: var(--muted);
     font-size: 12px;
-    font-weight: 700;
     margin-bottom: 5px;
   }
   .chapter-nav button > span:first-child {
-    font: 11px monospace;
-    color: #7c8c85;
+    font: 10px monospace;
+    color: var(--muted);
   }
   .chapter-nav button.current {
-    background: #173d45;
-    color: #f7f2e4;
+    background: #25223f;
+    border-color: #48406f;
+    color: #f0edff;
   }
   .chapter-nav button.current > span:first-child {
-    color: #b8ebc9;
+    color: var(--signal);
   }
   .chapter-nav button:hover:not(.current) {
-    background: #dedfd1;
+    background: #1b1e2b;
+    color: var(--ink);
   }
   .chapter-arrow {
     margin-left: auto;
   }
   .margin-note {
-    font-family: Georgia, serif;
-    font-style: italic;
-    font-size: 17px;
-    line-height: 1.6;
-    color: #627570;
-    padding: 25px 15px;
+    font: 11px/1.9 monospace;
+    color: var(--muted);
+    padding: 24px 12px;
   }
   .paper {
-    padding: 45px clamp(22px, 4vw, 60px) 24px;
+    padding: 42px clamp(24px, 4vw, 56px) 26px;
     min-width: 0;
-    background: linear-gradient(90deg, #dedace55, transparent 16px), var(--paper);
   }
   .paper > .eyebrow {
-    color: #a95837;
+    color: var(--signal);
   }
   .paper h2 {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-weight: 400;
-    font-size: clamp(34px, 4vw, 55px);
-    line-height: 1.05;
+    font-weight: 500;
+    font-size: clamp(30px, 3.6vw, 46px);
+    line-height: 1.1;
     letter-spacing: -1.6px;
     margin: 16px 0 22px;
   }
   .intro {
-    max-width: 660px;
+    max-width: 680px;
     font-size: 15px !important;
     line-height: 1.8 !important;
-    color: #526361;
+    color: #bfc2d1;
     margin-bottom: 28px !important;
   }
   .paper p {
@@ -585,52 +571,48 @@
     margin: 12px 0;
   }
   .paper h3 {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: 22px;
-    line-height: 1.25;
-    font-weight: 400;
-    margin: 22px 0 12px;
+    font-size: 19px;
+    line-height: 1.3;
+    font-weight: 500;
+    margin: 24px 0 12px;
   }
   .paper strong {
-    font-weight: 700;
+    font-weight: 600;
   }
   .paper code {
-    font-family: 'Courier New', monospace;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
   }
   .paper a {
     text-decoration: underline;
     text-underline-offset: 3px;
-    color: inherit;
+    color: var(--signal);
   }
   .gate-picker {
     display: flex;
-    gap: 6px;
-    margin: 25px 0 0;
+    gap: 5px;
+    margin: 26px 0 10px;
     flex-wrap: wrap;
   }
   .gate-picker button {
-    border: 1px solid #cfd3c7;
-    border-radius: 5px 5px 0 0;
-    border-bottom: 0;
-    background: #ebe9dd;
-    padding: 11px 17px;
-    font:
-      700 11px 'Courier New',
-      monospace;
-    color: #526665;
-    min-height: 43px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: #1a1d2a;
+    padding: 10px 16px;
+    font: 12px monospace;
+    color: var(--muted);
+    min-height: 44px;
   }
   .gate-picker button.chosen {
-    background: #173d45;
-    color: #b8ebc9;
-    border-color: #173d45;
+    background: #30285a;
+    color: #ddd8ff;
+    border-color: #7266b7;
   }
   .experiment {
     display: flex;
     align-items: center;
-    background: #e8ebde;
-    border: 1px solid #cfd6c8;
-    border-radius: 0 8px 8px 8px;
+    background: radial-gradient(ellipse at 50% 50%, #242039 0%, #10131c 75%);
+    border: 1px solid var(--line);
+    border-radius: 4px;
     padding: 30px 22px;
     min-height: 215px;
   }
@@ -649,23 +631,19 @@
     min-width: 75px;
     min-height: 90px;
     padding: 10px;
-    background: #d9e1d7;
-    border: 1px solid #aebfb4;
-    border-radius: 7px;
-    color: #38534e;
+    background: #191d2a;
+    border: 1px solid #3d4359;
+    border-radius: 4px;
+    color: #b9bdcf;
   }
   .signal-toggle > span,
   .signal-output > span {
-    font:
-      700 10px 'Courier New',
-      monospace;
+    font: 10px monospace;
     letter-spacing: 0.1em;
   }
   .signal-toggle b,
   .signal-output b {
-    font-family: 'Courier New', monospace;
-    font-size: 30px;
-    line-height: 1.1;
+    font: 30px/1.1 monospace;
   }
   .signal-toggle small,
   .signal-output small {
@@ -674,26 +652,26 @@
   }
   .signal-toggle.high,
   .signal-output.high {
-    background: #b8ebc9;
-    border-color: #54856c;
-    color: #153e2c;
+    background: #342b61;
+    border-color: #9a8ddb;
+    color: #e8e3ff;
   }
   .signal-toggle:hover {
-    box-shadow: 0 2px 0 #658677;
-    transform: translateY(-1px);
+    border-color: #b1a8ed;
   }
   .signal-output {
     margin-left: auto;
   }
   .wire {
-    height: 3px;
+    height: 2px;
     min-width: 12px;
     flex: 1;
-    background: #a5b5a5;
+    background: #4b5168;
     position: relative;
   }
   .wire.live {
-    background: #46885e;
+    background: #a79fff;
+    box-shadow: 0 0 12px #8578ff66;
   }
   .wire:after {
     content: '';
@@ -706,36 +684,34 @@
     border-radius: 50%;
   }
   .gate-body {
-    background: #23464b;
-    border-radius: 8px;
-    color: #f7f2e4;
+    background: #1b1b30;
+    border-radius: 4px;
+    color: #eeeaff;
     padding: 22px 15px;
     display: flex;
     flex-direction: column;
     text-align: center;
     gap: 12px;
     min-width: 100px;
-    border: 4px double #769084;
-    box-shadow: 4px 5px 0 #bcc7b8;
+    border: 1px solid #686184;
+    box-shadow:
+      0 0 0 4px #10121d,
+      0 0 0 5px #39364c;
   }
   .gate-body small {
-    font-size: 9px;
-    letter-spacing: 0.13em;
+    font: 9px monospace;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
   }
   .gate-body strong {
-    font:
-      700 23px 'Courier New',
-      monospace;
+    font: 23px monospace;
   }
   .gate-body span {
-    font:
-      9px 'Courier New',
-      monospace;
-    color: #b8ebc9;
+    font: 9px monospace;
+    color: var(--signal);
   }
   .experiment-caption {
-    color: #526665;
+    color: var(--muted);
     font-size: 12px !important;
     padding: 8px 0 14px;
     border-bottom: 1px solid var(--line);
@@ -743,22 +719,21 @@
   .two-columns {
     display: grid;
     grid-template-columns: 1.2fr 1fr;
-    gap: 35px;
+    gap: 30px;
     align-items: start;
     margin-top: 22px;
   }
   .pencil-note {
-    font-family: Georgia, serif;
-    font-style: italic;
-    color: #637765;
+    color: var(--muted);
+    font-size: 12px !important;
+    border-left: 2px solid #4c456d;
+    padding-left: 14px;
   }
   .truth-table {
     border-collapse: collapse;
     width: 100%;
     margin-top: 18px;
-    font:
-      12px 'Courier New',
-      monospace;
+    font: 12px monospace;
     text-align: center;
   }
   .truth-table caption {
@@ -766,33 +741,31 @@
     text-transform: uppercase;
     letter-spacing: 0.08em;
     font-size: 10px;
-    color: #5c716a;
+    color: var(--muted);
     padding: 0 0 10px;
   }
   .truth-table th {
     font-size: 10px;
     letter-spacing: 0.12em;
-    color: #64766c;
-    border-bottom: 1px solid #aebdad;
+    color: var(--muted);
+    border-bottom: 1px solid #4a4e63;
     padding: 12px;
   }
   .truth-table td {
     padding: 11px;
-    border-bottom: 1px solid #d8dece;
+    border-bottom: 1px solid var(--line);
   }
   .truth-table tr.active-row {
-    background: #d7edda;
+    background: #2b2549;
   }
   .truth-table tr.active-row td:last-child {
-    color: #174b2f;
+    color: #c6bdff;
   }
   .formula {
     padding: 25px 15px;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    font:
-      700 clamp(14px, 2vw, 20px) 'Courier New',
-      monospace;
+    border: 1px solid var(--line);
+    background: #0f111b;
+    font: 500 clamp(14px, 2vw, 20px) monospace;
     letter-spacing: -0.5px;
     text-align: center;
     margin: 25px 0;
@@ -813,28 +786,26 @@
   .trace-strip {
     display: flex;
     gap: 1px;
-    background: #d1d9cb;
-    border: 1px solid #d1d9cb;
-    border-radius: 7px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 4px;
     overflow: hidden;
     margin-bottom: 30px;
   }
   .trace-strip > span {
     flex: 1;
-    background: #e8ebdf;
+    background: #1a1d2a;
     padding: 12px;
-    font:
-      10px 'Courier New',
-      monospace;
+    font: 10px monospace;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 8px;
   }
   .trace-strip b {
-    background: #cfddcb;
+    background: #302a4b;
     padding: 4px 7px;
-    border-radius: 3px;
+    border-radius: 2px;
     font-size: 14px;
   }
   .canonical {
@@ -846,52 +817,46 @@
     justify-content: space-between;
     gap: 15px;
     padding: 16px;
-    border: 1px solid #d7dccc;
-    border-radius: 5px;
-    background: #edeee3;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: #161925;
     font-size: 12px;
   }
   .canonical > div.term-on {
-    background: #cbeacf;
-    border-color: #77a586;
+    background: #2b2549;
+    border-color: #706398;
   }
   .canonical b {
-    font:
-      700 18px 'Courier New',
-      monospace;
+    font: 18px monospace;
   }
   .or-word {
     display: block;
     padding: 7px 16px;
-    font:
-      9px 'Courier New',
-      monospace;
+    font: 9px monospace;
     letter-spacing: 0.14em;
-    color: #79877c;
+    color: var(--muted);
   }
   .chip-explainer {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    border: 1px solid #cdd5c7;
-    border-radius: 8px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
     overflow: hidden;
     margin: 25px 0;
-    background: #e8ebdf;
+    background: #161925;
   }
   .chip-explainer > div {
     padding: 24px 18px;
     text-align: center;
   }
   .chip-explainer > div + div {
-    border-left: 1px dashed #aabcae;
+    border-left: 1px dashed #4b4860;
   }
   .chip-explainer > div > span,
   .sketch-label {
-    font:
-      9px 'Courier New',
-      monospace;
+    font: 9px monospace;
     letter-spacing: 0.1em;
-    color: #677e70;
+    color: var(--muted);
   }
   .chip-explainer > div > div {
     min-height: 80px;
@@ -899,16 +864,14 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
-    font:
-      13px 'Courier New',
-      monospace;
+    font: 13px monospace;
   }
   .chip-explainer strong {
-    background: #23464b;
-    color: #ceebce;
-    border-radius: 5px;
+    background: #2d264b;
+    color: #ded7ff;
+    border: 1px solid #696083;
+    border-radius: 3px;
     padding: 15px 10px;
-    box-shadow: 3px 3px 0 #b0c0b1;
   }
   .chip-explainer p {
     font-size: 11px;
@@ -925,21 +888,20 @@
     margin-top: 0;
   }
   .code-card {
-    border-radius: 7px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
     overflow: hidden;
-    background: #173d45;
-    color: #e8eddf;
+    background: #0b0d15;
+    color: #ded8ff;
     margin: 4px 0;
   }
   .code-card > span {
     display: block;
-    font:
-      9px 'Courier New',
-      monospace;
+    font: 10px monospace;
     letter-spacing: 0.05em;
-    color: #a4c6b2;
+    color: var(--muted);
     padding: 14px 18px;
-    border-bottom: 1px solid #3d5d5d;
+    border-bottom: 1px solid var(--line);
   }
   .code-card pre {
     padding: 18px;
@@ -953,18 +915,18 @@
     line-height: 1.7;
   }
   .paper dt {
-    font:
-      700 10px 'Courier New',
-      monospace;
+    font: 11px monospace;
     margin-top: 14px;
+    color: var(--signal);
   }
   .paper dd {
     margin: 4px 0;
-    color: #5d6e64;
+    color: var(--muted);
   }
   .note-card {
-    background: #eae9da;
-    border-left: 3px solid #b4764c;
+    background: #1b1b2c;
+    border: 1px solid var(--line);
+    border-left: 2px solid #8272c5;
     padding: 4px 22px 12px;
     margin: 28px 0;
   }
@@ -973,16 +935,14 @@
   }
   .concept-label {
     display: inline-block;
-    font:
-      9px 'Courier New',
-      monospace;
+    font: 9px monospace;
     letter-spacing: 0.07em;
     text-transform: uppercase;
-    border: 1px solid #b8c2b0;
-    border-radius: 4px;
+    border: 1px solid #4b4563;
+    border-radius: 3px;
     padding: 8px 10px;
-    background: #e7eadc;
-    color: #596d59;
+    background: #201d30;
+    color: #c4bdd8;
     margin-bottom: 3px;
   }
   .bus-sketch {
@@ -993,10 +953,7 @@
     margin: 25px 0 32px;
   }
   .bus-label {
-    font:
-      10px 'Courier New',
-      monospace;
-    font-weight: 700;
+    font: 10px monospace;
   }
   .bus-bits {
     display: grid;
@@ -1012,27 +969,23 @@
     align-items: center;
     justify-content: center;
     gap: 5px;
-    background: #e0e6d8;
-    border: 1px solid #bfccb7;
-    border-radius: 4px;
-    font:
-      700 21px 'Courier New',
-      monospace;
-    color: #5d745e;
+    background: #1a1e2b;
+    border: 1px solid #41475c;
+    border-radius: 3px;
+    font: 21px monospace;
+    color: #bbc1d8;
   }
   .bus-bits span {
-    font:
-      9px 'Courier New',
-      monospace;
-    color: #6d826a;
+    font: 9px monospace;
+    color: var(--muted);
   }
   .bus-bits .bit-on {
-    background: #c5e5c7;
-    color: #225734;
-    border-color: #8dad8b;
+    background: #30284f;
+    color: #e1dbff;
+    border-color: #8477bb;
   }
   .output-bits > div {
-    background: #e9ebde;
+    background: #161925;
   }
   .scale-columns {
     grid-template-columns: 1fr 1fr;
@@ -1041,10 +994,10 @@
     margin-top: 0;
   }
   .selector-sketch {
-    border: 1px solid #bfcbb8;
-    border-radius: 7px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
     padding: 18px;
-    background: #e8ebdf;
+    background: #171a27;
   }
   .selector-choices {
     display: grid;
@@ -1056,37 +1009,33 @@
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    background: #f1f1e5;
-    border: 1px solid #cdd5c4;
-    border-radius: 4px;
+    background: #10131e;
+    border: 1px solid var(--line);
+    border-radius: 3px;
     padding: 10px;
-    font:
-      12px 'Courier New',
-      monospace;
-    min-height: 42px;
+    font: 12px monospace;
+    min-height: 44px;
   }
   .selector-choices small {
     font-size: 9px;
-    color: #62715e;
+    color: var(--muted);
   }
   .selector-choices .selected-word {
-    background: #c5e5c7;
-    border-color: #739e79;
+    background: #30284f;
+    border-color: #8477bb;
   }
   .selector-sketch p {
-    font:
-      12px 'Courier New',
-      monospace;
+    font: 12px monospace;
     margin-bottom: 0;
   }
   .selector-sketch p strong {
     font-size: 19px;
-    color: #25623e;
+    color: #c7baff;
   }
   .reading-links {
     display: grid;
-    gap: 12px;
-    margin-top: 32px;
+    gap: 10px;
+    margin-top: 30px;
   }
   .reading-links a {
     padding: 22px 48px 22px 20px;
@@ -1094,26 +1043,24 @@
     flex-direction: column;
     gap: 11px;
     position: relative;
-    border: 1px solid #c8d0c1;
-    border-radius: 6px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
     text-decoration: none;
-    background: #eceee1;
+    background: #171a26;
+    color: var(--ink);
   }
   .reading-links a:hover {
-    background: #dbe7d5;
-    border-color: #73967a;
+    background: #242039;
+    border-color: #73678e;
   }
   .reading-links span {
-    font:
-      9px 'Courier New',
-      monospace;
+    font: 9px monospace;
     letter-spacing: 0.08em;
-    color: #607567;
+    color: var(--muted);
   }
   .reading-links strong {
-    font:
-      400 21px Georgia,
-      serif;
+    font-size: 18px;
+    font-weight: 500;
   }
   .reading-links b {
     position: absolute;
@@ -1121,6 +1068,7 @@
     top: 30px;
     font-size: 21px;
     font-weight: 400;
+    color: var(--signal);
   }
   .credits p {
     font-size: 12px;
@@ -1132,26 +1080,24 @@
     border-top: 1px solid var(--line);
     margin-top: 40px;
     padding-top: 18px;
-    color: #7f897a;
-    font:
-      8px 'Courier New',
-      monospace;
+    color: var(--muted);
+    font: 9px monospace;
     letter-spacing: 0.1em;
   }
-  @media (max-width: 850px) {
+  @media (max-width: 900px) {
     .notebook {
       grid-template-columns: 185px minmax(0, 1fr);
     }
     .chapter-nav {
-      padding: 30px 10px;
+      padding: 28px 8px;
     }
     .chapter-nav button {
       font-size: 11px;
       gap: 7px;
-      padding: 14px 9px;
+      padding: 14px 8px;
     }
     .paper {
-      padding: 32px 25px 22px;
+      padding: 30px 24px 22px;
     }
     .two-columns,
     .blueprint-columns,
@@ -1180,7 +1126,7 @@
   }
   @media (max-width: 620px) {
     .field-guide {
-      padding: 22px 12px 35px;
+      padding: 22px 12px 36px;
     }
     .guide-header {
       gap: 10px;
@@ -1188,17 +1134,15 @@
       flex-wrap: wrap;
     }
     .guide-mark {
-      width: 40px;
-      height: 40px;
-      font-size: 25px;
-      border-radius: 10px;
+      width: 38px;
+      height: 38px;
     }
     .guide-heading h1 {
-      font-size: 27px;
+      font-size: 24px;
     }
     .guide-heading .eyebrow {
       font-size: 8px;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.07em;
       margin-bottom: 5px;
     }
     .back-button {
@@ -1206,14 +1150,14 @@
       font-size: 10px;
     }
     .notebook {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
     }
     .chapter-nav {
       padding: 10px;
       display: flex;
       overflow-x: auto;
       border-right: 0;
-      border-bottom: 1px solid #d7d3c6;
+      border-bottom: 1px solid var(--line);
       gap: 6px;
     }
     .nav-caption,
@@ -1231,23 +1175,22 @@
       white-space: nowrap;
     }
     .paper {
-      padding: 29px 20px 20px;
-      background: var(--paper);
+      padding: 28px 16px 20px;
     }
     .paper h2 {
-      font-size: 38px;
+      font-size: 32px;
     }
     .intro {
       font-size: 13px !important;
     }
     .experiment {
-      padding: 20px 10px;
+      padding: 20px 8px;
       min-height: 200px;
     }
     .signal-toggle,
     .signal-output {
-      min-width: 57px;
-      padding: 9px 7px;
+      min-width: 53px;
+      padding: 9px 6px;
       min-height: 79px;
     }
     .signal-toggle small,
@@ -1255,19 +1198,19 @@
       font-size: 8px;
     }
     .gate-body {
-      min-width: 74px;
-      padding: 18px 7px;
+      min-width: 72px;
+      padding: 18px 6px;
       gap: 11px;
     }
     .gate-body strong {
-      font-size: 19px;
+      font-size: 18px;
     }
     .gate-body small,
     .gate-body span {
       font-size: 8px;
     }
     .wire {
-      min-width: 7px;
+      min-width: 5px;
     }
     .gate-picker {
       gap: 4px;
@@ -1295,51 +1238,36 @@
     .canonical > div {
       font-size: 10px;
       padding: 14px 10px;
+      gap: 6px;
     }
     .chip-explainer {
       grid-template-columns: 1fr;
     }
     .chip-explainer > div + div {
       border-left: 0;
-      border-top: 1px dashed #aabcae;
-    }
-    .chip-explainer > div {
-      padding: 18px;
+      border-top: 1px dashed #4b4860;
     }
     .bus-sketch {
-      grid-template-columns: 29px minmax(0, 1fr);
-      gap: 8px;
+      grid-template-columns: 25px minmax(0, 1fr);
+      gap: 6px;
     }
     .bus-bits {
       gap: 3px;
     }
     .bus-bits button,
     .bus-bits > div {
+      min-height: 50px;
       font-size: 17px;
-      min-height: 52px;
     }
     .bus-bits span {
       font-size: 8px;
     }
     .reading-links strong {
-      font-size: 19px;
-    }
-    .formula {
-      font-size: 13px;
-      padding: 20px 7px;
+      font-size: 16px;
     }
     .page-footer {
-      font-size: 7px;
+      font-size: 8px;
       gap: 10px;
-    }
-    .note-card {
-      padding-left: 16px;
-      padding-right: 16px;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .signal-toggle:hover {
-      transform: none;
     }
   }
 </style>

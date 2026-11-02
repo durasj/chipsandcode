@@ -1,4 +1,5 @@
 import parse from '../editor/hdl/parse';
+import type { ChipNode, IdentifierNode } from '../editor/hdl/tree';
 import ChipFactory from '../hardware-simulator/chips/ChipFactory';
 import type { GateKind, Mission, Signals, TruthCase } from './missions';
 import { truthTable } from './missions';
@@ -85,13 +86,14 @@ export function availableSources(
   return [...mission.inputs, ...circuit.gates.slice(0, Math.max(0, index)).map((gate) => gate.id)];
 }
 
-function validate(mission: Mission, circuit: Circuit) {
+function validate(mission: Mission, circuit: Circuit, allowIncomplete = false) {
   if (!isCircuitDraft(mission, circuit))
     throw new Error('This circuit has invalid components. Start a fresh build.');
   const known = new Set(mission.inputs);
   for (const gate of circuit.gates) {
     for (const pin of gatePins(gate.type)) {
       const source = gate.inputs[pin];
+      if (!source && allowIncomplete) continue;
       if (!source) throw new Error(`Connect ${gate.id} ${pin} to a signal.`);
       if (!known.has(source))
         throw new Error(
@@ -102,6 +104,7 @@ function validate(mission: Mission, circuit: Circuit) {
   }
   for (const pin of mission.outputs) {
     const source = circuit.outputs[pin];
+    if (!source && allowIncomplete) continue;
     if (!source) throw new Error(`Connect output ${pin} to a signal.`);
     if (!known.has(source)) throw new Error(`Output ${pin} is connected to an unknown signal.`);
   }
@@ -113,11 +116,22 @@ function validate(mission: Mission, circuit: Circuit) {
  * A direct input → output wire needs two NANDs because HDL has no wire alias syntax.
  */
 export function toHDL(mission: Mission, circuit: Circuit): string {
-  validate(mission, circuit);
+  return serializeHDL(mission, circuit, false);
+}
+
+/** Editable source for an unfinished visual board, with unwired inputs omitted. */
+export function toHDLDraft(mission: Mission, circuit: Circuit): string {
+  return serializeHDL(mission, circuit, true);
+}
+
+function serializeHDL(mission: Mission, circuit: Circuit, allowIncomplete: boolean): string {
+  validate(mission, circuit, allowIncomplete);
   const wires = new Map(circuit.gates.map((gate, index) => [gate.id, `gamewire${index}`]));
   const sourceName = (source: string) => wires.get(source) ?? source;
   const lines = circuit.gates.map((gate) => {
-    const inputs = gatePins(gate.type).map((pin) => `${pin}=${sourceName(gate.inputs[pin])}`);
+    const inputs = gatePins(gate.type)
+      .filter((pin) => gate.inputs[pin])
+      .map((pin) => `${pin}=${sourceName(gate.inputs[pin])}`);
     const outputs = [
       `out=${wires.get(gate.id)}`,
       ...mission.outputs
@@ -139,9 +153,147 @@ export function toHDL(mission: Mission, circuit: Circuit): string {
     `    OUT ${mission.outputs.join(', ')};`,
     '',
     '    PARTS:',
+    ...(!lines.length ? ['    // Add parts here.'] : []),
     ...lines,
+    ...mission.outputs
+      .filter((pin) => !circuit.outputs[pin])
+      .map((pin) => `    // Connect output ${pin}.`),
     '}',
   ].join('\n');
+}
+
+/**
+ * Import the supported single-bit HDL subset into the same graph used by the
+ * visual editor. No circuit is changed until the whole source has been checked.
+ * Pins may be omitted while drafting; named wires must have exactly one driver.
+ */
+export function fromHDL(mission: Mission, source: string): Circuit {
+  if (source.length > 32_000) throw new Error('Keep this chip below 32,000 characters.');
+
+  // The existing language parser requires at least one statement after PARTS:.
+  // Accept an empty authoring skeleton without changing that shared grammar.
+  // Whitespace substitution preserves parser line/column positions.
+  const whitespace = (text: string) => text.replace(/[^\r\n]/g, ' ');
+  const parseable = source
+    .replace(/\/\/[^\n]*|\/\*[\s\S]*?\*\//g, whitespace)
+    .replace(/\bPARTS\s*:\s*(?=})/g, whitespace);
+  let chips: ChipNode[] | undefined;
+  try {
+    chips = parse(parseable);
+  } catch (error) {
+    const detail = error instanceof Error ? error.message.split('\n')[0] : 'Invalid syntax.';
+    throw new Error(`HDL ${detail} Check parentheses, commas and semicolons.`);
+  }
+  if (!chips?.length)
+    throw new Error('Complete the CHIP declaration, including its closing brace.');
+  if (chips.length !== 1) throw new Error('Define one CHIP at a time in this workspace.');
+  const chip = chips[0];
+  if (chip.name.value !== mission.chip)
+    throw new Error(`Use CHIP ${mission.chip} for this challenge.`);
+  if (chip.body.some((section) => !['input', 'output', 'parts'].includes(section.type)))
+    throw new Error('Use PARTS to build this chip. BUILTIN and CLOCKED are not supported here.');
+
+  function checkScalar(pin: IdentifierNode) {
+    if ('width' in pin || 'length' in pin || 'selection' in pin)
+      throw new Error(
+        'This layer uses single-bit pins. Buses and bit selections are not supported.',
+      );
+    if (pin.value === 'true' || pin.value === 'false')
+      throw new Error(
+        'Constant signals are not supported here. Connect an input or a part output.',
+      );
+  }
+
+  for (const direction of ['input', 'output'] as const) {
+    const pins = chip.body.flatMap((section) => (section.type === direction ? section.pins : []));
+    pins.forEach(checkScalar);
+    const expected = direction === 'input' ? mission.inputs : mission.outputs;
+    const names = pins.map((pin) => pin.value);
+    if (
+      names.length !== expected.length ||
+      new Set(names).size !== expected.length ||
+      !expected.every((pin) => names.includes(pin))
+    )
+      throw new Error(
+        `Declare exactly ${direction === 'input' ? 'IN' : 'OUT'} ${expected.join(', ')}; for ${mission.chip}.`,
+      );
+  }
+
+  const statements = chip.body.flatMap((section) =>
+    section.type === 'parts' ? section.statements : [],
+  );
+  if (statements.length > 32) throw new Error('This workspace supports up to 32 parts per chip.');
+  const drivers = new Map<string, number>();
+  const parts = statements.map((statement, index) => {
+    const type = statement.chip.value as GateKind;
+    if (!mission.availableParts.includes(type))
+      throw new Error(
+        `${type} is not available for ${mission.chip}. Use ${mission.availableParts.join(', ')}.`,
+      );
+    const inputPins = gatePins(type);
+    const inputs: Record<string, string> = Object.fromEntries(inputPins.map((pin) => [pin, '']));
+    for (const connection of statement.connections) {
+      checkScalar(connection.left);
+      checkScalar(connection.right);
+      const pin = connection.left.value;
+      const wire = connection.right.value;
+      if (pin === 'out') {
+        if (mission.inputs.includes(wire))
+          throw new Error(`Input ${wire} cannot be driven by a part output.`);
+        if (drivers.has(wire) && drivers.get(wire) !== index)
+          throw new Error(
+            `Signal ${wire} has more than one driver. Give each part its own output wire.`,
+          );
+        drivers.set(wire, index);
+      } else if (inputPins.includes(pin)) {
+        if (inputs[pin]) throw new Error(`${type} input ${pin} is connected more than once.`);
+        inputs[pin] = wire;
+      } else {
+        throw new Error(`${type} has no pin ${pin}. Use ${[...inputPins, 'out'].join(', ')}.`);
+      }
+    }
+    return { type, inputs };
+  });
+
+  // Resolve all drivers before sorting, so HDL declaration order is unrestricted.
+  for (const part of parts) {
+    for (const wire of Object.values(part.inputs)) {
+      if (wire && !mission.inputs.includes(wire) && !drivers.has(wire))
+        throw new Error(
+          `Signal ${wire} has no driver. Connect it to a part output or use a chip input.`,
+        );
+    }
+  }
+  const order: number[] = [];
+  const pending = new Set(parts.map((_, index) => index));
+  while (pending.size) {
+    const ready = [...pending].find((index) =>
+      Object.values(parts[index].inputs).every(
+        (wire) => !wire || mission.inputs.includes(wire) || !pending.has(drivers.get(wire)!),
+      ),
+    );
+    if (ready === undefined)
+      throw new Error('This circuit contains feedback. Connect signals forward through the parts.');
+    order.push(ready);
+    pending.delete(ready);
+  }
+  const ids = new Map(order.map((index, position) => [index, `g${position + 1}`]));
+  const resolve = (wire: string) =>
+    !wire || mission.inputs.includes(wire) ? wire : ids.get(drivers.get(wire)!)!;
+  const circuit: Circuit = {
+    gates: order.map((index) => ({
+      id: ids.get(index)!,
+      type: parts[index].type,
+      inputs: Object.fromEntries(
+        Object.entries(parts[index].inputs).map(([pin, wire]) => [pin, resolve(wire)]),
+      ),
+    })),
+    outputs: Object.fromEntries(
+      mission.outputs.map((pin) => [pin, drivers.has(pin) ? resolve(pin) : '']),
+    ),
+  };
+  validate(mission, circuit, true);
+  return circuit;
 }
 
 function compile(mission: Mission, circuit: Circuit) {

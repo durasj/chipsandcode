@@ -5,11 +5,12 @@
   import {
     availableSources,
     createCircuit,
+    fromHDL,
+    toHDLDraft,
     gatePins,
     isCircuitDraft,
     simulateCircuit,
     testCircuit,
-    toHDL,
     type Circuit,
   } from './circuit';
 
@@ -20,7 +21,18 @@
 
   const mission = getMission(missionId);
   const scenarios = truthTable(mission);
-  const draftKey = `chipsandcode:signal-isles:draft:${missionId}:v1`;
+  const draftKey = `chipsandcode:workbench:draft:${missionId}:v2`;
+  const legacyDraftKey = `chipsandcode:signal-isles:draft:${missionId}:v1`;
+  type EditorMode = 'visual' | 'split' | 'code';
+  let editorMode: EditorMode = 'split';
+  let code =
+    missionId === 'nand'
+      ? 'CHIP Nand {\n    IN a, b;\n    OUT out;\n\n    // Supplied primitive. Other chips are built from parts.\n    BUILTIN Nand;\n}'
+      : toHDLDraft(mission, createCircuit(mission));
+  let codeError = '';
+  let codeScroll = 0;
+  let undoCode = '';
+  let undoCodeError = '';
   let circuit: Circuit = createCircuit(mission);
   let inputValues: Record<string, boolean> = Object.fromEntries(
     mission.inputs.map((pin) => [pin, false]),
@@ -29,7 +41,6 @@
   let reportError = '';
   let hintCount = 0;
   let showGuide = false;
-  let showHDL = false;
   let remembered = false;
   let saveNotice = '';
   let predictions: number[] = [];
@@ -42,27 +53,87 @@
   let undoCircuit: Circuit | null = null;
   let missionHeading: HTMLHeadingElement;
 
-  $: live = inspect(circuit, inputValues);
+  $: live = codeError
+    ? { result: null, error: 'Fix the HDL error to resume the simulation.' }
+    : inspect(circuit, inputValues);
   $: liveSignals = live.result?.signals ?? { ...inputValues };
   $: schematicRows = Math.max(1, Math.ceil(circuit.gates.length / 3));
   $: schematicHeight = Math.max(330, 155 + schematicRows * 172);
-  $: hdl = makeHDL(circuit);
   $: allPredicted = predictions.length === scenarios.length;
-  $: restoreReady = missionId === 'nand' ? allPredicted : report?.success === true;
+  $: restoreReady = !codeError && (missionId === 'nand' ? allPredicted : report?.success === true);
 
   onMount(() => {
     try {
+      const preferred = localStorage.getItem('chipsandcode:workbench:mode');
+      if (preferred === 'visual' || preferred === 'split' || preferred === 'code')
+        editorMode = preferred;
       const saved = localStorage.getItem(draftKey);
       if (saved && missionId !== 'nand') {
-        const candidate: unknown = JSON.parse(saved);
-        if (isCircuitDraft(mission, candidate)) circuit = candidate;
+        const candidate = JSON.parse(saved);
+        if (
+          candidate?.version === 2 &&
+          isCircuitDraft(mission, candidate.circuit) &&
+          typeof candidate.source === 'string' &&
+          candidate.source.length < 100000
+        ) {
+          circuit = candidate.circuit;
+          code = candidate.source;
+          try {
+            const parsed = fromHDL(mission, code);
+            if (code !== toHDLDraft(mission, circuit)) circuit = parsed;
+          } catch (error) {
+            codeError = error instanceof Error ? error.message : 'Check your HDL syntax.';
+          }
+        }
+      } else if (missionId !== 'nand') {
+        const legacy = localStorage.getItem(legacyDraftKey);
+        if (legacy) {
+          const candidate: unknown = JSON.parse(legacy);
+          if (isCircuitDraft(mission, candidate)) {
+            circuit = candidate;
+            code = toHDLDraft(mission, circuit);
+          }
+        }
       }
     } catch {
-      saveNotice = 'Draft storage is unavailable. You can still build and play.';
+      saveNotice = 'Draft storage is unavailable. Your work is kept for this session.';
     }
     remembered = true;
     missionHeading?.focus();
   });
+
+  function setMode(mode: EditorMode) {
+    editorMode = mode;
+    try {
+      localStorage.setItem('chipsandcode:workbench:mode', mode);
+    } catch {
+      /* Editor preference is optional. */
+    }
+  }
+
+  function editCode(source: string) {
+    code = source;
+    report = null;
+    reportError = '';
+    copied = false;
+    undoCircuit = null;
+    selectedSource = '';
+    try {
+      circuit = fromHDL(mission, source);
+      codeError = '';
+    } catch (error) {
+      codeError = error instanceof Error ? error.message : 'Check your HDL syntax.';
+    }
+    save();
+  }
+
+  function useLastCircuit() {
+    code = toHDLDraft(mission, circuit);
+    codeError = '';
+    report = null;
+    reportError = '';
+    save();
+  }
 
   function inspect(value: Circuit, inputs: Record<string, boolean>) {
     try {
@@ -76,18 +147,10 @@
     }
   }
 
-  function makeHDL(value: Circuit) {
-    try {
-      return toHDL(mission, value);
-    } catch {
-      return '';
-    }
-  }
-
   function save() {
     if (!remembered || missionId === 'nand') return;
     try {
-      localStorage.setItem(draftKey, JSON.stringify(circuit));
+      localStorage.setItem(draftKey, JSON.stringify({ version: 2, circuit, source: code }));
       saveNotice = 'Draft saved on this device';
     } catch {
       saveNotice = 'This draft could not be saved. Keep this page open to continue.';
@@ -99,12 +162,14 @@
     if (!keepUndo) undoCircuit = null;
     report = null;
     reportError = '';
+    codeError = '';
     copied = false;
+    code = toHDLDraft(mission, circuit);
     save();
   }
 
   function addGate(type: GateKind) {
-    if (circuit.gates.length >= 24) return;
+    if (codeError || circuit.gates.length >= 24) return;
     let number = 1;
     while (circuit.gates.some((gate) => gate.id === `g${number}`)) number++;
     circuit.gates.push({
@@ -116,6 +181,7 @@
   }
 
   function removeGate(id: string) {
+    if (codeError) return;
     if (selectedSource === id) selectedSource = '';
     circuit.gates = circuit.gates
       .filter((gate) => gate.id !== id)
@@ -132,12 +198,14 @@
   }
 
   function setConnection(gateId: string, pin: string, source: string) {
+    if (codeError) return;
     const gate = circuit.gates.find((part) => part.id === gateId);
     if (gate) gate.inputs[pin] = source;
     changed();
   }
 
   function setOutput(pin: string, source: string) {
+    if (codeError) return;
     circuit.outputs[pin] = source;
     changed();
   }
@@ -179,24 +247,25 @@
   }
 
   function selectSource(source: string) {
+    if (codeError) return;
     if (missionId === 'nand') {
       if (mission.inputs.includes(source)) toggleInput(source);
       return;
     }
     selectedSource = selectedSource === source ? '' : source;
     wiringMessage = selectedSource
-      ? `${sourceLabel(source)} selected. Choose a part’s input pin or a machine output.`
+      ? `${sourceLabel(source)} selected. Choose a part’s input pin or a chip output.`
       : 'Choose a source dot, then a destination pin to connect them.';
   }
 
   function connectPin(gateId: string, pin: string) {
+    if (codeError) return;
     if (!selectedSource) {
       wiringMessage = 'First choose an input source or the dot on the right of a part.';
       return;
     }
     if (!availableSources(mission, circuit, gateId).includes(selectedSource)) {
-      wiringMessage =
-        'Signals travel forward. Choose a world input or a part earlier on the board.';
+      wiringMessage = 'Signals travel forward. Choose a chip input or a part earlier on the board.';
       return;
     }
     setConnection(gateId, pin, selectedSource);
@@ -204,18 +273,23 @@
   }
 
   function connectOutput(pin: string) {
+    if (codeError) return;
     if (missionId === 'nand') return;
     if (!selectedSource) {
-      wiringMessage =
-        'Choose an input source or a part’s output dot first, then the machine output.';
+      wiringMessage = 'Choose an input source or a part’s output dot first, then the chip output.';
       return;
     }
     setOutput(pin, selectedSource);
-    wiringMessage = `${sourceLabel(selectedSource)} now feeds machine output ${pin}. Try a signal or test your circuit.`;
+    wiringMessage = `${sourceLabel(selectedSource)} now feeds chip output ${pin}. Try a signal or test your circuit.`;
   }
 
   function runTests() {
     reportError = '';
+    if (codeError) {
+      reportError = codeError;
+      report = null;
+      return;
+    }
     try {
       report = testCircuit(mission, circuit);
       if (!report.success) {
@@ -256,6 +330,8 @@
 
   function resetBoard() {
     undoCircuit = JSON.parse(JSON.stringify(circuit)) as Circuit;
+    undoCode = code;
+    undoCodeError = codeError;
     circuit = createCircuit(mission);
     report = null;
     reportError = '';
@@ -268,14 +344,20 @@
   function undoClear() {
     if (!undoCircuit) return;
     circuit = undoCircuit;
+    code = undoCode;
+    codeError = undoCodeError;
     undoCircuit = null;
-    changed();
+    report = null;
+    reportError = '';
+    selectedSource = '';
+    copied = false;
+    save();
   }
 
   async function copyHDL() {
-    if (!hdl) return;
+    if (!code) return;
     try {
-      await navigator.clipboard.writeText(hdl);
+      await navigator.clipboard.writeText(code);
       copied = true;
     } catch {
       copied = false;
@@ -283,27 +365,24 @@
   }
 </script>
 
-<section class="bench" aria-label={`${mission.chip} workshop`}>
+<section class="bench" aria-label={`${mission.chip} workbench`}>
   <header class="bench-header">
-    <button class="world-back" on:click={onclose}
-      ><span aria-hidden="true">←</span> World map</button
-    >
+    <button class="world-back" on:click={onclose}><span aria-hidden="true">←</span> Layers</button>
     <div class="bench-identity">
       <span class="identity-light"></span> CHIPS <span class="identity-and">&</span> CODE
-      <span class="slash">/</span> FIELD WORKSHOP
+      <span class="slash">/</span> LAYER 00 / LOGIC
     </div>
     <button
       class="notes-trigger"
       aria-expanded={showGuide}
-      on:click={() => (showGuide = !showGuide)}
-      ><span aria-hidden="true">▤</span> Field notes</button
+      on:click={() => (showGuide = !showGuide)}><span aria-hidden="true">▤</span> Reference</button
     >
   </header>
 
   <div class="mission-title-row">
     <div>
       <p class="eyebrow">
-        STATION {String(mission.number).padStart(2, '0')} <span> / </span>
+        CHALLENGE {String(mission.number).padStart(2, '0')} <span> / </span>
         {mission.location}
       </p>
       <h1 tabindex="-1" bind:this={missionHeading}>{mission.title}</h1>
@@ -311,371 +390,457 @@
     </div>
     <div class="chip-stamp">
       <span>BUILD SPEC</span><strong>{mission.chip}</strong><span
-        >{completed.includes(missionId) ? 'RESTORED · REPLAY' : 'AWAITING SIGNAL'}</span
+        >{completed.includes(missionId) ? 'VERIFIED' : 'IN PROGRESS'}</span
       >
     </div>
   </div>
 
+  <div class="signal-inputs" aria-label="Live input switches">
+    <span class="switch-label">INPUT SIGNALS</span>
+    {#each mission.inputs as pin}
+      <button
+        class:input-on={inputValues[pin]}
+        class="input-switch"
+        aria-pressed={inputValues[pin]}
+        on:click={() => toggleInput(pin)}
+        ><span>{pin}</span><span class="switch-track"><i></i></span><strong
+          >{Number(inputValues[pin])}</strong
+        ></button
+      >
+    {/each}
+  </div>
+  <div class="editor-toolbar">
+    <div class="mode-switch" role="group" aria-label="Editor view">
+      <button
+        class:active={editorMode === 'visual'}
+        aria-pressed={editorMode === 'visual'}
+        on:click={() => setMode('visual')}><span aria-hidden="true">⌘</span> Visual</button
+      >
+      <button
+        class:active={editorMode === 'split'}
+        aria-pressed={editorMode === 'split'}
+        on:click={() => setMode('split')}><span aria-hidden="true">◫</span> Split</button
+      >
+      <button
+        class:active={editorMode === 'code'}
+        aria-pressed={editorMode === 'code'}
+        on:click={() => setMode('code')}><span aria-hidden="true">&lt;/&gt;</span> Code</button
+      >
+    </div>
+    <span class="sync-state" class:sync-error={!!codeError}
+      >{codeError
+        ? 'HDL needs attention'
+        : missionId === 'nand'
+          ? 'Supplied primitive · read-only HDL'
+          : 'Visual ↔ HDL · one circuit'}</span
+    >
+  </div>
+  {#if codeError}
+    <div class="code-error" role="alert">
+      <div>
+        <strong>HDL could not be applied.</strong>
+        <p>{codeError}</p>
+        <span>Your source is preserved. Simulation is paused until it compiles.</span>
+      </div>
+      <button on:click={useLastCircuit}>Use last valid circuit</button>
+    </div>
+  {/if}
   <div class="bench-layout">
-    <div class="workspace">
-      <div class="board-shell">
-        <div class="board-heading">
-          <span class="small-light"></span><span>CIRCUIT WORKBENCH</span><span class="board-number"
-            >MK. 01 / {mission.chip.toUpperCase()}</span
-          >
-        </div>
-        <div class="signal-inputs" aria-label="Live input switches">
-          <span class="switch-label">TRY A SIGNAL</span>
-          {#each mission.inputs as pin}
-            <button
-              class:input-on={inputValues[pin]}
-              class="input-switch"
-              aria-pressed={inputValues[pin]}
-              on:click={() => toggleInput(pin)}
-              ><span>{pin}</span><span class="switch-track"><i></i></span><strong
-                >{Number(inputValues[pin])}</strong
-              ></button
-            >
-          {/each}
-        </div>
-
-        {#if missionId !== 'nand'}
-          <div class="wiring-instruction">
-            <span aria-hidden="true">⌁</span>
-            <p aria-live="polite">{wiringMessage}</p>
-            {#if selectedSource}<button
-                on:click={() => {
-                  selectedSource = '';
-                  wiringMessage = 'Choose a source dot, then a destination pin to connect them.';
-                }}>Cancel wire</button
-              >{/if}
-          </div>
-        {/if}
-        <div class="circuit-viewport">
-          <svg
-            class="circuit-svg"
-            viewBox={`0 0 900 ${schematicHeight}`}
-            role="group"
-            aria-label={`Interactive circuit with ${circuit.gates.length} parts. Select a source dot, then a destination input pin. Connection menus are also available below.`}
-          >
-            <defs>
-              <pattern id="bench-grid" width="22" height="22" patternUnits="userSpaceOnUse"
-                ><circle cx="2" cy="2" r="1" fill="#b8c0b2" opacity=".35" /></pattern
+    <div class="workspace" class:split-view={editorMode === 'split'}>
+      {#if editorMode !== 'code'}
+        <div class="visual-workspace" class:paused={!!codeError}>
+          <div class="board-shell">
+            <div class="board-heading">
+              <span class="small-light"></span><span>VISUAL CIRCUIT</span><span class="board-number"
+                >MK. 01 / {mission.chip.toUpperCase()}</span
               >
-              <filter id="bench-glow"><feGaussianBlur stdDeviation="4" /></filter>
-            </defs>
-            <rect x="0" y="0" width="900" height={schematicHeight} fill="url(#bench-grid)" />
-            <text x="35" y="35" class="diagram-label">INPUT</text>
-            <text x="767" y="35" class="diagram-label">OUTPUT</text>
-            {#each circuit.gates as gate, index}
-              {@const position = gatePosition(index)}
-              {#each gatePins(gate.type) as pin, pinIndex}
-                {#if gate.inputs[pin]}
-                  <path
-                    d={wire(gate.inputs[pin], position.x, position.y + 25 + pinIndex * 60)}
-                    class="circuit-wire"
-                    class:wire-on={signal(gate.inputs[pin], liveSignals) === true}
-                  />
-                {/if}
-              {/each}
-            {/each}
-            {#each mission.outputs as pin, index}
-              {#if circuit.outputs[pin]}
-                <path
-                  d={wire(circuit.outputs[pin], 795, 125 + index * 106)}
-                  class="circuit-wire"
-                  class:wire-on={signal(circuit.outputs[pin], liveSignals) === true}
-                />
-              {/if}
-            {/each}
-            {#each mission.inputs as pin, index}
-              <g transform={`translate(38, ${85 + index * 76})`}>
-                <rect
-                  width="38"
-                  height="40"
-                  rx="8"
-                  fill={inputValues[pin] ? '#246957' : '#e4dece'}
-                  stroke={inputValues[pin] ? '#79d9b4' : '#c8c3b5'}
-                />
-                <text
-                  x="19"
-                  y="26"
-                  text-anchor="middle"
-                  fill={inputValues[pin] ? '#dbfff0' : '#647167'}
-                  font-family="monospace"
-                  font-size="20">{Number(inputValues[pin])}</text
-                >
-                <text x="19" y="58" text-anchor="middle" class="diagram-label">{pin}</text>
-                <circle cx="38" cy="20" r="4" fill="#bd8653" />
-                <foreignObject x="10" y="-8" width="56" height="56">
-                  <button
-                    class="svg-pin-button source-pin"
-                    class:source-selected={selectedSource === pin}
-                    aria-pressed={missionId === 'nand' ? inputValues[pin] : selectedSource === pin}
-                    aria-label={missionId === 'nand'
-                      ? `Toggle input ${pin}`
-                      : `Select source input ${pin}`}
-                    on:click={() => selectSource(pin)}><span></span></button
+            </div>
+
+            {#if missionId !== 'nand'}
+              <div class="wiring-instruction">
+                <span aria-hidden="true">⌁</span>
+                <p aria-live="polite">{wiringMessage}</p>
+                {#if selectedSource}<button
+                    on:click={() => {
+                      selectedSource = '';
+                      wiringMessage =
+                        'Choose a source dot, then a destination pin to connect them.';
+                    }}>Cancel wire</button
+                  >{/if}
+              </div>
+            {/if}
+            <div class="circuit-viewport">
+              <svg
+                class="circuit-svg"
+                viewBox={`0 0 900 ${schematicHeight}`}
+                role="group"
+                aria-label={`Interactive circuit with ${circuit.gates.length} parts. Select a source dot, then a destination input pin. Connection menus are also available below.`}
+              >
+                <defs>
+                  <pattern id="bench-grid" width="22" height="22" patternUnits="userSpaceOnUse"
+                    ><circle cx="2" cy="2" r="1" fill="#70758c" opacity=".35" /></pattern
                   >
-                </foreignObject>
-              </g>
-            {/each}
-            {#each circuit.gates as gate, index}
-              {@const position = gatePosition(index)}
-              <g transform={`translate(${position.x}, ${position.y})`}>
-                <rect x="0" y="5" width="132" height="110" rx="9" fill="#172e39" opacity=".12" />
-                <rect width="132" height="110" rx="9" fill="#203b43" stroke="#5c7671" />
-                <path
-                  d="M 14 -6 v 6 M 34 -6 v 6 M 54 -6 v 6 M 74 -6 v 6 M 94 -6 v 6 M 114 -6 v 6 M 14 110 v 6 M 34 110 v 6 M 54 110 v 6 M 74 110 v 6 M 94 110 v 6 M 114 110 v 6"
-                  stroke="#bd8653"
-                  stroke-width="4"
-                />
-                <text
-                  x="66"
-                  y="46"
-                  text-anchor="middle"
-                  fill="#f1ecd9"
-                  font-size="18"
-                  font-weight="700"
-                  font-family="monospace">{gate.type.toUpperCase()}</text
-                >
-                <text
-                  x="66"
-                  y="65"
-                  text-anchor="middle"
-                  fill="#a6b7ac"
-                  font-size="10"
-                  font-family="monospace">PART {String(index + 1).padStart(2, '0')}</text
-                >
-                {#each gatePins(gate.type) as pin, pinIndex}
-                  <circle
-                    cx="0"
-                    cy={25 + pinIndex * 60}
-                    r="4"
-                    fill={signal(gate.inputs[pin], liveSignals) === true ? '#7bd9b5' : '#bd8653'}
-                  />
-                  <text x="12" y={29 + pinIndex * 60} class="diagram-pin gate-pin-label">{pin}</text
-                  >
-                  {#if missionId !== 'nand'}
-                    <foreignObject x="-28" y={pinIndex * 60 - 3} width="56" height="56">
-                      <button
-                        class="svg-pin-button target-pin"
-                        class:target-ready={!!selectedSource &&
-                          availableSources(mission, circuit, gate.id).includes(selectedSource)}
-                        aria-label={`Connect to part ${index + 1} ${gate.type} input ${pin}`}
-                        on:click={() => connectPin(gate.id, pin)}><span></span></button
-                      >
-                    </foreignObject>
+                  <filter id="bench-glow"><feGaussianBlur stdDeviation="4" /></filter>
+                </defs>
+                <rect x="0" y="0" width="900" height={schematicHeight} fill="url(#bench-grid)" />
+                <text x="35" y="35" class="diagram-label">INPUT</text>
+                <text x="767" y="35" class="diagram-label">OUTPUT</text>
+                {#each circuit.gates as gate, index}
+                  {@const position = gatePosition(index)}
+                  {#each gatePins(gate.type) as pin, pinIndex}
+                    {#if gate.inputs[pin]}
+                      <path
+                        d={wire(gate.inputs[pin], position.x, position.y + 25 + pinIndex * 60)}
+                        class="circuit-wire"
+                        class:wire-on={signal(gate.inputs[pin], liveSignals) === true}
+                      />
+                    {/if}
+                  {/each}
+                {/each}
+                {#each mission.outputs as pin, index}
+                  {#if circuit.outputs[pin]}
+                    <path
+                      d={wire(circuit.outputs[pin], 795, 125 + index * 106)}
+                      class="circuit-wire"
+                      class:wire-on={signal(circuit.outputs[pin], liveSignals) === true}
+                    />
                   {/if}
                 {/each}
-                <circle
-                  cx="132"
-                  cy="55"
-                  r="4"
-                  fill={signal(gate.id, liveSignals) === true ? '#7bd9b5' : '#bd8653'}
-                />
-                <text x="148" y="59" class="diagram-pin"
-                  >{signal(gate.id, liveSignals) === null
-                    ? '·'
-                    : Number(signal(gate.id, liveSignals))}</text
-                >
-                {#if missionId !== 'nand'}
-                  <foreignObject x="104" y="27" width="56" height="56">
-                    <button
-                      class="svg-pin-button source-pin"
-                      class:source-selected={selectedSource === gate.id}
-                      aria-pressed={selectedSource === gate.id}
-                      aria-label={`Select source part ${index + 1} ${gate.type} output`}
-                      on:click={() => selectSource(gate.id)}><span></span></button
+                {#each mission.inputs as pin, index}
+                  <g transform={`translate(38, ${85 + index * 76})`}>
+                    <rect
+                      width="38"
+                      height="40"
+                      rx="8"
+                      fill={inputValues[pin] ? '#4f46e5' : '#242735'}
+                      stroke={inputValues[pin] ? '#a39bff' : '#50566d'}
+                    />
+                    <text
+                      x="19"
+                      y="26"
+                      text-anchor="middle"
+                      fill={inputValues[pin] ? '#fff' : '#adb1c3'}
+                      font-family="monospace"
+                      font-size="20">{Number(inputValues[pin])}</text
                     >
-                  </foreignObject>
+                    <text x="19" y="58" text-anchor="middle" class="diagram-label">{pin}</text>
+                    <circle cx="38" cy="20" r="4" fill="#8b83ff" />
+                    <foreignObject x="10" y="-8" width="56" height="56">
+                      <button
+                        class="svg-pin-button source-pin"
+                        class:source-selected={selectedSource === pin}
+                        aria-pressed={missionId === 'nand'
+                          ? inputValues[pin]
+                          : selectedSource === pin}
+                        aria-label={missionId === 'nand'
+                          ? `Toggle input ${pin}`
+                          : `Select source input ${pin}`}
+                        on:click={() => selectSource(pin)}><span></span></button
+                      >
+                    </foreignObject>
+                  </g>
+                {/each}
+                {#each circuit.gates as gate, index}
+                  {@const position = gatePosition(index)}
+                  <g transform={`translate(${position.x}, ${position.y})`}>
+                    <rect
+                      x="0"
+                      y="5"
+                      width="132"
+                      height="110"
+                      rx="9"
+                      fill="#07080e"
+                      opacity=".12"
+                    />
+                    <rect width="132" height="110" rx="9" fill="#1d2031" stroke="#5c568d" />
+                    <path
+                      d="M 14 -6 v 6 M 34 -6 v 6 M 54 -6 v 6 M 74 -6 v 6 M 94 -6 v 6 M 114 -6 v 6 M 14 110 v 6 M 34 110 v 6 M 54 110 v 6 M 74 110 v 6 M 94 110 v 6 M 114 110 v 6"
+                      stroke="#8b83ff"
+                      stroke-width="4"
+                    />
+                    <text
+                      x="66"
+                      y="46"
+                      text-anchor="middle"
+                      fill="#f0eefc"
+                      font-size="18"
+                      font-weight="700"
+                      font-family="monospace">{gate.type.toUpperCase()}</text
+                    >
+                    <text
+                      x="66"
+                      y="65"
+                      text-anchor="middle"
+                      fill="#a1a5b6"
+                      font-size="10"
+                      font-family="monospace">PART {String(index + 1).padStart(2, '0')}</text
+                    >
+                    {#each gatePins(gate.type) as pin, pinIndex}
+                      <circle
+                        cx="0"
+                        cy={25 + pinIndex * 60}
+                        r="4"
+                        fill={signal(gate.inputs[pin], liveSignals) === true
+                          ? '#b4acff'
+                          : '#8b83ff'}
+                      />
+                      <text x="12" y={29 + pinIndex * 60} class="diagram-pin gate-pin-label"
+                        >{pin}</text
+                      >
+                      {#if missionId !== 'nand'}
+                        <foreignObject x="-28" y={pinIndex * 60 - 3} width="56" height="56">
+                          <button
+                            class="svg-pin-button target-pin"
+                            class:target-ready={!!selectedSource &&
+                              availableSources(mission, circuit, gate.id).includes(selectedSource)}
+                            aria-label={`Connect to part ${index + 1} ${gate.type} input ${pin}`}
+                            on:click={() => connectPin(gate.id, pin)}><span></span></button
+                          >
+                        </foreignObject>
+                      {/if}
+                    {/each}
+                    <circle
+                      cx="132"
+                      cy="55"
+                      r="4"
+                      fill={signal(gate.id, liveSignals) === true ? '#b4acff' : '#8b83ff'}
+                    />
+                    <text x="148" y="59" class="diagram-pin"
+                      >{signal(gate.id, liveSignals) === null
+                        ? '·'
+                        : Number(signal(gate.id, liveSignals))}</text
+                    >
+                    {#if missionId !== 'nand'}
+                      <foreignObject x="104" y="27" width="56" height="56">
+                        <button
+                          class="svg-pin-button source-pin"
+                          class:source-selected={selectedSource === gate.id}
+                          aria-pressed={selectedSource === gate.id}
+                          aria-label={`Select source part ${index + 1} ${gate.type} output`}
+                          on:click={() => selectSource(gate.id)}><span></span></button
+                        >
+                      </foreignObject>
+                    {/if}
+                  </g>
+                {/each}
+                {#if circuit.gates.length === 0}
+                  <g transform="translate(390, 110)">
+                    <rect
+                      x="-35"
+                      y="-23"
+                      width="140"
+                      height="90"
+                      rx="13"
+                      fill="#171a26"
+                      stroke="#4f5369"
+                      stroke-dasharray="5 5"
+                    />
+                    <text
+                      x="35"
+                      y="17"
+                      text-anchor="middle"
+                      fill="#b8b2e5"
+                      font-family="monospace"
+                      font-size="27">+</text
+                    >
+                    <text x="35" y="41" text-anchor="middle" class="diagram-label"
+                      >YOUR CIRCUIT</text
+                    >
+                  </g>
+                  <text x="425" y="231" text-anchor="middle" fill="#a1a5b6" font-size="13"
+                    >Add a gate below or write HDL beside this view.</text
+                  >
                 {/if}
-              </g>
-            {/each}
-            {#if circuit.gates.length === 0}
-              <g transform="translate(390, 110)">
-                <rect
-                  x="-35"
-                  y="-23"
-                  width="140"
-                  height="90"
-                  rx="13"
-                  fill="#eee8d8"
-                  stroke="#b9bcac"
-                  stroke-dasharray="5 5"
-                />
-                <text
-                  x="35"
-                  y="17"
-                  text-anchor="middle"
-                  fill="#728074"
-                  font-family="monospace"
-                  font-size="27">+</text
-                >
-                <text x="35" y="41" text-anchor="middle" class="diagram-label">YOUR INVENTION</text>
-              </g>
-              <text x="425" y="231" text-anchor="middle" fill="#6d786f" font-size="13"
-                >Pick a part below. Make something work.</text
+                {#each mission.outputs as pin, index}
+                  {@const outputValue = live.result?.outputs[pin]}
+                  <g transform={`translate(795, ${125 + index * 106})`}>
+                    {#if outputValue}<circle
+                        cx="25"
+                        cy="0"
+                        r="29"
+                        fill="#8b83ff"
+                        opacity=".32"
+                        filter="url(#bench-glow)"
+                      />{/if}
+                    <circle
+                      cx="25"
+                      cy="0"
+                      r="24"
+                      fill={outputValue === true ? '#a399ff' : '#262a3b'}
+                      stroke={outputValue === true ? '#4f46e5' : '#555b73'}
+                      stroke-width="3"
+                    />
+                    <text
+                      x="25"
+                      y="7"
+                      text-anchor="middle"
+                      fill="#fff"
+                      font-family="monospace"
+                      font-size="21"
+                      font-weight="700"
+                      >{outputValue === undefined ? '?' : Number(outputValue)}</text
+                    >
+                    <text x="25" y="44" text-anchor="middle" class="diagram-label">{pin}</text>
+                    {#if missionId !== 'nand'}
+                      <foreignObject x="-3" y="-28" width="56" height="56">
+                        <button
+                          class="svg-pin-button output-pin"
+                          class:target-ready={!!selectedSource}
+                          aria-label={`Connect chip output ${pin}`}
+                          on:click={() => connectOutput(pin)}><span></span></button
+                        >
+                      </foreignObject>
+                    {/if}
+                  </g>
+                {/each}
+              </svg>
+            </div>
+            <p class="sr-only" aria-live="polite">
+              {live.result
+                ? `Live output: ${Object.entries(live.result.outputs)
+                    .map(([pin, value]) => `${pin} ${Number(value)}`)
+                    .join(', ')}`
+                : 'Circuit is not yet fully connected.'}
+            </p>
+            <div class="board-footer">
+              <span><span class="signal-key"></span> Live signal = 1</span><span
+                >{circuit.gates.length}
+                {circuit.gates.length === 1 ? 'part' : 'parts'} on board</span
+              ><span class="board-state"
+                >{codeError ? 'PAUSED' : live.result ? 'LIVE' : 'UNWIRED'}</span
               >
-            {/if}
-            {#each mission.outputs as pin, index}
-              {@const outputValue = live.result?.outputs[pin]}
-              <g transform={`translate(795, ${125 + index * 106})`}>
-                {#if outputValue}<circle
-                    cx="25"
-                    cy="0"
-                    r="29"
-                    fill="#67d9a8"
-                    opacity=".32"
-                    filter="url(#bench-glow)"
-                  />{/if}
-                <circle
-                  cx="25"
-                  cy="0"
-                  r="24"
-                  fill={outputValue === true ? '#8bdfb6' : '#d3d6c7'}
-                  stroke={outputValue === true ? '#246957' : '#9eaa9a'}
-                  stroke-width="3"
-                />
-                <text
-                  x="25"
-                  y="7"
-                  text-anchor="middle"
-                  fill="#244b3c"
-                  font-family="monospace"
-                  font-size="21"
-                  font-weight="700">{outputValue === undefined ? '?' : Number(outputValue)}</text
-                >
-                <text x="25" y="44" text-anchor="middle" class="diagram-label">{pin}</text>
-                {#if missionId !== 'nand'}
-                  <foreignObject x="-3" y="-28" width="56" height="56">
-                    <button
-                      class="svg-pin-button output-pin"
-                      class:target-ready={!!selectedSource}
-                      aria-label={`Connect machine output ${pin}`}
-                      on:click={() => connectOutput(pin)}><span></span></button
-                    >
-                  </foreignObject>
-                {/if}
-              </g>
-            {/each}
-          </svg>
-        </div>
-        <p class="sr-only" aria-live="polite">
-          {live.result
-            ? `Live output: ${Object.entries(live.result.outputs)
-                .map(([pin, value]) => `${pin} ${Number(value)}`)
-                .join(', ')}`
-            : 'Circuit is not yet fully connected.'}
-        </p>
-        <div class="board-footer">
-          <span><span class="signal-key"></span> Live signal = 1</span><span
-            >{circuit.gates.length} {circuit.gates.length === 1 ? 'part' : 'parts'} on board</span
-          ><button on:click={() => (showHDL = !showHDL)} aria-expanded={showHDL}
-            >{showHDL ? 'Hide' : 'View'} HDL <span aria-hidden="true">↗</span></button
-          >
-        </div>
-      </div>
+            </div>
+          </div>
 
-      {#if missionId !== 'nand'}
-        <section class="parts-bay" aria-label="Circuit parts and connections">
-          <div class="parts-heading">
-            <div>
-              <p class="eyebrow">SUPPLIED PARTS</p>
-              <h2>A little logic. Endless possibility.</h2>
-            </div>
-            <div class="clear-actions">
-              {#if undoCircuit}<button class="reset-button undo-clear" on:click={undoClear}
-                  >Undo clear</button
-                >{/if}<button
-                class="reset-button"
-                on:click={resetBoard}
-                disabled={circuit.gates.length === 0 &&
-                  mission.outputs.every((pin) => !circuit.outputs[pin])}>Clear circuit</button
-              >
-            </div>
-          </div>
-          <div class="part-buttons">
-            {#each mission.availableParts as type}<button
-                on:click={() => addGate(type)}
-                disabled={circuit.gates.length >= 24}
-                ><span aria-hidden="true">＋</span><strong>{type}</strong><span
-                  class="part-pin-count">{gatePins(type).length} IN / 1 OUT</span
-                ></button
-              >{/each}
-          </div>
-          <p class="connection-help">
-            Add a part, then wire its pins on the board or with the menus below. Earlier chips are
-            supplied as reference components; your collection tracks the ones you have built.
-          </p>
-          {#if circuit.gates.length > 0}
-            <div class="gate-controls">
-              {#each circuit.gates as gate, index (gate.id)}
-                <div class="gate-control">
-                  <div class="gate-control-heading">
-                    <span class="part-index">{String(index + 1).padStart(2, '0')}</span><strong
-                      >{gate.type}</strong
-                    ><button
-                      aria-label={`Remove part ${index + 1}, ${gate.type}`}
-                      on:click={() => removeGate(gate.id)}>×</button
-                    >
-                  </div>
-                  {#each gatePins(gate.type) as pin}
-                    <label
-                      ><span>Pin <b>{pin}</b></span><select
-                        aria-label={`Part ${index + 1} ${gate.type} input ${pin}`}
-                        value={gate.inputs[pin] ?? ''}
-                        on:change={(event) =>
-                          setConnection(gate.id, pin, event.currentTarget.value)}
-                        ><option value="">Choose source…</option
-                        >{#each availableSources(mission, circuit, gate.id) as source}<option
-                            value={source}>{sourceLabel(source)}</option
-                          >{/each}</select
-                      ></label
-                    >
+          {#if missionId !== 'nand'}
+            <section class="parts-bay" aria-label="Circuit parts and connections">
+              <div class="parts-heading">
+                <div>
+                  <p class="eyebrow">SUPPLIED PARTS</p>
+                  <h2>Component library</h2>
+                </div>
+                <div class="clear-actions">
+                  {#if undoCircuit}<button class="reset-button undo-clear" on:click={undoClear}
+                      >Undo clear</button
+                    >{/if}<button
+                    class="reset-button"
+                    on:click={resetBoard}
+                    disabled={circuit.gates.length === 0 &&
+                      mission.outputs.every((pin) => !circuit.outputs[pin])}>Clear circuit</button
+                  >
+                </div>
+              </div>
+              <div class="part-buttons">
+                {#each mission.availableParts as type}<button
+                    on:click={() => addGate(type)}
+                    disabled={!!codeError || circuit.gates.length >= 24}
+                    ><span aria-hidden="true">＋</span><strong>{type}</strong><span
+                      class="part-pin-count">{gatePins(type).length} IN / 1 OUT</span
+                    ></button
+                  >{/each}
+              </div>
+              <p class="connection-help">
+                Add a part, then wire its pins on the board or with the menus below. Earlier chips
+                are supplied as reference components; your collection tracks the ones you have
+                built.
+              </p>
+              {#if circuit.gates.length > 0}
+                <div class="gate-controls">
+                  {#each circuit.gates as gate, index (gate.id)}
+                    <div class="gate-control">
+                      <div class="gate-control-heading">
+                        <span class="part-index">{String(index + 1).padStart(2, '0')}</span><strong
+                          >{gate.type}</strong
+                        ><button
+                          disabled={!!codeError}
+                          aria-label={`Remove part ${index + 1}, ${gate.type}`}
+                          on:click={() => removeGate(gate.id)}>×</button
+                        >
+                      </div>
+                      {#each gatePins(gate.type) as pin}
+                        <label
+                          ><span>Pin <b>{pin}</b></span><select
+                            disabled={!!codeError}
+                            aria-label={`Part ${index + 1} ${gate.type} input ${pin}`}
+                            value={gate.inputs[pin] ?? ''}
+                            on:change={(event) =>
+                              setConnection(gate.id, pin, event.currentTarget.value)}
+                            ><option value="">Choose source…</option
+                            >{#each availableSources(mission, circuit, gate.id) as source}<option
+                                value={source}>{sourceLabel(source)}</option
+                              >{/each}</select
+                          ></label
+                        >
+                      {/each}
+                    </div>
                   {/each}
                 </div>
-              {/each}
-            </div>
+              {/if}
+              <div class="output-connections">
+                <span class="output-title">CHIP OUTPUTS</span>{#each mission.outputs as pin}<label
+                    ><span>Output <b>{pin}</b></span><select
+                      disabled={!!codeError}
+                      aria-label={`Chip output ${pin}`}
+                      value={circuit.outputs[pin] ?? ''}
+                      on:change={(event) => setOutput(pin, event.currentTarget.value)}
+                      ><option value="">Choose source…</option
+                      >{#each availableSources(mission, circuit) as source}<option value={source}
+                          >{sourceLabel(source)}</option
+                        >{/each}</select
+                    ></label
+                  >{/each}
+              </div>
+            </section>
           {/if}
-          <div class="output-connections">
-            <span class="output-title">CONNECT THE MACHINE</span
-            >{#each mission.outputs as pin}<label
-                ><span>Output <b>{pin}</b></span><select
-                  aria-label={`Machine output ${pin}`}
-                  value={circuit.outputs[pin] ?? ''}
-                  on:change={(event) => setOutput(pin, event.currentTarget.value)}
-                  ><option value="">Choose source…</option
-                  >{#each availableSources(mission, circuit) as source}<option value={source}
-                      >{sourceLabel(source)}</option
-                    >{/each}</select
-                ></label
-              >{/each}
-          </div>
-          <p class="draft-status">
-            {saveNotice || 'Your invention stays in this browser as you build.'}
-          </p>
-        </section>
+        </div>
       {/if}
-
-      {#if showHDL}
-        <section class="hdl-panel" aria-label="Generated hardware description language">
-          <div>
-            <h2>The same circuit, written in HDL.</h2>
-            <button on:click={copyHDL} disabled={!hdl}>{copied ? 'Copied' : 'Copy code'}</button>
+      {#if editorMode !== 'visual'}
+        <section class="hdl-panel" aria-label="HDL code editor">
+          <div class="code-heading">
+            <span><b aria-hidden="true">&lt;/&gt;</b> {mission.chip}.hdl</span><button
+              on:click={copyHDL}
+              disabled={!code}>{copied ? 'Copied' : 'Copy code'}</button
+            >
           </div>
-          {#if hdl}<pre><code>{hdl}</code></pre>{:else}<p>
-              Connect every part and output to reveal the HDL for your design.
-            </p>{/if}<a href="/experiment/hardware-ide"
-            >Open the full hardware IDE <span aria-hidden="true">↗</span></a
+          <div class="code-editor" class:has-error={!!codeError}>
+            <div class="line-numbers" aria-hidden="true">
+              <div style={`transform: translateY(-${codeScroll}px)`}>
+                {#each code.split('\n') as _, index}<span>{index + 1}</span>{/each}
+              </div>
+            </div>
+            <textarea
+              aria-label="HDL source"
+              aria-describedby="hdl-help"
+              value={code}
+              spellcheck="false"
+              autocapitalize="off"
+              autocomplete="off"
+              readonly={missionId === 'nand'}
+              on:input={(event) => editCode(event.currentTarget.value)}
+              on:scroll={(event) => (codeScroll = event.currentTarget.scrollTop)}
+            ></textarea>
+          </div>
+          <div class="code-status">
+            <span>{codeError ? 'HDL ERROR' : live.result ? 'COMPILED' : 'DRAFT'}</span><span
+              >HDL · {code.split('\n').length} lines</span
+            >
+          </div>
+          <p id="hdl-help">
+            {missionId === 'nand'
+              ? 'NAND is supplied by the simulator. Its HDL interface is read-only; discover its behavior with the input switches.'
+              : 'Edit the HDL to update the circuit. Wire the circuit to update the HDL. Both views use the same simulator.'}
+          </p>
+          <a href="/experiment/hardware-ide"
+            >Open full hardware IDE <span aria-hidden="true">↗</span></a
           >
         </section>
       {/if}
     </div>
 
+    <p class="draft-status">{saveNotice || 'Drafts are saved on this device.'}</p>
     <aside class="mission-instruments" aria-label="Mission goal and test instruments">
       <div class="goal-panel">
-        <p class="eyebrow">THE JOB</p>
+        <p class="eyebrow">SPECIFICATION</p>
         <h2>{mission.goal}</h2>
         <BenchMachine
           {missionId}
@@ -729,25 +894,25 @@
       {:else}
         <section class="test-panel" aria-label="Circuit test instrument">
           <div class="instrument-heading">
-            <span class="eyebrow">PROVE YOUR INVENTION</span><span class="case-count"
+            <span class="eyebrow">PROVE YOUR CIRCUIT</span><span class="case-count"
               >{scenarios.length} CASES</span
             >
           </div>
-          <h2>Every signal matters.</h2>
+          <h2>Verify every input.</h2>
           <p>
-            One working combination is a start. Test every input before bringing the station online.
+            Run the full truth table against the specification. Every input combination must pass.
           </p>
-          <button class="test-button" on:click={runTests}
+          <button class="test-button" disabled={!!codeError} on:click={runTests}
             ><span aria-hidden="true">▷</span> Test circuit
             <span>{scenarios.length} input combinations</span></button
           >
           {#if reportError}<div class="test-error" role="alert">
-              <strong>There’s an open connection.</strong>
+              <strong>Circuit cannot run.</strong>
               <p>{reportError}</p>
             </div>{/if}
           {#if report}
             <div class="test-summary" class:all-pass={report.success} aria-live="polite">
-              <strong>{report.success ? 'Signal confirmed.' : 'A clue from the machine.'}</strong
+              <strong>{report.success ? 'Signal confirmed.' : 'Specification mismatch.'}</strong
               ><span>{report.passed} of {report.total} combinations work.</span>
             </div>
             <div class="truth-table-wrap">
@@ -796,25 +961,23 @@
       {#if restoreReady}<section class="restore-panel" aria-live="polite">
           <span class="restore-check" aria-hidden="true">✓</span>
           <h2>
-            {completed.includes(missionId)
-              ? 'Still a working invention.'
-              : 'You brought it to life.'}
+            {completed.includes(missionId) ? 'Verification passed.' : 'Verification passed.'}
           </h2>
           <p>
             {missionId === 'nand'
-              ? 'Every NAND combination discovered. This tiny part can become every other logic gate.'
+              ? 'All four NAND cases verified. This primitive can implement every other Boolean gate.'
               : `Your ${mission.chip} works for every possible input.`}
           </p>
           <button class="restore-button" on:click={() => oncomplete(missionId)}
-            >{completed.includes(missionId) ? 'Return to the world' : 'Bring station online'}
+            >{completed.includes(missionId) ? 'Return to layers' : 'Save verified chip'}
             <span aria-hidden="true">→</span></button
           >
         </section>{/if}
 
       <section class="hint-panel">
         <div>
-          <h2>Stuck? Follow a clue.</h2>
-          <span>No penalties. Stay curious.</span>
+          <h2>Need a hint?</h2>
+          <span>Reveal one step at a time.</span>
         </div>
         {#if hintCount > 0}<ol>
             {#each mission.hints.slice(0, hintCount) as hint}<li>{hint}</li>{/each}
@@ -824,16 +987,16 @@
           }}
           disabled={hintCount >= mission.hints.length}
           >{hintCount === 0
-            ? 'Give me a nudge'
+            ? 'Reveal a hint'
             : hintCount >= mission.hints.length
-              ? 'All clues revealed'
-              : 'Another clue'} <span aria-hidden="true">↗</span></button
+              ? 'All hints revealed'
+              : 'Next hint'} <span aria-hidden="true">↗</span></button
         >
       </section>
       {#if showGuide}<section class="field-guide">
           <div class="instrument-heading">
-            <span class="eyebrow">FROM YOUR FIELD NOTES</span><button
-              aria-label="Close field notes"
+            <span class="eyebrow">REFERENCE</span><button
+              aria-label="Close reference"
               on:click={() => (showGuide = false)}>×</button
             >
           </div>
@@ -850,372 +1013,404 @@
 </section>
 
 <style>
-  .wiring-instruction {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 22px 0;
-    color: #65745e;
-    min-height: 48px;
-  }
-  .wiring-instruction > span {
-    font: 28px monospace;
-    color: #b17f4e;
-  }
-  .wiring-instruction p {
-    font:
-      11px/1.6 Arial,
-      sans-serif;
-    flex: 1;
-    margin: 0;
-  }
-  .wiring-instruction button {
-    font:
-      10px Arial,
-      sans-serif;
-    white-space: nowrap;
-    border: 0;
-    background: none;
-    color: #806a47;
-    padding: 10px 0;
-  }
-  .bench .svg-pin-button {
-    display: grid;
-    place-items: center;
-    width: 56px;
-    height: 56px;
-    border: 0;
-    border-radius: 50%;
-    background: transparent;
-    color: #a98255;
-    padding: 0;
-    font: 12px monospace;
-    transition: background 0.16s;
-  }
-  .svg-pin-button span {
-    width: 13px;
-    height: 13px;
-    border: 2px solid #efe6d1;
-    border-radius: 50%;
-    background: #b78c57;
-    box-shadow: 0 0 0 1px #b78c57;
-  }
-  .svg-pin-button:hover,
-  .svg-pin-button.source-selected {
-    background: #eda26538;
-  }
-  .svg-pin-button.source-selected span {
-    background: #e78b45;
-    box-shadow: 0 0 0 5px #ed985033;
-  }
-  .svg-pin-button.target-ready {
-    background: #8ec59d20;
-  }
-  .svg-pin-button.target-ready span {
-    background: #619779;
-    box-shadow: 0 0 0 3px #8ec59d33;
-  }
-  .bench .output-pin span {
-    width: 42px;
-    height: 42px;
-    background: transparent;
-    border: 2px dashed #749270;
-    box-shadow: none;
-  }
-  .bench .output-pin.target-ready span {
-    background: #7fb4842b;
-    border-color: #417357;
-  }
-  .clear-actions {
-    display: flex;
-    gap: 14px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-  }
-  .undo-clear {
-    color: #e3aa7c !important;
-  }
   .bench {
-    --bench-sea: #101e2b;
-    --bench-panel: #f4eedf;
-    --bench-ink: #20313a;
-    --bench-muted: #a1b1b4;
-    --bench-orange: #ed915b;
-    --bench-signal: #7bd9b5;
-    background: var(--bench-sea);
-    color: #f4eedf;
+    --surface: #12151f;
+    --edge: #303446;
+    --text: #f0f0f7;
+    --muted-text: #a1a5b6;
+    --accent: #a69cff;
+    color: var(--text);
+    background: #090b12;
     min-height: 100vh;
-    padding: 0 42px 60px;
-    font-family: Arial, Helvetica, sans-serif;
-    isolation: isolate;
+    padding: 0 clamp(16px, 3vw, 48px) 64px;
+    font-family: inherit;
+  }
+  .bench *,
+  .bench *::before,
+  .bench *::after {
+    box-sizing: border-box;
   }
   .bench button,
-  .bench select {
+  .bench select,
+  .bench textarea {
     font: inherit;
   }
   .bench button {
     cursor: pointer;
   }
   .bench button:disabled {
-    cursor: default;
     opacity: 0.45;
+    cursor: default;
   }
   .bench button:focus-visible,
   .bench select:focus-visible,
+  .bench textarea:focus-visible,
   .bench a:focus-visible {
-    outline: 3px solid #ee9255 !important;
+    outline: 2px solid #aaa0ff !important;
     outline-offset: 4px;
+  }
+  .bench-header,
+  .mission-title-row,
+  .editor-toolbar,
+  .signal-inputs,
+  .bench-layout,
+  .code-error {
+    max-width: 1600px;
+    margin-left: auto;
+    margin-right: auto;
   }
   .bench-header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
+    min-height: 64px;
     gap: 16px;
-    max-width: 1500px;
-    margin: 0 auto;
-    border-bottom: 1px solid #ffffff18;
-    min-height: 82px;
+    border-bottom: 1px solid #252938;
   }
   .world-back {
     display: flex;
     gap: 12px;
     align-items: center;
-    background: none;
+    color: #c8cad9;
     border: 0;
-    color: #eee8dc;
-    font-size: 14px;
-    font-weight: 600;
+    background: none;
     padding: 12px 0;
+    font-size: 12px !important;
   }
   .world-back span {
-    font-size: 22px;
+    font-size: 19px;
   }
   .bench-identity {
-    font: 10px monospace;
-    letter-spacing: 2px;
     display: flex;
+    gap: 7px;
     align-items: center;
-    gap: 9px;
-    color: #a9b7b8;
+    color: #9a9eb0;
+    font: 10px monospace;
+    letter-spacing: 1.1px;
   }
   .identity-light,
   .small-light {
-    width: 7px;
-    height: 7px;
-    background: #79d9b4;
     display: inline-block;
-    border-radius: 50%;
+    height: 5px;
+    width: 5px;
+    background: #a297ff;
+    border-radius: 1px;
   }
   .identity-and {
-    color: #ee9255;
+    color: #a79cff;
   }
   .slash {
-    margin: 0 13px;
-    color: #64777c;
+    color: #50566d;
+    margin: 0 10px;
   }
   .notes-trigger {
-    background: #ffffff08;
-    border: 1px solid #ffffff20;
-    border-radius: 7px;
     display: flex;
-    gap: 10px;
+    gap: 9px;
     align-items: center;
-    padding: 10px 14px;
-    font-size: 12px;
-    color: #e6e2d7;
+    background: #141722;
+    border: 1px solid var(--edge);
+    color: #cacbda;
+    border-radius: 4px;
+    padding: 9px 12px;
+    font-size: 11px !important;
   }
   .mission-title-row {
-    max-width: 1500px;
-    margin: 36px auto 28px;
     display: flex;
+    gap: 24px;
     align-items: center;
     justify-content: space-between;
-    gap: 28px;
+    padding: 28px 0 22px;
   }
   .eyebrow {
-    font: 10px/1.5 monospace;
-    letter-spacing: 2px;
+    color: #b5adf1;
+    font: 9px/1.6 monospace;
+    letter-spacing: 1.4px;
+    margin: 0 0 10px;
     text-transform: uppercase;
-    color: var(--bench-orange);
-    margin: 0 0 11px;
   }
   .eyebrow span {
-    color: #536e76;
-    margin: 0 8px;
+    color: #636983;
+    margin: 0 5px;
   }
   h1 {
-    font-size: clamp(30px, 3.7vw, 53px);
-    line-height: 1.08;
-    letter-spacing: -1.8px;
-    font-weight: 650;
-    margin: 0 0 14px;
-    max-width: 950px;
+    font-size: clamp(27px, 3vw, 40px);
+    font-weight: 550;
+    line-height: 1.12;
+    letter-spacing: -1.4px;
+    margin: 0 0 12px;
   }
   .mission-brief {
-    max-width: 740px;
-    color: #a8b8bb;
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1.75;
+    color: var(--muted-text);
+    max-width: 760px;
     margin: 0;
   }
   .chip-stamp {
-    border: 1px solid #c4d0cc2b;
-    border-radius: 9px;
-    min-width: 145px;
-    padding: 17px 22px;
+    border-left: 1px solid #3b365d;
     display: grid;
-    gap: 9px;
-    transform: rotate(3deg);
-    background: #ffffff03;
-    flex-shrink: 0;
-  }
-  .chip-stamp span {
-    font: 8px monospace;
-    color: #829a9e;
-    letter-spacing: 1.5px;
+    gap: 7px;
+    min-width: 130px;
+    padding: 4px 0 4px 20px;
   }
   .chip-stamp strong {
-    font: 30px monospace;
-    color: #e9b382;
+    font: 26px monospace;
+    color: #b8afff;
   }
-  .bench-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 325px;
-    gap: 25px;
-    max-width: 1500px;
-    margin: 0 auto;
-    align-items: start;
-  }
-  .workspace {
-    min-width: 0;
-  }
-  .board-shell {
-    background: #ebe9dc;
-    border-radius: 15px;
-    overflow: hidden;
-    border: 1px solid #c2c6b6;
-    box-shadow: 0 16px 45px #0002;
-    color: var(--bench-ink);
-  }
-  .board-heading {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    font: 9px monospace;
-    letter-spacing: 1.8px;
-    padding: 18px 22px;
-    border-bottom: 1px solid #647a6e26;
-    background: #e5e4d7;
-  }
-  .board-heading .small-light {
-    background: #6c7d70;
-    width: 6px;
-    height: 6px;
-  }
-  .board-number {
-    margin-left: auto;
-    color: #7c897a;
-    font-size: 8px;
+  .chip-stamp span {
+    color: #a0a4b6;
+    font: 8px monospace;
+    letter-spacing: 1.5px;
   }
   .signal-inputs {
     display: flex;
+    gap: 10px;
     align-items: center;
     flex-wrap: wrap;
-    gap: 14px;
-    padding: 19px 22px 3px;
+    padding: 14px 0 18px;
   }
   .switch-label {
     font: 9px monospace;
-    color: #6c7b6e;
-    letter-spacing: 1.3px;
-    margin-right: 4px;
+    letter-spacing: 1px;
+    color: #a5a9bc;
+    margin-right: 12px;
   }
   .input-switch {
-    border: 1px solid #bfc5b4;
-    border-radius: 7px;
     display: flex;
-    gap: 12px;
     align-items: center;
-    color: #3c5146;
-    background: #f3f1e5;
-    padding: 8px 10px;
-    font-size: 12px;
-    min-height: 39px;
+    gap: 12px;
+    padding: 8px 12px;
+    min-height: 38px;
+    border: 1px solid #383d51;
+    background: #151824;
+    color: #d3d5e2;
+    border-radius: 4px;
   }
   .input-switch > span:first-child {
-    font: 13px monospace;
-    min-width: 15px;
+    font: 12px monospace;
+    min-width: 18px;
   }
   .input-switch strong {
-    font: 14px monospace;
+    font: 13px monospace;
   }
   .switch-track {
-    height: 16px;
-    width: 29px;
-    background: #bbc4b4;
-    border-radius: 10px;
+    width: 28px;
+    height: 14px;
+    background: #3a3f55;
+    border-radius: 3px;
     position: relative;
   }
   .switch-track i {
     position: absolute;
+    width: 8px;
+    height: 8px;
     left: 3px;
     top: 3px;
-    width: 10px;
-    height: 10px;
-    background: #f7f5e8;
-    border-radius: 50%;
+    border-radius: 1px;
+    background: #b2b6c9;
     transition: transform 0.15s;
   }
+  .input-on {
+    border-color: #665db3;
+    background: #211d3a;
+  }
   .input-on .switch-track {
-    background: #27745b;
+    background: #6657d4;
   }
   .input-on .switch-track i {
-    transform: translateX(13px);
+    transform: translateX(14px);
+    background: #fff;
   }
-  .input-on {
-    border-color: #80b79a;
-    background: #e8f0e1;
+  .editor-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 0;
+    border-top: 1px solid #252938;
+  }
+  .mode-switch {
+    display: flex;
+    padding: 3px;
+    gap: 3px;
+    border: 1px solid var(--edge);
+    background: #0e111b;
+    border-radius: 5px;
+  }
+  .mode-switch button {
+    background: none;
+    color: #a3a7ba;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    min-height: 33px;
+    padding: 6px 14px;
+    font-size: 11px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .mode-switch button.active {
+    color: #fff;
+    background: #302950;
+    border-color: #5d5192;
+  }
+  .mode-switch button span {
+    font: 13px monospace;
+    color: #aaa0e7;
+  }
+  .sync-state {
+    font: 9px/1.5 monospace;
+    color: #a5a9ba;
+  }
+  .sync-error {
+    color: #f4abac;
+  }
+  .workspace {
+    min-width: 0;
+  }
+  .workspace.split-view {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: 12px;
+    align-items: stretch;
+  }
+  .visual-workspace {
+    min-width: 0;
+  }
+  .board-shell {
+    border: 1px solid #34364e;
+    background: #111420;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .board-heading,
+  .code-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 17px;
+    border-bottom: 1px solid #2a2e40;
+    color: #b6b9ca;
+    font: 9px monospace;
+    letter-spacing: 1px;
+    min-height: 45px;
+    background: #171a27;
+  }
+  .board-number {
+    margin-left: auto;
+    color: #a1a5b8;
+    font-size: 8px;
+  }
+  .wiring-instruction {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 9px 15px 0;
+    min-height: 42px;
+    color: #a7abbe;
+  }
+  .wiring-instruction > span {
+    font: 25px monospace;
+    color: #aba0ff;
+  }
+  .wiring-instruction p {
+    margin: 0;
+    font-size: 10px;
+    line-height: 1.6;
+    flex: 1;
+  }
+  .wiring-instruction button {
+    padding: 8px 0;
+    font-size: 10px;
+    color: #c6bfff;
+    background: none;
+    border: 0;
+    white-space: nowrap;
   }
   .circuit-viewport {
     overflow-x: auto;
   }
   .circuit-svg {
-    width: 100%;
-    min-width: 720px;
     display: block;
+    width: 100%;
+    min-width: 660px;
   }
   .diagram-label {
+    fill: #a5aabe;
     font: 10px monospace;
     letter-spacing: 1px;
-    fill: #687a6c;
-  }
-  .diagram-pin.gate-pin-label {
-    fill: #9cafa1;
   }
   .diagram-pin {
+    fill: #b0b2c5;
     font: 10px monospace;
-    fill: #64766b;
+  }
+  .gate-pin-label {
+    fill: #bcb8df;
   }
   .circuit-wire {
-    stroke: #bab19a;
-    stroke-width: 2.6;
     fill: none;
+    stroke: #4d506c;
+    stroke-width: 2;
     stroke-linecap: round;
-    transition: stroke 0.2s;
+    transition: stroke 0.15s;
   }
   .circuit-wire.wire-on {
-    stroke: #459879;
-    stroke-width: 3;
+    stroke: #a599ff;
+    stroke-width: 2.5;
+    filter: drop-shadow(0 0 3px #8e7cff55);
+  }
+  .bench .svg-pin-button {
+    display: grid;
+    place-items: center;
+    height: 56px;
+    width: 56px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    padding: 0;
+  }
+  .svg-pin-button span {
+    width: 12px;
+    height: 12px;
+    border: 2px solid #161928;
+    background: #a194f7;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px #a194f7;
+  }
+  .svg-pin-button:hover,
+  .svg-pin-button.source-selected {
+    background: #9382ff28;
+  }
+  .svg-pin-button.source-selected span {
+    background: #fff;
+    box-shadow: 0 0 0 5px #9382ff50;
+  }
+  .svg-pin-button.target-ready span {
+    background: #d1caff;
+    box-shadow: 0 0 0 4px #9382ff35;
+  }
+  .bench .output-pin span {
+    height: 42px;
+    width: 42px;
+    background: transparent;
+    border: 2px dashed #8078b4;
+    box-shadow: none;
+  }
+  .bench .output-pin.target-ready span {
+    background: #aba0ff26;
+    border-color: #e1dcff;
+  }
+  .paused .circuit-viewport {
+    opacity: 0.5;
   }
   .board-footer {
-    padding: 13px 20px;
-    border-top: 1px solid #647a6e26;
     display: flex;
+    gap: 15px;
     align-items: center;
-    gap: 20px;
+    padding: 12px 15px;
     font: 9px monospace;
-    color: #6c7c6d;
-    letter-spacing: 0.3px;
+    color: #a2a7bb;
+    border-top: 1px solid #2a2e40;
   }
   .board-footer > span:first-child {
     display: flex;
@@ -1223,595 +1418,687 @@
     align-items: center;
   }
   .signal-key {
-    height: 6px;
-    width: 6px;
-    background: #459879;
-    border-radius: 50%;
+    height: 5px;
+    width: 5px;
+    background: #a599ff;
   }
-  .board-footer button {
+  .board-state {
     margin-left: auto;
-    border: 0;
-    background: none;
-    color: #516e5e;
-    padding: 3px;
+    color: #b8aeff;
+    font-size: 8px;
+    letter-spacing: 1px;
   }
   .parts-bay {
-    padding-top: 27px;
+    padding: 18px 0 0;
   }
   .parts-heading {
     display: flex;
-    justify-content: space-between;
-    gap: 15px;
+    gap: 16px;
     align-items: center;
+    justify-content: space-between;
   }
   .parts-heading .eyebrow {
-    color: #8ba3a6;
-    margin-bottom: 5px;
-    font-size: 9px;
+    font-size: 8px;
+    color: #959bb1;
+    margin-bottom: 4px;
   }
   .parts-heading h2 {
-    font-size: 19px;
-    font-weight: 500;
-    letter-spacing: -0.4px;
+    font-size: 15px;
     margin: 0;
+    font-weight: 500;
+    color: #d9dbe8;
+  }
+  .clear-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
   }
   .reset-button {
     background: none;
     border: 0;
-    color: #9aafb0;
-    font-size: 11px;
+    color: #aeb2c5;
     padding: 8px 0;
+    font-size: 10px !important;
+  }
+  .undo-clear {
+    color: #c4baff;
   }
   .part-buttons {
     display: flex;
-    gap: 10px;
-    margin-top: 18px;
     flex-wrap: wrap;
+    gap: 8px;
+    margin: 14px 0 0;
   }
   .part-buttons button {
+    border: 1px solid #41405c;
+    background: #1d1c2e;
+    color: #e1def3;
     display: flex;
+    gap: 10px;
     align-items: center;
-    gap: 12px;
-    border: 1px solid #48626a;
-    background: #203541;
-    border-radius: 8px;
-    min-height: 49px;
-    color: #ede7d9;
-    padding: 9px 13px;
-    transition:
-      border-color 0.16s,
-      transform 0.16s;
+    min-height: 42px;
+    border-radius: 4px;
+    padding: 8px 12px;
   }
   .part-buttons button:hover:not(:disabled) {
-    border-color: #ed915b;
-    transform: translateY(-2px);
-  }
-  .part-buttons button > span:first-child {
-    color: #eda36f;
-    font-size: 21px;
+    background: #2d2647;
+    border-color: #8e7fd7;
   }
   .part-buttons strong {
-    font: 13px monospace;
+    font: 12px monospace;
+  }
+  .part-buttons button > span:first-child {
+    color: #b3a5ff;
+    font-size: 18px;
   }
   .part-pin-count {
-    font: 8px monospace;
-    color: #819ca1;
+    color: #a6a5bd;
+    font: 7px monospace;
     letter-spacing: 0.5px;
   }
   .connection-help {
-    font-size: 11px;
-    line-height: 1.65;
-    color: #8da5a9;
-    margin: 12px 0 16px;
+    color: #a1a5b9;
+    font-size: 10px;
+    line-height: 1.8;
+    margin: 12px 0;
   }
   .gate-controls {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 215px), 1fr));
-    gap: 11px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+    gap: 10px;
   }
   .gate-control {
-    background: #192d39;
-    border: 1px solid #334e59;
-    border-radius: 9px;
-    padding: 13px;
+    border: 1px solid #31354a;
+    border-radius: 4px;
+    background: #141722;
+    padding: 12px;
     min-width: 0;
   }
   .gate-control-heading {
     display: flex;
-    gap: 10px;
     align-items: center;
-    margin-bottom: 12px;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .gate-control-heading strong {
+    font: 12px monospace;
   }
   .part-index {
     font: 9px monospace;
-    color: #e5a878;
-    background: #e7945720;
-    border-radius: 4px;
-    padding: 5px;
-  }
-  .gate-control-heading strong {
-    font: 14px monospace;
+    color: #b4a9eb;
+    border-right: 1px solid #47405f;
+    padding-right: 8px;
   }
   .gate-control-heading button {
     margin-left: auto;
-    background: none;
+    padding: 0;
     border: 0;
-    color: #95a7a9;
-    font-size: 19px;
-    width: 27px;
-    height: 27px;
+    background: none;
+    color: #c2c4d4;
+    width: 30px;
+    height: 28px;
+    font-size: 20px !important;
   }
   .gate-control label,
   .output-connections label {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    margin-top: 9px;
+    gap: 10px;
+    margin-top: 8px;
+    color: #a1a6bc;
     font-size: 10px;
-    color: #9bb1b4;
   }
-  .gate-control label > span {
-    min-width: 32px;
+  .gate-control label span {
+    min-width: 40px;
   }
   .gate-control label b,
   .output-connections label b {
-    color: #e6e3d6;
     font: 11px monospace;
+    color: #dedfeb;
   }
   .gate-control select,
   .output-connections select {
-    min-width: 0;
     flex: 1;
-    max-width: 195px;
-    border: 1px solid #3d5962;
-    background: #122330;
-    color: #e2e6da;
-    border-radius: 5px;
-    padding: 9px 7px;
-    font-size: 11px;
-    min-height: 34px;
+    min-width: 0;
+    max-width: 240px;
+    min-height: 36px;
+    background: #0e111c;
+    border: 1px solid #41465d;
+    color: #d9dbe9;
+    border-radius: 3px;
+    padding: 8px;
+    font-size: 11px !important;
   }
   .output-connections {
     display: flex;
+    gap: 12px 20px;
     flex-wrap: wrap;
-    gap: 10px 22px;
     align-items: center;
-    border: 1px dashed #4b655f;
-    border-radius: 9px;
-    padding: 13px 15px;
-    margin-top: 14px;
-    background: #1a302f77;
+    border: 1px solid #3f385e;
+    border-radius: 4px;
+    padding: 12px;
+    margin-top: 10px;
+    background: #181626;
   }
   .output-title {
-    font: 9px monospace;
+    font: 8px monospace;
     letter-spacing: 1px;
-    color: #89b69e;
+    color: #b4a8e9;
   }
   .output-connections label {
-    margin: 0;
     flex: 1;
-    min-width: 170px;
+    min-width: 160px;
+    margin: 0;
   }
   .draft-status {
-    font: 9px/1.6 monospace;
-    color: #728d94;
-    margin-top: 12px;
+    color: #969db3;
+    font: 9px/1.7 monospace;
+    padding: 13px 0 20px;
+    margin: 0;
+  }
+  .hdl-panel {
+    display: flex;
+    flex-direction: column;
+    background: #0c0e17;
+    border: 1px solid #35334c;
+    border-radius: 5px;
+    overflow: hidden;
+    min-width: 0;
+  }
+  .code-heading {
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+  .code-heading > span {
+    font: 11px monospace;
+    letter-spacing: 0;
+  }
+  .code-heading b {
+    color: #b6a8ff;
+    padding-right: 8px;
+    font-weight: 400;
+  }
+  .code-heading button {
+    background: #252235;
+    border: 1px solid #44405e;
+    padding: 6px 9px;
+    color: #c4bddb;
+    border-radius: 3px;
+    font-size: 9px;
+    white-space: nowrap;
+  }
+  .code-editor {
+    display: flex;
+    flex: 1;
+    min-height: 380px;
+    position: relative;
+  }
+  .line-numbers {
+    width: 45px;
+    flex-shrink: 0;
+    padding: 22px 10px 22px 0;
+    color: #737a93;
+    text-align: right;
+    background: #10121d;
+    overflow: hidden;
+    font:
+      12px/1.9 ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      Consolas,
+      monospace;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    user-select: none;
+  }
+  .line-numbers span {
+    display: block;
+  }
+  .code-editor textarea {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #d1c9fb;
+    width: 100%;
+    resize: vertical;
+    padding: 22px 16px 22px 58px;
+    min-height: 380px;
+    white-space: pre;
+    overflow: auto;
+    font:
+      12px/1.9 ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      Consolas,
+      monospace;
+    tab-size: 4;
+    caret-color: #d4c6ff;
+  }
+  .code-editor textarea:focus {
+    outline: 0 !important;
+    box-shadow: inset 0 0 0 1px #7163ba;
+  }
+  .has-error textarea {
+    box-shadow: inset 0 0 0 1px #a76370;
+  }
+  .code-status {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 11px 15px;
+    border-top: 1px solid #2c2940;
+    font: 8px monospace;
+    color: #aca1db;
+    letter-spacing: 0.7px;
+    background: #171323;
+  }
+  .hdl-panel > p {
+    font-size: 10px;
+    line-height: 1.8;
+    color: #a1a4b7;
+    padding: 0 16px;
+    margin: 14px 0 6px;
+  }
+  .hdl-panel > a {
+    font-size: 10px;
+    color: #c1b7ed;
+    padding: 8px 16px 16px;
+  }
+  .code-error {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    border: 1px solid #754b60;
+    background: #261823;
+    color: #f4c8d5;
+    padding: 15px;
+    margin-top: 4px;
+    margin-bottom: 14px;
+    border-radius: 4px;
+  }
+  .code-error strong {
+    font-size: 12px;
+  }
+  .code-error p {
+    font: 11px/1.6 monospace;
+    max-height: 140px;
+    overflow: auto;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    margin: 7px 0;
+  }
+  .code-error span {
+    font-size: 10px;
+    color: #ceaeba;
+  }
+  .code-error button {
+    flex-shrink: 0;
+    border: 1px solid #775669;
+    background: #412b3d;
+    color: #f1d3df;
+    border-radius: 3px;
+    font-size: 10px;
+    padding: 10px;
   }
   .mission-instruments {
     display: grid;
-    gap: 15px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 0.8fr);
+    gap: 14px;
+    align-items: start;
+  }
+  .goal-panel,
+  .test-panel,
+  .hint-panel,
+  .restore-panel,
+  .field-guide {
     min-width: 0;
+    padding: 22px;
+    background: #12151f;
+    border: 1px solid #303446;
+    border-radius: 5px;
   }
   .goal-panel {
-    padding: 23px 23px 19px;
-    border: 1px solid #35505a;
-    background: #172c38;
-    border-radius: 12px;
-    overflow: hidden;
-  }
-  .goal-panel .eyebrow {
-    font-size: 9px;
+    grid-column: 1;
+    grid-row: 1 / span 2;
   }
   .goal-panel h2 {
-    font-size: 20px;
-    line-height: 1.4;
-    letter-spacing: -0.4px;
-    margin: 0;
+    font-size: 17px;
     font-weight: 500;
-    color: #eee9d8;
+    line-height: 1.5;
+    margin: 0;
+    color: #ddddeb;
   }
   .reward-copy {
-    font-size: 11px;
-    line-height: 1.7;
-    color: #a6bab7;
+    font: 9px/1.7 monospace;
+    color: #aaa5c7;
     display: flex;
     gap: 8px;
-    margin: 16px 0 0;
-  }
-  .reward-copy span {
-    color: #d39e70;
+    margin: 14px 0 0;
   }
   .test-panel {
-    background: #f4eedf;
-    color: #203b3c;
-    border-radius: 12px;
-    padding: 23px;
+    grid-column: 2;
+    grid-row: 1;
+    border-color: #49405f;
+    background: #171422;
   }
   .instrument-heading {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 10px;
+    gap: 8px;
   }
   .test-panel .eyebrow {
-    color: #797666;
-    font-size: 8px;
-    letter-spacing: 1.3px;
     margin: 0;
+    font-size: 8px;
+    color: #b3a8d5;
   }
   .case-count {
     font: 9px monospace;
-    color: #8a7862;
+    color: #b8afcf;
     white-space: nowrap;
   }
   .test-panel h2 {
-    font-size: 22px;
-    font-weight: 550;
-    letter-spacing: -0.7px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    font-size: 23px;
     margin: 14px 0 10px;
   }
   .test-panel > p {
-    font-size: 12px;
-    line-height: 1.7;
-    color: #6b736b;
+    font-size: 11px;
+    line-height: 1.8;
+    color: #a8a4bb;
     margin: 0 0 16px;
   }
   .test-button {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 9px;
-    flex-wrap: wrap;
-    background: #e88e57;
-    color: #172e32;
-    border: 1px solid #ce7a49;
-    border-radius: 7px;
-    padding: 13px 10px;
+    gap: 10px;
     width: 100%;
-    font-size: 14px;
-    font-weight: 700;
-    box-shadow: 0 3px 0 #ad663b;
+    border: 1px solid #8875e9;
+    background: #6852c9;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 13px !important;
+    padding: 13px;
+    min-height: 46px;
   }
   .test-button > span:first-child {
-    font-size: 22px;
-    line-height: 0.8;
+    font-size: 20px;
   }
   .test-button > span:last-child {
-    width: 100%;
+    margin-left: auto;
     font: 8px monospace;
-    letter-spacing: 0.7px;
-    color: #674f39;
+    color: #f2edff;
   }
   .waiting-signal {
     display: flex;
-    gap: 9px;
     align-items: center;
-    margin-top: 18px;
-    color: #91917d;
+    gap: 10px;
+    margin-top: 14px;
+    color: #a8a1bc;
   }
   .waiting-signal > span {
-    font: 27px monospace;
+    font: 24px monospace;
   }
   .waiting-signal p {
-    font: 9px/1.65 monospace;
+    font: 9px/1.6 monospace;
     margin: 0;
   }
   .test-error {
-    margin-top: 20px;
+    background: #332333;
+    border-left: 2px solid #d68eac;
     padding: 13px;
-    border-left: 3px solid #b77954;
-    background: #e8dfcc;
+    margin-top: 15px;
+    overflow-wrap: anywhere;
   }
   .test-error strong {
+    color: #edbfce;
     font-size: 12px;
   }
   .test-error p {
+    color: #d7b5c3;
     font-size: 11px;
-    line-height: 1.6;
-    overflow-wrap: anywhere;
-    margin: 6px 0 0;
+    line-height: 1.7;
+    margin: 5px 0 0;
   }
   .test-summary {
-    margin-top: 20px;
-    border-left: 3px solid #c38d54;
-    padding-left: 11px;
     display: grid;
-    gap: 6px;
+    gap: 5px;
+    padding-left: 12px;
+    border-left: 2px solid #d595a9;
+    margin-top: 18px;
   }
   .test-summary strong {
-    font-size: 13px;
+    font-size: 12px;
+    color: #e0d7f0;
   }
   .test-summary span {
-    font-size: 11px;
-    color: #7b7866;
+    font-size: 10px;
+    color: #bcb3cb;
   }
-  .all-pass {
-    border-color: #3b8c66;
+  .test-summary.all-pass {
+    border-color: #a799ed;
   }
   .truth-table-wrap {
-    margin-top: 16px;
     overflow-x: auto;
+    margin-top: 14px;
   }
   .truth-table {
     width: 100%;
-    font: 10px monospace;
     border-collapse: collapse;
+    font: 11px monospace;
   }
   .truth-table th {
+    font-size: 9px;
     font-weight: 400;
-    color: #6b7b6e;
+    color: #aaa3ba;
+    border-bottom: 1px solid #4b415b;
     text-align: center;
-    padding: 8px 3px;
-    border-bottom: 1px solid #b7bfab;
+    padding: 8px 4px;
   }
   .truth-table td {
-    padding: 7px 3px;
+    border-bottom: 1px solid #302939;
     text-align: center;
-    color: #3c5d4d;
-    border-bottom: 1px solid #d3d4c3;
+    padding: 7px 4px;
+    color: #d3c7e6;
   }
   .truth-table caption {
     text-align: left;
     caption-side: bottom;
-    font:
-      9px/1.5 Arial,
-      sans-serif;
-    color: #84917c;
-    padding-top: 9px;
+    font-size: 9px;
+    line-height: 1.6;
+    color: #aea4c0;
+    padding-top: 10px;
   }
   .truth-table button {
-    height: 24px;
-    min-width: 27px;
-    background: #d8e4ce;
-    color: #31654b;
-    border: 0;
-    border-radius: 4px;
-    font-size: 13px;
+    border: 1px solid #51446e;
+    background: #332744;
+    color: #d0bcf0;
+    border-radius: 3px;
+    min-height: 28px;
+    min-width: 29px;
   }
   .truth-table .row-failed td {
-    color: #985532;
-    background: #e9e2ce;
-  }
-  .row-failed button {
-    background: #d8b99b;
-    color: #644027;
+    color: #e5acbb;
+    background: #342331;
   }
   .test-clue {
     font-size: 10px !important;
     margin: 13px 0 0 !important;
-    line-height: 1.7 !important;
   }
   .prediction-buttons {
     display: flex;
-    gap: 9px;
+    gap: 10px;
   }
   .prediction-buttons button {
-    flex: 1;
-    border: 1px solid #bfc4b0;
-    border-radius: 7px;
-    background: #e7e5d6;
-    padding: 12px 9px;
-    color: #526553;
     display: flex;
+    flex: 1;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    font-size: 12px;
+    gap: 13px;
+    min-height: 46px;
+    padding: 12px;
+    border: 1px solid #56496c;
+    background: #292137;
+    color: #d6cce8;
+    border-radius: 4px;
+    font-size: 11px;
   }
   .prediction-buttons strong {
-    font: 23px monospace;
-    color: #233e3b;
+    font: 20px monospace;
   }
   .prediction-feedback {
-    font-size: 11px !important;
-    margin: 14px 0 !important;
-    min-height: 38px;
+    font-size: 10px !important;
+    min-height: 34px;
+    margin: 12px 0 !important;
   }
   .discovery-cases {
     display: flex;
     gap: 6px;
   }
   .discovery-cases button {
-    font: 11px monospace;
-    background: #e9e5d5;
-    border: 1px solid #c7c6b3;
-    color: #7e806c;
-    border-radius: 5px;
-    padding: 9px 8px;
-    flex: 1;
     display: grid;
     gap: 5px;
+    flex: 1;
+    background: #211b2f;
+    color: #b9adc9;
+    border: 1px solid #4c405d;
+    border-radius: 3px;
+    padding: 9px 6px;
+    font: 10px monospace;
   }
   .discovery-cases .case-discovered {
-    background: #d2e4ce;
-    border-color: #9bb998;
-    color: #39684f;
+    border-color: #9b88d6;
+    background: #3c3053;
+    color: #e2d6ff;
   }
   .discovery-cases .case-selected {
-    box-shadow: inset 0 0 0 1px #687a5f;
+    box-shadow: inset 0 0 0 1px #afa0d6;
   }
   .next-case {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 38px;
+    width: 100%;
     background: none;
     border: 0;
-    margin: 14px 0 0;
-    padding: 4px 0;
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    color: #486b53;
-    font-size: 10px;
+    color: #c5b4df;
+    font-size: 10px !important;
+    padding: 9px 0 0;
   }
   .hint-panel {
-    padding: 21px 22px;
-    border: 1px solid #344e59;
-    border-radius: 11px;
-    background: #132734;
+    grid-column: 3;
+    grid-row: 1;
   }
   .hint-panel h2 {
     font-size: 13px;
+    font-weight: 500;
     margin: 0 0 6px;
-    color: #dedfcf;
   }
   .hint-panel > div > span {
     font-size: 10px;
-    color: #7f9a9f;
+    color: #a1a5b6;
   }
   .hint-panel button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
     border: 0;
     background: none;
-    padding: 13px 0 0;
-    color: #e7b184;
+    color: #beb2ee;
+    padding: 16px 0 0;
     font-size: 11px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
+    min-height: 40px;
   }
   .hint-panel ol {
-    padding-left: 16px;
-    margin: 15px 0 0;
+    margin: 16px 0 0;
+    padding-left: 15px;
   }
   .hint-panel li {
     font-size: 11px;
-    line-height: 1.75;
-    color: #b3c3c1;
-    margin-bottom: 9px;
-    padding-left: 4px;
+    color: #bfc0ce;
+    line-height: 1.8;
+    margin-bottom: 10px;
   }
   .restore-panel {
-    padding: 25px 22px;
-    border: 1px solid #4a8a6c;
-    background: #1b3d35;
-    border-radius: 12px;
-    text-align: center;
+    grid-column: 2;
+    grid-row: 2;
+    border-color: #6a5f9b;
+    background: #24203a;
   }
   .restore-check {
-    display: grid;
-    place-items: center;
-    margin: 0 auto 12px;
-    border: 1px solid #80d4a0;
-    background: #3f6850;
-    color: #c5efb7;
-    border-radius: 50%;
-    width: 33px;
-    height: 33px;
+    display: inline-block;
+    color: #c9beff;
+    font: 17px monospace;
+    margin-bottom: 9px;
   }
   .restore-panel h2 {
     font-size: 19px;
+    font-weight: 500;
     letter-spacing: -0.4px;
-    margin: 0 0 10px;
-    color: #dcedd5;
+    margin: 0 0 9px;
   }
   .restore-panel p {
+    color: #bdb4d8;
     font-size: 11px;
-    color: #a1c5ae;
-    line-height: 1.75;
-    margin: 0 0 17px;
+    line-height: 1.8;
+    margin: 0 0 15px;
   }
   .restore-button {
+    background: #aa9bea;
+    color: #171126;
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
     gap: 10px;
-    background: #b6dfa3;
-    border: 0;
-    border-bottom: 3px solid #81a376;
-    border-radius: 7px;
-    color: #254536;
-    font-size: 12px;
-    font-weight: 700;
     width: 100%;
-    padding: 14px;
+    padding: 13px;
+    min-height: 44px;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    border: 1px solid #ccbef7;
+    border-radius: 4px;
   }
   .field-guide {
-    border: 1px solid #9b8a68;
-    border-radius: 11px;
-    background: #e9e1ca;
-    color: #3f5046;
-    padding: 22px;
+    grid-column: 3;
+    grid-row: 2;
+    border-color: #47415b;
   }
   .field-guide .eyebrow {
-    color: #7e725c;
-    font-size: 8px;
-    letter-spacing: 1px;
     margin: 0;
+    font-size: 8px;
   }
   .field-guide button {
-    background: none;
     border: 0;
+    background: none;
+    color: #c1b8d8;
     font-size: 21px;
-    color: #7e725c;
   }
   .field-guide h2 {
-    font-size: 20px;
-    line-height: 1.3;
-    margin: 12px 0;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.5;
+    margin: 13px 0;
   }
   .field-guide p {
-    font-size: 12px;
-    line-height: 1.9;
+    font-size: 11px;
+    color: #b9b3c8;
+    line-height: 1.85;
   }
   .field-guide a {
     display: block;
-    color: #6a7655;
     font-size: 10px;
+    line-height: 1.7;
+    color: #c9bdf1;
     padding-top: 12px;
-  }
-  .hdl-panel {
-    background: #122430;
-    border: 1px solid #36545b;
-    border-radius: 11px;
-    padding: 22px;
-    margin-top: 22px;
-  }
-  .hdl-panel > div {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    justify-content: space-between;
-  }
-  .hdl-panel h2 {
-    font-size: 15px;
-    font-weight: 400;
-    margin: 0;
-    color: #c9d7d0;
-  }
-  .hdl-panel button {
-    background: #28433f;
-    border: 1px solid #527166;
-    border-radius: 5px;
-    padding: 7px 11px;
-    color: #b0ceb7;
-    font-size: 11px;
-    white-space: nowrap;
-  }
-  .hdl-panel pre {
-    font: 12px/1.8 monospace;
-    color: #aacbb7;
-    overflow: auto;
-    padding: 18px 0;
-    max-height: 350px;
-  }
-  .hdl-panel p {
-    font-size: 12px;
-    color: #8fa8ab;
-    line-height: 1.8;
-    padding: 15px 0;
-  }
-  .hdl-panel a {
-    font-size: 11px;
-    color: #d4a178;
   }
   .sr-only {
     position: absolute;
@@ -1824,289 +2111,164 @@
     white-space: nowrap;
     border: 0;
   }
-  @media (min-width: 1600px) {
-    .bench-layout {
-      grid-template-columns: minmax(0, 1fr) 350px;
-      gap: 30px;
+  @media (min-width: 1500px) {
+    .workspace.split-view {
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    }
+    .circuit-svg {
+      min-height: 390px;
     }
   }
-  @media (max-width: 1100px) {
-    .bench {
-      padding: 0 24px 45px;
+  @media (max-width: 1000px) {
+    .mission-instruments {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
     }
-    .bench-layout {
-      grid-template-columns: minmax(0, 1fr) 290px;
-      gap: 18px;
+    .hint-panel {
+      grid-column: 1;
+      grid-row: 3;
     }
-    .test-panel,
-    .goal-panel {
-      padding: 19px;
-    }
-    .board-number {
-      display: none;
-    }
-    .board-footer {
-      gap: 12px;
-      font-size: 8px;
-    }
-    .bench-identity {
-      font-size: 8px;
-      letter-spacing: 1px;
-    }
-    .bench-identity .slash {
-      margin: 0 6px;
+    .field-guide {
+      grid-column: 2;
+      grid-row: 3;
     }
     .part-pin-count {
       display: none;
     }
-    .mission-title-row {
-      margin-top: 28px;
+    .board-number {
+      display: none;
     }
-    .chip-stamp {
-      min-width: 125px;
-      padding: 15px;
-    }
-    .gate-controls {
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+    .workspace.split-view {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
     }
   }
-  @media (max-width: 850px) {
-    .bench-layout {
+  @media (max-width: 760px) {
+    .workspace.split-view {
       grid-template-columns: minmax(0, 1fr);
-    }
-    .mission-instruments {
-      grid-template-columns: 1fr 1fr;
-      align-items: start;
-    }
-    .goal-panel {
-      grid-column: 1;
-    }
-    .test-panel {
-      grid-column: 2;
-      grid-row: 1 / span 3;
-    }
-    .hint-panel,
-    .restore-panel,
-    .field-guide {
-      grid-column: 1;
     }
     .bench-identity {
       display: none;
     }
     .chip-stamp {
-      display: none;
+      min-width: 100px;
     }
     .mission-title-row {
-      margin-bottom: 23px;
+      gap: 15px;
     }
-    .signal-inputs {
-      padding-top: 16px;
+    .code-editor,
+    .code-editor textarea {
+      min-height: 300px;
     }
-    .circuit-svg {
-      min-width: 720px;
+    .hdl-panel {
+      margin-top: 4px;
     }
-    .bench-header {
-      min-height: 68px;
+    .sync-state {
+      max-width: 165px;
+      text-align: right;
     }
-    .mission-brief {
-      max-width: 650px;
+    .code-error {
+      align-items: start;
+      flex-direction: column;
     }
   }
-  @media (max-width: 550px) {
+  @media (max-width: 520px) {
     .bench {
-      padding: 0 16px 32px;
-    }
-    .bench-header {
-      min-height: 65px;
-      gap: 12px;
-    }
-    .world-back {
-      font-size: 12px;
-    }
-    .notes-trigger {
-      padding: 9px 10px;
-      font-size: 11px;
+      padding: 0 16px 40px;
     }
     .mission-title-row {
-      margin-top: 25px;
+      padding-top: 25px;
     }
-    .eyebrow {
-      font-size: 8px;
-      letter-spacing: 1.5px;
+    .chip-stamp {
+      display: none;
     }
     h1 {
-      font-size: 35px;
-      letter-spacing: -1px;
+      font-size: 30px;
     }
     .mission-brief {
       font-size: 12px;
-      line-height: 1.8;
-    }
-    .bench-layout {
-      gap: 24px;
-    }
-    .board-heading {
-      padding: 14px 16px;
-      font-size: 8px;
-    }
-    .signal-inputs {
-      padding: 14px 15px 3px;
-      gap: 9px;
     }
     .switch-label {
       width: 100%;
-      font-size: 8px;
     }
-    .input-switch {
-      gap: 10px;
-      min-height: 40px;
+    .signal-inputs {
+      padding-top: 4px;
+      gap: 8px;
     }
-    .circuit-svg {
-      min-width: 720px;
+    .editor-toolbar {
+      align-items: start;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .sync-state {
+      max-width: none;
+      text-align: left;
+    }
+    .mode-switch {
+      width: 100%;
+    }
+    .mode-switch button {
+      flex: 1;
+      justify-content: center;
+      padding: 7px 9px;
+      min-height: 38px;
+    }
+    .mission-instruments {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .goal-panel,
+    .test-panel,
+    .hint-panel,
+    .restore-panel,
+    .field-guide {
+      grid-row: auto;
+      grid-column: auto;
+      padding: 18px;
     }
     .board-footer {
-      padding: 13px 14px;
-      gap: 12px;
       flex-wrap: wrap;
+      gap: 10px;
       font-size: 8px;
     }
     .board-footer > span:nth-child(2) {
       display: none;
     }
-    .parts-heading h2 {
-      font-size: 17px;
-      max-width: 200px;
-      line-height: 1.4;
-    }
-    .parts-heading .eyebrow {
-      font-size: 8px;
-    }
-    .parts-bay {
-      padding-top: 23px;
-    }
-    .part-buttons {
-      gap: 8px;
-    }
-    .part-buttons button {
-      padding: 8px 11px;
-      gap: 9px;
-      min-height: 44px;
-    }
     .gate-controls {
       grid-template-columns: minmax(0, 1fr);
     }
-    .gate-control {
-      padding: 15px;
-    }
-    .gate-control label {
-      font-size: 11px;
-    }
-    .gate-control select {
-      max-width: 235px;
-      font-size: 12px;
+    .gate-control select,
+    .output-connections select {
       min-height: 41px;
     }
-    .gate-control-heading button {
-      width: 35px;
-      height: 35px;
-    }
     .output-connections {
-      gap: 12px;
       display: block;
     }
     .output-title {
       display: block;
-      margin-bottom: 13px;
+      margin-bottom: 12px;
     }
     .output-connections label {
-      margin-top: 11px;
-      gap: 15px;
-    }
-    .output-connections select {
-      max-width: 230px;
-      min-height: 41px;
-      font-size: 12px;
-    }
-    .mission-instruments {
-      grid-template-columns: 1fr;
-      gap: 15px;
-    }
-    .goal-panel {
-      grid-column: auto;
-      grid-row: auto;
-      display: grid;
-      grid-template-columns: 1fr 110px;
-      column-gap: 5px;
-      padding: 20px;
-    }
-    .goal-panel .eyebrow {
-      grid-column: 1;
-    }
-    .goal-panel h2 {
-      font-size: 20px;
-      grid-column: 1;
-      grid-row: 2;
-    }
-
-    .goal-panel :global(.bench-machine) {
-      grid-column: 2;
-      grid-row: 1 / span 3;
-    }
-    .reward-copy {
-      grid-column: 1;
-      font-size: 10px;
-    }
-    .test-panel,
-    .hint-panel,
-    .restore-panel,
-    .field-guide {
-      grid-column: auto;
-      grid-row: auto;
-    }
-    .test-panel {
-      padding: 22px;
+      margin-top: 10px;
     }
     .test-button {
-      min-height: 54px;
+      flex-wrap: wrap;
     }
-    .truth-table {
-      font-size: 12px;
+    .test-button > span:last-child {
+      margin: 0;
     }
-    .truth-table td {
-      padding: 8px 5px;
+    .test-button,
+    .truth-table button {
+      min-height: 38px;
     }
     .truth-table button {
-      height: 36px;
-      min-width: 36px;
+      min-width: 38px;
     }
-    .truth-table caption {
-      font-size: 10px;
+    .circuit-svg {
+      min-width: 660px;
     }
-    .hint-panel button {
-      min-height: 42px;
-    }
-    .prediction-buttons button {
-      min-height: 53px;
-    }
-    .discovery-cases button {
-      min-height: 53px;
-    }
-    .next-case {
-      min-height: 40px;
-      align-items: center;
-    }
-    .hdl-panel {
-      padding: 17px;
-    }
-    .hdl-panel > div {
+    .parts-heading {
       align-items: start;
     }
-    .hdl-panel h2 {
-      font-size: 13px;
-      line-height: 1.5;
-    }
-    .hdl-panel pre {
-      font-size: 11px;
+    .clear-actions {
+      gap: 2px;
     }
   }
   @media (prefers-reduced-motion: reduce) {

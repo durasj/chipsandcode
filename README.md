@@ -20,19 +20,21 @@
 
 ## Features
 
-### Signal Isles: the playable redesign
+### Build from signals to software
 
-The home screen is now a miniature world restored by building real logic circuits. Seven stations cover the supplied NAND gate and the existing NOT, AND, OR, XOR, Mux and DMux exercises. Tap a signal source and a destination pin to connect them, or use the labeled connection controls. Test the complete truth table before restoring a station. Drafts, discoveries and completed inventions are stored in this browser; no account or database is required to play.
+Chips and Code now opens on a layered view of a computer: dark binary logic at the foundation, rising toward light, high-level software. The original name, logo, and indigo identity remain. Logic is the playable layer; arithmetic, memory, architecture, and software are clearly marked as planned.
 
-The visual builder generates HDL and runs the existing hardware simulator. The field guide provides optional interactive explanations of Boolean expressions, composition, HDL, buses and multi-way selectors. The original reading and full hardware IDE remain available. Multi-bit circuits, arithmetic, memory and CPU construction are future work, not playable campaign stages.
+Seven steps cover the supplied NAND primitive and the existing NOT, AND, OR, XOR, Mux, and DMux construction exercises. Build with direct visual wiring, edit HDL, or use both side by side. The two views share one circuit model and the existing parser and hardware simulator. Toggle inputs, inspect live signals, and verify the complete truth table before saving a chip. Invalid code remains editable with a diagnostic and cannot pass a test against an older circuit.
 
-See the [game design](docs/signal-isles-game-design.md), [art direction](docs/signal-isles-art-direction.md), and [content audit](docs/signal-isles-content-audit.md) for the redesign, its relationship to the existing material, and the boundary between the current implementation and later ideas.
+Progress and workbench drafts are stored on the current device. Optional interactive reference material covers Boolean logic, composition, HDL, buses, and selectors. The original reading and full hardware IDE remain accessible. Multi-bit circuits and higher computer layers require further simulator and content work; their place in the stack is a roadmap, not an implemented campaign.
 
-The animation below shows the original hardware IDE, which remains accessible from the game footer.
+See the [interaction design](docs/computer-layers-design.md), [art direction](docs/art-direction.md), and [content audit](docs/content-audit.md) for the design, its relationship to the existing material, and implementation boundaries.
+
+The animation below shows the original hardware IDE, which remains accessible from the application footer.
 
 <img src="./demo.gif" width="100%">
 
-Currently contains and fully supports the first week of Nand2Tetris.
+Contains the existing first-week Boolean logic material and six executable single-bit construction exercises. Bus and multi-way extensions are described in the reference; their construction support is planned.
 Can work offline and supports installation as a PWA.
 No cloud dependency for the basic functionality.
 
@@ -81,7 +83,7 @@ npm ci
 npm run dev
 ```
 
-The app uses Svelte 5, SvelteKit 3, Vite 8, and TypeScript 6 (the current version supported by SvelteKit and svelte-check). The editor uses Monaco 0.57. UI menus and tabs use Bits UI. Tailwind 3 and daisyUI 3 retain the existing presentation during this infrastructure migration; redesigning the styling system is a separate step.
+The app uses Svelte 5, SvelteKit 3, Vite 8, and TypeScript 6 (the current version supported by SvelteKit and svelte-check). The editor uses Monaco 0.57. UI menus and tabs use Bits UI. Tailwind 3 and daisyUI 3 support the existing course and IDE pages. The new computer stack and workbench use component styles with the original indigo brand.
 
 Lessons, built-in examples, the simulator, local drafts and ZIP downloads work without a database. Saved experiments use the same-origin SvelteKit `/api/experiments` routes and require `DATABASE_URL` from a Neon Postgres database. Copy `.env.template` to `.env.local` and set the URL locally when working on persistence. Never commit credentials or migration exports.
 

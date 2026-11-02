@@ -2,10 +2,12 @@ import { describe, expect, it } from 'vitest';
 import {
   availableSources,
   createCircuit,
+  fromHDL,
   isCircuitDraft,
   simulateCircuit,
   testCircuit,
   toHDL,
+  toHDLDraft,
 } from './circuit';
 import type { Circuit, GateNode } from './circuit';
 import { getMission, missions, truthTable } from './missions';
@@ -54,7 +56,7 @@ const examples: Record<MissionId, Circuit> = {
   },
 };
 
-describe('Signal Isles circuit authoring', () => {
+describe('Chips and Code circuit authoring', () => {
   it.each(missions)('accepts a real NAND construction for $chip across every input', (mission) => {
     const report = testCircuit(mission, examples[mission.id]);
     expect(report.success).toBe(true);
@@ -223,5 +225,142 @@ describe('Signal Isles circuit authoring', () => {
       inputs: { in: true, sel: false },
       expected: { a: true, b: false },
     });
+  });
+});
+
+describe('editable HDL and visual circuit interoperability', () => {
+  const source = (parts: string) => `CHIP And { IN a, b; OUT out; PARTS: ${parts} }`;
+
+  it.each(missions)(
+    'round-trips the $chip construction through the existing HDL language',
+    (mission) => {
+      const imported = fromHDL(mission, toHDL(mission, examples[mission.id]));
+      expect(imported).toEqual(examples[mission.id]);
+      expect(testCircuit(mission, imported).success).toBe(true);
+    },
+  );
+
+  it('accepts named internal wires and forward declarations without changing behavior', () => {
+    const mission = getMission('and');
+    const circuit = fromHDL(
+      mission,
+      source(`
+      Not(in=negative, out=out);
+      Nand(a=a, b=b, out=negative);
+    `),
+    );
+    expect(circuit).toEqual({
+      gates: [nand('g1', 'a', 'b'), { id: 'g2', type: 'Not', inputs: { in: 'g1' } }],
+      outputs: { out: 'g2' },
+    });
+    expect(testCircuit(mission, circuit).success).toBe(true);
+  });
+
+  it('resolves multiple aliases of the same part output and both DMux output pins', () => {
+    const mission = getMission('dmux');
+    const circuit = fromHDL(
+      mission,
+      `CHIP DMux {
+      IN in, sel; OUT a, b; PARTS:
+      Not(in=sel, out=negative, out=alias, out=alias);
+      And(a=in, b=negative, out=a);
+      And(a=in, b=sel, out=b);
+      Not(in=alias, out=unused);
+    }`,
+    );
+    expect(circuit.gates[1].inputs.b).toBe('g1');
+    expect(circuit.gates[3].inputs.in).toBe('g1');
+    expect(testCircuit(mission, circuit).success).toBe(true);
+  });
+
+  it('retains empty and incomplete visual designs as editable, parseable drafts', () => {
+    const mission = getMission('not');
+    const empty = createCircuit(mission);
+    expect(fromHDL(mission, toHDLDraft(mission, empty))).toEqual(empty);
+    expect(fromHDL(mission, 'CHIP Not { IN in; OUT out; PARTS: /* start here */ }')).toEqual(empty);
+    expect(fromHDL(mission, 'CHIP Not { IN in; OUT out; }')).toEqual(empty);
+    const partial: Circuit = {
+      gates: [nand('g1', 'in', ''), nand('g2', '', 'g1')],
+      outputs: { out: '' },
+    };
+    expect(fromHDL(mission, toHDLDraft(mission, partial))).toEqual(partial);
+    expect(() => testCircuit(mission, partial)).toThrow('Connect g1 b');
+    expect(() =>
+      toHDLDraft(mission, { gates: [nand('g1', 'missing', '')], outputs: { out: '' } }),
+    ).toThrow('earlier gate');
+  });
+
+  it('imports a part without a connected output as an unfinished draft', () => {
+    const circuit = fromHDL(getMission('not'), 'CHIP Not { IN in; OUT out; PARTS: Nand(a=in); }');
+    expect(circuit).toEqual({ gates: [nand('g1', 'in', '')], outputs: { out: '' } });
+  });
+
+  it('keeps the equivalent behavior of visual input-to-output wires after a code round-trip', () => {
+    const mission = getMission('mux');
+    const circuit: Circuit = { gates: [], outputs: { out: 'a' } };
+    const imported = fromHDL(mission, toHDLDraft(mission, circuit));
+    for (const { inputs } of truthTable(mission)) {
+      expect(simulateCircuit(mission, imported, inputs).outputs.out).toBe(inputs.a);
+    }
+  });
+
+  it.each([
+    ['CHIP And { IN a; OUT out; }', 'IN a, b'],
+    ['CHIP And { IN a, a; OUT out; }', 'IN a, b'],
+    ['CHIP And { IN a, b, c; OUT out; }', 'IN a, b'],
+    ['CHIP And { IN a, b; OUT other; }', 'OUT out'],
+    ['CHIP Other { IN a, b; OUT out; }', 'Use CHIP And'],
+    [source('Nand(a=a, b=b, out=out);') + source('Nand(a=a, b=b, out=out);'), 'one CHIP'],
+    ['CHIP And { IN a, b; OUT out; BUILTIN And; }', 'BUILTIN and CLOCKED'],
+    ['CHIP And { IN a, b; OUT out; CLOCKED a; }', 'BUILTIN and CLOCKED'],
+    ['CHIP And { IN a[1], b; OUT out; }', 'single-bit'],
+    [source('Nand(a=a[0], b=b, out=out);'), 'single-bit'],
+    [source('Nand(a[0..1]=a, b=b, out=out);'), 'single-bit'],
+    [source('Nand(a=true, b=b, out=out);'), 'Constant signals'],
+    [source('Nand(a=false, b=b, out=out);'), 'Constant signals'],
+    [source('Mux(a=a, b=b, out=out);'), 'not available'],
+    [source('And(a=a, b=b, out=out);'), 'not available'],
+    [source('Nand(in=a, out=out);'), 'has no pin in'],
+    [source('Nand(a=a, a=b, out=out);'), 'connected more than once'],
+    [source('Nand(a=a, b=b, out=a);'), 'cannot be driven'],
+    [source('Nand(a=a, b=b, out=out); Not(in=a, out=out);'), 'more than one driver'],
+    [source('Nand(a=unknown, b=b, out=out);'), 'has no driver'],
+    [source('Nand(a=out, b=b, out=out);'), 'feedback'],
+    [source('Nand(a=next, b=b, out=first); Not(in=first, out=next);'), 'feedback'],
+  ])(
+    'rejects unsupported or ambiguous HDL without accepting a partial graph: %s',
+    (hdl, message) => {
+      expect(() => fromHDL(getMission('and'), hdl)).toThrow(message);
+    },
+  );
+
+  it('reports syntax location and does not silently accept truncated source', () => {
+    expect(() => fromHDL(getMission('and'), source('\n Nand(a=a b=b, out=out);'))).toThrow(
+      'line 2 col',
+    );
+    expect(() => fromHDL(getMission('and'), 'CHIP And { IN a, b; OUT out;')).toThrow(
+      'closing brace',
+    );
+    expect(() => fromHDL(getMission('and'), '')).toThrow('CHIP declaration');
+    expect(() => fromHDL(getMission('and'), ' '.repeat(32_001))).toThrow('32,000 characters');
+    expect(() =>
+      fromHDL(
+        getMission('and'),
+        source(Array.from({ length: 33 }, (_, i) => `Nand(a=a, b=b, out=wire${i});`).join('\n')),
+      ),
+    ).toThrow('up to 32 parts');
+  });
+
+  it('preserves error line numbers when comments precede the invalid statement', () => {
+    expect(() =>
+      fromHDL(
+        getMission('and'),
+        `// first line\nCHIP And {
+      /* two\n         lines */
+      IN a, b; OUT out;
+      PARTS: Nand(a=a b=b, out=out);
+    }`,
+      ),
+    ).toThrow('line 6 col');
   });
 });

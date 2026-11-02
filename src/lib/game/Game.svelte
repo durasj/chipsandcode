@@ -1,12 +1,15 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
-  import WorldMap from './WorldMap.svelte';
+  import ComputerStack from './ComputerStack.svelte';
+  import { computerLayers } from './layers';
   import MissionWorkbench from './MissionWorkbench.svelte';
   import FieldGuide from './FieldGuide.svelte';
   import { missions, getMission, type MissionId } from './missions';
 
   let view: 'world' | 'workbench' | 'guide' | 'collection' = 'world';
   let selected: MissionId = 'nand';
+  let selectedLayer = 'logic';
+  $: activeLayer = computerLayers.find((layer) => layer.id === selectedLayer) ?? computerLayers[0];
   let completed: string[] = [];
   let sound = false;
   let notice = '';
@@ -22,7 +25,9 @@
   onMount(() => {
     try {
       const saved = JSON.parse(
-        localStorage.getItem('chipsandcode.signal-isles.progress.v1') || '[]',
+        (localStorage.getItem('chipsandcode.progress.v1') ??
+          localStorage.getItem('chipsandcode.signal-isles.progress.v1')) ||
+          '[]',
       );
       if (Array.isArray(saved))
         completed = [
@@ -32,9 +37,11 @@
             ),
           ),
         ];
-      sound = localStorage.getItem('chipsandcode.signal-isles.sound') === 'on';
+      sound =
+        (localStorage.getItem('chipsandcode.sound') ??
+          localStorage.getItem('chipsandcode.signal-isles.sound')) === 'on';
     } catch {
-      notice = 'Saving is unavailable. You can still play this session.';
+      notice = 'Storage is unavailable. You can still build in this session.';
     }
     selected = missions.find((mission) => !completed.includes(mission.id))?.id || 'nand';
     ready = true;
@@ -70,6 +77,7 @@
     const found = missions.find((mission) => mission.id === id);
     if (!found) return;
     selected = found.id;
+    selectedLayer = 'logic';
     restored = null;
     playTone();
   }
@@ -94,11 +102,12 @@
     if (!mission) return;
     if (!completed.includes(id)) completed = [...completed, id];
     try {
-      localStorage.setItem('chipsandcode.signal-isles.progress.v1', JSON.stringify(completed));
+      localStorage.setItem('chipsandcode.progress.v1', JSON.stringify(completed));
     } catch {
       notice = 'Your circuit worked. Progress could not be saved in this browser.';
     }
     restored = mission.id;
+    selectedLayer = 'logic';
     view = 'world';
     playTone(true);
     await tick();
@@ -109,7 +118,7 @@
   function toggleSound() {
     sound = !sound;
     try {
-      localStorage.setItem('chipsandcode.signal-isles.sound', sound ? 'on' : 'off');
+      localStorage.setItem('chipsandcode.sound', sound ? 'on' : 'off');
     } catch {
       /* Optional preference. */
     }
@@ -117,22 +126,18 @@
   }
 </script>
 
-<div class="signal-game">
-  <a class="skip-game" href="#game-content">Skip to game</a>
+<div class="computer-game">
+  <a class="skip-game" href="#game-content">Skip to workspace</a>
   <header class="game-header">
     <button class="wordmark" onclick={() => setView('world')}>
-      <span class="brand-chip" aria-hidden="true">c+c</span>
-      <span
-        >chips<span class="brand-and">&</span>code<span class="brand-sub"
-          >A SMALL WORLD. A BIG IDEA.</span
-        ></span
-      >
+      <img src="/logo.svg" alt="" width="40" height="40" />
+      <span>Chips <span class="brand-and">and</span> Code</span>
     </button>
-    <nav class="game-nav" aria-label="Game navigation">
+    <nav class="game-nav" aria-label="Workspace navigation">
       <button
         class:current={view === 'world'}
         aria-current={view === 'world' ? 'page' : undefined}
-        onclick={() => setView('world')}>World</button
+        onclick={() => setView('world')}>The computer</button
       >
       <button
         class:current={view === 'workbench'}
@@ -142,7 +147,7 @@
       <button
         class:current={view === 'guide'}
         aria-current={view === 'guide' ? 'page' : undefined}
-        onclick={() => setView('guide')}>Field guide</button
+        onclick={() => setView('guide')}>Reference</button
       >
       <button
         class:current={view === 'collection'}
@@ -152,126 +157,138 @@
       >
     </nav>
     <button class="sound-button" aria-pressed={sound} onclick={toggleSound}
-      ><span aria-hidden="true">♪</span> Sound {sound ? 'on' : 'off'}</button
+      ><span aria-hidden="true">◌</span> Sound {sound ? 'on' : 'off'}</button
     >
   </header>
 
   <main id="game-content">
     {#if view === 'world'}
-      <section class="world-section" aria-label="Signal Isles world">
-        <div class="world-topline">
-          <span><i></i> THE SIGNAL ISLES</span><span>CHAPTER 01 <b>/</b> THE FIRST SPARK</span>
+      <section class="computer-section" aria-label="Computer layers">
+        <div class="system-bar">
+          <span><i></i> FROM SIGNAL TO SOFTWARE</span><span
+            >INTERACTIVE COMPUTER ENGINEERING <b>/</b> 01</span
+          >
         </div>
-        <div class="world-layout">
+        <div class="computer-layout">
           <div class="mission-brief">
             {#if restoredMission}
-              <span class="eyebrow signal-text">SYSTEM RESTORED</span>
-              <h1 bind:this={mainHeading} tabindex="-1">You made<br />a little magic.</h1>
+              <span class="eyebrow">VERIFICATION COMPLETE</span>
+              <h1 bind:this={mainHeading} tabindex="-1">
+                One more piece.<br /><em>A step closer.</em>
+              </h1>
               <p class="intro-copy">{restoredMission.reward}</p>
-              <p class="restoration-note" role="status">
-                ✓ {restoredMission.chip} verified. Your world remembers.
+              <p class="verification-note" role="status">
+                ✓ {restoredMission.chip} verified. Added to your chips.
               </p>
             {:else}
-              <span class="eyebrow">BUILD SOMETHING THAT MATTERS</span>
+              <span class="eyebrow">BUILD YOUR UNDERSTANDING</span>
               <h1 bind:this={mainHeading} tabindex="-1">
-                A little logic.<br /><em>A living world.</em>
+                Understand<br />the machine.<br /><em>From the inside out.</em>
               </h1>
               <p class="intro-copy">
-                The islands have gone quiet. Bring them back to life, one invention at a time.
+                Start with a signal. Build the logic. Work your way up to the software. Every layer
+                is built on the one below.
               </p>
             {/if}
-            <div class="selected-mission">
-              <div class="mission-meta">
-                <span>STATION {String(activeMission.number).padStart(2, '0')}</span><span
-                  class:done={completed.includes(selected)}
-                  >{completed.includes(selected)
-                    ? '✓ RESTORED'
-                    : selected === nextMission?.id
-                      ? 'YOUR NEXT STOP'
-                      : 'OPEN TO EXPLORE'}</span
-                >
+            {#if selectedLayer === 'logic'}
+              <div class="selected-mission">
+                <div class="mission-meta">
+                  <span>LAYER 00 / LOGIC</span><span class:done={completed.includes(selected)}
+                    >{completed.includes(selected)
+                      ? '✓ VERIFIED'
+                      : `CHALLENGE ${String(activeMission.number).padStart(2, '0')} / 07`}</span
+                  >
+                </div>
+                <div class="mission-title">
+                  <span class="chip-symbol" aria-hidden="true">{activeMission.chip}</span>
+                  <h2>{activeMission.title}</h2>
+                </div>
+                <p>{activeMission.brief}</p>
+                {#if restored && nextMission}
+                  <button
+                    bind:this={startButton}
+                    class="primary-action"
+                    onclick={() => {
+                      selected = nextMission!.id;
+                      void setView('workbench');
+                    }}>Build the next chip <span aria-hidden="true">↗</span></button
+                  >
+                {:else}
+                  <button
+                    bind:this={startButton}
+                    class="primary-action"
+                    onclick={() => setView('workbench')}
+                    >{completed.includes(selected)
+                      ? 'Reopen workbench'
+                      : selected === 'nand'
+                        ? 'Enter the signal layer'
+                        : 'Build this chip'} <span aria-hidden="true">↗</span></button
+                  >
+                {/if}
+                <div class="editor-note">
+                  <span>VISUAL</span><i>↔</i><span>HDL CODE</span><span class="editor-note-detail"
+                    >One circuit. Two ways in.</span
+                  >
+                </div>
               </div>
-              <h2>{activeMission.title}</h2>
-              <p>{activeMission.brief}</p>
-              <div class="mission-skill">
-                <span class="tiny-chip">{activeMission.chip}</span><span
-                  >{selected === 'nand'
-                    ? 'Discover your first building block'
-                    : 'Build it. Test it. Make it yours.'}</span
-                >
-              </div>
-              {#if restored && nextMission}
+            {:else}
+              <div class="selected-mission layer-preview">
+                <div class="mission-meta">
+                  <span>LAYER {activeLayer.number} / {activeLayer.title.toUpperCase()}</span><span
+                    >PLANNED</span
+                  >
+                </div>
+                <h2>{activeLayer.subtitle}</h2>
+                <p>{activeLayer.description}</p>
+                <p class="planned-note">
+                  This layer is the next part of the build. The seven logic challenges are ready
+                  now.
+                </p>
                 <button
                   bind:this={startButton}
                   class="primary-action"
                   onclick={() => {
-                    selected = nextMission!.id;
-                    void setView('workbench');
-                  }}>Next invention <span aria-hidden="true">↗</span></button
+                    selectedLayer = 'logic';
+                  }}>Back to the signal layer <span aria-hidden="true">↓</span></button
                 >
-              {:else}
-                <button
-                  bind:this={startButton}
-                  class="primary-action"
-                  onclick={() => setView('workbench')}
-                  >{completed.includes(selected)
-                    ? 'Revisit workshop'
-                    : completed.length === 0 && selected === 'nand'
-                      ? 'Bring it to life'
-                      : 'Enter workshop'} <span aria-hidden="true">↗</span></button
-                >
-              {/if}
-              <span class="below-button"
-                >{selected === 'nand'
-                  ? 'No code. No setup. Just curiosity.'
-                  : 'Experiment freely. Every attempt teaches you something.'}</span
-              >
-            </div>
-            <button class="quiet-link" onclick={() => setView('guide')}
-              >▤ Curious how it works? Open the field guide ↗</button
-            >
+              </div>
+            {/if}
           </div>
-          <div class="map-zone">
-            <div class="map-caption">
-              <span>SIGNAL ARCHIPELAGO <b>01—07</b></span><span>EXPLORE · INVENT · RESTORE</span>
-            </div>
-            <WorldMap {completed} {selected} onselect={selectMission} />
-            <div class="map-footer">
-              <span
-                ><i class="legend-active"></i> Restored <i class="legend-next"></i> Selected
-                <i class="legend-off"></i> Waiting for a spark</span
-              ><span>Choose an island to explore</span>
-            </div>
+          <div class="stack-zone">
+            <ComputerStack
+              {completed}
+              {selected}
+              {selectedLayer}
+              onselect={selectMission}
+              onlayerselect={(id) => {
+                selectedLayer = id;
+                restored = null;
+              }}
+            />
           </div>
         </div>
-        <section class="expedition" aria-label="Stations, list view">
-          <div class="expedition-heading">
-            <span>YOUR EXPEDITION</span><span
-              >{completed.length} OF {missions.length} SYSTEMS RESTORED</span
-            >
+        <div class="layer-status">
+          <div>
+            <span class="status-light"></span><strong
+              >{completed.length} / {missions.length} CHIPS VERIFIED</strong
+            ><span class="status-description">Layer 00 · Boolean logic</span>
           </div>
-          <div class="station-list">
-            {#each missions as mission}
-              <button
-                class="station-stop"
-                class:active={selected === mission.id}
-                class:restored={completed.includes(mission.id)}
-                aria-pressed={selected === mission.id}
-                onclick={() => selectMission(mission.id)}
-              >
-                <span class="stop-number"
-                  >{completed.includes(mission.id)
-                    ? '✓'
-                    : String(mission.number).padStart(2, '0')}</span
-                >
-                <span><strong>{mission.chip}</strong><small>{mission.location}</small></span><span
-                  class="stop-arrow"
-                  aria-hidden="true">↗</span
-                >
-              </button>
-            {/each}
-          </div>
-        </section>
+          <button class="quiet-link" onclick={() => setView('guide')}
+            >Open the reference <span aria-hidden="true">↗</span></button
+          >
+        </div>
+        <div class="principles">
+          <p>
+            <span>01</span><strong>Build, don't just read.</strong> Trace a live signal through every
+            connection.
+          </p>
+          <p>
+            <span>02</span><strong>Wire it. Or write it.</strong> Visual and HDL views of the same circuit.
+          </p>
+          <p>
+            <span>03</span><strong>Prove that it works.</strong> Test every input. Inspect every output.
+          </p>
+        </div>
       </section>
     {:else if view === 'workbench'}
       {#key selected}<MissionWorkbench
@@ -284,23 +301,25 @@
       <FieldGuide onclose={returnToWorld} />
     {:else}
       <section class="collection-view">
-        <button class="quiet-link" onclick={returnToWorld}>← Back to the islands</button>
-        <span class="eyebrow">THE THINGS YOU CAN MAKE</span>
-        <h1 bind:this={mainHeading} tabindex="-1">
-          Small chips.<br /><em>Endless possibilities.</em>
-        </h1>
-        <p class="collection-intro">
-          Every verified invention earns a place here. Later workshops use the same logic as
-          building blocks for bigger ideas.
-        </p>
+        <div class="collection-intro">
+          <span class="eyebrow">YOUR COMPONENT LIBRARY</span>
+          <h1 bind:this={mainHeading} tabindex="-1">
+            Small primitives.<br /><em>Complex systems.</em>
+          </h1>
+          <p>
+            Every verified chip is another abstraction you understand. Reopen a design, trace its
+            signals, or rebuild it in code.
+          </p>
+        </div>
         <div class="collection-grid">
           {#each missions as mission}
             <article class="collection-card" class:collected={completed.includes(mission.id)}>
-              <span class="collection-status"
-                >{completed.includes(mission.id)
-                  ? '✓ VERIFIED IN YOUR WORKSHOP'
-                  : 'AWAITING YOUR INVENTION'}</span
-              >
+              <div class="collection-top">
+                <span class="collection-number">{String(mission.number).padStart(2, '0')}</span
+                ><span class="collection-status"
+                  >{completed.includes(mission.id) ? '✓ VERIFIED' : 'NOT YET VERIFIED'}</span
+                >
+              </div>
               <div class="collectible-chip" aria-hidden="true"><span>{mission.chip}</span></div>
               <h2>{mission.title}</h2>
               <p>{mission.goal}</p>
@@ -310,59 +329,61 @@
                   selected = mission.id;
                   void setView('workbench');
                 }}
-                >{completed.includes(mission.id) ? 'Rebuild & experiment' : 'Visit workshop'}
+                >{completed.includes(mission.id) ? 'Open design' : 'Build chip'}
                 <span aria-hidden="true">↗</span></button
               >
             </article>
           {/each}
         </div>
         <div class="future-note">
-          <span class="eyebrow">BEYOND THE HORIZON</span>
-          <h2>A computer of your own.</h2>
+          <span class="eyebrow">THE NEXT ABSTRACTION</span>
+          <h2>From gates to a computer.</h2>
           <p>
-            Buses, arithmetic, memory, and a CPU are the bigger adventure ahead. The field guide
-            introduces buses and selectors; this playable chapter focuses on single-bit Boolean
-            logic.
+            Arithmetic, memory, architecture, and software are the layers ahead. The current
+            workbench covers single-bit combinational logic. Buses and multi-way selectors are
+            introduced in the reference.
           </p>
-          <button class="quiet-link" onclick={() => setView('guide')}
-            >Explore the ideas in your field guide ↗</button
-          >
+          <button class="quiet-link" onclick={returnToWorld}>Explore the computer layers ↗</button>
         </div>
       </section>
     {/if}
   </main>
   <footer class="game-footer">
-    <span><span class="footer-symbol">✳</span> Built from curiosity. Powered by you.</span>
+    <span class="footer-brand">Chips and Code <span>/</span> From the ground up.</span>
     <div>
       <a href="/experiment/hardware-ide">Open hardware IDE ↗</a><a
         href="/learn/hardware/boolean-logic">Original reading</a
       ><a href="/about">About</a><a href="/accessibility-statement">Accessibility Statement</a><a
         href="/signin"
         aria-label="User account">Account</a
-      ><span class="save-status"
-        >{ready
-          ? notice
-            ? 'Progress: this session only'
-            : 'Progress saved on this device'
-          : 'Getting your workshop ready'}</span
       >
     </div>
+    <span class="save-status"
+      >{ready
+        ? notice
+          ? 'Progress: this session only'
+          : 'Progress saved on this device'
+        : 'Initializing workspace'}</span
+    >
   </footer>
   {#if notice}<p class="storage-notice" role="status">{notice}</p>{/if}
 </div>
 
 <style>
-  .signal-game {
-    --sea: #101e2b;
-    --sea-deep: #0b141e;
-    --panel: #f4eedf;
-    --ink: #172839;
-    --copper: #ee9255;
-    --action: #e97445;
-    --signal: #7bd9b5;
+  .computer-game {
+    --sea: #090b11;
+    --sea-deep: #07080d;
+    --panel: #12151f;
+    --paper: #12151f;
+    --ink: #f0f0f7;
+    --muted: #a1a5b6;
+    --line: #303446;
+    --copper: #a49cff;
+    --action: #4f46e5;
+    --signal: #a49cff;
     min-height: 100vh;
-    background: #101e2b;
-    color: #f4eedf;
+    background: #090b11;
+    color: var(--ink);
     font-family:
       Inter,
       ui-sans-serif,
@@ -374,18 +395,19 @@
     line-height: 1.5;
     color-scheme: dark;
   }
-  .signal-game :global(button) {
+  .computer-game :global(button) {
     font-family: inherit;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
   }
-  .signal-game :global(button:focus-visible),
-  .signal-game :global(a:focus-visible),
-  .signal-game :global(select:focus-visible) {
-    outline: 3px solid #ee9255 !important;
-    outline-offset: 5px;
+  .computer-game :global(button:focus-visible),
+  .computer-game :global(a:focus-visible),
+  .computer-game :global(select:focus-visible),
+  .computer-game :global(textarea:focus-visible) {
+    outline: 2px solid #aaa4ff !important;
+    outline-offset: 4px;
   }
-  .signal-game :global(h1:focus) {
+  .computer-game :global(h1:focus) {
     outline: none !important;
   }
   button {
@@ -399,883 +421,676 @@
     left: 20px;
     top: -100px;
     z-index: 100;
-    background: #f4eedf;
-    color: #172839;
+    background: #e9e8ff;
+    color: #131320;
     padding: 12px;
   }
   .skip-game:focus {
     top: 8px;
   }
   .game-header {
-    min-height: 102px;
-    margin: 0 4%;
-    border-bottom: 1px solid #ffffff18;
+    min-height: 84px;
+    padding: 12px 4%;
+    border-bottom: 1px solid #252735;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 28px;
+    gap: 24px;
   }
   .wordmark {
     display: flex;
     align-items: center;
-    gap: 13px;
-    font-size: 23px;
-    letter-spacing: -1.2px;
-    font-weight: 750;
+    gap: 12px;
+    font-size: 19px;
+    letter-spacing: -0.7px;
+    font-weight: 700;
     text-align: left;
+    white-space: nowrap;
+  }
+  .wordmark img {
+    width: 34px;
+    height: 34px;
   }
   .brand-and {
-    color: #ee9255;
-    font-weight: 450;
-    margin: 0 2px;
-  }
-  .brand-sub {
-    display: block;
-    font-size: 8px;
-    letter-spacing: 2px;
-    font-weight: 600;
-    color: #a5b5ba;
-    margin-top: 2px;
-  }
-  .brand-chip {
-    width: 43px;
-    height: 43px;
-    display: grid;
-    place-items: center;
-    border: 1px solid #ee9255;
-    border-radius: 10px;
-    box-shadow:
-      inset 0 0 0 4px #101e2b,
-      inset 0 0 0 5px #ee9255;
-    transform: rotate(-8deg);
-    color: #ee9255;
-    font-family: ui-monospace, monospace;
-    font-size: 16px;
-    letter-spacing: -2px;
+    font-weight: 400;
+    color: #a1a5b6;
   }
   .game-nav {
     display: flex;
     align-items: center;
-    gap: 5px;
-    padding: 5px;
-    border: 1px solid #ffffff12;
-    border-radius: 10px;
-    background: #0d1925;
+    gap: 3px;
   }
   .game-nav button {
-    font-size: 13px;
-    font-weight: 600;
-    padding: 9px 16px;
-    border-radius: 6px;
-    color: #a5b5ba;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 11px 14px;
+    border-radius: 4px;
+    color: #a1a5b6;
     transition:
       background 0.15s,
       color 0.15s;
   }
   .game-nav button:hover {
-    color: #f4eedf;
+    color: white;
+    background: #191b29;
   }
   .game-nav button.current {
-    background: #293947;
-    color: #fff7e6;
-    box-shadow: 0 1px 3px #0003;
+    background: #202031;
+    color: #eeecff;
   }
   .chip-count {
     font-family: ui-monospace, monospace;
-    background: #ffffff12;
+    background: #ffffff0b;
     font-size: 10px;
     padding: 1px 5px;
-    margin-left: 3px;
-    border-radius: 3px;
+    margin-left: 4px;
+    border-radius: 2px;
   }
   .sound-button {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 7px;
+    font-family: ui-monospace, monospace;
     font-size: 11px;
-    color: #a5b5ba;
+    color: #a1a5b6;
     white-space: nowrap;
     min-height: 44px;
   }
   .sound-button > span {
-    font-size: 21px;
-    color: #ee9255;
+    font-size: 20px;
+    color: #a49cff;
   }
-  .world-section {
-    max-width: 1640px;
+  .computer-section {
+    max-width: 1600px;
     margin: auto;
-    padding: 28px 4% 36px;
+    padding: 26px 4% 0;
   }
-  .world-topline {
+  .system-bar {
     display: flex;
-    align-items: center;
     justify-content: space-between;
     gap: 12px;
     font-family: ui-monospace, monospace;
-    font-size: 10px;
+    font-size: 9px;
     letter-spacing: 1.5px;
-    color: #b3c1c6;
+    color: #b1b3c3;
   }
-  .world-topline > span:first-child {
+  .system-bar > span:first-child {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 9px;
   }
-  .world-topline i {
-    width: 6px;
-    height: 6px;
-    background: #ee9255;
+  .system-bar i,
+  .status-light {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    background: #aaa4ff;
     border-radius: 50%;
+    box-shadow: 0 0 12px #756aff77;
   }
-  .world-topline b {
-    color: #ee9255;
-    margin: 0 8px;
+  .system-bar > span:last-child {
+    color: #959aac;
+  }
+  .system-bar b {
+    margin: 0 10px;
     font-weight: 400;
+    color: #aaa4ff;
   }
-  .world-topline > span:last-child {
-    font-size: 9px;
-    color: #8f9da7;
-  }
-  .world-layout {
+  .computer-layout {
     display: grid;
-    grid-template-columns: minmax(260px, 310px) minmax(0, 1fr);
+    grid-template-columns: minmax(300px, 0.86fr) minmax(0, 1.55fr);
     align-items: center;
-    gap: 2%;
-    padding: 25px 0 24px;
+    gap: 3%;
+    padding: 24px 0 20px;
   }
   .mission-brief {
-    position: relative;
-    z-index: 1;
-    padding: 22px 0;
+    min-width: 0;
+    padding: 12px 0;
   }
   .eyebrow {
     font-family: ui-monospace, monospace;
     display: block;
-    color: #ee9255;
+    color: #aaa4ff;
     font-size: 9px;
-    font-weight: 600;
-    letter-spacing: 1.7px;
-  }
-  .signal-text {
-    color: #7bd9b5;
+    font-weight: 500;
+    letter-spacing: 1.5px;
   }
   h1 {
-    font-size: clamp(36px, 3vw, 48px);
-    line-height: 1.12;
-    font-weight: 650;
+    font-size: clamp(38px, 3.5vw, 55px);
+    line-height: 1.08;
+    font-weight: 500;
     letter-spacing: -2.5px;
-    margin: 16px 0;
+    margin: 17px 0;
   }
   h1 em {
     font-style: normal;
-    color: #ee9255;
+    color: #aaa4ff;
+    font-size: 0.72em;
+    letter-spacing: -1.2px;
   }
   .intro-copy {
-    font-size: 14px;
-    color: #b1c0c5;
-    line-height: 1.75;
-    max-width: 275px;
+    font-size: 13px;
+    color: #a1a5b6;
+    line-height: 1.8;
+    max-width: 330px;
   }
-  .restoration-note {
-    font-size: 11px;
-    color: #7bd9b5;
+  .verification-note {
+    font-size: 12px;
+    color: #a49cff;
     margin-top: 12px;
   }
   .selected-mission {
-    border-top: 1px solid #ffffff1c;
+    border-top: 1px solid #303446;
     padding-top: 18px;
-    margin-top: 18px;
+    margin-top: 26px;
+    max-width: 360px;
   }
   .mission-meta {
     display: flex;
-    gap: 8px;
+    align-items: center;
     justify-content: space-between;
-    font-family: ui-monospace, monospace;
-    font-size: 8px;
-    letter-spacing: 1px;
-    color: #98aab2;
+    gap: 10px;
+    color: #a1a5b6;
+    font:
+      9px ui-monospace,
+      monospace;
+    letter-spacing: 0.7px;
   }
-  .mission-meta > span:last-child {
-    color: #ee9255;
+  .mission-meta .done {
+    color: #c0baff;
   }
-  .mission-meta > span.done {
-    color: #7bd9b5;
+  .mission-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 16px 0 10px;
+  }
+  .chip-symbol {
+    font:
+      12px ui-monospace,
+      monospace;
+    border: 1px solid #57516d;
+    color: #c6c1ff;
+    padding: 10px 8px;
+    min-width: 53px;
+    text-align: center;
+    background: #1a1929;
   }
   .selected-mission h2 {
-    font-size: 23px;
-    font-weight: 600;
-    letter-spacing: -0.6px;
-    margin: 13px 0 9px;
+    font-size: 19px;
+    font-weight: 550;
+    letter-spacing: -0.5px;
+    line-height: 1.3;
   }
-  .selected-mission p {
-    font-size: 13px;
+  .selected-mission > p {
+    font-size: 12px;
     line-height: 1.75;
-    color: #b1c0c5;
-  }
-  .mission-skill {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 17px 0 24px;
-    font-size: 10px;
-    color: #a9b9bf;
-  }
-  .tiny-chip {
-    font-family: ui-monospace, monospace;
-    font-size: 10px;
-    color: #f1b38b;
-    border: 1px solid #75513d;
-    border-radius: 4px;
-    padding: 3px 7px;
-    background: #e974450c;
+    color: #a1a5b6;
   }
   .primary-action {
-    width: 100%;
-    min-height: 50px;
-    padding: 13px 18px;
-    background: #ee9255;
-    border: 1px solid #f3b38a;
-    color: #18242d;
-    font-size: 13px;
-    font-weight: 750;
-    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0 3px 0 #aa5c32;
-    transition:
-      background 0.15s,
-      transform 0.15s;
+    width: 100%;
+    min-height: 47px;
+    padding: 12px 17px;
+    margin-top: 17px;
+    background: #4f46e5;
+    color: white;
+    border: 1px solid #7068ff;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: background 0.15s;
   }
   .primary-action:hover {
-    background: #f7aa76;
-    transform: translateY(-1px);
+    background: #6258f1;
   }
   .primary-action > span {
-    font-size: 21px;
-    font-weight: 400;
-    line-height: 1;
+    font-size: 19px;
   }
-  .below-button {
-    display: block;
-    font-size: 9px;
-    color: #a2b2ba;
-    text-align: center;
-    margin-top: 12px;
-    line-height: 1.5;
-  }
-  .quiet-link {
+  .editor-note {
     display: flex;
     align-items: center;
     gap: 8px;
-    min-height: 44px;
-    font-size: 10px;
-    color: #c1cbca;
-    line-height: 1.65;
-    text-align: left;
+    font:
+      8px ui-monospace,
+      monospace;
+    color: #b4afef;
+    margin-top: 13px;
+    letter-spacing: 0.4px;
   }
-  .mission-brief > .quiet-link {
-    margin-top: 15px;
+  .editor-note i {
+    font-style: normal;
+    color: #878a9e;
+  }
+  .editor-note-detail {
+    margin-left: auto;
+    font:
+      10px Inter,
+      ui-sans-serif,
+      sans-serif;
+    letter-spacing: 0;
+    color: #9b9fb2;
+  }
+  .layer-preview h2 {
+    margin: 18px 0 12px;
+    font-size: 24px;
+  }
+  .layer-preview .planned-note {
+    font-size: 11px;
+    margin-top: 14px;
+    color: #b4afef;
+  }
+  .stack-zone {
+    min-width: 0;
+  }
+  .quiet-link {
+    color: #bbb7e8;
+    font-size: 11px;
+    min-height: 44px;
+    text-align: left;
   }
   .quiet-link:hover {
-    color: #ee9255;
+    color: white;
   }
-  .map-zone {
-    position: relative;
-    min-width: 0;
-    align-self: stretch;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    background: radial-gradient(ellipse at 53% 49%, #29404c50 0%, #101e2b00 67%);
-  }
-  .map-caption {
+  .layer-status {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 10px;
-    margin: 0 3% 4px;
-    font-family: ui-monospace, monospace;
-    font-size: 8px;
-    letter-spacing: 1.3px;
-    color: #8ea3ad;
+    gap: 20px;
+    border-top: 1px solid #303446;
+    border-bottom: 1px solid #242735;
+    padding: 8px 0;
+    font:
+      10px ui-monospace,
+      monospace;
   }
-  .map-caption b {
-    color: #ee9255;
-    margin-left: 12px;
+  .layer-status > div {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .layer-status strong {
     font-weight: 400;
+    letter-spacing: 0.6px;
   }
-  .map-caption > span:last-child {
-    font-size: 7px;
-    color: #8197a1;
+  .status-description {
+    color: #a1a5b6;
+    padding-left: 16px;
+    border-left: 1px solid #303446;
   }
-  .map-footer {
-    margin: 12px 3% 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 12px;
-    color: #92a6af;
-    font-size: 9px;
-  }
-  .map-footer > span:first-child {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-  .map-footer i {
-    display: inline-block;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    margin-left: 8px;
-  }
-  .map-footer i:first-child {
-    margin-left: 0;
-  }
-  .legend-active {
-    background: #7bd9b5;
-  }
-  .legend-next {
-    background: #ee9255;
-  }
-  .legend-off {
-    background: #697e87;
-  }
-  .expedition {
-    border-top: 1px solid #ffffff1c;
-    padding-top: 20px;
-  }
-  .expedition-heading {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    font-family: ui-monospace, monospace;
-    font-size: 8px;
-    letter-spacing: 1.4px;
-    color: #b6c3c7;
-  }
-  .expedition-heading > span:last-child {
-    color: #8fa4ad;
-  }
-  .station-list {
+  .principles {
     display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-    gap: 6px;
-    margin-top: 16px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    padding: 25px 0;
   }
-  .station-stop {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    text-align: left;
-    padding: 12px 9px;
-    border: 1px solid #ffffff10;
-    border-radius: 6px;
-    min-width: 0;
-    transition:
-      background 0.15s,
-      border-color 0.15s;
+  .principles p {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 3px 12px;
+    font-size: 11px;
+    color: #a1a5b6;
   }
-  .station-stop:hover {
-    background: #ffffff06;
-    border-color: #ffffff38;
+  .principles p > span {
+    grid-row: span 2;
+    font:
+      10px ui-monospace,
+      monospace;
+    color: #a49cff;
+    padding-top: 3px;
   }
-  .station-stop.active {
-    border-color: #ee92556b;
-    background: #ee92550b;
-  }
-  .stop-number {
-    font-family: ui-monospace, monospace;
-    font-size: 10px;
-    color: #849aa4;
-  }
-  .station-stop.active .stop-number {
-    color: #ee9255;
-  }
-  .station-stop.restored .stop-number {
-    color: #7bd9b5;
-  }
-  .station-stop strong {
-    display: block;
-    font-family: ui-monospace, monospace;
+  .principles strong {
+    color: #d4d5df;
     font-weight: 500;
     font-size: 12px;
-    color: #efebdf;
-  }
-  .station-stop small {
-    font-size: 8px;
-    color: #91a7b0;
-    display: block;
-    margin-top: 3px;
-  }
-  .stop-arrow {
-    color: #ee9255;
-    font-size: 13px;
-    margin-left: auto;
-    opacity: 0;
-  }
-  .station-stop.active .stop-arrow,
-  .station-stop:hover .stop-arrow {
-    opacity: 1;
-  }
-  .game-footer {
-    padding: 20px 4% 24px;
-    border-top: 1px solid #ffffff12;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 15px;
-    font-size: 9px;
-    color: #8fa4ad;
-  }
-  .footer-symbol {
-    color: #ee9255;
-    font-size: 16px;
-    vertical-align: middle;
-    margin-right: 6px;
-  }
-  .game-footer > div {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-  .game-footer a {
-    color: #aebfc5;
-    min-height: 30px;
-    display: flex;
-    align-items: center;
-  }
-  .game-footer a:hover {
-    color: #ee9255;
-  }
-  .save-status {
-    font-size: 8px;
-    color: #8da3ac;
-  }
-  .storage-notice {
-    font-size: 12px;
-    padding: 12px 4%;
-    background: #ee92551a;
-    color: #ffd7ad;
   }
   .collection-view {
-    max-width: 1240px;
+    max-width: 1400px;
     margin: auto;
-    padding: 24px 5% 64px;
+    padding: 48px 4%;
   }
-  .collection-view > .eyebrow {
-    margin-top: 25px;
-  }
-  .collection-intro {
-    color: #b1c0c5;
-    max-width: 580px;
+  .collection-intro > p {
+    color: #a1a5b6;
+    max-width: 500px;
     font-size: 14px;
     line-height: 1.8;
   }
   .collection-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 18px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
     margin-top: 36px;
   }
   .collection-card {
-    padding: 25px;
-    border: 1px solid #ffffff18;
-    border-radius: 12px;
-    background: #152633;
-  }
-  .collection-card.collected {
-    border-color: #7bd9b550;
-    background: #18312f;
-  }
-  .collection-status {
-    font-family: ui-monospace, monospace;
-    font-size: 8px;
-    letter-spacing: 1px;
-    color: #93a9b1;
-  }
-  .collected .collection-status {
-    color: #7bd9b5;
-  }
-  .collectible-chip {
-    position: relative;
-    display: grid;
-    place-items: center;
-    width: 98px;
-    height: 90px;
-    background: #253944;
-    box-shadow:
-      0 8px 0 #09151e,
-      0 11px 15px #0004;
-    border: 1px solid #527078;
-    border-radius: 7px;
-    margin: 32px 6px;
-    transform: rotate(-7deg);
-    font-family: ui-monospace, monospace;
-    font-size: 22px;
-    color: #9fb6b8;
-  }
-  .collectible-chip:after {
-    content: '';
-    position: absolute;
-    inset: 8px;
-    border: 1px solid #ffffff12;
+    padding: 22px;
+    border: 1px solid #303446;
+    background: #0f111b;
     border-radius: 4px;
   }
-  .collectible-chip > span {
-    transform: rotate(7deg);
+  .collection-card.collected {
+    border-color: #6c63cf;
+    background: #161426;
   }
-  .collected .collectible-chip {
-    color: #7bd9b5;
+  .collection-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    align-items: center;
+  }
+  .collection-number {
+    font:
+      11px ui-monospace,
+      monospace;
+    color: #aaa4ff;
+  }
+  .collection-status {
+    color: #a1a5b6;
+    font:
+      8px ui-monospace,
+      monospace;
+    letter-spacing: 0.6px;
+  }
+  .collected .collection-status {
+    color: #c5bfff;
+  }
+  .collectible-chip {
+    width: 85px;
+    height: 65px;
+    display: grid;
+    place-items: center;
+    margin: 34px auto;
+    background: #171925;
+    border: 1px solid #484b65;
+    box-shadow:
+      inset 0 0 0 5px #0f111b,
+      inset 0 0 0 6px #303446;
+    font:
+      16px ui-monospace,
+      monospace;
+    color: #b4afef;
+    position: relative;
+  }
+  .collectible-chip::before,
+  .collectible-chip::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    width: 8px;
+    background: repeating-linear-gradient(to bottom, #5f5a89 0 3px, transparent 3px 10px);
+  }
+  .collectible-chip::before {
+    left: -9px;
+  }
+  .collectible-chip::after {
+    right: -9px;
   }
   .collection-card h2 {
-    font-size: 20px;
-    font-weight: 600;
+    font-size: 17px;
     letter-spacing: -0.5px;
-    margin-bottom: 8px;
   }
   .collection-card p {
-    color: #acbec4;
+    color: #a1a5b6;
     font-size: 12px;
-    line-height: 1.8;
-    min-height: 66px;
+    line-height: 1.7;
+    margin: 10px 0 18px;
+    min-height: 41px;
   }
   .collection-action {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    border-top: 1px solid #ffffff18;
-    margin-top: 17px;
-    padding-top: 16px;
     min-height: 44px;
-    font-size: 12px;
-    color: #ee9255;
+    font-size: 11px;
+    color: #c5bfff;
+    border-top: 1px solid #303446;
+    padding-top: 12px;
   }
   .future-note {
-    margin-top: 35px;
-    padding-top: 35px;
-    border-top: 1px solid #ffffff1c;
-    max-width: 650px;
+    border-top: 1px solid #303446;
+    margin-top: 40px;
+    padding-top: 28px;
   }
   .future-note h2 {
-    font-size: 25px;
-    margin: 12px 0;
-    font-weight: 600;
+    font-size: 27px;
+    margin: 10px 0;
   }
   .future-note p {
     font-size: 13px;
-    line-height: 1.85;
-    color: #acbec4;
+    color: #a1a5b6;
+    max-width: 670px;
+    line-height: 1.8;
+  }
+  .game-footer {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 25px 4%;
+    border-top: 1px solid #242735;
+    color: #959aac;
+    font-size: 10px;
+  }
+  .footer-brand {
+    font-size: 11px;
+    color: #b6b8c6;
+  }
+  .footer-brand span {
+    margin: 0 7px;
+    color: #aaa4ff;
+  }
+  .game-footer > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .game-footer a:hover {
+    color: white;
+  }
+  .save-status {
+    font:
+      9px ui-monospace,
+      monospace;
+  }
+  .storage-notice {
+    padding: 12px 4%;
+    color: #e0c98c;
+    font-size: 12px;
   }
   @media (min-width: 1500px) {
-    .world-layout {
-      grid-template-columns: 330px minmax(0, 1fr);
-      gap: 4%;
-    }
-    .game-header {
-      min-height: 110px;
-    }
-    .world-section {
-      padding-top: 36px;
-    }
-    .selected-mission {
-      margin-top: 35px;
-      padding-top: 27px;
-    }
-    .mission-brief {
-      padding: 35px 0;
-    }
-    .intro-copy {
-      font-size: 16px;
-    }
-    .world-layout h1 {
-      font-size: 57px;
+    .computer-layout {
+      grid-template-columns: minmax(330px, 1fr) minmax(0, 1.7fr);
     }
   }
-  @media (max-width: 1100px) {
-    .game-nav button {
-      padding: 9px 11px;
-      font-size: 12px;
-    }
-    .world-layout {
-      grid-template-columns: 255px minmax(0, 1fr);
-      gap: 10px;
-    }
-    .world-layout h1 {
-      font-size: 40px;
-    }
-    .world-section {
-      padding-inline: 3%;
-    }
+  @media (max-width: 1000px) {
     .game-header {
-      margin-inline: 3%;
-      gap: 18px;
-    }
-    .station-stop {
-      gap: 7px;
-      padding: 10px 6px;
-    }
-    .station-stop small {
-      font-size: 7px;
-    }
-    .stop-arrow {
-      display: none;
-    }
-    .map-caption > span:last-child {
-      display: none;
-    }
-    .game-footer > div {
-      gap: 15px;
-    }
-  }
-  @media (max-width: 800px) {
-    .game-header {
-      flex-wrap: wrap;
-      gap: 8px;
-      padding: 18px 0 12px;
-      min-height: auto;
+      gap: 12px;
     }
     .wordmark {
-      font-size: 22px;
+      font-size: 17px;
+      gap: 8px;
+    }
+    .game-nav button {
+      padding: 10px;
+      font-size: 11px;
+    }
+    .sound-button {
+      font-size: 10px;
+    }
+    .computer-layout {
+      grid-template-columns: minmax(270px, 0.9fr) minmax(0, 1.2fr);
+      gap: 20px;
+    }
+    .collection-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .editor-note-detail {
+      display: none;
+    }
+  }
+  @media (max-width: 760px) {
+    .game-header {
+      flex-wrap: wrap;
+      padding-top: 16px;
+    }
+    .wordmark {
+      flex: 1;
     }
     .game-nav {
       order: 3;
       width: 100%;
       justify-content: space-between;
-      margin-top: 10px;
+      border-top: 1px solid #242735;
+      padding-top: 9px;
     }
     .game-nav button {
-      flex: 1;
-      padding: 10px 6px;
+      padding: 10px 12px;
     }
-    .world-topline {
-      font-size: 8px;
-      letter-spacing: 1px;
+    .system-bar > span:last-child {
+      display: none;
     }
-    .world-topline > span:last-child {
-      font-size: 7px;
-      letter-spacing: 0.5px;
-    }
-    .world-layout {
-      grid-template-columns: minmax(0, 1fr);
-      padding-top: 17px;
-      gap: 0;
+    .computer-layout {
+      grid-template-columns: 1fr;
+      padding-top: 16px;
+      gap: 14px;
     }
     .mission-brief {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      column-gap: 25px;
-      padding: 8px 0 25px;
+      grid-template-columns: 1fr 1fr;
+      align-content: start;
+      gap: 0 20px;
     }
     .mission-brief > .eyebrow {
-      grid-column: 1;
-      font-size: 7px;
-      align-self: end;
+      grid-column: 1 / -1;
     }
     .mission-brief h1 {
+      font-size: 35px;
       grid-column: 1;
-      font-size: 38px;
-      margin: 12px 0;
     }
-    .intro-copy {
+    .mission-brief > p {
       grid-column: 1;
-      font-size: 12px;
     }
     .selected-mission {
       grid-column: 2;
-      grid-row: 1 / span 4;
-      border-top: none;
-      border-left: 1px solid #ffffff1c;
-      margin: 0;
-      padding: 10px 0 0 24px;
-    }
-    .selected-mission h2 {
-      font-size: 21px;
-    }
-    .selected-mission p {
-      font-size: 12px;
+      grid-row: 2 / span 3;
+      margin-top: 18px;
+      padding-top: 12px;
     }
     .mission-meta {
-      font-size: 7px;
+      flex-wrap: wrap;
+      gap: 7px;
+      font-size: 8px;
     }
-    .mission-meta > span:last-child {
+    .selected-mission h2 {
+      font-size: 17px;
+    }
+    .mission-title {
+      gap: 9px;
+    }
+    .chip-symbol {
+      min-width: 45px;
+      font-size: 10px;
+    }
+    .status-description {
       display: none;
-    }
-    .mission-skill {
-      margin: 12px 0 15px;
-      font-size: 9px;
-    }
-    .mission-brief > .quiet-link {
-      grid-column: 1;
-      margin-top: 8px;
-      font-size: 9px;
-      max-width: 200px;
-    }
-    .map-zone {
-      margin-top: 0;
-    }
-    .station-list {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 8px;
-    }
-    .station-stop {
-      padding: 12px;
-    }
-    .station-stop small {
-      font-size: 9px;
-    }
-    .station-stop strong {
-      font-size: 13px;
     }
     .collection-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-    .collection-view h1 {
-      font-size: 44px;
+    .principles {
+      gap: 20px;
     }
-    .restoration-note {
-      grid-column: 1;
+    .principles p {
+      display: block;
+      line-height: 1.7;
     }
-    .expedition {
-      margin-top: 20px;
+    .principles strong {
+      display: block;
+      margin: 5px 0;
+    }
+    .principles p > span {
+      display: block;
     }
   }
   @media (max-width: 480px) {
-    .world-layout {
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      padding-top: 28px;
-    }
     .game-header {
-      margin-inline: 5%;
-    }
-    .sound-button {
-      font-size: 10px;
+      padding-inline: 5%;
     }
     .game-nav button {
-      font-size: 11px;
+      padding: 9px 7px;
+      font-size: 10px;
     }
-    .chip-count {
-      margin-left: 0;
+    .wordmark {
+      font-size: 17px;
     }
-    .world-section {
-      padding: 20px 5% 25px;
-    }
-    .world-topline > span:last-child {
-      font-size: 6px;
-    }
-    .world-topline {
-      font-size: 7px;
-      letter-spacing: 1px;
-    }
-    .world-topline b {
-      margin-inline: 3px;
+    .computer-section {
+      padding-inline: 5%;
     }
     .mission-brief {
-      display: contents;
-    }
-    .mission-brief > .eyebrow {
-      font-size: 7px;
-      order: 1;
-    }
-    .mission-brief h1 {
-      order: 2;
-      font-size: 42px;
-      margin: 16px 0;
-      letter-spacing: -1.7px;
-    }
-    .intro-copy {
-      order: 3;
-      max-width: 300px;
-      font-size: 13px;
-    }
-    .selected-mission {
-      order: 5;
-      border-left: 0;
-      border-top: 1px solid #ffffff1c;
-      padding: 18px 0 0;
-      margin-top: 20px;
-    }
-    .mission-meta {
-      font-size: 8px;
-    }
-    .mission-meta > span:last-child {
       display: block;
     }
-    .selected-mission h2 {
-      font-size: 22px;
+    .mission-brief h1 {
+      font-size: 42px;
     }
-    .selected-mission p {
-      font-size: 13px;
+    .intro-copy {
+      max-width: 100%;
     }
-    .mission-skill {
-      margin: 12px 0 18px;
-    }
-    .mission-brief > .quiet-link {
-      order: 6;
+    .selected-mission {
       max-width: none;
-      margin-top: 14px;
+      margin-top: 22px;
     }
-    .map-caption {
-      font-size: 6px;
-      letter-spacing: 1px;
-      margin-inline: 0;
+    .editor-note-detail {
+      display: inline;
     }
-    .map-zone {
-      order: 4;
-      margin-top: 24px;
+    .mission-meta {
+      font-size: 9px;
     }
-    .restoration-note {
-      order: 3;
+    .layer-status {
+      align-items: flex-start;
+      gap: 8px;
     }
-    .map-footer {
-      margin-inline: 0;
+    .layer-status > div {
+      gap: 7px;
+      padding-top: 16px;
       font-size: 8px;
     }
-    .map-footer > span:last-child {
-      display: none;
+    .quiet-link {
+      font-size: 10px;
     }
-    .station-list {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    .principles {
+      grid-template-columns: 1fr;
+      gap: 17px;
+      padding: 22px 0;
     }
-    .station-stop {
-      padding: 12px;
+    .principles p {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 1px 10px;
     }
-    .expedition-heading {
-      font-size: 7px;
-      letter-spacing: 0.8px;
+    .principles strong {
+      margin: 0;
     }
     .collection-grid {
-      grid-template-columns: minmax(0, 1fr);
-    }
-    .collection-view h1 {
-      font-size: 39px;
-    }
-    .game-footer > div {
-      column-gap: 18px;
-      row-gap: 2px;
-    }
-    .save-status {
-      flex-basis: 100%;
-      margin-top: 8px;
+      grid-template-columns: 1fr;
     }
     .collection-card p {
-      min-height: auto;
+      min-height: 0;
+    }
+    .game-footer {
+      padding-inline: 5%;
+    }
+    .game-footer > div {
+      gap: 12px;
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .signal-game :global(*),
-    .signal-game :global(*:before),
-    .signal-game :global(*:after) {
-      animation: none !important;
+    .computer-game :global(*) {
       transition: none !important;
+      animation: none !important;
       scroll-behavior: auto !important;
     }
   }
