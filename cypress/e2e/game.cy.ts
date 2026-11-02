@@ -51,7 +51,7 @@ describe('Chips and Code workbench', () => {
   });
 
   it('Characterizes NAND, remembers verified chips, and builds a working NOT chip', () => {
-    cy.findByRole('button', { name: 'Enter the signal layer' }).click();
+    cy.findByRole('button', { name: 'Begin building' }).click();
 
     // A wrong prediction cannot complete a case or verify the primitive.
     cy.findByRole('button', { name: 'Predict 0' }).click();
@@ -236,6 +236,7 @@ describe('Chips and Code workbench', () => {
     it(`Keeps the layers and all editor views within a ${width}px viewport`, () => {
       cy.viewport(width, 900);
       expectNoPageOverflow();
+      if (width === 320) cy.screenshot('computer-landing-mobile', { capture: 'fullPage' });
       openNotWorkbench();
       chooseView('Visual');
       expectNoPageOverflow();

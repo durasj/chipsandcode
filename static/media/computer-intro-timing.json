@@ -1,0 +1,67 @@
+{
+  "title": "Chips and Code \u2014 from signal to software",
+  "duration": 48.0,
+  "fps": 30,
+  "width": 1280,
+  "height": 720,
+  "audio_status": "silent-master-awaiting-narration",
+  "voice_direction": "Natural, clear English. Calm, precise, curious. About 110 words per minute. No theatrical emphasis. Leave breathing room between layers.",
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 4.8,
+      "layer": "signals",
+      "title": "Two states.",
+      "narration": "Every computer begins with two states. Zero and one."
+    },
+    {
+      "start": 4.8,
+      "end": 12.2,
+      "layer": "logic",
+      "title": "Signals become logic.",
+      "narration": "Connect those signals through logic gates, and simple rules become useful behavior."
+    },
+    {
+      "start": 12.2,
+      "end": 20.2,
+      "layer": "arithmetic",
+      "title": "Logic becomes arithmetic.",
+      "narration": "Combine gates into arithmetic. Bits become numbers, and circuits add, compare, and calculate."
+    },
+    {
+      "start": 20.2,
+      "end": 28.2,
+      "layer": "memory",
+      "title": "A value can stay.",
+      "narration": "Add memory, and the machine can keep its state. A value survives beyond a single moment."
+    },
+    {
+      "start": 28.2,
+      "end": 36.2,
+      "layer": "architecture",
+      "title": "A computer takes shape.",
+      "narration": "Bring calculation, memory, and control together. Instructions now move through a complete computer."
+    },
+    {
+      "start": 36.2,
+      "end": 43.4,
+      "layer": "software",
+      "title": "Signals become software.",
+      "narration": "Software builds on all of it. Every line of code connects back to the machine beneath."
+    },
+    {
+      "start": 43.4,
+      "end": 48.0,
+      "layer": "closing",
+      "title": "Chips and Code",
+      "narration": "Start with logic. Build from the ground up."
+    }
+  ],
+  "visual_accuracy": {
+    "logic": "All four NAND input cases; out = NOT(a AND b).",
+    "arithmetic": "Four-bit addition:0011 +0001 =0100.",
+    "memory": "Eight-bit register loads10110100 on a rising edge, then holds it.",
+    "architecture": "Conceptual fetch/decode/execute/write-back: D=D+A with D=3,A=1 produces D=4.",
+    "software": "Conceptual high-level add(3,1) returns4; this software layer is a roadmap, not a current programming exercise."
+  }
+}

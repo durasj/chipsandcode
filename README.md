@@ -7,7 +7,7 @@
 <h3 align="center">Chips and Code</h3>
 
 <p align="center">
-  Wondering how computers work? Find out by embarking on the journey of building your own computer from scratch, from chips to code. No prerequisites and for free from the browser.
+  Build a computer from signals to software. Connect gates, write HDL, and test your designs in the browser. Free, with no prerequisites.
   <br>
   <a href="https://chipsandcode.com/"><strong>Visit »</strong></a>
 </p>
@@ -22,9 +22,11 @@
 
 ### Build from signals to software
 
-Chips and Code now opens on a layered view of a computer: dark binary logic at the foundation, rising toward light, high-level software. The original name, logo, and indigo identity remain. Logic is the playable layer; arithmetic, memory, architecture, and software are clearly marked as planned.
+Chips and Code opens with a 30-second visual journey from signals to software, followed by a layered landing page that moves from dark logic to light software. Each section presents a concrete engineering problem: combine signals, add numbers, retain state, execute an instruction, or express a program. The original logo and indigo identity remain. Logic is playable; higher layers are clearly marked as planned.
 
-Seven steps cover the supplied NAND primitive and the existing NOT, AND, OR, XOR, Mux, and DMux construction exercises. Build with direct visual wiring, edit HDL, or use both side by side. The two views share one circuit model and the existing parser and hardware simulator. Toggle inputs, inspect live signals, and verify the complete truth table before saving a chip. Invalid code remains editable with a diagnostic and cannot pass a test against an older circuit.
+The silent hero can be paused, replayed, or inspected by selecting a layer; it honors reduced motion and stops advancing when offscreen or hidden. A separate 48-second captioned visual introduction opens on request, with native video controls and a text transcript. See [intro production](docs/intro-production.md) for media assets, rendering, and narration status.
+
+Seven steps cover the supplied NAND primitive and the existing NOT, AND, OR, XOR, Mux, and DMux construction exercises. Build with direct visual wiring, edit HDL, or use both side by side. The two views share one circuit model and the existing parser and hardware simulator. A concise chip contract, input switches, and one test/save toolbar keep the workspace focused on the design. Toggle inputs, inspect live signals, and verify the complete truth table before saving a chip. Invalid code remains editable with a diagnostic and cannot pass a test against an older circuit.
 
 Progress and workbench drafts are stored on the current device. Optional interactive reference material covers Boolean logic, composition, HDL, buses, and selectors. The original reading and full hardware IDE remain accessible. Multi-bit circuits and higher computer layers require further simulator and content work; their place in the stack is a roadmap, not an implemented campaign.
 
@@ -83,7 +85,7 @@ npm ci
 npm run dev
 ```
 
-The app uses Svelte 5, SvelteKit 3, Vite 8, and TypeScript 6 (the current version supported by SvelteKit and svelte-check). The editor uses Monaco 0.57. UI menus and tabs use Bits UI. Tailwind 3 and daisyUI 3 support the existing course and IDE pages. The new computer stack and workbench use component styles with the original indigo brand.
+The app uses Svelte 5, SvelteKit 3, Vite 8, and TypeScript 6 (the current version supported by SvelteKit and svelte-check). The editor uses Monaco 0.57. UI menus and tabs use Bits UI. Tailwind 3 and daisyUI 3 support the existing course and IDE pages. The layered landing and workbench use component styles with the original indigo brand.
 
 Lessons, built-in examples, the simulator, local drafts and ZIP downloads work without a database. Saved experiments use the same-origin SvelteKit `/api/experiments` routes and require `DATABASE_URL` from a Neon Postgres database. Copy `.env.template` to `.env.local` and set the URL locally when working on persistence. Never commit credentials or migration exports.
 

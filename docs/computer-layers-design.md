@@ -20,9 +20,17 @@ The first layer contains the existing single-bit material: supplied NAND, then N
 
 The existing Markdown course and full hardware IDE remain accessible. Interactive bus and multi-way-selector explanations in the reference are concept demonstrations, not implemented construction challenges.
 
-## Navigation and progression
+## Landing and introduction
 
-An exploded computer stack shows the relationship between layers. Higher layers are visibly lighter and more abstract; the foundation is dark and detailed. Selecting a layer reveals its purpose and status. Logic exposes the seven existing gate steps and the next useful action.
+The landing page moves through five sections, from dark signals and logic to light software. Every section centers on an actual problem: construct a gate, add binary numbers, retain a value, execute an instruction, or express a program. The logic section includes all seven challenges, an interactive preview of the selected chip's required behavior, and a direct action into its workbench. Higher sections use precise diagrams and explicit Planned labels.
+
+A 30-second silent hero introduces the layers using animated signals, arithmetic, state, architecture, and code. Playback starts automatically unless reduced motion is requested. Controls pause, resume, replay, or jump to a layer. It stops advancing while offscreen, while its browser tab is hidden, or while the separate introduction dialog is open. Automatic playback never changes page navigation.
+
+The Watch the journey action opens a separate 48-second captioned film. It uses native video controls, a poster, and an accessible text transcript, and is loaded on demand. The current master is visual only; recorded narration remains outstanding. Timing, voice direction, rendering, and media production status belong in [intro production](intro-production.md).
+
+The hero and film illustrate the product's direction. Their depiction of arithmetic, memory, architecture, or software does not imply that those construction layers are playable.
+
+## Navigation and progression
 
 The gates remain freely explorable. Completed chips are recorded only after the required evidence: all four observations for supplied NAND, or every truth-table case for a constructed chip. A suggested next step gives direction without enforcing artificial locks. Completion is evidence that a design satisfies its small, exhaustive contract; it is not a claim of independent transfer mastery.
 
@@ -51,6 +59,8 @@ HDL is structural code. It describes the connections between components, not the
 5. Repair the failing design without losing work or being penalized.
 6. Save the verified result and continue to the next chip.
 
+The workbench presents the chip contract once, followed by the input switches, editing surface, and test/save toolbar. Status text reports the current working state: draft, ready, errors, or passed cases. Hints and explanations are available without repeating the contract or replacing the editor. A verified circuit has one save action in the toolbar.
+
 A live signal monitor makes state legible using values and labels as well as color. It is driven by the same circuit used for testing. Signal traces visualize Boolean propagation; they do not claim to measure voltage, current, energy, or physical delay.
 
 ## Contracts retained from the source material
@@ -69,7 +79,7 @@ Mux and DMux are composed from implemented elementary gates. Their placeholder b
 
 ## Reference content
 
-The optional reference covers signals and truth tables, Boolean expressions and canonical representation, abstraction and composition, HDL, buses, and multi-way selectors. Inputs and outputs remain manipulable so reading is connected to behavior. Source links and Nand2Tetris attribution stay visible. Existing learning-content licensing remains CC BY-NC-SA 3.0; software remains MIT.
+The optional reference uses direct subject headings and readable controls. It covers signals and truth tables, Boolean expressions and canonical representation, abstraction and composition, HDL, buses, and multi-way selectors. Inputs and outputs remain manipulable so reading is connected to behavior. Source links and Nand2Tetris attribution stay visible. Existing learning-content licensing remains CC BY-NC-SA 3.0; software remains MIT.
 
 ## Interaction standards
 

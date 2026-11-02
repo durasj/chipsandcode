@@ -368,14 +368,11 @@
 <section class="bench" aria-label={`${mission.chip} workbench`}>
   <header class="bench-header">
     <button class="world-back" on:click={onclose}><span aria-hidden="true">←</span> Layers</button>
-    <div class="bench-identity">
-      <span class="identity-light"></span> CHIPS <span class="identity-and">AND</span> CODE
-      <span class="slash">/</span> LAYER 00 / LOGIC
-    </div>
     <button
       class="notes-trigger"
       aria-expanded={showGuide}
-      on:click={() => (showGuide = !showGuide)}><span aria-hidden="true">▤</span> Reference</button
+      on:click={() => (showGuide = !showGuide)}
+      ><span aria-hidden="true">▤</span> How it works</button
     >
   </header>
 
@@ -386,10 +383,10 @@
         {mission.location}
       </p>
       <h1 tabindex="-1" bind:this={missionHeading}>{mission.title}</h1>
-      <p class="mission-brief">{mission.brief}</p>
+      <p class="mission-brief">{mission.goal}</p>
     </div>
     <div class="chip-stamp">
-      <span>BUILD SPEC</span><strong>{mission.chip}</strong><span
+      <span>CHIP</span><strong>{mission.chip}</strong><span
         >{completed.includes(missionId) ? 'VERIFIED' : 'IN PROGRESS'}</span
       >
     </div>
@@ -447,12 +444,12 @@
         {:else if report}
           {report.passed} / {report.total} pass
         {:else}
-          Visual ↔ HDL · one circuit
+          {live.result ? 'Ready to test' : 'Draft'}
         {/if}
       </span>
       {#if restoreReady}
         <button class="toolbar-save" on:click={() => oncomplete(missionId)}
-          >Save chip <span aria-hidden="true">↗</span></button
+          >Save verified chip <span aria-hidden="true">↗</span></button
         >
       {:else if missionId === 'nand'}
         <a class="results-link" href="#nand-discovery">Discover <span aria-hidden="true">↓</span></a
@@ -479,9 +476,7 @@
         <div class="visual-workspace" class:paused={!!codeError}>
           <div class="board-shell">
             <div class="board-heading">
-              <span class="small-light"></span><span>VISUAL CIRCUIT</span><span class="board-number"
-                >MK. 01 / {mission.chip.toUpperCase()}</span
-              >
+              <span class="small-light"></span><span>VISUAL CIRCUIT</span>
             </div>
 
             {#if missionId !== 'nand'}
@@ -591,7 +586,7 @@
                       y="46"
                       text-anchor="middle"
                       fill="#f0eefc"
-                      font-size="18"
+                      font-size="20"
                       font-weight="700"
                       font-family="monospace">{gate.type.toUpperCase()}</text
                     >
@@ -600,7 +595,7 @@
                       y="65"
                       text-anchor="middle"
                       fill="#a1a5b6"
-                      font-size="10"
+                      font-size="14"
                       font-family="monospace">PART {String(index + 1).padStart(2, '0')}</text
                     >
                     {#each gatePins(gate.type) as pin, pinIndex}
@@ -768,9 +763,7 @@
                   >{/each}
               </div>
               <p class="connection-help">
-                Add a part, then wire its pins on the board or with the menus below. Earlier chips
-                are supplied as reference components; your collection tracks the ones you have
-                built.
+                Add a gate, then connect its pins on the board or with the menus.
               </p>
               {#if circuit.gates.length > 0}
                 <div class="gate-controls">
@@ -855,8 +848,8 @@
           </div>
           <p id="hdl-help">
             {missionId === 'nand'
-              ? 'NAND is supplied by the simulator. Its HDL interface is read-only; discover its behavior with the input switches.'
-              : 'Edit the HDL to update the circuit. Wire the circuit to update the HDL. Both views use the same simulator.'}
+              ? 'NAND is supplied by the simulator; its HDL is read-only.'
+              : 'Edit either view. Visual edits rewrite the HDL.'}
           </p>
           <a href="/experiment/hardware-ide"
             >Open full hardware IDE <span aria-hidden="true">↗</span></a
@@ -866,17 +859,14 @@
     </div>
 
     <p class="draft-status">{saveNotice || 'Drafts are saved on this device.'}</p>
-    <aside class="mission-instruments" aria-label="Mission goal and test instruments">
-      <div class="goal-panel">
-        <p class="eyebrow">SPECIFICATION</p>
-        <h2>{mission.goal}</h2>
+    <aside class="mission-instruments" aria-label="Signal analysis and test results">
+      <div class="analyzer-panel">
         <BenchMachine
           {missionId}
           outputs={live.result?.outputs ?? null}
           inputs={inputValues}
           certified={restoreReady}
         />
-        <p class="reward-copy"><span aria-hidden="true">↳</span> {mission.reward}</p>
       </div>
 
       {#if missionId === 'nand'}
@@ -887,10 +877,7 @@
             >
           </div>
           <h2>What comes out?</h2>
-          <p>
-            NAND is your first supplied part. Switch the inputs and predict its output. It switches
-            off only when both inputs are on.
-          </p>
+          <p>Select each input pair and predict its output.</p>
           <div class="prediction-buttons">
             <button on:click={() => predict(false)}>Predict <strong>0</strong></button><button
               on:click={() => predict(true)}>Predict <strong>1</strong></button
@@ -926,10 +913,7 @@
               >{scenarios.length} CASES</span
             >
           </div>
-          <h2>Verify every input.</h2>
-          <p>
-            Run the full truth table against the specification. Every input combination must pass.
-          </p>
+          <h2>Test results</h2>
           {#if reportError}<div class="test-error" role="alert">
               <strong>Circuit cannot run.</strong>
               <p>{reportError}</p>
@@ -982,24 +966,9 @@
         </section>
       {/if}
 
-      {#if restoreReady}<section class="restore-panel" aria-live="polite">
-          <span class="restore-check" aria-hidden="true">✓</span>
-          <h2>Verification passed.</h2>
-          <p>
-            {missionId === 'nand'
-              ? 'All four NAND cases verified. This primitive can implement every other Boolean gate.'
-              : `Your ${mission.chip} works for every possible input.`}
-          </p>
-          <button class="restore-button" on:click={() => oncomplete(missionId)}
-            >{completed.includes(missionId) ? 'Return to layers' : 'Save verified chip'}
-            <span aria-hidden="true">→</span></button
-          >
-        </section>{/if}
-
       <section class="hint-panel">
         <div>
           <h2>Need a hint?</h2>
-          <span>Reveal one step at a time.</span>
         </div>
         {#if hintCount > 0}<ol>
             {#each mission.hints.slice(0, hintCount) as hint}<li>{hint}</li>{/each}
@@ -1102,15 +1071,7 @@
   .world-back span {
     font-size: 19px;
   }
-  .bench-identity {
-    display: flex;
-    gap: 7px;
-    align-items: center;
-    color: #9a9eb0;
-    font: 10px monospace;
-    letter-spacing: 1.1px;
-  }
-  .identity-light,
+
   .small-light {
     display: inline-block;
     height: 5px;
@@ -1118,13 +1079,7 @@
     background: #a297ff;
     border-radius: 1px;
   }
-  .identity-and {
-    color: #a79cff;
-  }
-  .slash {
-    color: #50566d;
-    margin: 0 10px;
-  }
+
   .notes-trigger {
     display: flex;
     gap: 9px;
@@ -1134,7 +1089,7 @@
     color: #cacbda;
     border-radius: 4px;
     padding: 9px 12px;
-    font-size: 11px !important;
+    font-size: 12px !important;
   }
   .mission-title-row {
     display: flex;
@@ -1145,7 +1100,7 @@
   }
   .eyebrow {
     color: #b5adf1;
-    font: 9px/1.6 monospace;
+    font: 12px/1.6 monospace;
     letter-spacing: 1.4px;
     margin: 0 0 10px;
     text-transform: uppercase;
@@ -1181,7 +1136,7 @@
   }
   .chip-stamp span {
     color: #a0a4b6;
-    font: 8px monospace;
+    font: 12px monospace;
     letter-spacing: 1.5px;
   }
   .signal-inputs {
@@ -1192,7 +1147,7 @@
     padding: 14px 0 18px;
   }
   .switch-label {
-    font: 9px monospace;
+    font: 12px monospace;
     letter-spacing: 1px;
     color: #a5a9bc;
     margin-right: 12px;
@@ -1266,7 +1221,7 @@
     min-width: 0;
   }
   .toolbar-status {
-    font: 9px/1.5 monospace;
+    font: 12px/1.5 monospace;
     color: #beb5db;
   }
   .toolbar-status.status-error {
@@ -1282,12 +1237,12 @@
     border-radius: 4px;
     background: #a99be1;
     color: #171126;
-    font-size: 11px !important;
+    font-size: 12px !important;
     font-weight: 600 !important;
   }
   .results-link {
     padding: 10px 0;
-    font-size: 10px;
+    font-size: 12px;
     color: #c3b6ec;
     white-space: nowrap;
   }
@@ -1306,7 +1261,7 @@
     border-radius: 3px;
     min-height: 33px;
     padding: 6px 14px;
-    font-size: 11px;
+    font-size: 12px;
     display: flex;
     gap: 8px;
     align-items: center;
@@ -1346,16 +1301,12 @@
     padding: 14px 17px;
     border-bottom: 1px solid #2a2e40;
     color: #b6b9ca;
-    font: 9px monospace;
+    font: 12px monospace;
     letter-spacing: 1px;
     min-height: 45px;
     background: #171a27;
   }
-  .board-number {
-    margin-left: auto;
-    color: #a1a5b8;
-    font-size: 8px;
-  }
+
   .wiring-instruction {
     display: flex;
     gap: 10px;
@@ -1370,13 +1321,13 @@
   }
   .wiring-instruction p {
     margin: 0;
-    font-size: 10px;
+    font-size: 12px;
     line-height: 1.6;
     flex: 1;
   }
   .wiring-instruction button {
     padding: 8px 0;
-    font-size: 10px;
+    font-size: 12px;
     color: #c6bfff;
     background: none;
     border: 0;
@@ -1392,12 +1343,12 @@
   }
   .diagram-label {
     fill: #a5aabe;
-    font: 10px monospace;
+    font: 16px monospace;
     letter-spacing: 1px;
   }
   .diagram-pin {
     fill: #b0b2c5;
-    font: 10px monospace;
+    font: 16px monospace;
   }
   .gate-pin-label {
     fill: #bcb8df;
@@ -1463,7 +1414,7 @@
     gap: 15px;
     align-items: center;
     padding: 12px 15px;
-    font: 9px monospace;
+    font: 12px monospace;
     color: #a2a7bb;
     border-top: 1px solid #2a2e40;
   }
@@ -1480,7 +1431,7 @@
   .board-state {
     margin-left: auto;
     color: #b8aeff;
-    font-size: 8px;
+    font-size: 12px;
     letter-spacing: 1px;
   }
   .parts-bay {
@@ -1493,7 +1444,7 @@
     justify-content: space-between;
   }
   .parts-heading .eyebrow {
-    font-size: 8px;
+    font-size: 12px;
     color: #959bb1;
     margin-bottom: 4px;
   }
@@ -1514,7 +1465,7 @@
     border: 0;
     color: #aeb2c5;
     padding: 8px 0;
-    font-size: 10px !important;
+    font-size: 12px !important;
   }
   .undo-clear {
     color: #c4baff;
@@ -1549,12 +1500,12 @@
   }
   .part-pin-count {
     color: #a6a5bd;
-    font: 7px monospace;
+    font: 12px monospace;
     letter-spacing: 0.5px;
   }
   .connection-help {
     color: #a1a5b9;
-    font-size: 10px;
+    font-size: 12px;
     line-height: 1.8;
     margin: 12px 0;
   }
@@ -1580,7 +1531,7 @@
     font: 12px monospace;
   }
   .part-index {
-    font: 9px monospace;
+    font: 12px monospace;
     color: #b4a9eb;
     border-right: 1px solid #47405f;
     padding-right: 8px;
@@ -1602,14 +1553,14 @@
     gap: 10px;
     margin-top: 8px;
     color: #a1a6bc;
-    font-size: 10px;
+    font-size: 12px;
   }
   .gate-control label span {
     min-width: 40px;
   }
   .gate-control label b,
   .output-connections label b {
-    font: 11px monospace;
+    font: 12px monospace;
     color: #dedfeb;
   }
   .gate-control select,
@@ -1623,7 +1574,7 @@
     color: #d9dbe9;
     border-radius: 3px;
     padding: 8px;
-    font-size: 11px !important;
+    font-size: 12px !important;
   }
   .output-connections {
     display: flex;
@@ -1637,7 +1588,7 @@
     background: #181626;
   }
   .output-title {
-    font: 8px monospace;
+    font: 12px monospace;
     letter-spacing: 1px;
     color: #b4a8e9;
   }
@@ -1648,7 +1599,7 @@
   }
   .draft-status {
     color: #969db3;
-    font: 9px/1.7 monospace;
+    font: 12px/1.7 monospace;
     padding: 13px 0 20px;
     margin: 0;
   }
@@ -1668,7 +1619,7 @@
     padding-bottom: 7px;
   }
   .code-heading > span {
-    font: 11px monospace;
+    font: 12px monospace;
     letter-spacing: 0;
   }
   .code-heading b {
@@ -1682,7 +1633,7 @@
     padding: 6px 9px;
     color: #c4bddb;
     border-radius: 3px;
-    font-size: 9px;
+    font-size: 12px;
     white-space: nowrap;
   }
   .code-editor {
@@ -1700,7 +1651,7 @@
     background: #10121d;
     overflow: hidden;
     font:
-      12px/1.9 ui-monospace,
+      13px/1.9 ui-monospace,
       SFMono-Regular,
       Menlo,
       Consolas,
@@ -1726,7 +1677,7 @@
     white-space: pre;
     overflow: auto;
     font:
-      12px/1.9 ui-monospace,
+      13px/1.9 ui-monospace,
       SFMono-Regular,
       Menlo,
       Consolas,
@@ -1747,20 +1698,20 @@
     gap: 16px;
     padding: 11px 15px;
     border-top: 1px solid #2c2940;
-    font: 8px monospace;
+    font: 12px monospace;
     color: #aca1db;
     letter-spacing: 0.7px;
     background: #171323;
   }
   .hdl-panel > p {
-    font-size: 10px;
+    font-size: 12px;
     line-height: 1.8;
     color: #a1a4b7;
     padding: 0 16px;
     margin: 14px 0 6px;
   }
   .hdl-panel > a {
-    font-size: 10px;
+    font-size: 12px;
     color: #c1b7ed;
     padding: 8px 16px 16px;
   }
@@ -1781,7 +1732,7 @@
     font-size: 12px;
   }
   .code-error p {
-    font: 11px/1.6 monospace;
+    font: 12px/1.6 monospace;
     max-height: 140px;
     overflow: auto;
     white-space: pre-wrap;
@@ -1789,7 +1740,7 @@
     margin: 7px 0;
   }
   .code-error span {
-    font-size: 10px;
+    font-size: 12px;
     color: #ceaeba;
   }
   .code-error button {
@@ -1798,7 +1749,7 @@
     background: #412b3d;
     color: #f1d3df;
     border-radius: 3px;
-    font-size: 10px;
+    font-size: 12px;
     padding: 10px;
   }
   .mission-instruments {
@@ -1807,10 +1758,9 @@
     gap: 14px;
     align-items: start;
   }
-  .goal-panel,
+  .analyzer-panel,
   .test-panel,
   .hint-panel,
-  .restore-panel,
   .field-guide {
     min-width: 0;
     padding: 22px;
@@ -1818,24 +1768,11 @@
     border: 1px solid #303446;
     border-radius: 5px;
   }
-  .goal-panel {
+  .analyzer-panel {
     grid-column: 1;
-    grid-row: 1 / span 2;
+    grid-row: 1;
   }
-  .goal-panel h2 {
-    font-size: 17px;
-    font-weight: 500;
-    line-height: 1.5;
-    margin: 0;
-    color: #ddddeb;
-  }
-  .reward-copy {
-    font: 9px/1.7 monospace;
-    color: #aaa5c7;
-    display: flex;
-    gap: 8px;
-    margin: 14px 0 0;
-  }
+
   .test-panel {
     scroll-margin-top: 170px;
     grid-column: 2;
@@ -1851,11 +1788,11 @@
   }
   .test-panel .eyebrow {
     margin: 0;
-    font-size: 8px;
+    font-size: 12px;
     color: #b3a8d5;
   }
   .case-count {
-    font: 9px monospace;
+    font: 12px monospace;
     color: #b8afcf;
     white-space: nowrap;
   }
@@ -1866,7 +1803,7 @@
     margin: 14px 0 10px;
   }
   .test-panel > p {
-    font-size: 11px;
+    font-size: 12px;
     line-height: 1.8;
     color: #a8a4bb;
     margin: 0 0 16px;
@@ -1879,7 +1816,7 @@
     background: #6852c9;
     color: #fff;
     border-radius: 4px;
-    font-size: 11px !important;
+    font-size: 12px !important;
     padding: 9px 13px;
     min-height: 38px;
   }
@@ -1897,7 +1834,7 @@
     font: 24px monospace;
   }
   .waiting-signal p {
-    font: 9px/1.6 monospace;
+    font: 12px/1.6 monospace;
     margin: 0;
   }
   .test-error {
@@ -1913,7 +1850,7 @@
   }
   .test-error p {
     color: #d7b5c3;
-    font-size: 11px;
+    font-size: 12px;
     line-height: 1.7;
     margin: 5px 0 0;
   }
@@ -1929,7 +1866,7 @@
     color: #e0d7f0;
   }
   .test-summary span {
-    font-size: 10px;
+    font-size: 12px;
     color: #bcb3cb;
   }
   .test-summary.all-pass {
@@ -1942,10 +1879,10 @@
   .truth-table {
     width: 100%;
     border-collapse: collapse;
-    font: 11px monospace;
+    font: 12px monospace;
   }
   .truth-table th {
-    font-size: 9px;
+    font-size: 12px;
     font-weight: 400;
     color: #aaa3ba;
     border-bottom: 1px solid #4b415b;
@@ -1961,7 +1898,7 @@
   .truth-table caption {
     text-align: left;
     caption-side: bottom;
-    font-size: 9px;
+    font-size: 12px;
     line-height: 1.6;
     color: #aea4c0;
     padding-top: 10px;
@@ -1979,7 +1916,7 @@
     background: #342331;
   }
   .test-clue {
-    font-size: 10px !important;
+    font-size: 12px !important;
     margin: 13px 0 0 !important;
   }
   .prediction-buttons {
@@ -1998,13 +1935,13 @@
     background: #292137;
     color: #d6cce8;
     border-radius: 4px;
-    font-size: 11px;
+    font-size: 12px;
   }
   .prediction-buttons strong {
     font: 20px monospace;
   }
   .prediction-feedback {
-    font-size: 10px !important;
+    font-size: 12px !important;
     min-height: 34px;
     margin: 12px 0 !important;
   }
@@ -2021,7 +1958,7 @@
     border: 1px solid #4c405d;
     border-radius: 3px;
     padding: 9px 6px;
-    font: 10px monospace;
+    font: 12px monospace;
   }
   .discovery-cases .case-discovered {
     border-color: #9b88d6;
@@ -2040,7 +1977,7 @@
     background: none;
     border: 0;
     color: #c5b4df;
-    font-size: 10px !important;
+    font-size: 12px !important;
     padding: 9px 0 0;
   }
   .hint-panel {
@@ -2052,10 +1989,7 @@
     font-weight: 500;
     margin: 0 0 6px;
   }
-  .hint-panel > div > span {
-    font-size: 10px;
-    color: #a1a5b6;
-  }
+
   .hint-panel button {
     display: flex;
     justify-content: space-between;
@@ -2065,7 +1999,7 @@
     background: none;
     color: #beb2ee;
     padding: 16px 0 0;
-    font-size: 11px;
+    font-size: 12px;
     min-height: 40px;
   }
   .hint-panel ol {
@@ -2073,49 +2007,10 @@
     padding-left: 15px;
   }
   .hint-panel li {
-    font-size: 11px;
+    font-size: 12px;
     color: #bfc0ce;
     line-height: 1.8;
     margin-bottom: 10px;
-  }
-  .restore-panel {
-    grid-column: 2;
-    grid-row: 2;
-    border-color: #6a5f9b;
-    background: #24203a;
-  }
-  .restore-check {
-    display: inline-block;
-    color: #c9beff;
-    font: 17px monospace;
-    margin-bottom: 9px;
-  }
-  .restore-panel h2 {
-    font-size: 19px;
-    font-weight: 500;
-    letter-spacing: -0.4px;
-    margin: 0 0 9px;
-  }
-  .restore-panel p {
-    color: #bdb4d8;
-    font-size: 11px;
-    line-height: 1.8;
-    margin: 0 0 15px;
-  }
-  .restore-button {
-    background: #aa9bea;
-    color: #171126;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    padding: 13px;
-    min-height: 44px;
-    font-size: 12px !important;
-    font-weight: 600 !important;
-    border: 1px solid #ccbef7;
-    border-radius: 4px;
   }
   .field-guide {
     grid-column: 3;
@@ -2124,7 +2019,7 @@
   }
   .field-guide .eyebrow {
     margin: 0;
-    font-size: 8px;
+    font-size: 12px;
   }
   .field-guide button {
     border: 0;
@@ -2139,16 +2034,37 @@
     margin: 13px 0;
   }
   .field-guide p {
-    font-size: 11px;
+    font-size: 12px;
     color: #b9b3c8;
     line-height: 1.85;
   }
   .field-guide a {
     display: block;
-    font-size: 10px;
+    font-size: 12px;
     line-height: 1.7;
     color: #c9bdf1;
     padding-top: 12px;
+  }
+  .eyebrow,
+  .chip-stamp span,
+  .switch-label,
+  .board-heading,
+  .board-state,
+  .parts-heading .eyebrow,
+  .part-pin-count,
+  .part-index,
+  .output-title,
+  .code-status,
+  .test-panel .eyebrow,
+  .case-count,
+  .field-guide .eyebrow {
+    font-size: 10px;
+  }
+  .board-footer {
+    font-size: 11px;
+  }
+  .toolbar-status {
+    font-size: 12px;
   }
   .sr-only {
     position: absolute;
@@ -2175,18 +2091,16 @@
     }
     .hint-panel {
       grid-column: 1;
-      grid-row: 3;
+      grid-row: 2;
     }
     .field-guide {
       grid-column: 2;
-      grid-row: 3;
+      grid-row: 2;
     }
     .part-pin-count {
       display: none;
     }
-    .board-number {
-      display: none;
-    }
+
     .workspace.split-view {
       grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
     }
@@ -2195,9 +2109,7 @@
     .workspace.split-view {
       grid-template-columns: minmax(0, 1fr);
     }
-    .bench-identity {
-      display: none;
-    }
+
     .chip-stamp {
       min-width: 100px;
     }
@@ -2252,7 +2164,7 @@
     .toolbar-status {
       flex: 1;
       min-width: 0;
-      font-size: 8px;
+      font-size: 12px;
     }
     .toolbar-save {
       margin-left: auto;
@@ -2270,10 +2182,9 @@
     .mission-instruments {
       grid-template-columns: minmax(0, 1fr);
     }
-    .goal-panel,
+    .analyzer-panel,
     .test-panel,
     .hint-panel,
-    .restore-panel,
     .field-guide {
       grid-row: auto;
       grid-column: auto;
@@ -2282,7 +2193,7 @@
     .board-footer {
       flex-wrap: wrap;
       gap: 10px;
-      font-size: 8px;
+      font-size: 12px;
     }
     .board-footer > span:nth-child(2) {
       display: none;

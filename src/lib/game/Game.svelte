@@ -1,25 +1,22 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
-  import ComputerStack from './ComputerStack.svelte';
-  import { computerLayers } from './layers';
+  import Landing from './Landing.svelte';
+  import IntroVideo from './IntroVideo.svelte';
   import MissionWorkbench from './MissionWorkbench.svelte';
   import FieldGuide from './FieldGuide.svelte';
   import { missions, getMission, type MissionId } from './missions';
 
   let view: 'world' | 'workbench' | 'guide' | 'collection' = 'world';
   let selected: MissionId = 'nand';
-  let selectedLayer = 'logic';
-  $: activeLayer = computerLayers.find((layer) => layer.id === selectedLayer) ?? computerLayers[0];
+  let introOpen = false;
+  let content: HTMLElement;
   let completed: string[] = [];
   let sound = false;
   let notice = '';
   let restored: MissionId | null = null;
   let ready = false;
   let audioContext: AudioContext | undefined;
-  let startButton: HTMLButtonElement;
   let mainHeading: HTMLHeadingElement;
-  $: activeMission = getMission(selected);
-  $: nextMission = missions.find((mission) => !completed.includes(mission.id));
   $: restoredMission = restored ? getMission(restored) : null;
 
   onMount(() => {
@@ -77,24 +74,32 @@
     const found = missions.find((mission) => mission.id === id);
     if (!found) return;
     selected = found.id;
-    selectedLayer = 'logic';
     restored = null;
     playTone();
   }
 
   async function setView(next: typeof view) {
+    introOpen = false;
     view = next;
     restored = null;
     await tick();
-    mainHeading?.focus();
+    content?.querySelector<HTMLHeadingElement>('h1')?.focus();
     window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  function startMission(id: string) {
+    selectMission(id);
+    void setView('workbench');
   }
 
   async function returnToWorld() {
     view = 'world';
     await tick();
-    startButton?.focus();
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    const section = document.getElementById('layer-logic');
+    section?.scrollIntoView({ block: 'start', behavior: 'instant' });
+    section
+      ?.querySelector<HTMLButtonElement>(`[data-mission="${selected}"]`)
+      ?.focus({ preventScroll: true });
   }
 
   async function completeMission(id: string) {
@@ -107,12 +112,14 @@
       notice = 'Your circuit worked. Progress could not be saved in this browser.';
     }
     restored = mission.id;
-    selectedLayer = 'logic';
     view = 'world';
     playTone(true);
     await tick();
-    startButton?.focus();
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    const section = document.getElementById('layer-logic');
+    section?.scrollIntoView({ block: 'start', behavior: 'instant' });
+    section
+      ?.querySelector<HTMLButtonElement>(`[data-mission="${selected}"]`)
+      ?.focus({ preventScroll: true });
   }
 
   function toggleSound() {
@@ -161,135 +168,18 @@
     >
   </header>
 
-  <main id="game-content">
+  <main id="game-content" bind:this={content}>
     {#if view === 'world'}
-      <section class="computer-section" aria-label="Computer layers">
-        <div class="system-bar">
-          <span><i></i> FROM SIGNAL TO SOFTWARE</span><span
-            >INTERACTIVE COMPUTER ENGINEERING <b>/</b> 01</span
-          >
-        </div>
-        <div class="computer-layout">
-          <div class="mission-brief">
-            {#if restoredMission}
-              <span class="eyebrow">VERIFICATION COMPLETE</span>
-              <h1 bind:this={mainHeading} tabindex="-1">
-                One more piece.<br /><em>A step closer.</em>
-              </h1>
-              <p class="intro-copy">{restoredMission.reward}</p>
-              <p class="verification-note" role="status">
-                ✓ {restoredMission.chip} verified. Added to your chips.
-              </p>
-            {:else}
-              <span class="eyebrow">BUILD YOUR UNDERSTANDING</span>
-              <h1 bind:this={mainHeading} tabindex="-1">
-                Understand<br />the machine.<br /><em>From the inside out.</em>
-              </h1>
-              <p class="intro-copy">
-                Start with a signal. Build the logic. Work your way up to the software. Every layer
-                is built on the one below.
-              </p>
-            {/if}
-            {#if selectedLayer === 'logic'}
-              <div class="selected-mission">
-                <div class="mission-meta">
-                  <span>LAYER 00 / LOGIC</span><span class:done={completed.includes(selected)}
-                    >{completed.includes(selected)
-                      ? '✓ VERIFIED'
-                      : `CHALLENGE ${String(activeMission.number).padStart(2, '0')} / 07`}</span
-                  >
-                </div>
-                <div class="mission-title">
-                  <span class="chip-symbol" aria-hidden="true">{activeMission.chip}</span>
-                  <h2>{activeMission.title}</h2>
-                </div>
-                <p>{activeMission.brief}</p>
-                {#if restored && nextMission}
-                  <button
-                    bind:this={startButton}
-                    class="primary-action"
-                    onclick={() => {
-                      selected = nextMission!.id;
-                      void setView('workbench');
-                    }}>Build the next chip <span aria-hidden="true">↗</span></button
-                  >
-                {:else}
-                  <button
-                    bind:this={startButton}
-                    class="primary-action"
-                    onclick={() => setView('workbench')}
-                    >{completed.includes(selected)
-                      ? 'Reopen workbench'
-                      : selected === 'nand'
-                        ? 'Enter the signal layer'
-                        : 'Build this chip'} <span aria-hidden="true">↗</span></button
-                  >
-                {/if}
-                <div class="editor-note">
-                  <span>VISUAL</span><i>↔</i><span>HDL CODE</span><span class="editor-note-detail"
-                    >One circuit. Two ways in.</span
-                  >
-                </div>
-              </div>
-            {:else}
-              <div class="selected-mission layer-preview">
-                <div class="mission-meta">
-                  <span>LAYER {activeLayer.number} / {activeLayer.title.toUpperCase()}</span><span
-                    >PLANNED</span
-                  >
-                </div>
-                <h2>{activeLayer.subtitle}</h2>
-                <p>{activeLayer.description}</p>
-                <p class="planned-note">
-                  This layer is the next part of the build. The seven logic challenges are ready
-                  now.
-                </p>
-                <button
-                  bind:this={startButton}
-                  class="primary-action"
-                  onclick={() => {
-                    selectedLayer = 'logic';
-                  }}>Back to the signal layer <span aria-hidden="true">↓</span></button
-                >
-              </div>
-            {/if}
-          </div>
-          <div class="stack-zone">
-            <ComputerStack
-              {completed}
-              {selected}
-              {selectedLayer}
-              onselect={selectMission}
-              onlayerselect={(id) => {
-                selectedLayer = id;
-                restored = null;
-              }}
-            />
-          </div>
-        </div>
-        <div class="layer-status">
-          <div>
-            <span class="status-light"></span><strong
-              >{completed.length} / {missions.length} CHIPS VERIFIED</strong
-            ><span class="status-description">Layer 00 · Boolean logic</span>
-          </div>
-          <button class="quiet-link" onclick={() => setView('guide')}
-            >Open the reference <span aria-hidden="true">↗</span></button
-          >
-        </div>
-        <div class="principles">
-          <p>
-            <span>01</span><strong>Build, don't just read.</strong> Trace a live signal through every
-            connection.
-          </p>
-          <p>
-            <span>02</span><strong>Wire it. Or write it.</strong> Visual and HDL views of the same circuit.
-          </p>
-          <p>
-            <span>03</span><strong>Prove that it works.</strong> Test every input. Inspect every output.
-          </p>
-        </div>
-      </section>
+      <Landing
+        {completed}
+        {selected}
+        {introOpen}
+        verified={restoredMission?.chip ?? null}
+        onselect={selectMission}
+        onstart={startMission}
+        onreference={() => setView('guide')}
+        onwatch={() => (introOpen = true)}
+      />
     {:else if view === 'workbench'}
       {#key selected}<MissionWorkbench
           missionId={selected}
@@ -303,13 +193,8 @@
       <section class="collection-view">
         <div class="collection-intro">
           <span class="eyebrow">YOUR COMPONENT LIBRARY</span>
-          <h1 bind:this={mainHeading} tabindex="-1">
-            Small primitives.<br /><em>Complex systems.</em>
-          </h1>
-          <p>
-            Every verified chip is another abstraction you understand. Reopen a design, trace its
-            signals, or rebuild it in code.
-          </p>
+          <h1 bind:this={mainHeading} tabindex="-1">Your chips.</h1>
+          <p>Reopen a verified circuit or build the next chip.</p>
         </div>
         <div class="collection-grid">
           {#each missions as mission}
@@ -335,21 +220,11 @@
             </article>
           {/each}
         </div>
-        <div class="future-note">
-          <span class="eyebrow">THE NEXT ABSTRACTION</span>
-          <h2>From gates to a computer.</h2>
-          <p>
-            Arithmetic, memory, architecture, and software are the layers ahead. The current
-            workbench covers single-bit combinational logic. Buses and multi-way selectors are
-            introduced in the reference.
-          </p>
-          <button class="quiet-link" onclick={returnToWorld}>Explore the computer layers ↗</button>
-        </div>
       </section>
     {/if}
   </main>
-  <footer class="game-footer">
-    <span class="footer-brand">Chips and Code <span>/</span> From the ground up.</span>
+  <footer class="game-footer" class:light-footer={view === 'world'}>
+    <span class="footer-brand">Chips and Code</span>
     <div>
       <a href="/experiment/hardware-ide">Open hardware IDE ↗</a><a
         href="/learn/hardware/boolean-logic">Original reading</a
@@ -367,6 +242,7 @@
     >
   </footer>
   {#if notice}<p class="storage-notice" role="status">{notice}</p>{/if}
+  {#if introOpen}<IntroVideo onclose={() => (introOpen = false)} />{/if}
 </div>
 
 <style>
@@ -490,7 +366,6 @@
     display: flex;
     align-items: center;
     gap: 7px;
-    font-family: ui-monospace, monospace;
     font-size: 11px;
     color: #a1a5b6;
     white-space: nowrap;
@@ -500,251 +375,20 @@
     font-size: 20px;
     color: #a49cff;
   }
-  .computer-section {
-    max-width: 1600px;
-    margin: auto;
-    padding: 26px 4% 0;
-  }
-  .system-bar {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    font-family: ui-monospace, monospace;
-    font-size: 9px;
-    letter-spacing: 1.5px;
-    color: #b1b3c3;
-  }
-  .system-bar > span:first-child {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-  }
-  .system-bar i,
-  .status-light {
-    display: inline-block;
-    width: 5px;
-    height: 5px;
-    background: #aaa4ff;
-    border-radius: 50%;
-    box-shadow: 0 0 12px #756aff77;
-  }
-  .system-bar > span:last-child {
-    color: #959aac;
-  }
-  .system-bar b {
-    margin: 0 10px;
-    font-weight: 400;
-    color: #aaa4ff;
-  }
-  .computer-layout {
-    display: grid;
-    grid-template-columns: minmax(300px, 0.86fr) minmax(0, 1.55fr);
-    align-items: center;
-    gap: 3%;
-    padding: 24px 0 20px;
-  }
-  .mission-brief {
-    min-width: 0;
-    padding: 12px 0;
-  }
   .eyebrow {
-    font-family: ui-monospace, monospace;
     display: block;
     color: #aaa4ff;
-    font-size: 9px;
-    font-weight: 500;
-    letter-spacing: 1.5px;
+    font:
+      11px ui-monospace,
+      monospace;
+    letter-spacing: 1.2px;
   }
   h1 {
-    font-size: clamp(38px, 3.5vw, 55px);
-    line-height: 1.08;
+    font-size: clamp(36px, 3.5vw, 55px);
+    line-height: 1.12;
     font-weight: 500;
-    letter-spacing: -2.5px;
+    letter-spacing: -2px;
     margin: 17px 0;
-  }
-  h1 em {
-    font-style: normal;
-    color: #aaa4ff;
-    font-size: 0.72em;
-    letter-spacing: -1.2px;
-  }
-  .intro-copy {
-    font-size: 13px;
-    color: #a1a5b6;
-    line-height: 1.8;
-    max-width: 330px;
-  }
-  .verification-note {
-    font-size: 12px;
-    color: #a49cff;
-    margin-top: 12px;
-  }
-  .selected-mission {
-    border-top: 1px solid #303446;
-    padding-top: 18px;
-    margin-top: 26px;
-    max-width: 360px;
-  }
-  .mission-meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    color: #a1a5b6;
-    font:
-      9px ui-monospace,
-      monospace;
-    letter-spacing: 0.7px;
-  }
-  .mission-meta .done {
-    color: #c0baff;
-  }
-  .mission-title {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin: 16px 0 10px;
-  }
-  .chip-symbol {
-    font:
-      12px ui-monospace,
-      monospace;
-    border: 1px solid #57516d;
-    color: #c6c1ff;
-    padding: 10px 8px;
-    min-width: 53px;
-    text-align: center;
-    background: #1a1929;
-  }
-  .selected-mission h2 {
-    font-size: 19px;
-    font-weight: 550;
-    letter-spacing: -0.5px;
-    line-height: 1.3;
-  }
-  .selected-mission > p {
-    font-size: 12px;
-    line-height: 1.75;
-    color: #a1a5b6;
-  }
-  .primary-action {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    min-height: 47px;
-    padding: 12px 17px;
-    margin-top: 17px;
-    background: #4f46e5;
-    color: white;
-    border: 1px solid #7068ff;
-    border-radius: 3px;
-    font-size: 12px;
-    font-weight: 600;
-    transition: background 0.15s;
-  }
-  .primary-action:hover {
-    background: #6258f1;
-  }
-  .primary-action > span {
-    font-size: 19px;
-  }
-  .editor-note {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font:
-      8px ui-monospace,
-      monospace;
-    color: #b4afef;
-    margin-top: 13px;
-    letter-spacing: 0.4px;
-  }
-  .editor-note i {
-    font-style: normal;
-    color: #878a9e;
-  }
-  .editor-note-detail {
-    margin-left: auto;
-    font:
-      10px Inter,
-      ui-sans-serif,
-      sans-serif;
-    letter-spacing: 0;
-    color: #9b9fb2;
-  }
-  .layer-preview h2 {
-    margin: 18px 0 12px;
-    font-size: 24px;
-  }
-  .layer-preview .planned-note {
-    font-size: 11px;
-    margin-top: 14px;
-    color: #b4afef;
-  }
-  .stack-zone {
-    min-width: 0;
-  }
-  .quiet-link {
-    color: #bbb7e8;
-    font-size: 11px;
-    min-height: 44px;
-    text-align: left;
-  }
-  .quiet-link:hover {
-    color: white;
-  }
-  .layer-status {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    border-top: 1px solid #303446;
-    border-bottom: 1px solid #242735;
-    padding: 8px 0;
-    font:
-      10px ui-monospace,
-      monospace;
-  }
-  .layer-status > div {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .layer-status strong {
-    font-weight: 400;
-    letter-spacing: 0.6px;
-  }
-  .status-description {
-    color: #a1a5b6;
-    padding-left: 16px;
-    border-left: 1px solid #303446;
-  }
-  .principles {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 28px;
-    padding: 25px 0;
-  }
-  .principles p {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 3px 12px;
-    font-size: 11px;
-    color: #a1a5b6;
-  }
-  .principles p > span {
-    grid-row: span 2;
-    font:
-      10px ui-monospace,
-      monospace;
-    color: #a49cff;
-    padding-top: 3px;
-  }
-  .principles strong {
-    color: #d4d5df;
-    font-weight: 500;
-    font-size: 12px;
   }
   .collection-view {
     max-width: 1400px;
@@ -788,9 +432,8 @@
   .collection-status {
     color: #a1a5b6;
     font:
-      8px ui-monospace,
+      10px ui-monospace,
       monospace;
-    letter-spacing: 0.6px;
   }
   .collected .collection-status {
     color: #c5bfff;
@@ -833,10 +476,10 @@
   }
   .collection-card p {
     color: #a1a5b6;
-    font-size: 12px;
+    font-size: 13px;
     line-height: 1.7;
     margin: 10px 0 18px;
-    min-height: 41px;
+    min-height: 44px;
   }
   .collection-action {
     display: flex;
@@ -844,25 +487,10 @@
     align-items: center;
     width: 100%;
     min-height: 44px;
-    font-size: 11px;
+    font-size: 13px;
     color: #c5bfff;
     border-top: 1px solid #303446;
     padding-top: 12px;
-  }
-  .future-note {
-    border-top: 1px solid #303446;
-    margin-top: 40px;
-    padding-top: 28px;
-  }
-  .future-note h2 {
-    font-size: 27px;
-    margin: 10px 0;
-  }
-  .future-note p {
-    font-size: 13px;
-    color: #a1a5b6;
-    max-width: 670px;
-    line-height: 1.8;
   }
   .game-footer {
     display: flex;
@@ -872,16 +500,12 @@
     gap: 16px;
     padding: 25px 4%;
     border-top: 1px solid #242735;
-    color: #959aac;
-    font-size: 10px;
+    color: #a1a5b6;
+    font-size: 11px;
   }
   .footer-brand {
-    font-size: 11px;
+    font-size: 12px;
     color: #b6b8c6;
-  }
-  .footer-brand span {
-    margin: 0 7px;
-    color: #aaa4ff;
   }
   .game-footer > div {
     display: flex;
@@ -893,18 +517,28 @@
   }
   .save-status {
     font:
-      9px ui-monospace,
+      10px ui-monospace,
       monospace;
+  }
+  .light-footer {
+    background: #f1f1f7;
+    color: #55576b;
+    border-color: #d7d7e1;
+    color-scheme: light;
+  }
+  .light-footer .footer-brand {
+    color: #292a3c;
+  }
+  .light-footer a:hover {
+    color: #4f46e5;
+  }
+  .light-footer :global(a:focus-visible) {
+    outline-color: #4f46e5 !important;
   }
   .storage-notice {
     padding: 12px 4%;
     color: #e0c98c;
     font-size: 12px;
-  }
-  @media (min-width: 1500px) {
-    .computer-layout {
-      grid-template-columns: minmax(330px, 1fr) minmax(0, 1.7fr);
-    }
   }
   @media (max-width: 1000px) {
     .game-header {
@@ -918,18 +552,8 @@
       padding: 10px;
       font-size: 11px;
     }
-    .sound-button {
-      font-size: 10px;
-    }
-    .computer-layout {
-      grid-template-columns: minmax(270px, 0.9fr) minmax(0, 1.2fr);
-      gap: 20px;
-    }
     .collection-grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-    .editor-note-detail {
-      display: none;
     }
   }
   @media (max-width: 760px) {
@@ -950,70 +574,8 @@
     .game-nav button {
       padding: 10px 12px;
     }
-    .system-bar > span:last-child {
-      display: none;
-    }
-    .computer-layout {
-      grid-template-columns: 1fr;
-      padding-top: 16px;
-      gap: 14px;
-    }
-    .mission-brief {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      align-content: start;
-      gap: 0 20px;
-    }
-    .mission-brief > .eyebrow {
-      grid-column: 1 / -1;
-    }
-    .mission-brief h1 {
-      font-size: 35px;
-      grid-column: 1;
-    }
-    .mission-brief > p {
-      grid-column: 1;
-    }
-    .selected-mission {
-      grid-column: 2;
-      grid-row: 2 / span 3;
-      margin-top: 18px;
-      padding-top: 12px;
-    }
-    .mission-meta {
-      flex-wrap: wrap;
-      gap: 7px;
-      font-size: 8px;
-    }
-    .selected-mission h2 {
-      font-size: 17px;
-    }
-    .mission-title {
-      gap: 9px;
-    }
-    .chip-symbol {
-      min-width: 45px;
-      font-size: 10px;
-    }
-    .status-description {
-      display: none;
-    }
     .collection-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-    .principles {
-      gap: 20px;
-    }
-    .principles p {
-      display: block;
-      line-height: 1.7;
-    }
-    .principles strong {
-      display: block;
-      margin: 5px 0;
-    }
-    .principles p > span {
-      display: block;
     }
   }
   @media (max-width: 480px) {
@@ -1022,57 +584,10 @@
     }
     .game-nav button {
       padding: 9px 7px;
-      font-size: 10px;
+      font-size: 11px;
     }
     .wordmark {
       font-size: 17px;
-    }
-    .computer-section {
-      padding-inline: 5%;
-    }
-    .mission-brief {
-      display: block;
-    }
-    .mission-brief h1 {
-      font-size: 42px;
-    }
-    .intro-copy {
-      max-width: 100%;
-    }
-    .selected-mission {
-      max-width: none;
-      margin-top: 22px;
-    }
-    .editor-note-detail {
-      display: inline;
-    }
-    .mission-meta {
-      font-size: 9px;
-    }
-    .layer-status {
-      align-items: flex-start;
-      gap: 8px;
-    }
-    .layer-status > div {
-      gap: 7px;
-      padding-top: 16px;
-      font-size: 8px;
-    }
-    .quiet-link {
-      font-size: 10px;
-    }
-    .principles {
-      grid-template-columns: 1fr;
-      gap: 17px;
-      padding: 22px 0;
-    }
-    .principles p {
-      display: grid;
-      grid-template-columns: 22px 1fr;
-      gap: 1px 10px;
-    }
-    .principles strong {
-      margin: 0;
     }
     .collection-grid {
       grid-template-columns: 1fr;

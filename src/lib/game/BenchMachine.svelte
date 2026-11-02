@@ -100,9 +100,7 @@
 
 <style>
   .bench-machine {
-    margin-top: 24px;
-    padding-top: 14px;
-    border-top: 1px solid #303446;
+    min-width: 0;
   }
   .analyzer-header,
   .analyzer-foot {
@@ -110,7 +108,7 @@
     justify-content: space-between;
     gap: 10px;
     color: #a7abc0;
-    font: 8px/1.5 monospace;
+    font: 11px/1.5 monospace;
     letter-spacing: 0.8px;
   }
   .analyzer-header span:last-child {
@@ -127,7 +125,7 @@
   }
   .channel-name {
     fill: #a7b1ce;
-    font: 10px monospace;
+    font: 12px monospace;
   }
   .output-channel {
     fill: #c1afff;
@@ -138,6 +136,6 @@
   }
   .analyzer-foot {
     color: #9ba0b5;
-    font-size: 7px;
+    font-size: 10px;
   }
 </style>
