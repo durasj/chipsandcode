@@ -304,6 +304,7 @@
     position: relative;
     width: 100%;
     aspect-ratio: 1.12;
+    max-height: 500px;
     isolation: isolate;
   }
   .stack-art {

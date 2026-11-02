@@ -158,6 +158,12 @@ describe('Chips and Code workbench', () => {
   it('Solves a chip in code and keeps the editable visual and HDL views synchronized', () => {
     openNotWorkbench();
     cy.findByRole('button', { name: 'Split' }).should('have.attr', 'aria-pressed', 'true');
+    cy.findByRole('button', { name: /Test circuit/ }).then(($button) => {
+      expect(
+        $button[0].getBoundingClientRect().bottom,
+        'testing is reachable beside the editor',
+      ).to.be.at.most(720);
+    });
     chooseView('Code');
     cy.findByRole('region', { name: 'Circuit parts and connections' }).should('not.exist');
     writeHDL(inverterHDL);

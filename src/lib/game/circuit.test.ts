@@ -299,9 +299,77 @@ describe('editable HDL and visual circuit interoperability', () => {
     const mission = getMission('mux');
     const circuit: Circuit = { gates: [], outputs: { out: 'a' } };
     const imported = fromHDL(mission, toHDLDraft(mission, circuit));
+    expect(imported).toEqual(circuit);
     for (const { inputs } of truthTable(mission)) {
       expect(simulateCircuit(mission, imported, inputs).outputs.out).toBe(inputs.a);
     }
+  });
+
+  it.each(['not', 'dmux'] as const)(
+    'round-trips 32 authored parts plus all direct output wires for %s, including a code comment edit',
+    (id) => {
+      const mission = getMission(id);
+      const gates = Array.from({ length: 32 }, (_, index) => {
+        const input = index === 0 ? 'in' : `g${index}`;
+        return nand(`g${index + 1}`, input, input);
+      });
+      const circuit: Circuit = {
+        gates,
+        outputs: Object.fromEntries(mission.outputs.map((pin) => [pin, 'in'])),
+      };
+      const source = toHDLDraft(mission, circuit);
+      expect(source.match(/    Nand\(/g)).toHaveLength(32 + mission.outputs.length * 2);
+      for (const hdl of [source, `${source}\n// A comment must not break the saved circuit.`]) {
+        const imported = fromHDL(mission, hdl);
+        expect(imported).toEqual(circuit);
+        for (const { inputs } of truthTable(mission)) {
+          expect(simulateCircuit(mission, imported, inputs).outputs).toEqual(
+            Object.fromEntries(mission.outputs.map((pin) => [pin, inputs.in])),
+          );
+        }
+      }
+    },
+  );
+
+  it.each([
+    ['Nand(a=a, b=a, out=authoredWire); Nand(a=authoredWire, b=authoredWire, out=out);', 2],
+    ['Nand(a=a, b=b, out=gamebufferout); Nand(a=gamebufferout, b=gamebufferout, out=out);', 2],
+    [
+      'Nand(a=a, b=a, out=gamebufferout, out=alias); Nand(a=gamebufferout, b=gamebufferout, out=out);',
+      2,
+    ],
+    [
+      'Nand(a=a, b=a, out=gamebufferout); Nand(a=gamebufferout, b=gamebufferout, out=out, out=alias);',
+      2,
+    ],
+    [
+      'Nand(a=a, b=a, out=gamebufferout); Nand(a=gamebufferout, b=gamebufferout, out=out); Not(in=gamebufferout, out=extra);',
+      3,
+    ],
+    [
+      'Nand(a=a, b=a, out=gamebufferout); Nand(a=gamebufferout, b=gamebufferout, out=out); Not(in=out, out=extra);',
+      3,
+    ],
+  ])(
+    'preserves authored buffer-like parts when the generated adapter contract does not match: %s',
+    (parts, count) => {
+      const imported = fromHDL(getMission('and'), source(parts));
+      expect(imported.gates).toHaveLength(count);
+      expect(imported.outputs.out).toBe('g2');
+    },
+  );
+
+  it('does not hide conflicting drivers while normalizing generated wire adapters', () => {
+    expect(() =>
+      fromHDL(
+        getMission('and'),
+        source(`
+      Nand(a=a, b=a, out=gamebufferout);
+      Nand(a=gamebufferout, b=gamebufferout, out=out);
+      Not(in=b, out=gamebufferout);
+    `),
+      ),
+    ).toThrow('more than one driver');
   });
 
   it.each([

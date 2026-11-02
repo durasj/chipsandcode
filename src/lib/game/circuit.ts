@@ -222,7 +222,10 @@ export function fromHDL(mission: Mission, source: string): Circuit {
   const statements = chip.body.flatMap((section) =>
     section.type === 'parts' ? section.statements : [],
   );
-  if (statements.length > 32) throw new Error('This workspace supports up to 32 parts per chip.');
+  // A visual wire to an external output is exported as two NANDs. Keep a hard
+  // parser bound while allowing those adapters in addition to 32 authored parts.
+  if (statements.length > 32 + mission.outputs.length * 2)
+    throw new Error('This workspace supports up to 32 parts per chip.');
   const drivers = new Map<string, number>();
   const parts = statements.map((statement, index) => {
     const type = statement.chip.value as GateKind;
@@ -264,8 +267,51 @@ export function fromHDL(mission: Mission, source: string): Circuit {
         );
     }
   }
+
+  // Recover only the exact adapters emitted by serializeHDL. Validate all source
+  // statements first, and require exclusive ownership of both intermediate and
+  // output wires so no authored fan-out or aliases can disappear in conversion.
+  const adapters = new Set<number>();
+  const directOutputs = new Map<string, string>();
+  for (const output of mission.outputs) {
+    const buffer = `gamebuffer${output}`;
+    const first = drivers.get(buffer);
+    const last = drivers.get(output);
+    if (first === undefined || last === undefined || first === last) continue;
+    const before = parts[first];
+    const after = parts[last];
+    const exactNand = (index: number, a: string, b: string, out: string) =>
+      statements[index].chip.value === 'Nand' &&
+      statements[index].connections.length === 3 &&
+      statements[index].connections.every(
+        ({ left, right }) =>
+          (left.value === 'a' && right.value === a) ||
+          (left.value === 'b' && right.value === b) ||
+          (left.value === 'out' && right.value === out),
+      );
+    if (
+      !mission.inputs.includes(before.inputs.a) ||
+      before.inputs.a !== before.inputs.b ||
+      after.inputs.a !== buffer ||
+      after.inputs.b !== buffer ||
+      !exactNand(first, before.inputs.a, before.inputs.a, buffer) ||
+      !exactNand(last, buffer, buffer, output) ||
+      parts.some((part, index) =>
+        Object.values(part.inputs).some(
+          (wire) => wire === output || (wire === buffer && index !== last),
+        ),
+      )
+    )
+      continue;
+    adapters.add(first);
+    adapters.add(last);
+    directOutputs.set(output, before.inputs.a);
+  }
+  if (parts.length - adapters.size > 32)
+    throw new Error('This workspace supports up to 32 parts per chip.');
+
   const order: number[] = [];
-  const pending = new Set(parts.map((_, index) => index));
+  const pending = new Set(parts.map((_, index) => index).filter((index) => !adapters.has(index)));
   while (pending.size) {
     const ready = [...pending].find((index) =>
       Object.values(parts[index].inputs).every(
@@ -289,7 +335,10 @@ export function fromHDL(mission: Mission, source: string): Circuit {
       ),
     })),
     outputs: Object.fromEntries(
-      mission.outputs.map((pin) => [pin, drivers.has(pin) ? resolve(pin) : '']),
+      mission.outputs.map((pin) => [
+        pin,
+        directOutputs.get(pin) ?? (drivers.has(pin) ? resolve(pin) : ''),
+      ]),
     ),
   };
   validate(mission, circuit, true);

@@ -369,7 +369,7 @@
   <header class="bench-header">
     <button class="world-back" on:click={onclose}><span aria-hidden="true">←</span> Layers</button>
     <div class="bench-identity">
-      <span class="identity-light"></span> CHIPS <span class="identity-and">&</span> CODE
+      <span class="identity-light"></span> CHIPS <span class="identity-and">AND</span> CODE
       <span class="slash">/</span> LAYER 00 / LOGIC
     </div>
     <button
@@ -427,13 +427,41 @@
         on:click={() => setMode('code')}><span aria-hidden="true">&lt;/&gt;</span> Code</button
       >
     </div>
-    <span class="sync-state" class:sync-error={!!codeError}
-      >{codeError
-        ? 'HDL needs attention'
-        : missionId === 'nand'
-          ? 'Supplied primitive · read-only HDL'
-          : 'Visual ↔ HDL · one circuit'}</span
-    >
+    <div class="toolbar-actions">
+      {#if missionId !== 'nand'}
+        <button class="test-button" disabled={!!codeError} on:click={runTests}
+          ><span aria-hidden="true">▷</span> Test circuit</button
+        >
+      {/if}
+      <span
+        class="toolbar-status"
+        class:status-error={!!codeError || !!reportError || (report !== null && !report.success)}
+        aria-live="polite"
+      >
+        {#if missionId === 'nand'}
+          {predictions.length} / {scenarios.length} cases discovered
+        {:else if codeError}
+          HDL needs attention
+        {:else if reportError}
+          Circuit cannot run
+        {:else if report}
+          {report.passed} / {report.total} pass
+        {:else}
+          Visual ↔ HDL · one circuit
+        {/if}
+      </span>
+      {#if restoreReady}
+        <button class="toolbar-save" on:click={() => oncomplete(missionId)}
+          >Save chip <span aria-hidden="true">↗</span></button
+        >
+      {:else if missionId === 'nand'}
+        <a class="results-link" href="#nand-discovery">Discover <span aria-hidden="true">↓</span></a
+        >
+      {:else if report || reportError}
+        <a class="results-link" href="#circuit-results">Details <span aria-hidden="true">↓</span></a
+        >
+      {/if}
+    </div>
   </div>
   {#if codeError}
     <div class="code-error" role="alert">
@@ -852,7 +880,7 @@
       </div>
 
       {#if missionId === 'nand'}
-        <section class="test-panel" aria-label="Discover NAND">
+        <section id="nand-discovery" class="test-panel" aria-label="Discover NAND">
           <div class="instrument-heading">
             <span class="eyebrow">SIGNAL DISCOVERY</span><span class="case-count"
               >{predictions.length} / {scenarios.length}</span
@@ -892,7 +920,7 @@
             >{/if}
         </section>
       {:else}
-        <section class="test-panel" aria-label="Circuit test instrument">
+        <section id="circuit-results" class="test-panel" aria-label="Circuit test instrument">
           <div class="instrument-heading">
             <span class="eyebrow">PROVE YOUR CIRCUIT</span><span class="case-count"
               >{scenarios.length} CASES</span
@@ -902,10 +930,6 @@
           <p>
             Run the full truth table against the specification. Every input combination must pass.
           </p>
-          <button class="test-button" disabled={!!codeError} on:click={runTests}
-            ><span aria-hidden="true">▷</span> Test circuit
-            <span>{scenarios.length} input combinations</span></button
-          >
           {#if reportError}<div class="test-error" role="alert">
               <strong>Circuit cannot run.</strong>
               <p>{reportError}</p>
@@ -960,9 +984,7 @@
 
       {#if restoreReady}<section class="restore-panel" aria-live="polite">
           <span class="restore-check" aria-hidden="true">✓</span>
-          <h2>
-            {completed.includes(missionId) ? 'Verification passed.' : 'Verification passed.'}
-          </h2>
+          <h2>Verification passed.</h2>
           <p>
             {missionId === 'nand'
               ? 'All four NAND cases verified. This primitive can implement every other Boolean gate.'
@@ -1225,9 +1247,49 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    flex-wrap: wrap;
+    gap: 10px 16px;
     padding: 10px 0;
     border-top: 1px solid #252938;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: #090b12;
+    box-shadow: 0 8px 14px #090b1277;
+  }
+  .toolbar-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 9px 14px;
+    margin-left: auto;
+    min-width: 0;
+  }
+  .toolbar-status {
+    font: 9px/1.5 monospace;
+    color: #beb5db;
+  }
+  .toolbar-status.status-error {
+    color: #f4abac;
+  }
+  .toolbar-save {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 38px;
+    padding: 9px 12px;
+    border: 1px solid #b5a6ed;
+    border-radius: 4px;
+    background: #a99be1;
+    color: #171126;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+  }
+  .results-link {
+    padding: 10px 0;
+    font-size: 10px;
+    color: #c3b6ec;
+    white-space: nowrap;
   }
   .mode-switch {
     display: flex;
@@ -1257,13 +1319,6 @@
   .mode-switch button span {
     font: 13px monospace;
     color: #aaa0e7;
-  }
-  .sync-state {
-    font: 9px/1.5 monospace;
-    color: #a5a9ba;
-  }
-  .sync-error {
-    color: #f4abac;
   }
   .workspace {
     min-width: 0;
@@ -1782,6 +1837,7 @@
     margin: 14px 0 0;
   }
   .test-panel {
+    scroll-margin-top: 170px;
     grid-column: 2;
     grid-row: 1;
     border-color: #49405f;
@@ -1818,23 +1874,17 @@
   .test-button {
     display: flex;
     align-items: center;
-    gap: 10px;
-    width: 100%;
+    gap: 9px;
     border: 1px solid #8875e9;
     background: #6852c9;
     color: #fff;
     border-radius: 4px;
-    font-size: 13px !important;
-    padding: 13px;
-    min-height: 46px;
+    font-size: 11px !important;
+    padding: 9px 13px;
+    min-height: 38px;
   }
-  .test-button > span:first-child {
-    font-size: 20px;
-  }
-  .test-button > span:last-child {
-    margin-left: auto;
-    font: 8px monospace;
-    color: #f2edff;
+  .test-button > span {
+    font-size: 18px;
   }
   .waiting-signal {
     display: flex;
@@ -2161,10 +2211,6 @@
     .hdl-panel {
       margin-top: 4px;
     }
-    .sync-state {
-      max-width: 165px;
-      text-align: right;
-    }
     .code-error {
       align-items: start;
       flex-direction: column;
@@ -2194,14 +2240,24 @@
       gap: 8px;
     }
     .editor-toolbar {
-      align-items: start;
+      align-items: stretch;
       flex-direction: column;
       gap: 9px;
     }
-    .sync-state {
-      max-width: none;
-      text-align: left;
+    .toolbar-actions {
+      width: 100%;
+      margin-left: 0;
+      gap: 9px 10px;
     }
+    .toolbar-status {
+      flex: 1;
+      min-width: 0;
+      font-size: 8px;
+    }
+    .toolbar-save {
+      margin-left: auto;
+    }
+
     .mode-switch {
       width: 100%;
     }
@@ -2247,12 +2303,6 @@
     }
     .output-connections label {
       margin-top: 10px;
-    }
-    .test-button {
-      flex-wrap: wrap;
-    }
-    .test-button > span:last-child {
-      margin: 0;
     }
     .test-button,
     .truth-table button {
