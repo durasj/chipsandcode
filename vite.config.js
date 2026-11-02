@@ -24,7 +24,7 @@ const config = defineConfig(() => {
       contentPlugin(),
       withPwa(
         {
-          adapter: adapter({ runtime: 'nodejs24.x' }),
+          adapter: adapter({ runtime: 'nodejs26.x' }),
           preprocess: vitePreprocess({ script: true }),
           prerender: {
             entries: ['*', '/learn/hardware/boolean-logic'],
