@@ -120,9 +120,8 @@ describe('Experiment - Hardware IDE', () => {
     cy.get('.monaco-editor textarea:first')
       .click({ force: true })
       .focused()
-      .type(
-        '{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}',
-      )
+      // Anchor to the document end rather than the cursor position left by a mouse click.
+      .type('{moveToEnd}{upArrow}{upArrow}')
       .type('{end}{leftArrow}{leftArrow}{backspace}{backspace}{backspace}nota');
     cy.contains('[role="alert"]', 'contains a loop');
     cy.contains('[role="tab"]', 'Tests').contains('2 / 4');
