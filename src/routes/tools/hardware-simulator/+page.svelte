@@ -8,14 +8,14 @@
     content="Describe a chip, test every input, and inspect its signals in the Chips and Code hardware simulator."
   /></svelte:head
 >
-<section class="hardware-tool-page">
+<main class="hardware-tool-page">
   <header class="tool-introduction">
     <a href="/tools">← Tools</a>
     <h1>Hardware simulator</h1>
     <p>Describe the circuit. Test its behavior. Follow every signal.</p>
   </header>
   <HardwareIDE />
-</section>
+</main>
 
 <style>
   .hardware-tool-page {

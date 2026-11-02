@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import '#lib/tools/lab.css';
   import {
     booleanFunctions,
@@ -12,6 +13,10 @@
     toggleFunctionRow,
   } from '#lib/tools/logic.js';
 
+  let ready = false;
+  onMount(() => {
+    ready = true;
+  });
   let mask = 6;
   let a = false;
   let b = false;
@@ -50,7 +55,7 @@
   />
 </svelte:head>
 
-<main class="logic-lab" aria-labelledby="functions-title">
+<main class="logic-lab" data-ready={ready} aria-labelledby="functions-title">
   <a href="/tools" class="back-link"><span aria-hidden="true">←</span> Tools</a>
   <header class="tool-heading">
     <p class="eyebrow">Logic lab / 01</p>
@@ -88,7 +93,7 @@
               <td
                 ><button
                   class="signal-button table-output"
-                  aria-label={`Output for a ${Number(x)} b ${Number(y)}`}
+                  aria-label={`Output for a ${Number(x)} b ${Number(y)}: ${Number(evaluateFunction(mask, x, y))}`}
                   aria-pressed={evaluateFunction(mask, x, y)}
                   on:click={() => choose(toggleFunctionRow(mask, index))}
                   >{Number(evaluateFunction(mask, x, y))}</button
@@ -108,15 +113,15 @@
           <div class="input-pair">
             <button
               class="signal-button"
-              aria-label="Input a"
+              aria-label={`Input a ${Number(a)}`}
               aria-pressed={a}
-              on:click={() => (a = !a)}><span>a</span><strong>{Number(a)}</strong></button
+              on:click={() => (a = !a)}><span>a</span>{' '}<strong>{Number(a)}</strong></button
             >
             <button
               class="signal-button"
-              aria-label="Input b"
+              aria-label={`Input b ${Number(b)}`}
               aria-pressed={b}
-              on:click={() => (b = !b)}><span>b</span><strong>{Number(b)}</strong></button
+              on:click={() => (b = !b)}><span>b</span>{' '}<strong>{Number(b)}</strong></button
             >
           </div>
           <svg viewBox="0 0 100 110" class="connecting-lines" aria-hidden="true"
@@ -157,7 +162,9 @@
     </p>
     <button class="text-button" on:click={copyCode}>Copy HDL</button>
     <span class="copy-message" role="status">{copyState}</span>
-    <pre aria-label="Equivalent NAND HDL"><code>{source}</code></pre>
+    <!-- This overflow region is keyboard-focusable so the code can be scrolled horizontally. -->
+    <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+    <pre tabindex="0" role="region" aria-label="Equivalent NAND HDL"><code>{source}</code></pre>
     <p>
       This is real single-bit HDL. Paste it into the <a href="/tools/hardware-simulator"
         >hardware simulator</a
@@ -177,6 +184,7 @@
     <p
       aria-live="polite"
       data-testid="equivalence-result"
+      class="equivalence-result"
       class:verified={differences.length === 0}
     >
       {#if differences.length === 0}Equivalent: all 4 input combinations match.

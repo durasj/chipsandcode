@@ -7,10 +7,26 @@ function waitForEditor() {
   cy.get('.monaco-editor').filter(':visible').first().should('be.visible');
 }
 
-function typeInEditor(text: string, last = false) {
-  const editors = cy.get('.monaco-editor').filter(':visible');
-  (last ? editors.last() : editors.first()).click();
-  cy.focused().type(text, { delay: 0 });
+function typeInEditor(text: string, expectedOutput = false) {
+  // Monaco's keyboard input is its native textarea, positioned at the caret.
+  // Focusing that input exercises normal keyboard editing without a forced click
+  // on an invisible caret or a click on the outer accessibility container.
+  cy.get(
+    expectedOutput
+      ? '.modified-in-monaco-diff-editor textarea.inputarea'
+      : '.editor-mount .monaco-editor textarea.inputarea',
+  )
+    .should('have.length', 1)
+    .focus()
+    .should('be.focused')
+    .type(text, { delay: 0 });
+  if (!text.includes('{')) {
+    cy.get('.editor-mount .view-lines').should(($lines) => {
+      expect($lines.text().replace(/\s+/g, ' '), 'typed source appears in the editor').to.contain(
+        text,
+      );
+    });
+  }
 }
 
 function visitSimulator(id = '') {
@@ -122,10 +138,10 @@ describe('Hardware simulator tool', () => {
   it('Explains an invalid input without presenting a stale output', () => {
     visitSimulator('Xor');
     cy.findByLabelText('Value for a').clear().type('2').blur();
-    cy.findByRole('alert').should('be.visible');
+    cy.contains('[role="alert"]', 'Input a must be 0 or 1.').should('be.visible');
     cy.contains('tr', 'out').contains('td', '—');
     cy.findByLabelText('Value for a').clear().type('1').blur();
-    cy.findByRole('alert').should('not.exist');
+    cy.contains('[role="alert"]', 'Input a must be 0 or 1.').should('not.exist');
     cy.contains('tr', 'out').contains('td', '1');
   });
 
@@ -163,10 +179,11 @@ describe('Hardware simulator tool', () => {
 
   it('Opens, saves and shares a new experiment using canonical URLs', () => {
     visitSimulator('Xor');
-    cy.findByLabelText('Open/New').click();
+    cy.findByRole('button', { name: 'File' }).click();
     cy.findByRole('menuitem', { name: 'Open new' }).click();
     cy.findByLabelText('Experiment name').should('have.value', 'Untitled Experiment');
     cy.location('pathname').should('eq', simulatorPath);
+    waitForEditor();
     typeInEditor('// Empty code');
     cy.contains('[role="tab"]', 'Tests').click();
     typeInEditor('// Empty TST');
@@ -187,7 +204,7 @@ describe('Hardware simulator tool', () => {
     cy.findByLabelText('Share').click();
     cy.findByLabelText('Experiment URL').invoke('val').should('contain', `${simulatorPath}/abc123`);
     cy.get('body').type('{esc}');
-    cy.findByLabelText('Open/New').click();
+    cy.findByRole('button', { name: 'File' }).click();
     cy.findByRole('menuitem', { name: 'Open new' }).click();
     cy.location('pathname').should('eq', simulatorPath);
     waitForEditor();

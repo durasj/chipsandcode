@@ -289,6 +289,7 @@
     background: #1b2030;
     color: #eeeaff;
     font-weight: 500;
+    overflow-wrap: normal;
   }
   .reading-body :global(th),
   .reading-body :global(td) {

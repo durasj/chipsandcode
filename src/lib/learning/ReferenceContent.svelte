@@ -17,6 +17,16 @@
       </div>
     {:else if node.name === 'th'}
       <th {...node.attributes} scope="col"><svelte:self children={node.children} /></th>
+    {:else if node.name === 'pre'}
+      <!-- Code retains its layout and can be scrolled with the keyboard on narrow screens. -->
+      <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+      <pre
+        {...node.attributes}
+        tabindex="0"
+        role="group"
+        aria-label={node.attributes['data-language'] === 'hdl'
+          ? 'Scrollable HDL example'
+          : 'Scrollable code example'}><svelte:self children={node.children} /></pre>
     {:else if node.children?.length}
       <svelte:element this={node.name} {...node.attributes}>
         <svelte:self children={node.children} />

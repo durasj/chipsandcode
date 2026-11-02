@@ -16,7 +16,7 @@
 </script>
 
 <svelte:head><title>Hardware simulator — Chips and Code</title></svelte:head>
-<section class="hardware-tool-page">
+<main class="hardware-tool-page">
   <header class="tool-introduction">
     <a href="/tools">← Tools</a>
     <h1>Hardware simulator</h1>
@@ -35,7 +35,7 @@
       </div>
     {/await}
   {/key}
-</section>
+</main>
 
 <style>
   .hardware-tool-page {

@@ -39,6 +39,7 @@
           'editor.background': '#10131F',
           'editor.foreground': '#E3E5F1',
           'editorLineNumber.foreground': '#9DA5BE',
+          'editorLineNumber.dimmedForeground': '#9DA5BE',
           'editorLineNumber.activeForeground': '#F4F3FF',
           'editor.lineHighlightBackground': '#191E30',
           'editor.selectionBackground': '#3E356B',
@@ -692,7 +693,7 @@
     {#if controls}
       <div class="file-actions">
         <DropdownMenu.Root>
-          <DropdownMenu.Trigger class="tool-button" aria-label="Open/New"
+          <DropdownMenu.Trigger class="tool-button" aria-label="File"
             >File <span aria-hidden="true">⌄</span></DropdownMenu.Trigger
           >
           <DropdownMenu.Content sideOffset={8} align="end" class="hardware-menu">

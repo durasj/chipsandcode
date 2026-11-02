@@ -34,7 +34,11 @@
 .logic-lab a:hover {
   text-decoration: underline;
 }
-.logic-lab :is(button, input, select, a, summary):focus-visible {
+.logic-lab p a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+}
+.logic-lab :is(button, input, select, a, summary, pre):focus-visible {
   outline: 2px solid #d0c7ff !important;
   outline-offset: 4px;
 }
@@ -225,6 +229,9 @@
   color: #b6e3c8;
   font-size: 13px;
   line-height: 1.6;
+}
+.logic-lab .equivalence-result {
+  margin-top: 12px;
 }
 .logic-lab pre {
   max-width: 100%;

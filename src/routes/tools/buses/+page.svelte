@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import '#lib/tools/lab.css';
   import {
     binaryWord,
@@ -10,6 +11,10 @@
     type BusComponent,
   } from '#lib/tools/logic.js';
 
+  let ready = false;
+  onMount(() => {
+    ready = true;
+  });
   let component: BusComponent = 'not16';
   let selector = 0;
   let editInput = 'in';
@@ -74,7 +79,7 @@
   />
 </svelte:head>
 
-<main class="logic-lab" aria-labelledby="buses-title">
+<main class="logic-lab" data-ready={ready} aria-labelledby="buses-title">
   <a href="/tools" class="back-link"><span aria-hidden="true">←</span> Tools</a>
   <header class="tool-heading">
     <p class="eyebrow">Logic lab / 02</p>
@@ -108,10 +113,10 @@
       {#if isDemux}
         <button
           class="signal-button"
-          aria-label="Input signal"
+          aria-label={`Input in ${Number(signal)}`}
           aria-pressed={signal}
           on:click={() => (signal = !signal)}
-          ><span>in</span><strong>{Number(signal)}</strong></button
+          ><span>in</span>{' '}<strong>{Number(signal)}</strong></button
         >
       {:else}
         {#if names.length > 2}
@@ -191,11 +196,11 @@
                 {#each binaryWord(parsed[name].value as number, inputWidth).split('') as bit, index}
                   <button
                     class:one={bit === '1'}
-                    aria-label={`Input ${name} bit ${inputWidth - 1 - index}`}
+                    aria-label={`Input ${name} bit ${inputWidth - 1 - index}: ${bit}`}
                     aria-pressed={bit === '1'}
                     on:click={() => toggleBit(name, inputWidth - 1 - index)}
                   >
-                    <small>{inputWidth - 1 - index}</small><span>{bit}</span>
+                    <small aria-hidden="true">{inputWidth - 1 - index}</small><span>{bit}</span>
                   </button>
                 {/each}
               </div>
