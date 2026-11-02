@@ -21,7 +21,7 @@ Import `durasj/chipsandcode` into the `durasjs-projects` team. Use these setting
 | Project name        | `chipsandcode`                              |
 | Framework           | SvelteKit                                   |
 | Root directory      | Repository root                             |
-| Node.js             | 24.x                                        |
+| Node.js             | 26.x                                        |
 | Install command     | `npm ci`                                    |
 | Build command       | `npm run build`                             |
 | Output directory    | Framework default; leave the override unset |

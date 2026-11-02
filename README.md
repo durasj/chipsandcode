@@ -78,7 +78,7 @@ Major features, ordered by priority:
 
 ## Developing
 
-Use Node.js 24 (`nvm use`) and install the locked dependencies:
+Use Node.js 26 (`nvm use`) and install the locked dependencies:
 
 ```bash
 npm ci
@@ -99,9 +99,9 @@ npm run preview -- --host 127.0.0.1
 npm run test:cy
 ```
 
-The production build generates `.vercel/output` using `@sveltejs/adapter-vercel`; it does not need database credentials. Lessons and the new-experiment page are prerendered. Shared experiment pages load on the client, and the API runs on Node.js 24 functions. The PWA precaches application assets and lessons; private API responses are never cached.
+The production build generates `.vercel/output` using `@sveltejs/adapter-vercel`; it does not need database credentials. Lessons and the new-experiment page are prerendered. Shared experiment pages load on the client, and the API runs on Node.js 26 functions. The PWA precaches application assets and lessons; private API responses are never cached.
 
-Unit tests live next to the source and include parser fixtures, simulator behavior, ownership checks, origin checks and migration validation. Cypress retains the existing accessibility and visual-regression checks. CI uses Node.js 24 and `npm ci` and runs typing, coverage, builds and Cypress on pull requests.
+Unit tests live next to the source and include parser fixtures, simulator behavior, ownership checks, origin checks and migration validation. Cypress retains the existing accessibility and visual-regression checks. CI uses Node.js 26 and `npm ci` and runs typing, coverage, builds and Cypress on pull requests.
 
 ## Deployment and data migration
 
