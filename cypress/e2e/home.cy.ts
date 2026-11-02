@@ -12,7 +12,11 @@ describe('Home', () => {
       .findAllByRole('button')
       .should('have.length', 7);
     cy.contains('0 OF 7 SYSTEMS RESTORED');
-    cy.screenshot('signal-isles-world', { capture: 'viewport' });
+    cy.findByRole('button', { name: 'Bring it to life' }).then(($button) => {
+      const bounds = $button[0].getBoundingClientRect();
+      expect(bounds.bottom, 'start action is visible without scrolling').to.be.at.most(720);
+    });
+    cy.screenshot('signal-isles-world', { capture: 'fullPage' });
     cy.checkA11y();
 
     cy.findByRole('button', { name: 'Bring it to life' }).click();

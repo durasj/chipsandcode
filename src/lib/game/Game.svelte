@@ -560,11 +560,11 @@
     color: #7bd9b5;
   }
   h1 {
-    font-size: clamp(36px, 3.4vw, 57px);
+    font-size: clamp(36px, 3vw, 48px);
     line-height: 1.12;
     font-weight: 650;
     letter-spacing: -2.5px;
-    margin: 20px 0;
+    margin: 16px 0;
   }
   h1 em {
     font-style: normal;
@@ -583,8 +583,8 @@
   }
   .selected-mission {
     border-top: 1px solid #ffffff1c;
-    padding-top: 22px;
-    margin-top: 28px;
+    padding-top: 18px;
+    margin-top: 18px;
   }
   .mission-meta {
     display: flex;
