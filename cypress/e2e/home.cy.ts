@@ -49,8 +49,8 @@ describe('Chips and Code landing', () => {
       'be.visible',
     );
     cy.contains('Build your own computer from scratch');
-    cy.findAllByRole('button', { name: 'Start learning' })
-      .first()
+    cy.get('.opening')
+      .findByRole('button', { name: 'Start learning' })
       .then(($button) => {
         const bounds = $button[0].getBoundingClientRect();
         expect(bounds.bottom, 'learning starts without scrolling').to.be.at.most(720);
@@ -75,6 +75,7 @@ describe('Chips and Code landing', () => {
         'only the brand, menu, and learning action occupy the opening viewport',
       ).to.have.length.at.most(3);
     });
+    cy.findByRole('navigation', { name: 'Workspace menu' }).should('not.exist');
     cy.findByRole('region', { name: 'Logic challenges' }).should('not.exist');
     cy.findByRole('navigation', { name: 'Explore computer layers' }).should('not.exist');
     cy.findByRole('button', { name: /Play layer journey|Pause layer journey/ }).should('not.exist');
@@ -82,7 +83,7 @@ describe('Chips and Code landing', () => {
     cy.injectAxe();
     checkAccessibility();
 
-    cy.findAllByRole('button', { name: 'Start learning' }).first().click();
+    cy.get('.opening').findByRole('button', { name: 'Start learning' }).click();
     cy.findByRole('heading', { name: 'A computer starts with a signal.' }).should('be.visible');
     cy.findByRole('switch', { name: 'Signal' }).should('have.attr', 'aria-checked', 'false');
     cy.findByLabelText('HDL source').should('not.exist');
@@ -106,7 +107,7 @@ describe('Chips and Code landing', () => {
     cy.injectAxe();
     checkAccessibility();
     // Every entry point starts a new visitor at the physical foundation.
-    cy.findAllByRole('button', { name: 'Start learning' }).last().click();
+    cy.get('.journey-start').findByRole('button', { name: 'Start learning' }).click();
     cy.findByRole('heading', { name: 'A computer starts with a signal.' }).should('be.visible');
   });
 
@@ -127,7 +128,7 @@ describe('Chips and Code landing', () => {
   it('Introduces one signal and then NAND without overflowing a narrow screen', () => {
     cy.viewport(320, 760);
     visitLanding(true);
-    cy.findAllByRole('button', { name: 'Start learning' }).first().click();
+    cy.get('.opening').findByRole('button', { name: 'Start learning' }).click();
     cy.findByRole('heading', { name: 'A computer starts with a signal.' }).should('be.visible');
     cy.screenshot('first-signal-mobile', { capture: 'viewport' });
     cy.findByRole('switch', { name: 'Signal' })

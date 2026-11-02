@@ -374,6 +374,9 @@
     background: #12151f;
     box-shadow: 0 16px 48px #0006;
   }
+  .workspace-menu:not([open]) nav {
+    display: none;
+  }
   .workspace-menu nav button,
   .workspace-menu nav a {
     display: block;

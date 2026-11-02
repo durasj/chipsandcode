@@ -142,7 +142,7 @@
 <div class="quiet-landing" class:reduced-motion={reducedMotion}>
   <section class="opening" aria-labelledby="journey-heading">
     <div class="opening-copy">
-      <h1 id="journey-heading" tabindex="-1">Wondering how<br />computers <em>work?</em></h1>
+      <h1 id="journey-heading" tabindex="-1">Wondering how{' '}<br />computers <em>work?</em></h1>
       <p>Build your own computer from scratch,<br class="desktop-break" /> from chips to code.</p>
       <button class="start-button" onclick={onstart}
         >{continuing ? 'Continue learning' : 'Start learning'}<span aria-hidden="true">↗</span
@@ -230,7 +230,7 @@
 
   <section class="journey-start" aria-labelledby="start-heading">
     <p class="closing-label">Start at the beginning</p>
-    <h2 id="start-heading">One signal.<br />Then the next.</h2>
+    <h2 id="start-heading">One signal.{' '}<br />Then the next.</h2>
     <p>We’ll introduce each idea and tool as you need it.</p>
     <button class="start-button" onclick={onstart}
       >{continuing ? 'Continue learning' : 'Start learning'}<span aria-hidden="true">↗</span

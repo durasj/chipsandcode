@@ -18,7 +18,7 @@ function visitGame(progress: string[] = ['nand']) {
 }
 
 function openNotWorkbench() {
-  cy.findAllByRole('button', { name: 'Continue learning' }).first().click();
+  cy.get('.opening').findByRole('button', { name: 'Continue learning' }).click();
   cy.findByRole('heading', { name: 'Invert a signal' }).should('be.visible');
 }
 
@@ -87,7 +87,7 @@ describe('Chips and Code workbench', () => {
 
   it('Starts with one signal, adds NAND, and continues to the first circuit in order', () => {
     visitGame([]);
-    cy.findAllByRole('button', { name: 'Start learning' }).first().click();
+    cy.get('.opening').findByRole('button', { name: 'Start learning' }).click();
     cy.findByRole('heading', { name: 'A computer starts with a signal.' }).should('be.visible');
     cy.findByRole('button', { name: 'Continue' }).should('not.exist');
     cy.findByRole('switch', { name: 'Signal' })
