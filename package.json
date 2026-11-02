@@ -20,7 +20,8 @@
     "postinstall": "svelte-kit sync",
     "db:migrate": "node --env-file-if-exists=.env.local scripts/migrate-database.mjs",
     "data:export:cloudflare": "node --env-file-if-exists=.env.local scripts/export-cloudflare.mjs",
-    "data:import": "node --env-file-if-exists=.env.local scripts/import-cloudflare.mjs"
+    "data:import": "node --env-file-if-exists=.env.local scripts/import-cloudflare.mjs",
+    "check:cy": "tsc -p cypress/tsconfig.json --noEmit"
   },
   "devDependencies": {
     "@eslint/js": "^9.0.0",
