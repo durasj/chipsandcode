@@ -122,6 +122,7 @@ describe('Signal Isles', () => {
     cy.findByRole('button', { name: 'Connect machine output out' }).click();
     cy.findByRole('button', { name: /Test circuit/ }).click();
     cy.contains('2 of 2 combinations work.');
+    cy.screenshot('signal-isles-workbench', { capture: 'viewport' });
     cy.findByRole('button', { name: 'Clear circuit' }).click();
     cy.findByLabelText('Part 1 Nand input a').should('not.exist');
     cy.findByRole('button', { name: 'Undo clear' }).click();

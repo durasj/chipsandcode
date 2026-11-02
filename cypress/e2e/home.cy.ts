@@ -12,6 +12,7 @@ describe('Home', () => {
       .findAllByRole('button')
       .should('have.length', 7);
     cy.contains('0 OF 7 SYSTEMS RESTORED');
+    cy.screenshot('signal-isles-world', { capture: 'viewport' });
     cy.checkA11y();
 
     cy.findByRole('button', { name: 'Bring it to life' }).click();

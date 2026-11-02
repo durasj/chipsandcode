@@ -29,7 +29,7 @@ export const missions: Mission[] = [
     location: 'Arrival dock',
     brief:
       'An old signal chip still works. Wake it up and discover the one input combination that switches its light off.',
-    goal: 'Explore both switches, then run the four-case signal check.',
+    goal: 'Discover the output for all four switch combinations.',
     inputs: ['a', 'b'],
     outputs: ['out'],
     availableParts: ['Nand'],

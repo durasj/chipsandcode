@@ -120,11 +120,7 @@
 <div class="signal-game">
   <a class="skip-game" href="#game-content">Skip to game</a>
   <header class="game-header">
-    <button
-      class="wordmark"
-      onclick={() => setView('world')}
-      aria-label="Chips and Code, return to world"
-    >
+    <button class="wordmark" onclick={() => setView('world')}>
       <span class="brand-chip" aria-hidden="true">c+c</span>
       <span
         >chips<span class="brand-and">&</span>code<span class="brand-sub"
@@ -155,11 +151,8 @@
         >Your chips <span class="chip-count">{completed.length}</span></button
       >
     </nav>
-    <button
-      class="sound-button"
-      aria-pressed={sound}
-      aria-label={sound ? 'Turn sound off' : 'Turn sound on'}
-      onclick={toggleSound}><span aria-hidden="true">♪</span> Sound {sound ? 'on' : 'off'}</button
+    <button class="sound-button" aria-pressed={sound} onclick={toggleSound}
+      ><span aria-hidden="true">♪</span> Sound {sound ? 'on' : 'off'}</button
     >
   </header>
 
