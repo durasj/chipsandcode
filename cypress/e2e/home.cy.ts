@@ -17,10 +17,24 @@ function visitLanding(reducedMotion = false) {
   cy.contains('Progress saved on this device');
 }
 
+function checkAccessibility() {
+  cy.checkA11y(undefined, undefined, (violations) => {
+    if (violations.length) {
+      const details = violations.map(
+        (violation) =>
+          `${violation.id}:\n${violation.nodes
+            .map((node) => `${JSON.stringify(node.target)}\n${node.failureSummary}`)
+            .join('\n')}`,
+      );
+      throw new Error(`Accessibility violations:\n${details.join('\n\n')}`);
+    }
+  });
+}
+
 function selectJourneyPhase(name: string) {
   cy.findByRole('navigation', { name: 'Explore computer layers' })
     .findByRole('button', { name: new RegExp(name) })
-    .click()
+    .click({ scrollBehavior: 'center' })
     .should('have.attr', 'aria-pressed', 'true');
 }
 
@@ -57,7 +71,7 @@ describe('Chips and Code landing', () => {
     cy.findByRole('button', { name: 'Play layer journey' }).should('be.visible');
     cy.screenshot('computer-layers-landing', { capture: 'fullPage' });
     cy.injectAxe();
-    cy.checkA11y();
+    checkAccessibility();
 
     cy.findByRole('button', { name: 'Begin building' }).click();
     cy.findByRole('heading', { name: 'Read the signal' }).should('be.visible');
@@ -68,19 +82,19 @@ describe('Chips and Code landing', () => {
 
   it('Plays, pauses, and scrubs the cinematic journey without navigating away', () => {
     visitLanding();
-    cy.findByRole('button', { name: 'Pause layer journey' }).click();
+    cy.findByRole('button', { name: 'Pause layer journey' }).click({ scrollBehavior: 'center' });
     cy.findByRole('button', { name: 'Play layer journey' }).should('be.visible');
     selectJourneyPhase('Arithmetic');
     cy.findByRole('img', { name: /Arithmetic\. Four one-bit adders/ }).should('be.visible');
     cy.get('.timecode')
       .invoke('text')
       .then((pausedTime) => {
-        cy.findByRole('button', { name: 'Play layer journey' }).click();
+        cy.findByRole('button', { name: 'Play layer journey' }).click({ scrollBehavior: 'center' });
         cy.get('.timecode', { timeout: 5000 }).should(($timecode) => {
           expect($timecode.text(), 'the animation advances').not.to.equal(pausedTime);
         });
       });
-    cy.findByRole('button', { name: 'Pause layer journey' }).click();
+    cy.findByRole('button', { name: 'Pause layer journey' }).click({ scrollBehavior: 'center' });
     selectJourneyPhase('Memory');
     cy.findByRole('img', { name: /Memory\. A register keeps its value/ }).should('be.visible');
     selectJourneyPhase('Software');
@@ -93,7 +107,7 @@ describe('Chips and Code landing', () => {
     );
     cy.get('.computer-hero').screenshot('computer-hero-software');
     cy.injectAxe();
-    cy.checkA11y();
+    checkAccessibility();
   });
 
   it('Starts still for reduced motion and keeps manual chapter controls available', () => {
@@ -105,7 +119,7 @@ describe('Chips and Code landing', () => {
     selectJourneyPhase('Software');
     cy.findByRole('img', { name: /Software\. Every line of code/ }).should('be.visible');
     cy.get('.layer-journey').should('not.have.class', 'moving');
-    cy.findByRole('button', { name: 'Play layer journey' }).click();
+    cy.findByRole('button', { name: 'Play layer journey' }).click({ scrollBehavior: 'center' });
     cy.findByRole('button', { name: 'Pause layer journey' }).should('be.visible');
   });
 
@@ -156,7 +170,7 @@ describe('Chips and Code landing', () => {
     cy.findByRole('region', { name: 'Logic reference' }).should('be.visible');
     cy.findByRole('heading', { name: 'Signals and gates' }).should('be.visible');
     cy.injectAxe();
-    cy.checkA11y();
+    checkAccessibility();
     const chapters = [
       { button: 'Expressions', heading: 'Boolean expressions' },
       { button: 'HDL & composition', heading: 'Interfaces and implementation' },
@@ -168,7 +182,7 @@ describe('Chips and Code landing', () => {
         .findByRole('button', { name: new RegExp(button) })
         .click();
       cy.findByRole('heading', { name: heading }).should('be.visible');
-      cy.checkA11y();
+      checkAccessibility();
     });
     cy.findByRole('button', { name: /Back to layers/ }).click();
     cy.findByRole('region', { name: 'Logic challenges' }).should('be.visible');

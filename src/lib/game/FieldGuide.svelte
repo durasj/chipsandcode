@@ -297,9 +297,9 @@
                 type="button"
                 class:bit-on={bit}
                 aria-pressed={bit}
-                aria-label={`Bus input bit ${7 - i}: ${Number(bit)}`}
+                aria-label={`Bus input bit ${7 - i} ${Number(bit)}`}
                 onclick={() => (bus = bus.map((value, index) => (index === i ? !value : value)))}
-                ><span>{7 - i}</span>{Number(bit)}</button
+                ><span>{7 - i}</span>{' '}{Number(bit)}</button
               >{/each}
           </div>
           <span class="bus-label">NOT</span>

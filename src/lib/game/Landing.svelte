@@ -129,7 +129,8 @@
                   aria-label={`Input ${pin} ${Number(exampleInputs[pin] ?? false)}`}
                   aria-pressed={exampleInputs[pin] ?? false}
                   on:click={() => toggleExample(pin)}
-                  ><span>{pin}</span><strong>{Number(exampleInputs[pin] ?? false)}</strong></button
+                  ><span>{pin}</span>{' '}<strong>{Number(exampleInputs[pin] ?? false)}</strong
+                  ></button
                 >
               {/each}
             </div>
@@ -891,7 +892,7 @@
       10px ui-monospace,
       SFMono-Regular,
       monospace;
-    color: #56506d;
+    color: #403954;
   }
   .cycle-line strong {
     font-size: 19px;
@@ -905,7 +906,7 @@
     color: #45455e;
   }
   .cycle-arrow {
-    color: #5e557e;
+    color: #403954;
     font-size: 18px;
   }
   .cycle-return {
@@ -920,7 +921,7 @@
     left: 50%;
     bottom: -9px;
     padding: 0 8px;
-    color: #5c4d8a;
+    color: #403954;
     background: #b8b8ca;
     line-height: 16px;
   }
