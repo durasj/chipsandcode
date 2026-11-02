@@ -82,6 +82,8 @@
       editor = monaco.editor.create(node, {
         theme: themeName ? `vs-${themeName}` : 'vs-light',
         automaticLayout: true,
+        // Retain the standard textarea input path used by the existing keyboard workflows.
+        editContext: false,
         model: hdlModel,
         wordBasedSuggestions: 'off',
         accessibilityHelpUrl:
@@ -572,6 +574,8 @@
       editor = monaco.editor.createDiffEditor(editor.getContainerDomNode(), {
         theme: themeName ? `vs-${themeName}` : 'vs-light',
         automaticLayout: true,
+        // Retain the standard textarea input path used by the existing keyboard workflows.
+        editContext: false,
         enableSplitViewResizing: false,
       });
     } else if (selectedTab === EditorTab.DIFF) {
@@ -581,6 +585,8 @@
       editor = monaco.editor.create(editor.getContainerDomNode(), {
         theme: themeName ? `vs-${themeName}` : 'vs-light',
         automaticLayout: true,
+        // Retain the standard textarea input path used by the existing keyboard workflows.
+        editContext: false,
         wordBasedSuggestions: 'off',
       });
     }
@@ -892,13 +898,18 @@
                       class="h-5 w-5 text-primary dark:text-base-content"
                     /> Download
                   </DropdownMenu.Item>
-                  <DropdownMenu.Item
-                    class="flex gap-2 rounded px-3 py-2 data-[highlighted]:bg-base-200"
-                    onSelect={remove}
-                    disabled={removingState}
-                  >
-                    <Icon src={Trash} class="h-5 w-5 text-primary dark:text-base-content" />
-                    {removingState ? 'Deleting...' : 'Delete'}
+                  <DropdownMenu.Item onSelect={remove} disabled={removingState}>
+                    {#snippet child({ props })}
+                      <button
+                        {...props}
+                        type="button"
+                        disabled={removingState}
+                        class="flex gap-2 rounded px-3 py-2 data-[highlighted]:bg-base-200"
+                      >
+                        <Icon src={Trash} class="h-5 w-5 text-primary dark:text-base-content" />
+                        {removingState ? 'Deleting...' : 'Delete'}
+                      </button>
+                    {/snippet}
                   </DropdownMenu.Item>
                 </DropdownMenu.Content>
               </DropdownMenu.Root>

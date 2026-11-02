@@ -14,6 +14,8 @@ const config = defineConfig(() => {
     resolve: {
       alias: {
         src: path.resolve('./src'),
+        // Monaco 0.57 vendors DOMPurify 3.4.15; replacing its npm dependency alone is insufficient.
+        './dompurify/dompurify.js': path.resolve('./node_modules/dompurify/dist/purify.es.mjs'),
       },
     },
     plugins: [

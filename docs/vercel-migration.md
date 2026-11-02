@@ -6,6 +6,12 @@ The migration branch prepares application hosting and experiment persistence for
 
 The thesis site (`thesis.chipsandcode.com`) is linked from the existing README but its source is not in this repository. Its hosting must be inventoried separately before calling the broader migration complete. Changing the main site's hosting does not require transferring domain registration, nameservers, or unrelated DNS records.
 
+## Dependency security
+
+The migration upgrades Zod to 4.6.7 and replaces Monaco 0.57's vendored DOMPurify 3.4.15 with patched 3.4.17 in the actual browser bundle. An npm dependency override alone would leave the vendored code unchanged; the Vite alias and build verification cover that path. The build cleans generated output first so cached chunks and function symlinks cannot survive into a new artifact.
+
+On 2026-11-02, `npm audit --omit=dev` reported no high or critical findings after these changes. Six low findings remain through the upstream `deepmerge` dependency chain; its latest published version is still affected. Recheck upstream updates before release rather than applying the audit tool's incompatible framework downgrades.
+
 ## 1. Create the Vercel project
 
 Import `durasj/chipsandcode` into the `durasjs-projects` team. Use these settings:
