@@ -61,9 +61,11 @@
   <header class="guide-header">
     <div class="guide-heading">
       <p class="eyebrow">LAYER 00 / LOGIC</p>
-      <h1>Reference</h1>
+      <h1 tabindex="-1">Reference</h1>
     </div>
-    <button type="button" class="back-button" onclick={onclose}>← Back to layers</button>
+    <button type="button" class="back-button" onclick={onclose}
+      ><span aria-hidden="true">←</span> Back</button
+    >
   </header>
 
   <div class="notebook">

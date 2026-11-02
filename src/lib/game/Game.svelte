@@ -1,23 +1,31 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
   import Landing from './Landing.svelte';
+  import SignalIntro from './SignalIntro.svelte';
   import IntroVideo from './IntroVideo.svelte';
   import MissionWorkbench from './MissionWorkbench.svelte';
   import FieldGuide from './FieldGuide.svelte';
   import { missions, getMission, type MissionId } from './missions';
 
-  let view: 'world' | 'workbench' | 'guide' | 'collection' = 'world';
+  type View = 'world' | 'signal' | 'workbench' | 'guide' | 'collection' | 'milestone';
+  const introKey = 'chipsandcode.signal-intro.v1';
+  let view: View = 'world';
+  let referenceReturn: View = 'world';
   let selected: MissionId = 'nand';
   let introOpen = false;
+  let introSeen = false;
   let content: HTMLElement;
-  let completed: string[] = [];
-  let sound = false;
+  let menu: HTMLDetailsElement;
+  let menuOpen = false;
+  let completed: MissionId[] = [];
+  let lastCompleted: MissionId = 'nand';
   let notice = '';
-  let restored: MissionId | null = null;
   let ready = false;
-  let audioContext: AudioContext | undefined;
-  let mainHeading: HTMLHeadingElement;
-  $: restoredMission = restored ? getMission(restored) : null;
+
+  $: nextMission = missions.find((mission) => !completed.includes(mission.id));
+  $: verifiedMissions = missions.filter((mission) => completed.includes(mission.id));
+  $: lastMission = getMission(lastCompleted);
+  $: continuing = introSeen || completed.includes('nand');
 
   onMount(() => {
     try {
@@ -26,220 +34,212 @@
           localStorage.getItem('chipsandcode.signal-isles.progress.v1')) ||
           '[]',
       );
-      if (Array.isArray(saved))
+      if (Array.isArray(saved)) {
         completed = [
           ...new Set(
             saved.filter(
-              (id): id is MissionId => typeof id === 'string' && missions.some((m) => m.id === id),
+              (id): id is MissionId =>
+                typeof id === 'string' && missions.some((mission) => mission.id === id),
             ),
           ),
         ];
-      sound =
-        (localStorage.getItem('chipsandcode.sound') ??
-          localStorage.getItem('chipsandcode.signal-isles.sound')) === 'on';
+      }
+      introSeen = localStorage.getItem(introKey) === 'complete' || completed.includes('nand');
     } catch {
-      notice = 'Storage is unavailable. You can still build in this session.';
+      notice = 'Your progress can only be kept for this session.';
     }
-    selected = missions.find((mission) => !completed.includes(mission.id))?.id || 'nand';
+    selected = missions.find((mission) => !completed.includes(mission.id))?.id ?? 'nand';
     ready = true;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && menuOpen) {
+        menuOpen = false;
+        menu?.querySelector('summary')?.focus();
+      }
+    };
+    const closeOnOutside = (event: PointerEvent) => {
+      if (menuOpen && event.target instanceof Node && !menu?.contains(event.target))
+        menuOpen = false;
+    };
+    document.addEventListener('keydown', closeOnEscape);
+    document.addEventListener('pointerdown', closeOnOutside);
     return () => {
-      void audioContext?.close();
+      document.removeEventListener('keydown', closeOnEscape);
+      document.removeEventListener('pointerdown', closeOnOutside);
     };
   });
 
-  function playTone(celebrate = false) {
-    if (!sound) return;
-    try {
-      audioContext ||= new AudioContext();
-      void audioContext.resume();
-      const now = audioContext.currentTime;
-      (celebrate ? [392, 494, 587, 784] : [440]).forEach((frequency, index) => {
-        const oscillator = audioContext!.createOscillator();
-        const gain = audioContext!.createGain();
-        oscillator.frequency.value = frequency;
-        gain.gain.setValueAtTime(0, now + index * 0.09);
-        gain.gain.linearRampToValueAtTime(0.035, now + index * 0.09 + 0.015);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + index * 0.09 + 0.22);
-        oscillator.connect(gain);
-        gain.connect(audioContext!.destination);
-        oscillator.start(now + index * 0.09);
-        oscillator.stop(now + index * 0.09 + 0.23);
-      });
-    } catch {
-      /* Sound is optional. */
+  async function setView(next: View) {
+    menuOpen = false;
+    introOpen = false;
+    view = next;
+    await tick();
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    Array.from(content?.querySelectorAll<HTMLHeadingElement>('h1') ?? [])
+      .find((heading) => heading.getClientRects().length > 0)
+      ?.focus({ preventScroll: true });
+  }
+
+  function startLearning() {
+    if (!continuing) {
+      void setView('signal');
+    } else if (nextMission) {
+      selected = nextMission.id;
+      void setView('workbench');
+    } else {
+      void setView('collection');
     }
   }
 
-  function selectMission(id: string) {
-    const found = missions.find((mission) => mission.id === id);
-    if (!found) return;
-    selected = found.id;
-    restored = null;
-    playTone();
-  }
-
-  async function setView(next: typeof view) {
-    introOpen = false;
-    view = next;
-    restored = null;
-    await tick();
-    content?.querySelector<HTMLHeadingElement>('h1')?.focus();
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  }
-
-  function startMission(id: string) {
-    selectMission(id);
+  function finishSignalIntro() {
+    introSeen = true;
+    try {
+      localStorage.setItem(introKey, 'complete');
+    } catch {
+      notice = 'Your progress can only be kept for this session.';
+    }
+    selected = 'nand';
     void setView('workbench');
   }
 
-  async function returnToWorld() {
-    view = 'world';
-    await tick();
-    const section = document.getElementById('layer-logic');
-    section?.scrollIntoView({ block: 'start', behavior: 'instant' });
-    section
-      ?.querySelector<HTMLButtonElement>(`[data-mission="${selected}"]`)
-      ?.focus({ preventScroll: true });
-  }
-
-  async function completeMission(id: string) {
+  function completeMission(id: string) {
     const mission = missions.find((item) => item.id === id);
     if (!mission) return;
-    if (!completed.includes(id)) completed = [...completed, id];
+    if (!completed.includes(mission.id)) completed = [...completed, mission.id];
+    lastCompleted = mission.id;
     try {
       localStorage.setItem('chipsandcode.progress.v1', JSON.stringify(completed));
     } catch {
-      notice = 'Your circuit worked. Progress could not be saved in this browser.';
+      notice = 'Your circuit worked. Progress can only be kept for this session.';
     }
-    restored = mission.id;
-    view = 'world';
-    playTone(true);
-    await tick();
-    const section = document.getElementById('layer-logic');
-    section?.scrollIntoView({ block: 'start', behavior: 'instant' });
-    section
-      ?.querySelector<HTMLButtonElement>(`[data-mission="${selected}"]`)
-      ?.focus({ preventScroll: true });
+    void setView('milestone');
   }
 
-  function toggleSound() {
-    sound = !sound;
-    try {
-      localStorage.setItem('chipsandcode.sound', sound ? 'on' : 'off');
-    } catch {
-      /* Optional preference. */
+  function reopenMission(id: MissionId) {
+    if (!completed.includes(id)) return;
+    selected = id;
+    void setView('workbench');
+  }
+
+  function openReference() {
+    if (view === 'guide') {
+      void setView('guide');
+      return;
     }
-    playTone();
+    referenceReturn = view;
+    void setView('guide');
   }
 </script>
 
-<div class="computer-game">
-  <a class="skip-game" href="#game-content">Skip to workspace</a>
+<div class="computer-game" data-ready={ready}>
+  <a class="skip-game" href="#game-content">Skip to content</a>
   <header class="game-header">
-    <button class="wordmark" onclick={() => setView('world')}>
-      <img src="/logo.svg" alt="" width="40" height="40" />
+    <button class="wordmark" onclick={() => setView('world')} aria-label="Chips and Code home">
+      <img src="/logo.svg" alt="" width="34" height="34" />
       <span>Chips <span class="brand-and">and</span> Code</span>
     </button>
-    <nav class="game-nav" aria-label="Workspace navigation">
-      <button
-        class:current={view === 'world'}
-        aria-current={view === 'world' ? 'page' : undefined}
-        onclick={() => setView('world')}>The computer</button
-      >
-      <button
-        class:current={view === 'workbench'}
-        aria-current={view === 'workbench' ? 'page' : undefined}
-        onclick={() => setView('workbench')}>Workbench</button
-      >
-      <button
-        class:current={view === 'guide'}
-        aria-current={view === 'guide' ? 'page' : undefined}
-        onclick={() => setView('guide')}>Reference</button
-      >
-      <button
-        class:current={view === 'collection'}
-        aria-current={view === 'collection' ? 'page' : undefined}
-        onclick={() => setView('collection')}
-        >Your chips <span class="chip-count">{completed.length}</span></button
-      >
-    </nav>
-    <button class="sound-button" aria-pressed={sound} onclick={toggleSound}
-      ><span aria-hidden="true">◌</span> Sound {sound ? 'on' : 'off'}</button
-    >
+    <details class="workspace-menu" bind:this={menu} bind:open={menuOpen}>
+      <summary>Menu <span aria-hidden="true">+</span></summary>
+      <nav aria-label="Workspace menu">
+        <button onclick={() => setView('world')}>The computer</button>
+        <button onclick={startLearning}
+          >{continuing ? 'Continue learning' : 'Start learning'}</button
+        >
+        {#if completed.length}<button onclick={() => setView('collection')}>Your chips</button>{/if}
+        <button onclick={openReference}>Reference</button>
+        <div class="menu-resources">
+          <a href="/experiment/hardware-ide">Hardware IDE ↗</a>
+          <a href="/learn/hardware/boolean-logic">Original reading</a>
+        </div>
+      </nav>
+    </details>
   </header>
 
   <main id="game-content" bind:this={content}>
+    {#if view === 'signal' || (view === 'guide' && referenceReturn === 'signal')}
+      <div class="learning-session" hidden={view !== 'signal'}>
+        <SignalIntro oncomplete={finishSignalIntro} onclose={() => setView('world')} />
+      </div>
+    {/if}
+    {#if view === 'workbench' || (view === 'guide' && referenceReturn === 'workbench')}
+      <div class="learning-session" hidden={view !== 'workbench'}>
+        {#key selected}<MissionWorkbench
+            missionId={selected}
+            {completed}
+            oncomplete={completeMission}
+            onclose={() => setView('world')}
+          />{/key}
+      </div>
+    {/if}
     {#if view === 'world'}
-      <Landing
-        {completed}
-        {selected}
-        {introOpen}
-        verified={restoredMission?.chip ?? null}
-        onselect={selectMission}
-        onstart={startMission}
-        onreference={() => setView('guide')}
-        onwatch={() => (introOpen = true)}
-      />
-    {:else if view === 'workbench'}
-      {#key selected}<MissionWorkbench
-          missionId={selected}
-          {completed}
-          oncomplete={completeMission}
-          onclose={returnToWorld}
-        />{/key}
+      <Landing {continuing} onstart={startLearning} onwatch={() => (introOpen = true)} />
     {:else if view === 'guide'}
-      <FieldGuide onclose={returnToWorld} />
-    {:else}
+      <FieldGuide onclose={() => setView(referenceReturn)} />
+    {:else if view === 'milestone'}
+      <section class="learning-milestone" aria-labelledby="milestone-title">
+        <span class="milestone-mark" aria-hidden="true">✓</span>
+        <h1 id="milestone-title" tabindex="-1">
+          {lastCompleted === 'nand'
+            ? 'NAND, explored.'
+            : `${lastMission.chip.toUpperCase()} works.`}
+        </h1>
+        <p>
+          {lastCompleted === 'nand'
+            ? 'Its output is 0 only when both inputs are 1.'
+            : lastMission.goal}
+        </p>
+        {#if nextMission}
+          <div class="next-concept">
+            <span>Next</span>
+            <h2>{nextMission.title}</h2>
+            <p>{nextMission.brief}</p>
+          </div>
+          <button class="learning-action" onclick={startLearning}
+            >Continue <span aria-hidden="true">→</span></button
+          >
+        {:else}
+          <div class="next-concept">
+            <h2>The logic layer is yours.</h2>
+            <p>
+              Six circuits, built from one primitive. Arithmetic is the next layer; it is still
+              being built.
+            </p>
+          </div>
+          <button class="learning-action" onclick={() => setView('collection')}
+            >Review your chips <span aria-hidden="true">→</span></button
+          >
+        {/if}
+      </section>
+    {:else if view === 'collection'}
       <section class="collection-view">
-        <div class="collection-intro">
-          <span class="eyebrow">YOUR COMPONENT LIBRARY</span>
-          <h1 bind:this={mainHeading} tabindex="-1">Your chips.</h1>
-          <p>Reopen a verified circuit or build the next chip.</p>
-        </div>
-        <div class="collection-grid">
-          {#each missions as mission}
-            <article class="collection-card" class:collected={completed.includes(mission.id)}>
-              <div class="collection-top">
-                <span class="collection-number">{String(mission.number).padStart(2, '0')}</span
-                ><span class="collection-status"
-                  >{completed.includes(mission.id) ? '✓ VERIFIED' : 'NOT YET VERIFIED'}</span
-                >
-              </div>
-              <div class="collectible-chip" aria-hidden="true"><span>{mission.chip}</span></div>
-              <h2>{mission.title}</h2>
-              <p>{mission.goal}</p>
-              <button
-                class="collection-action"
-                onclick={() => {
-                  selected = mission.id;
-                  void setView('workbench');
-                }}
-                >{completed.includes(mission.id) ? 'Open design' : 'Build chip'}
-                <span aria-hidden="true">↗</span></button
-              >
-            </article>
+        <h1 tabindex="-1">Your chips.</h1>
+        <p>Each one is a building block for what comes next.</p>
+        <div class="verified-chips">
+          {#each verifiedMissions as mission}
+            <button
+              class="verified-chip"
+              onclick={() => reopenMission(mission.id)}
+              aria-label={`Reopen ${mission.chip} ${mission.title}`}
+            >
+              <span class="chip-name">{mission.chip}</span>
+              <span class="chip-purpose">{mission.title}</span>
+              <span aria-hidden="true">↗</span>
+            </button>
           {/each}
         </div>
+        {#if nextMission}<button class="learning-action" onclick={startLearning}
+            >Continue learning <span aria-hidden="true">→</span></button
+          >{/if}
       </section>
     {/if}
   </main>
+
   <footer class="game-footer" class:light-footer={view === 'world'}>
-    <span class="footer-brand">Chips and Code</span>
+    <span>Chips and Code</span>
     <div>
-      <a href="/experiment/hardware-ide">Open hardware IDE ↗</a><a
-        href="/learn/hardware/boolean-logic">Original reading</a
-      ><a href="/about">About</a><a href="/accessibility-statement">Accessibility Statement</a><a
-        href="/signin"
-        aria-label="User account">Account</a
-      >
+      <a href="/about">About</a>
+      <a href="/accessibility-statement">Accessibility Statement</a>
+      <a href="/signin" aria-label="User account">Account</a>
     </div>
-    <span class="save-status"
-      >{ready
-        ? notice
-          ? 'Progress: this session only'
-          : 'Progress saved on this device'
-        : 'Initializing workspace'}</span
-    >
   </footer>
   {#if notice}<p class="storage-notice" role="status">{notice}</p>{/if}
   {#if introOpen}<IntroVideo onclose={() => (introOpen = false)} />{/if}
@@ -260,6 +260,7 @@
     min-height: 100vh;
     background: #090b11;
     color: var(--ink);
+    color-scheme: dark;
     font-family:
       Inter,
       ui-sans-serif,
@@ -269,7 +270,6 @@
       'Segoe UI',
       sans-serif;
     line-height: 1.5;
-    color-scheme: dark;
   }
   .computer-game :global(button) {
     font-family: inherit;
@@ -278,6 +278,7 @@
   }
   .computer-game :global(button:focus-visible),
   .computer-game :global(a:focus-visible),
+  .computer-game :global(summary:focus-visible),
   .computer-game :global(select:focus-visible),
   .computer-game :global(textarea:focus-visible) {
     outline: 2px solid #aaa4ff !important;
@@ -286,7 +287,14 @@
   .computer-game :global(h1:focus) {
     outline: none !important;
   }
-  button {
+  main {
+    min-height: calc(100svh - 84px);
+  }
+  .learning-session[hidden] {
+    display: none;
+  }
+  button,
+  summary {
     cursor: pointer;
   }
   a {
@@ -307,7 +315,6 @@
   .game-header {
     min-height: 84px;
     padding: 12px 4%;
-    border-bottom: 1px solid #252735;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -316,7 +323,7 @@
   .wordmark {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 11px;
     font-size: 19px;
     letter-spacing: -0.7px;
     font-weight: 700;
@@ -331,203 +338,188 @@
     font-weight: 400;
     color: #a1a5b6;
   }
-  .game-nav {
+  .workspace-menu {
+    position: relative;
+    z-index: 30;
+  }
+  .workspace-menu summary {
     display: flex;
     align-items: center;
-    gap: 3px;
-  }
-  .game-nav button {
-    font-size: 12px;
-    font-weight: 500;
-    padding: 11px 14px;
-    border-radius: 4px;
-    color: #a1a5b6;
-    transition:
-      background 0.15s,
-      color 0.15s;
-  }
-  .game-nav button:hover {
-    color: white;
-    background: #191b29;
-  }
-  .game-nav button.current {
-    background: #202031;
-    color: #eeecff;
-  }
-  .chip-count {
-    font-family: ui-monospace, monospace;
-    background: #ffffff0b;
-    font-size: 10px;
-    padding: 1px 5px;
-    margin-left: 4px;
-    border-radius: 2px;
-  }
-  .sound-button {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    font-size: 11px;
-    color: #a1a5b6;
-    white-space: nowrap;
+    gap: 20px;
+    padding: 12px 0 12px 16px;
     min-height: 44px;
+    font-size: 13px;
+    color: #c4c6d3;
+    list-style: none;
   }
-  .sound-button > span {
+  .workspace-menu summary::-webkit-details-marker {
+    display: none;
+  }
+  .workspace-menu summary > span {
     font-size: 20px;
-    color: #a49cff;
+    transition: transform 0.15s;
   }
-  .eyebrow {
+  .workspace-menu[open] summary > span {
+    transform: rotate(45deg);
+  }
+  .workspace-menu nav {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 9px);
+    width: 228px;
+    max-width: calc(100vw - 32px);
+    padding: 10px;
+    border: 1px solid #353747;
+    border-radius: 5px;
+    background: #12151f;
+    box-shadow: 0 16px 48px #0006;
+  }
+  .workspace-menu nav button,
+  .workspace-menu nav a {
     display: block;
-    color: #aaa4ff;
-    font:
-      11px ui-monospace,
-      monospace;
-    letter-spacing: 1.2px;
+    width: 100%;
+    padding: 11px 12px;
+    color: #d3d4e0;
+    font-size: 13px;
+    text-align: left;
+    border-radius: 3px;
+  }
+  .workspace-menu nav button:hover,
+  .workspace-menu nav a:hover {
+    background: #252338;
+    color: white;
+  }
+  .menu-resources {
+    border-top: 1px solid #303446;
+    margin-top: 8px;
+    padding-top: 8px;
+  }
+  .menu-resources a {
+    color: #b1b5c6;
+  }
+  .learning-milestone {
+    width: min(620px, 100%);
+    margin: auto;
+    padding: clamp(52px, 10vh, 96px) 28px 100px;
+    min-height: calc(100svh - 164px);
+  }
+  .milestone-mark {
+    color: #b3aaff;
+    font-size: 26px;
   }
   h1 {
-    font-size: clamp(36px, 3.5vw, 55px);
-    line-height: 1.12;
+    margin: 20px 0 16px;
+    font-size: clamp(34px, 4vw, 50px);
+    line-height: 1.1;
     font-weight: 500;
-    letter-spacing: -2px;
-    margin: 17px 0;
+    letter-spacing: -1.8px;
+  }
+  .learning-milestone > p,
+  .collection-view > p {
+    color: #b0b4c5;
+    font-size: 16px;
+    line-height: 1.7;
+    margin: 0;
+  }
+  .next-concept {
+    border-top: 1px solid #303446;
+    margin: 40px 0 26px;
+    padding-top: 26px;
+  }
+  .next-concept > span {
+    color: #a49cff;
+    font-size: 12px;
+  }
+  .next-concept h2 {
+    margin: 8px 0;
+    font-size: 22px;
+    line-height: 1.3;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+  }
+  .next-concept p {
+    margin: 0;
+    color: #a1a5b6;
+    font-size: 14px;
+    line-height: 1.7;
+    max-width: 460px;
+  }
+  .learning-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 42px;
+    min-height: 48px;
+    border: 1px solid #746bff;
+    border-radius: 3px;
+    padding: 12px 19px;
+    background: #4f46e5;
+    color: #fff;
+    font-size: 14px;
+  }
+  .learning-action:hover {
+    background: #5c53e8;
   }
   .collection-view {
-    max-width: 1400px;
+    max-width: 850px;
     margin: auto;
-    padding: 48px 4%;
+    padding: 48px 28px 100px;
+    min-height: calc(100svh - 164px);
   }
-  .collection-intro > p {
-    color: #a1a5b6;
-    max-width: 500px;
-    font-size: 14px;
-    line-height: 1.8;
+  .verified-chips {
+    margin: 36px 0;
+    border-top: 1px solid #303446;
   }
-  .collection-grid {
+  .verified-chip {
+    width: 100%;
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 16px;
-    margin-top: 36px;
-  }
-  .collection-card {
-    padding: 22px;
-    border: 1px solid #303446;
-    background: #0f111b;
-    border-radius: 4px;
-  }
-  .collection-card.collected {
-    border-color: #6c63cf;
-    background: #161426;
-  }
-  .collection-top {
-    display: flex;
-    justify-content: space-between;
-    gap: 8px;
+    grid-template-columns: 85px 1fr auto;
+    gap: 18px;
     align-items: center;
+    text-align: left;
+    padding: 23px 0;
+    border-bottom: 1px solid #303446;
   }
-  .collection-number {
-    font:
-      11px ui-monospace,
-      monospace;
-    color: #aaa4ff;
+  .verified-chip:hover {
+    background: #ffffff04;
   }
-  .collection-status {
-    color: #a1a5b6;
-    font:
-      10px ui-monospace,
-      monospace;
-  }
-  .collected .collection-status {
-    color: #c5bfff;
-  }
-  .collectible-chip {
-    width: 85px;
-    height: 65px;
-    display: grid;
-    place-items: center;
-    margin: 34px auto;
-    background: #171925;
-    border: 1px solid #484b65;
-    box-shadow:
-      inset 0 0 0 5px #0f111b,
-      inset 0 0 0 6px #303446;
+  .chip-name {
+    color: #c1baff;
     font:
       16px ui-monospace,
       monospace;
-    color: #b4afef;
-    position: relative;
   }
-  .collectible-chip::before,
-  .collectible-chip::after {
-    content: '';
-    position: absolute;
-    top: 8px;
-    bottom: 8px;
-    width: 8px;
-    background: repeating-linear-gradient(to bottom, #5f5a89 0 3px, transparent 3px 10px);
+  .chip-purpose {
+    font-size: 14px;
+    color: #c9cbd7;
   }
-  .collectible-chip::before {
-    left: -9px;
-  }
-  .collectible-chip::after {
-    right: -9px;
-  }
-  .collection-card h2 {
-    font-size: 17px;
-    letter-spacing: -0.5px;
-  }
-  .collection-card p {
-    color: #a1a5b6;
-    font-size: 13px;
-    line-height: 1.7;
-    margin: 10px 0 18px;
-    min-height: 44px;
-  }
-  .collection-action {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    min-height: 44px;
-    font-size: 13px;
-    color: #c5bfff;
-    border-top: 1px solid #303446;
-    padding-top: 12px;
+  .verified-chip > :last-child {
+    color: #a49cff;
   }
   .game-footer {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
     justify-content: space-between;
-    gap: 16px;
-    padding: 25px 4%;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 27px 4%;
     border-top: 1px solid #242735;
     color: #a1a5b6;
-    font-size: 11px;
-  }
-  .footer-brand {
     font-size: 12px;
-    color: #b6b8c6;
   }
   .game-footer > div {
     display: flex;
     flex-wrap: wrap;
-    gap: 16px;
+    gap: 22px;
   }
   .game-footer a:hover {
     color: white;
   }
-  .save-status {
-    font:
-      10px ui-monospace,
-      monospace;
-  }
   .light-footer {
-    background: #f1f1f7;
+    background: #f2f1f7;
     color: #55576b;
     border-color: #d7d7e1;
     color-scheme: light;
-  }
-  .light-footer .footer-brand {
-    color: #292a3c;
   }
   .light-footer a:hover {
     color: #4f46e5;
@@ -540,73 +532,51 @@
     color: #e0c98c;
     font-size: 12px;
   }
-  @media (max-width: 1000px) {
+  @media (max-width: 520px) {
+    main {
+      min-height: calc(100svh - 72px);
+    }
     .game-header {
+      min-height: 72px;
+      padding: 12px 20px;
+      gap: 15px;
+    }
+    .wordmark {
+      gap: 7px;
+      font-size: 16px;
+    }
+    .wordmark img {
+      width: 28px;
+      height: 28px;
+    }
+    .workspace-menu summary {
+      gap: 10px;
+      font-size: 12px;
+    }
+    .learning-milestone,
+    .collection-view {
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+    .verified-chip {
+      grid-template-columns: 60px 1fr auto;
       gap: 12px;
     }
-    .wordmark {
-      font-size: 17px;
-      gap: 8px;
-    }
-    .game-nav button {
-      padding: 10px;
-      font-size: 11px;
-    }
-    .collection-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-  }
-  @media (max-width: 760px) {
-    .game-header {
-      flex-wrap: wrap;
-      padding-top: 16px;
-    }
-    .wordmark {
-      flex: 1;
-    }
-    .game-nav {
-      order: 3;
-      width: 100%;
-      justify-content: space-between;
-      border-top: 1px solid #242735;
-      padding-top: 9px;
-    }
-    .game-nav button {
-      padding: 10px 12px;
-    }
-    .collection-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-  @media (max-width: 480px) {
-    .game-header {
-      padding-inline: 5%;
-    }
-    .game-nav button {
-      padding: 9px 7px;
-      font-size: 11px;
-    }
-    .wordmark {
-      font-size: 17px;
-    }
-    .collection-grid {
-      grid-template-columns: 1fr;
-    }
-    .collection-card p {
-      min-height: 0;
+    .chip-purpose {
+      font-size: 13px;
     }
     .game-footer {
-      padding-inline: 5%;
+      padding: 24px;
+      font-size: 11px;
+      gap: 15px;
     }
     .game-footer > div {
-      gap: 12px;
+      gap: 15px;
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .computer-game :global(*) {
-      transition: none !important;
-      animation: none !important;
-      scroll-behavior: auto !important;
+    .workspace-menu summary > span {
+      transition: none;
     }
   }
 </style>

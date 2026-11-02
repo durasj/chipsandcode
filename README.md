@@ -7,7 +7,7 @@
 <h3 align="center">Chips and Code</h3>
 
 <p align="center">
-  Build a computer from signals to software. Connect gates, write HDL, and test your designs in the browser. Free, with no prerequisites.
+  Wondering how computers work? Build your own computer from scratch, from chips to code. Free in your browser, with no prerequisites.
   <br>
   <a href="https://chipsandcode.com/"><strong>Visit »</strong></a>
 </p>
@@ -22,13 +22,15 @@
 
 ### Build from signals to software
 
-Chips and Code opens with a 30-second visual journey from signals to software, followed by a layered landing page that moves from dark logic to light software. Each section presents a concrete engineering problem: combine signals, add numbers, retain state, execute an instruction, or express a program. The original logo and indigo identity remain. Logic is playable; higher layers are clearly marked as planned.
+The homepage retains the original invitation: **“Wondering how computers work?”** A quiet, scroll-driven journey moves from dark signals and logic to light software. One learning action starts at the foundation. Parallax diagrams explain the relationship between the layers without a mission picker, playback dashboard, or editor controls on the homepage. Reduced motion uses a static presentation; mobile layouts keep each explanation with its diagram.
 
-The silent hero can be paused, replayed, or inspected by selecting a layer; it honors reduced motion and stops advancing when offscreen or hidden. A separate 48-second captioned visual introduction opens on request, with native video controls and a text transcript. See [intro production](docs/intro-production.md) for media assets, rendering, and narration status.
+Learning starts with a single signal. Turn it on and off, then explore a supplied NAND gate one input combination at a time. Continue into NOT, AND, OR, XOR, Mux, and DMux. The first construction introduces adding a part, choosing a source, connecting pins, and testing the result through instructions that follow the actual circuit state.
 
-Seven steps cover the supplied NAND primitive and the existing NOT, AND, OR, XOR, Mux, and DMux construction exercises. Build with direct visual wiring, edit HDL, or use both side by side. The two views share one circuit model and the existing parser and hardware simulator. A concise chip contract, input switches, and one test/save toolbar keep the workspace focused on the design. Toggle inputs, inspect live signals, and verify the complete truth table before saving a chip. Invalid code remains editable with a diagnostic and cannot pass a test against an older circuit.
+The construction workspace begins in Visual mode. A compact view selector makes Code and Split available when wanted; saved view preferences are retained. Direct visual wiring and real HDL share one circuit model, parser, and simulator. Connection menus, hints, reference explanations, and signal analysis stay secondary. Test every input case before saving a chip. Invalid code stays editable and cannot pass a test against an older circuit.
 
-Progress and workbench drafts are stored on the current device. Optional interactive reference material covers Boolean logic, composition, HDL, buses, and selectors. The original reading and full hardware IDE remain accessible. Multi-bit circuits and higher computer layers require further simulator and content work; their place in the stack is a roadmap, not an implemented campaign.
+Progress and drafts are stored on the current device. Optional reference material, original reading, and the full hardware IDE remain accessible. The current playable material is single-bit logic; arithmetic, memory, architecture, and software are the path ahead, not implemented construction layers.
+
+A separate 48-second visual introduction is available through a quiet link at the end of the homepage. It has native video controls, captions, and a text transcript. The current film is silent; see [intro production](docs/intro-production.md) for its assets and narration status.
 
 See the [interaction design](docs/computer-layers-design.md), [art direction](docs/art-direction.md), and [content audit](docs/content-audit.md) for the design, its relationship to the existing material, and implementation boundaries.
 

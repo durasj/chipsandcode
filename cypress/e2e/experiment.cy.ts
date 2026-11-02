@@ -42,7 +42,10 @@ describe('Experiment - Hardware IDE', () => {
     // TODO: Find a way to suppress dynamic ESM loading for Cypress tests
     cy.wait(1500);
 
-    cy.contains('footer a', 'Open hardware IDE').click();
+    cy.contains('summary', 'Menu').click();
+    cy.findByRole('navigation', { name: 'Workspace menu' })
+      .findByRole('link', { name: /Hardware IDE/ })
+      .click();
 
     cy.findByLabelText('Experiment name').should('have.value', 'Untitled Experiment');
 

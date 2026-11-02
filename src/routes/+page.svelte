@@ -3,10 +3,10 @@
 </script>
 
 <svelte:head>
-  <title>Chips and Code — From signal to software</title>
+  <title>Chips and Code: Learning what our computers are made of</title>
   <meta
     name="description"
-    content="Build your understanding of a computer from the inside out. Explore its layers, wire real logic circuits, or write HDL. Visual and code, side by side."
+    content="Wondering how computers work? Build your understanding from chips to code, one step at a time. No prerequisites. Start free in your browser."
   />
 </svelte:head>
 <Game />

@@ -6,11 +6,13 @@ Use the original Chips and Code logo assets and indigo `#4f46e5`. The product re
 
 ## A page made of computer layers
 
-The landing page itself moves from a dark logic foundation toward light software. Each section contains one concrete engineering problem and a visual that explains it: signal behavior, binary addition, captured state, the instruction cycle, or code translated into lower abstractions. The logic section connects directly to the current workbench; higher layers remain clearly marked Planned.
+The original homepage question—“Wondering how computers work?”—leads the experience. Keep its promise: build from chips to code, with no prerequisites, free in the browser. Avoid introducing HDL, chip selection, test controls, and progress statistics before the visitor has begun.
 
-The opening hero is a 30-second silent motion sequence through the same layers. It can be paused, replayed, or inspected by selecting a chapter. Reduced motion prevents autoplay, and offscreen or hidden playback stops advancing. A separate 48-second captioned film is available on request. Keep its media production status and narration work documented in [intro production](intro-production.md).
+The homepage follows native scrolling through a dark logic foundation toward light software. A sticky technical diagram changes with the current layer and moves at different rates from its supporting planes. Each section adds one idea and one short explanation. Mobile and reduced-motion layouts keep static diagrams next to their descriptions. Do not hijack scrolling, require animation, or add chapter tabs, playback buttons, or timecodes.
 
-Use connected traces, register rows, instruction patterns, and code only where they explain the layer. Make ordering and dependency legible. The current logic layer contains the real gate sequence and reflects saved verification state. Animation must follow the behavior being explained, not supply unrelated spectacle.
+Use one prominent learning action in the opening, repeated at the conclusion. Both enter the same foundational learning flow. Keep navigation in one quiet menu and the separate 48-second introduction behind a text link at the end. Its media production and narration status remain documented in [intro production](intro-production.md).
+
+Connected traces, registers, instruction patterns, and code should explain the current layer. Make the dependency from simple to complex legible. The later layers show the intended journey; a concise availability note explains that logic is playable today. Animation must follow scrolling and support the explanation, not compete with it.
 
 The result should feel closer to a schematic, instrument panel, or software development environment than a miniature landscape. Avoid fictional place names, collectible gems, mascots, scenery, and unrelated reward metaphors.
 
@@ -36,9 +38,11 @@ Use the same clean sans-serif family throughout navigation, instructions, and th
 
 ## Workbench
 
-The editable circuit and HDL are peers. Split view should expose the connection between a pin assignment and a wire without making either representation a small disclosure. Single visual and code views remain available, especially on narrow screens. A technical signal monitor shows current inputs and outputs; test evidence shows the complete contract.
+Reveal tools as their purpose becomes clear. The first screen has one signal switch. The next introduces two NAND inputs and asks the learner to read one output at a time. The first constructed chip provides a concrete next instruction based on its current wiring.
 
-Keep the chip contract concise and present it once. Part controls, view controls, and the test/save toolbar stay easy to identify. Remove decorative model numbers, duplicate success panels, and repeated editing explanations. Invalid code is an ordinary working state with a concise diagnostic, not a destructive modal. Hints and conceptual explanations remain secondary to the construction surface.
+The editable circuit and HDL remain peers. Start a new workspace in Visual mode and offer Code or Split through one compact selector; retain an existing preference. Split view shows the relationship between a pin assignment and a wire without shrinking either into a decorative inset. Preserve readable single-view options on narrow screens.
+
+Present the chip contract once, make direct wiring the main construction action, and keep alternate connection menus in a disclosure. Test evidence appears when testing is relevant. Put signal analysis, hints, and explanations behind explicit secondary actions. A verified circuit has one save action. Invalid code is an ordinary, recoverable state with a concise diagnostic.
 
 ## Reference
 
@@ -46,6 +50,6 @@ The reference uses the same dark technical surfaces and indigo selection states.
 
 ## Accessibility and responsiveness
 
-Native buttons provide layer and gate selection, playback control, mode switching, and wiring actions. Visible labels should match their accessible names. Focus must remain obvious on dark and light surfaces. Numerical and textual state accompany color. Responsive layouts must work at 320px without making the entire page overflow; a clearly bounded code or schematic surface may scroll internally.
+Native controls provide the signal switches, view selection, disclosures, video controls, and wiring actions. Visible labels should match their accessible names. Focus must remain obvious on dark and light surfaces. Numerical and textual state accompany color. Responsive layouts must work at 320px without making the entire page overflow; a clearly bounded code or schematic surface may scroll internally.
 
 Animations should explain selection or a real signal state. Honor reduced motion and keep sound optional. No decorative motion should compete with reading code or tracing a connection.

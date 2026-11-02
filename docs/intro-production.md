@@ -1,6 +1,6 @@
 # Computer journey: intro film
 
-The introduction is a 48-second, 1280 × 720 motion film at 30 fps. It follows the same palette and technical examples as the landing hero, moving from dark signal logic to light software. The original Chips and Code logo is used unchanged.
+The introduction is a 48-second, 1280 × 720 motion film at 30 fps. It follows the same dark-to-light computer-layer journey as the homepage. The original Chips and Code logo is used unchanged.
 
 ## Current media state
 
@@ -10,27 +10,27 @@ The film introduces the relationship between computer layers. Only the existing 
 
 ## Assets
 
-| File | Purpose |
-| --- | --- |
-| `computer-intro.mp4` | H.264 / yuv420p video with fast-start metadata |
-| `computer-intro-poster.jpg` | Original brand and complete abstraction stack |
-| `computer-intro.vtt` | Timed English captions, reserving the lower part of the frame |
-| `computer-intro-transcript.txt` | Plain-text equivalent of the narration |
-| `computer-intro-timing.json` | Authoritative scene timing, narration, palette/example descriptions, audio status |
+| File                            | Purpose                                                                           |
+| ------------------------------- | --------------------------------------------------------------------------------- |
+| `computer-intro.mp4`            | H.264 / yuv420p video with fast-start metadata                                    |
+| `computer-intro-poster.jpg`     | Original brand and complete abstraction stack                                     |
+| `computer-intro.vtt`            | Timed English captions, reserving the lower part of the frame                     |
+| `computer-intro-transcript.txt` | Plain-text equivalent of the narration                                            |
+| `computer-intro-timing.json`    | Authoritative scene timing, narration, palette/example descriptions, audio status |
 
 The renderer is `scripts/render-computer-intro.py`. It uses Pillow and NumPy for precise vector-like frames, the repository's `sharp` dependency for the original SVG mark, and FFmpeg for encoding. No generated raster imagery or browser automation is involved.
 
 ## Sequence
 
-| Time | Layer | Motion and technical meaning |
-| --- | --- | --- |
-| 0.0–4.8 s | Signals | A sampled two-level waveform introduces 0 and 1. |
-| 4.8–12.2 s | Logic | NAND cycles through all four input cases; live wire values and the truth row agree. |
-| 12.2–20.2 s | Arithmetic | A four-bit addition develops from right to left: `0011 + 0001 = 0100`. |
-| 20.2–28.2 s | Memory | An eight-bit register loads `10110100` at the rising clock edge, then holds it. |
-| 28.2–36.2 s | Architecture | A conceptual fetch/decode/execute/write-back sequence evaluates `D = D + A` with `D=3` and `A=1`. |
-| 36.2–43.4 s | Software | `add(3, 1)` returns `4`, presenting the same idea at a higher level. |
-| 43.4–48.0 s | Complete stack | The five layers separate into one view, ending with “Start with logic.” |
+| Time        | Layer          | Motion and technical meaning                                                                      |
+| ----------- | -------------- | ------------------------------------------------------------------------------------------------- |
+| 0.0–4.8 s   | Signals        | A sampled two-level waveform introduces 0 and 1.                                                  |
+| 4.8–12.2 s  | Logic          | NAND cycles through all four input cases; live wire values and the truth row agree.               |
+| 12.2–20.2 s | Arithmetic     | A four-bit addition develops from right to left: `0011 + 0001 = 0100`.                            |
+| 20.2–28.2 s | Memory         | An eight-bit register loads `10110100` at the rising clock edge, then holds it.                   |
+| 28.2–36.2 s | Architecture   | A conceptual fetch/decode/execute/write-back sequence evaluates `D = D + A` with `D=3` and `A=1`. |
+| 36.2–43.4 s | Software       | `add(3, 1)` returns `4`, presenting the same idea at a higher level.                              |
+| 43.4–48.0 s | Complete stack | The five layers separate into one view, ending with “Start with logic.”                           |
 
 Color moves through `#070910`, `#111526`, `#303a57`, `#a6afc7`, and `#f2f1f7`. Indigo remains `#4f46e5`. Signal markers denote Boolean values and conceptual data flow, not electrical measurements or physical propagation speed.
 

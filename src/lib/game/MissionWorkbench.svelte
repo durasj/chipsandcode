@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import BenchMachine from './BenchMachine.svelte';
+  import NandDiscovery from './NandDiscovery.svelte';
   import { getMission, truthTable, type GateKind } from './missions';
   import {
     availableSources,
@@ -24,7 +25,7 @@
   const draftKey = `chipsandcode:workbench:draft:${missionId}:v2`;
   const legacyDraftKey = `chipsandcode:signal-isles:draft:${missionId}:v1`;
   type EditorMode = 'visual' | 'split' | 'code';
-  let editorMode: EditorMode = 'split';
+  let editorMode: EditorMode = 'visual';
   let code =
     missionId === 'nand'
       ? 'CHIP Nand {\n    IN a, b;\n    OUT out;\n\n    // Supplied primitive. Other chips are built from parts.\n    BUILTIN Nand;\n}'
@@ -43,15 +44,34 @@
   let showGuide = false;
   let remembered = false;
   let saveNotice = '';
-  let predictions: number[] = [];
-  let predictionMessage = '';
-  let selectedScenario = 0;
   let restoreReady = false;
   let copied = false;
   let selectedSource = '';
   let wiringMessage = 'Choose a source dot, then a destination pin to connect them.';
   let undoCircuit: Circuit | null = null;
   let missionHeading: HTMLHeadingElement;
+  let continueButton: HTMLButtonElement | undefined = undefined;
+  $: guidedInstruction = nextBuildInstruction(circuit, selectedSource, report?.success === true);
+
+  function nextBuildInstruction(value: Circuit, source: string, passed: boolean) {
+    if (missionId !== 'not' || completed.includes('not')) return wiringMessage;
+    if (passed) return 'Both input values work. Your first circuit is ready.';
+    if (!value.gates.length) return 'Start by adding one NAND gate above.';
+    const part = value.gates[0];
+    if (!part.inputs.a)
+      return source === 'in'
+        ? 'Now select pin a on the left of the NAND gate.'
+        : 'Select the dot beside input in. It is the source of your signal.';
+    if (!part.inputs.b)
+      return source === 'in'
+        ? 'Connect that same input to pin b. One source can feed both pins.'
+        : 'Select input in again, then connect it to pin b on the NAND gate.';
+    if (!value.outputs.out)
+      return source === part.id
+        ? 'Now select the output circle on the right to finish the connection.'
+        : 'Select the output dot on the right of the NAND gate.';
+    return 'The circuit is connected. Test it with both possible input values.';
+  }
 
   $: live = codeError
     ? { result: null, error: 'Fix the HDL error to resume the simulation.' }
@@ -59,8 +79,7 @@
   $: liveSignals = live.result?.signals ?? { ...inputValues };
   $: schematicRows = Math.max(1, Math.ceil(circuit.gates.length / 3));
   $: schematicHeight = Math.max(330, 155 + schematicRows * 172);
-  $: allPredicted = predictions.length === scenarios.length;
-  $: restoreReady = !codeError && (missionId === 'nand' ? allPredicted : report?.success === true);
+  $: restoreReady = !codeError && report?.success === true;
 
   onMount(() => {
     try {
@@ -212,10 +231,6 @@
 
   function toggleInput(pin: string) {
     inputValues = { ...inputValues, [pin]: !inputValues[pin] };
-    selectedScenario = scenarios.findIndex((scenario) =>
-      mission.inputs.every((input) => scenario.inputs[input] === inputValues[input]),
-    );
-    predictionMessage = '';
   }
 
   function sourceLabel(source: string) {
@@ -283,7 +298,7 @@
     wiringMessage = `${sourceLabel(selectedSource)} now feeds chip output ${pin}. Try a signal or test your circuit.`;
   }
 
-  function runTests() {
+  async function runTests() {
     reportError = '';
     if (codeError) {
       reportError = codeError;
@@ -292,6 +307,10 @@
     }
     try {
       report = testCircuit(mission, circuit);
+      if (report.success) {
+        await tick();
+        continueButton?.focus();
+      }
       if (!report.success) {
         const firstFailure = report.rows.find((row) => !row.passed);
         if (firstFailure) inputValues = { ...firstFailure.inputs };
@@ -305,29 +324,6 @@
     }
   }
 
-  function predict(value: boolean) {
-    const index = scenarios.findIndex((scenario) =>
-      mission.inputs.every((pin) => scenario.inputs[pin] === inputValues[pin]),
-    );
-    const expected = live.result?.outputs[mission.outputs[0]];
-    if (expected === undefined) return;
-    if (value !== expected) {
-      predictionMessage = `The NAND output is ${Number(expected)} here. Try this combination again: it is off only when both inputs are on.`;
-      return;
-    }
-    predictions = [...new Set([...predictions, index])];
-    selectedScenario = index;
-    predictionMessage = `Exactly. ${mission.inputs.map((pin) => `${pin}=${Number(inputValues[pin])}`).join(', ')} produces ${Number(expected)}.`;
-  }
-
-  function nextPrediction() {
-    const index = scenarios.findIndex((_, row) => !predictions.includes(row));
-    if (index < 0) return;
-    selectedScenario = index;
-    inputValues = { ...scenarios[index].inputs };
-    predictionMessage = '';
-  }
-
   function resetBoard() {
     undoCircuit = JSON.parse(JSON.stringify(circuit)) as Circuit;
     undoCode = code;
@@ -335,8 +331,6 @@
     circuit = createCircuit(mission);
     report = null;
     reportError = '';
-    predictions = [];
-    predictionMessage = '';
     selectedSource = '';
     changed(true);
   }
@@ -365,643 +359,578 @@
   }
 </script>
 
-<section class="bench" aria-label={`${mission.chip} workbench`}>
-  <header class="bench-header">
-    <button class="world-back" on:click={onclose}><span aria-hidden="true">←</span> Layers</button>
-    <button
-      class="notes-trigger"
-      aria-expanded={showGuide}
-      on:click={() => (showGuide = !showGuide)}
-      ><span aria-hidden="true">▤</span> How it works</button
-    >
-  </header>
+{#if missionId === 'nand'}
+  <NandDiscovery oncomplete={() => oncomplete(missionId)} {onclose} />
+{:else}
+  <section class="bench" aria-label={`${mission.chip} workbench`}>
+    <header class="bench-header">
+      <button class="world-back" on:click={onclose}><span aria-hidden="true">←</span> Layers</button
+      >
+      <button
+        class="notes-trigger"
+        aria-expanded={showGuide}
+        on:click={() => (showGuide = !showGuide)}>Help</button
+      >
+    </header>
 
-  <div class="mission-title-row">
-    <div>
-      <p class="eyebrow">
-        CHALLENGE {String(mission.number).padStart(2, '0')} <span> / </span>
-        {mission.location}
-      </p>
-      <h1 tabindex="-1" bind:this={missionHeading}>{mission.title}</h1>
-      <p class="mission-brief">{mission.goal}</p>
-    </div>
-    <div class="chip-stamp">
-      <span>CHIP</span><strong>{mission.chip}</strong><span
-        >{completed.includes(missionId) ? 'VERIFIED' : 'IN PROGRESS'}</span
-      >
-    </div>
-  </div>
+    {#if showGuide}<section class="field-guide">
+        <div class="instrument-heading">
+          <span class="eyebrow">REFERENCE</span><button
+            aria-label="Close reference"
+            on:click={() => (showGuide = false)}>×</button
+          >
+        </div>
+        <h2>{mission.chip}, under the hood.</h2>
+        <p>{mission.explanation}</p>
+        <a href="/learn/hardware/boolean-logic/background"
+          >Read the full background <span aria-hidden="true">↗</span></a
+        ><a href="/learn/hardware/boolean-logic/project"
+          >Original gate specifications <span aria-hidden="true">↗</span></a
+        >
+      </section>{/if}
 
-  <div class="signal-inputs" aria-label="Live input switches">
-    <span class="switch-label">INPUT SIGNALS</span>
-    {#each mission.inputs as pin}
-      <button
-        class:input-on={inputValues[pin]}
-        class="input-switch"
-        aria-pressed={inputValues[pin]}
-        on:click={() => toggleInput(pin)}
-        ><span>{pin}</span><span class="switch-track"><i></i></span><strong
-          >{Number(inputValues[pin])}</strong
-        ></button
-      >
-    {/each}
-  </div>
-  <div class="editor-toolbar">
-    <div class="mode-switch" role="group" aria-label="Editor view">
-      <button
-        class:active={editorMode === 'visual'}
-        aria-pressed={editorMode === 'visual'}
-        on:click={() => setMode('visual')}><span aria-hidden="true">⌘</span> Visual</button
-      >
-      <button
-        class:active={editorMode === 'split'}
-        aria-pressed={editorMode === 'split'}
-        on:click={() => setMode('split')}><span aria-hidden="true">◫</span> Split</button
-      >
-      <button
-        class:active={editorMode === 'code'}
-        aria-pressed={editorMode === 'code'}
-        on:click={() => setMode('code')}><span aria-hidden="true">&lt;/&gt;</span> Code</button
-      >
-    </div>
-    <div class="toolbar-actions">
-      {#if missionId !== 'nand'}
-        <button class="test-button" disabled={!!codeError} on:click={runTests}
-          ><span aria-hidden="true">▷</span> Test circuit</button
-        >
-      {/if}
-      <span
-        class="toolbar-status"
-        class:status-error={!!codeError || !!reportError || (report !== null && !report.success)}
-        aria-live="polite"
-      >
-        {#if missionId === 'nand'}
-          {predictions.length} / {scenarios.length} cases discovered
-        {:else if codeError}
-          HDL needs attention
-        {:else if reportError}
-          Circuit cannot run
-        {:else if report}
-          {report.passed} / {report.total} pass
-        {:else}
-          {live.result ? 'Ready to test' : 'Draft'}
-        {/if}
-      </span>
-      {#if restoreReady}
-        <button class="toolbar-save" on:click={() => oncomplete(missionId)}
-          >Save verified chip <span aria-hidden="true">↗</span></button
-        >
-      {:else if missionId === 'nand'}
-        <a class="results-link" href="#nand-discovery">Discover <span aria-hidden="true">↓</span></a
-        >
-      {:else if report || reportError}
-        <a class="results-link" href="#circuit-results">Details <span aria-hidden="true">↓</span></a
-        >
-      {/if}
-    </div>
-  </div>
-  {#if codeError}
-    <div class="code-error" role="alert">
+    <div class="mission-title-row">
       <div>
-        <strong>HDL could not be applied.</strong>
-        <p>{codeError}</p>
-        <span>Your source is preserved. Simulation is paused until it compiles.</span>
+        <p class="eyebrow">
+          CHALLENGE {String(mission.number).padStart(2, '0')} <span> / </span>
+          {mission.location}
+        </p>
+        <h1 tabindex="-1" bind:this={missionHeading}>{mission.title}</h1>
+        <p class="mission-brief">{mission.goal}</p>
       </div>
-      <button on:click={useLastCircuit}>Use last valid circuit</button>
     </div>
-  {/if}
-  <div class="bench-layout">
-    <div class="workspace" class:split-view={editorMode === 'split'}>
-      {#if editorMode !== 'code'}
-        <div class="visual-workspace" class:paused={!!codeError}>
-          <div class="board-shell">
-            <div class="board-heading">
-              <span class="small-light"></span><span>VISUAL CIRCUIT</span>
-            </div>
 
-            {#if missionId !== 'nand'}
-              <div class="wiring-instruction">
-                <span aria-hidden="true">⌁</span>
-                <p aria-live="polite">{wiringMessage}</p>
-                {#if selectedSource}<button
-                    on:click={() => {
-                      selectedSource = '';
-                      wiringMessage =
-                        'Choose a source dot, then a destination pin to connect them.';
-                    }}>Cancel wire</button
-                  >{/if}
+    {#if live.result}
+      <div class="signal-inputs" aria-label="Live input switches">
+        <span class="switch-label">INPUT SIGNALS</span>
+        {#each mission.inputs as pin}
+          <button
+            class:input-on={inputValues[pin]}
+            class="input-switch"
+            aria-pressed={inputValues[pin]}
+            on:click={() => toggleInput(pin)}
+            ><span>{pin}</span><span class="switch-track"><i></i></span><strong
+              >{Number(inputValues[pin])}</strong
+            ></button
+          >
+        {/each}
+      </div>
+    {/if}
+    <div class="editor-toolbar">
+      <label class="view-choice">
+        <span class="sr-only">Editor view</span>
+        <select
+          aria-label="Editor view"
+          value={editorMode}
+          on:change={(event) => setMode(event.currentTarget.value as EditorMode)}
+        >
+          <option value="visual">Visual</option>
+          <option value="code">Code</option>
+          <option value="split">Split</option>
+        </select>
+      </label>
+      <div class="toolbar-actions">
+        {#if codeError || reportError || report}
+          <span
+            class="toolbar-status"
+            class:status-error={!!codeError ||
+              !!reportError ||
+              (report !== null && !report.success)}
+            aria-live="polite"
+          >
+            {codeError
+              ? 'Check the code'
+              : reportError
+                ? 'Check the connections'
+                : report
+                  ? `${report.passed} / ${report.total} pass`
+                  : ''}
+          </span>
+        {/if}
+        {#if restoreReady}
+          <button
+            class="toolbar-save"
+            bind:this={continueButton}
+            on:click={() => oncomplete(missionId)}
+            >Continue <span aria-hidden="true">→</span></button
+          >
+        {:else if live.result || codeError || reportError}
+          <button class="test-button" disabled={!!codeError || !live.result} on:click={runTests}
+            >Test circuit</button
+          >
+        {/if}
+      </div>
+    </div>
+    {#if codeError}
+      <div class="code-error" role="alert">
+        <div>
+          <strong>HDL could not be applied.</strong>
+          <p>{codeError}</p>
+          <span>Your source is preserved. Simulation is paused until it compiles.</span>
+        </div>
+        <button on:click={useLastCircuit}>Use last valid circuit</button>
+      </div>
+    {/if}
+    <div class="bench-layout">
+      <div class="workspace" class:split-view={editorMode === 'split'}>
+        {#if editorMode !== 'code'}
+          <div class="visual-workspace" class:paused={!!codeError}>
+            <div class="board-shell">
+              <div class="board-heading">
+                <span>Circuit</span>
+                <div class="part-buttons">
+                  {#each mission.availableParts as type}<button
+                      on:click={() => addGate(type)}
+                      disabled={!!codeError || circuit.gates.length >= 24}
+                      ><span aria-hidden="true">＋</span><strong>{type}</strong></button
+                    >{/each}
+                </div>
               </div>
-            {/if}
-            <div class="circuit-viewport">
-              <svg
-                class="circuit-svg"
-                viewBox={`0 0 900 ${schematicHeight}`}
-                role="group"
-                aria-label={`Interactive circuit with ${circuit.gates.length} parts. Select a source dot, then a destination input pin. Connection menus are also available below.`}
-              >
-                <defs>
-                  <pattern id="bench-grid" width="22" height="22" patternUnits="userSpaceOnUse"
-                    ><circle cx="2" cy="2" r="1" fill="#70758c" opacity=".35" /></pattern
-                  >
-                  <filter id="bench-glow"><feGaussianBlur stdDeviation="4" /></filter>
-                </defs>
-                <rect x="0" y="0" width="900" height={schematicHeight} fill="url(#bench-grid)" />
-                <text x="35" y="35" class="diagram-label">INPUT</text>
-                <text x="767" y="35" class="diagram-label">OUTPUT</text>
-                {#each circuit.gates as gate, index}
-                  {@const position = gatePosition(index)}
-                  {#each gatePins(gate.type) as pin, pinIndex}
-                    {#if gate.inputs[pin]}
+
+              {#if missionId !== 'nand'}
+                <div class="wiring-instruction">
+                  <span aria-hidden="true">⌁</span>
+                  <p aria-live="polite">{guidedInstruction}</p>
+                  {#if selectedSource}<button
+                      on:click={() => {
+                        selectedSource = '';
+                        wiringMessage =
+                          'Choose a source dot, then a destination pin to connect them.';
+                      }}>Cancel wire</button
+                    >{/if}
+                </div>
+              {/if}
+              <div class="circuit-viewport">
+                <svg
+                  class="circuit-svg"
+                  viewBox={`0 0 900 ${schematicHeight}`}
+                  role="group"
+                  aria-label={`Interactive circuit with ${circuit.gates.length} parts. Select a source dot, then a destination input pin. Connection menus are also available below.`}
+                >
+                  <defs>
+                    <pattern id="bench-grid" width="22" height="22" patternUnits="userSpaceOnUse"
+                      ><circle cx="2" cy="2" r="1" fill="#70758c" opacity=".35" /></pattern
+                    >
+                    <filter id="bench-glow"><feGaussianBlur stdDeviation="4" /></filter>
+                  </defs>
+                  <rect x="0" y="0" width="900" height={schematicHeight} fill="url(#bench-grid)" />
+                  <text x="35" y="35" class="diagram-label">INPUT</text>
+                  <text x="767" y="35" class="diagram-label">OUTPUT</text>
+                  {#each circuit.gates as gate, index}
+                    {@const position = gatePosition(index)}
+                    {#each gatePins(gate.type) as pin, pinIndex}
+                      {#if gate.inputs[pin]}
+                        <path
+                          d={wire(gate.inputs[pin], position.x, position.y + 25 + pinIndex * 60)}
+                          class="circuit-wire"
+                          class:wire-on={signal(gate.inputs[pin], liveSignals) === true}
+                        />
+                      {/if}
+                    {/each}
+                  {/each}
+                  {#each mission.outputs as pin, index}
+                    {#if circuit.outputs[pin]}
                       <path
-                        d={wire(gate.inputs[pin], position.x, position.y + 25 + pinIndex * 60)}
+                        d={wire(circuit.outputs[pin], 795, 125 + index * 106)}
                         class="circuit-wire"
-                        class:wire-on={signal(gate.inputs[pin], liveSignals) === true}
+                        class:wire-on={signal(circuit.outputs[pin], liveSignals) === true}
                       />
                     {/if}
                   {/each}
-                {/each}
-                {#each mission.outputs as pin, index}
-                  {#if circuit.outputs[pin]}
-                    <path
-                      d={wire(circuit.outputs[pin], 795, 125 + index * 106)}
-                      class="circuit-wire"
-                      class:wire-on={signal(circuit.outputs[pin], liveSignals) === true}
-                    />
-                  {/if}
-                {/each}
-                {#each mission.inputs as pin, index}
-                  <g transform={`translate(38, ${85 + index * 76})`}>
-                    <rect
-                      width="38"
-                      height="40"
-                      rx="8"
-                      fill={inputValues[pin] ? '#4f46e5' : '#242735'}
-                      stroke={inputValues[pin] ? '#a39bff' : '#50566d'}
-                    />
-                    <text
-                      x="19"
-                      y="26"
-                      text-anchor="middle"
-                      fill={inputValues[pin] ? '#fff' : '#adb1c3'}
-                      font-family="monospace"
-                      font-size="20">{Number(inputValues[pin])}</text
-                    >
-                    <text x="19" y="58" text-anchor="middle" class="diagram-label">{pin}</text>
-                    <circle cx="38" cy="20" r="4" fill="#8b83ff" />
-                    <foreignObject x="10" y="-8" width="56" height="56">
-                      <button
-                        class="svg-pin-button source-pin"
-                        class:source-selected={selectedSource === pin}
-                        aria-pressed={missionId === 'nand'
-                          ? inputValues[pin]
-                          : selectedSource === pin}
-                        aria-label={missionId === 'nand'
-                          ? `Toggle input ${pin}`
-                          : `Select source input ${pin}`}
-                        on:click={() => selectSource(pin)}><span></span></button
-                      >
-                    </foreignObject>
-                  </g>
-                {/each}
-                {#each circuit.gates as gate, index}
-                  {@const position = gatePosition(index)}
-                  <g transform={`translate(${position.x}, ${position.y})`}>
-                    <rect
-                      x="0"
-                      y="5"
-                      width="132"
-                      height="110"
-                      rx="9"
-                      fill="#07080e"
-                      opacity=".12"
-                    />
-                    <rect width="132" height="110" rx="9" fill="#1d2031" stroke="#5c568d" />
-                    <path
-                      d="M 14 -6 v 6 M 34 -6 v 6 M 54 -6 v 6 M 74 -6 v 6 M 94 -6 v 6 M 114 -6 v 6 M 14 110 v 6 M 34 110 v 6 M 54 110 v 6 M 74 110 v 6 M 94 110 v 6 M 114 110 v 6"
-                      stroke="#8b83ff"
-                      stroke-width="4"
-                    />
-                    <text
-                      x="66"
-                      y="46"
-                      text-anchor="middle"
-                      fill="#f0eefc"
-                      font-size="20"
-                      font-weight="700"
-                      font-family="monospace">{gate.type.toUpperCase()}</text
-                    >
-                    <text
-                      x="66"
-                      y="65"
-                      text-anchor="middle"
-                      fill="#a1a5b6"
-                      font-size="14"
-                      font-family="monospace">PART {String(index + 1).padStart(2, '0')}</text
-                    >
-                    {#each gatePins(gate.type) as pin, pinIndex}
-                      <circle
-                        cx="0"
-                        cy={25 + pinIndex * 60}
-                        r="4"
-                        fill={signal(gate.inputs[pin], liveSignals) === true
-                          ? '#b4acff'
-                          : '#8b83ff'}
+                  {#each mission.inputs as pin, index}
+                    <g transform={`translate(38, ${85 + index * 76})`}>
+                      <rect
+                        width="38"
+                        height="40"
+                        rx="8"
+                        fill={inputValues[pin] ? '#4f46e5' : '#242735'}
+                        stroke={inputValues[pin] ? '#a39bff' : '#50566d'}
                       />
-                      <text x="12" y={29 + pinIndex * 60} class="diagram-pin gate-pin-label"
-                        >{pin}</text
+                      <text
+                        x="19"
+                        y="26"
+                        text-anchor="middle"
+                        fill={inputValues[pin] ? '#fff' : '#adb1c3'}
+                        font-family="monospace"
+                        font-size="20">{Number(inputValues[pin])}</text
+                      >
+                      <text x="19" y="58" text-anchor="middle" class="diagram-label">{pin}</text>
+                      <circle cx="38" cy="20" r="4" fill="#8b83ff" />
+                      <foreignObject x="10" y="-8" width="56" height="56">
+                        <button
+                          class="svg-pin-button source-pin"
+                          class:source-selected={selectedSource === pin}
+                          aria-pressed={missionId === 'nand'
+                            ? inputValues[pin]
+                            : selectedSource === pin}
+                          aria-label={missionId === 'nand'
+                            ? `Toggle input ${pin}`
+                            : `Select source input ${pin}`}
+                          on:click={() => selectSource(pin)}><span></span></button
+                        >
+                      </foreignObject>
+                    </g>
+                  {/each}
+                  {#each circuit.gates as gate, index}
+                    {@const position = gatePosition(index)}
+                    <g transform={`translate(${position.x}, ${position.y})`}>
+                      <rect
+                        x="0"
+                        y="5"
+                        width="132"
+                        height="110"
+                        rx="9"
+                        fill="#07080e"
+                        opacity=".12"
+                      />
+                      <rect width="132" height="110" rx="9" fill="#1d2031" stroke="#5c568d" />
+                      <path
+                        d="M 14 -6 v 6 M 34 -6 v 6 M 54 -6 v 6 M 74 -6 v 6 M 94 -6 v 6 M 114 -6 v 6 M 14 110 v 6 M 34 110 v 6 M 54 110 v 6 M 74 110 v 6 M 94 110 v 6 M 114 110 v 6"
+                        stroke="#8b83ff"
+                        stroke-width="4"
+                      />
+                      <text
+                        x="66"
+                        y="46"
+                        text-anchor="middle"
+                        fill="#f0eefc"
+                        font-size="20"
+                        font-weight="700"
+                        font-family="monospace">{gate.type.toUpperCase()}</text
+                      >
+                      <text
+                        x="66"
+                        y="65"
+                        text-anchor="middle"
+                        fill="#a1a5b6"
+                        font-size="14"
+                        font-family="monospace">PART {String(index + 1).padStart(2, '0')}</text
+                      >
+                      {#each gatePins(gate.type) as pin, pinIndex}
+                        <circle
+                          cx="0"
+                          cy={25 + pinIndex * 60}
+                          r="4"
+                          fill={signal(gate.inputs[pin], liveSignals) === true
+                            ? '#b4acff'
+                            : '#8b83ff'}
+                        />
+                        <text x="12" y={29 + pinIndex * 60} class="diagram-pin gate-pin-label"
+                          >{pin}</text
+                        >
+                        {#if missionId !== 'nand'}
+                          <foreignObject x="-28" y={pinIndex * 60 - 3} width="56" height="56">
+                            <button
+                              class="svg-pin-button target-pin"
+                              class:target-ready={!!selectedSource &&
+                                availableSources(mission, circuit, gate.id).includes(
+                                  selectedSource,
+                                )}
+                              aria-label={`Connect to part ${index + 1} ${gate.type} input ${pin}`}
+                              on:click={() => connectPin(gate.id, pin)}><span></span></button
+                            >
+                          </foreignObject>
+                        {/if}
+                      {/each}
+                      <circle
+                        cx="132"
+                        cy="55"
+                        r="4"
+                        fill={signal(gate.id, liveSignals) === true ? '#b4acff' : '#8b83ff'}
+                      />
+                      <text x="148" y="59" class="diagram-pin"
+                        >{signal(gate.id, liveSignals) === null
+                          ? '·'
+                          : Number(signal(gate.id, liveSignals))}</text
                       >
                       {#if missionId !== 'nand'}
-                        <foreignObject x="-28" y={pinIndex * 60 - 3} width="56" height="56">
+                        <foreignObject x="104" y="27" width="56" height="56">
                           <button
-                            class="svg-pin-button target-pin"
-                            class:target-ready={!!selectedSource &&
-                              availableSources(mission, circuit, gate.id).includes(selectedSource)}
-                            aria-label={`Connect to part ${index + 1} ${gate.type} input ${pin}`}
-                            on:click={() => connectPin(gate.id, pin)}><span></span></button
+                            class="svg-pin-button source-pin"
+                            class:source-selected={selectedSource === gate.id}
+                            aria-pressed={selectedSource === gate.id}
+                            aria-label={`Select source part ${index + 1} ${gate.type} output`}
+                            on:click={() => selectSource(gate.id)}><span></span></button
                           >
                         </foreignObject>
                       {/if}
-                    {/each}
-                    <circle
-                      cx="132"
-                      cy="55"
-                      r="4"
-                      fill={signal(gate.id, liveSignals) === true ? '#b4acff' : '#8b83ff'}
-                    />
-                    <text x="148" y="59" class="diagram-pin"
-                      >{signal(gate.id, liveSignals) === null
-                        ? '·'
-                        : Number(signal(gate.id, liveSignals))}</text
+                    </g>
+                  {/each}
+                  {#if circuit.gates.length === 0}
+                    <g transform="translate(390, 110)">
+                      <rect
+                        x="-35"
+                        y="-23"
+                        width="140"
+                        height="90"
+                        rx="13"
+                        fill="#171a26"
+                        stroke="#4f5369"
+                        stroke-dasharray="5 5"
+                      />
+                      <text
+                        x="35"
+                        y="17"
+                        text-anchor="middle"
+                        fill="#b8b2e5"
+                        font-family="monospace"
+                        font-size="27">+</text
+                      >
+                      <text x="35" y="41" text-anchor="middle" class="diagram-label"
+                        >YOUR CIRCUIT</text
+                      >
+                    </g>
+                    <text x="425" y="231" text-anchor="middle" fill="#a1a5b6" font-size="13"
+                      >Add a gate above to start your circuit.</text
                     >
-                    {#if missionId !== 'nand'}
-                      <foreignObject x="104" y="27" width="56" height="56">
-                        <button
-                          class="svg-pin-button source-pin"
-                          class:source-selected={selectedSource === gate.id}
-                          aria-pressed={selectedSource === gate.id}
-                          aria-label={`Select source part ${index + 1} ${gate.type} output`}
-                          on:click={() => selectSource(gate.id)}><span></span></button
-                        >
-                      </foreignObject>
-                    {/if}
-                  </g>
-                {/each}
-                {#if circuit.gates.length === 0}
-                  <g transform="translate(390, 110)">
-                    <rect
-                      x="-35"
-                      y="-23"
-                      width="140"
-                      height="90"
-                      rx="13"
-                      fill="#171a26"
-                      stroke="#4f5369"
-                      stroke-dasharray="5 5"
-                    />
-                    <text
-                      x="35"
-                      y="17"
-                      text-anchor="middle"
-                      fill="#b8b2e5"
-                      font-family="monospace"
-                      font-size="27">+</text
-                    >
-                    <text x="35" y="41" text-anchor="middle" class="diagram-label"
-                      >YOUR CIRCUIT</text
-                    >
-                  </g>
-                  <text x="425" y="231" text-anchor="middle" fill="#a1a5b6" font-size="13"
-                    >Add a gate below or write HDL beside this view.</text
-                  >
-                {/if}
-                {#each mission.outputs as pin, index}
-                  {@const outputValue = live.result?.outputs[pin]}
-                  <g transform={`translate(795, ${125 + index * 106})`}>
-                    {#if outputValue}<circle
+                  {/if}
+                  {#each mission.outputs as pin, index}
+                    {@const outputValue = live.result?.outputs[pin]}
+                    <g transform={`translate(795, ${125 + index * 106})`}>
+                      {#if outputValue}<circle
+                          cx="25"
+                          cy="0"
+                          r="29"
+                          fill="#8b83ff"
+                          opacity=".32"
+                          filter="url(#bench-glow)"
+                        />{/if}
+                      <circle
                         cx="25"
                         cy="0"
-                        r="29"
-                        fill="#8b83ff"
-                        opacity=".32"
-                        filter="url(#bench-glow)"
-                      />{/if}
-                    <circle
-                      cx="25"
-                      cy="0"
-                      r="24"
-                      fill={outputValue === true ? '#a399ff' : '#262a3b'}
-                      stroke={outputValue === true ? '#4f46e5' : '#555b73'}
-                      stroke-width="3"
-                    />
-                    <text
-                      x="25"
-                      y="7"
-                      text-anchor="middle"
-                      fill="#fff"
-                      font-family="monospace"
-                      font-size="21"
-                      font-weight="700"
-                      >{outputValue === undefined ? '?' : Number(outputValue)}</text
-                    >
-                    <text x="25" y="44" text-anchor="middle" class="diagram-label">{pin}</text>
-                    {#if missionId !== 'nand'}
-                      <foreignObject x="-3" y="-28" width="56" height="56">
-                        <button
-                          class="svg-pin-button output-pin"
-                          class:target-ready={!!selectedSource}
-                          aria-label={`Connect chip output ${pin}`}
-                          on:click={() => connectOutput(pin)}><span></span></button
-                        >
-                      </foreignObject>
-                    {/if}
-                  </g>
-                {/each}
-              </svg>
-            </div>
-            <p class="sr-only" aria-live="polite">
-              {live.result
-                ? `Live output: ${Object.entries(live.result.outputs)
-                    .map(([pin, value]) => `${pin} ${Number(value)}`)
-                    .join(', ')}`
-                : 'Circuit is not yet fully connected.'}
-            </p>
-            <div class="board-footer">
-              <span><span class="signal-key"></span> Live signal = 1</span><span
-                >{circuit.gates.length}
-                {circuit.gates.length === 1 ? 'part' : 'parts'} on board</span
-              ><span class="board-state"
-                >{codeError ? 'PAUSED' : live.result ? 'LIVE' : 'UNWIRED'}</span
-              >
-            </div>
-          </div>
-
-          {#if missionId !== 'nand'}
-            <section class="parts-bay" aria-label="Circuit parts and connections">
-              <div class="parts-heading">
-                <div>
-                  <p class="eyebrow">SUPPLIED PARTS</p>
-                  <h2>Component library</h2>
-                </div>
-                <div class="clear-actions">
-                  {#if undoCircuit}<button class="reset-button undo-clear" on:click={undoClear}
-                      >Undo clear</button
-                    >{/if}<button
-                    class="reset-button"
-                    on:click={resetBoard}
-                    disabled={circuit.gates.length === 0 &&
-                      mission.outputs.every((pin) => !circuit.outputs[pin])}>Clear circuit</button
-                  >
-                </div>
+                        r="24"
+                        fill={outputValue === true ? '#a399ff' : '#262a3b'}
+                        stroke={outputValue === true ? '#4f46e5' : '#555b73'}
+                        stroke-width="3"
+                      />
+                      <text
+                        x="25"
+                        y="7"
+                        text-anchor="middle"
+                        fill="#fff"
+                        font-family="monospace"
+                        font-size="21"
+                        font-weight="700"
+                        >{outputValue === undefined ? '?' : Number(outputValue)}</text
+                      >
+                      <text x="25" y="44" text-anchor="middle" class="diagram-label">{pin}</text>
+                      {#if missionId !== 'nand'}
+                        <foreignObject x="-3" y="-28" width="56" height="56">
+                          <button
+                            class="svg-pin-button output-pin"
+                            class:target-ready={!!selectedSource}
+                            aria-label={`Connect chip output ${pin}`}
+                            on:click={() => connectOutput(pin)}><span></span></button
+                          >
+                        </foreignObject>
+                      {/if}
+                    </g>
+                  {/each}
+                </svg>
               </div>
-              <div class="part-buttons">
-                {#each mission.availableParts as type}<button
-                    on:click={() => addGate(type)}
-                    disabled={!!codeError || circuit.gates.length >= 24}
-                    ><span aria-hidden="true">＋</span><strong>{type}</strong><span
-                      class="part-pin-count">{gatePins(type).length} IN / 1 OUT</span
-                    ></button
-                  >{/each}
-              </div>
-              <p class="connection-help">
-                Add a gate, then connect its pins on the board or with the menus.
+              <p class="sr-only" aria-live="polite">
+                {live.result
+                  ? `Live output: ${Object.entries(live.result.outputs)
+                      .map(([pin, value]) => `${pin} ${Number(value)}`)
+                      .join(', ')}`
+                  : 'Circuit is not yet fully connected.'}
               </p>
-              {#if circuit.gates.length > 0}
-                <div class="gate-controls">
-                  {#each circuit.gates as gate, index (gate.id)}
-                    <div class="gate-control">
-                      <div class="gate-control-heading">
-                        <span class="part-index">{String(index + 1).padStart(2, '0')}</span><strong
-                          >{gate.type}</strong
-                        ><button
-                          disabled={!!codeError}
-                          aria-label={`Remove part ${index + 1}, ${gate.type}`}
-                          on:click={() => removeGate(gate.id)}>×</button
-                        >
-                      </div>
-                      {#each gatePins(gate.type) as pin}
-                        <label
-                          ><span>Pin <b>{pin}</b></span><select
-                            disabled={!!codeError}
-                            aria-label={`Part ${index + 1} ${gate.type} input ${pin}`}
-                            value={gate.inputs[pin] ?? ''}
-                            on:change={(event) =>
-                              setConnection(gate.id, pin, event.currentTarget.value)}
-                            ><option value="">Choose source…</option
-                            >{#each availableSources(mission, circuit, gate.id) as source}<option
-                                value={source}>{sourceLabel(source)}</option
-                              >{/each}</select
-                          ></label
-                        >
+            </div>
+
+            {#if missionId !== 'nand'}
+              <section class="parts-bay" aria-label="Circuit parts and connections">
+                <details class="connections-disclosure">
+                  <summary>Connections</summary>
+                  <div class="clear-actions">
+                    {#if undoCircuit}<button class="reset-button undo-clear" on:click={undoClear}
+                        >Undo clear</button
+                      >{/if}<button
+                      class="reset-button"
+                      on:click={resetBoard}
+                      disabled={circuit.gates.length === 0 &&
+                        mission.outputs.every((pin) => !circuit.outputs[pin])}>Clear circuit</button
+                    >
+                  </div>
+
+                  {#if circuit.gates.length > 0}
+                    <div class="gate-controls">
+                      {#each circuit.gates as gate, index (gate.id)}
+                        <div class="gate-control">
+                          <div class="gate-control-heading">
+                            <span class="part-index">{String(index + 1).padStart(2, '0')}</span
+                            ><strong>{gate.type}</strong><button
+                              disabled={!!codeError}
+                              aria-label={`Remove part ${index + 1}, ${gate.type}`}
+                              on:click={() => removeGate(gate.id)}>×</button
+                            >
+                          </div>
+                          {#each gatePins(gate.type) as pin}
+                            <label
+                              ><span>Pin <b>{pin}</b></span><select
+                                disabled={!!codeError}
+                                aria-label={`Part ${index + 1} ${gate.type} input ${pin}`}
+                                value={gate.inputs[pin] ?? ''}
+                                on:change={(event) =>
+                                  setConnection(gate.id, pin, event.currentTarget.value)}
+                                ><option value="">Choose source…</option
+                                >{#each availableSources(mission, circuit, gate.id) as source}<option
+                                    value={source}>{sourceLabel(source)}</option
+                                  >{/each}</select
+                              ></label
+                            >
+                          {/each}
+                        </div>
                       {/each}
                     </div>
-                  {/each}
-                </div>
-              {/if}
-              <div class="output-connections">
-                <span class="output-title">CHIP OUTPUTS</span>{#each mission.outputs as pin}<label
-                    ><span>Output <b>{pin}</b></span><select
-                      disabled={!!codeError}
-                      aria-label={`Chip output ${pin}`}
-                      value={circuit.outputs[pin] ?? ''}
-                      on:change={(event) => setOutput(pin, event.currentTarget.value)}
-                      ><option value="">Choose source…</option
-                      >{#each availableSources(mission, circuit) as source}<option value={source}
-                          >{sourceLabel(source)}</option
-                        >{/each}</select
-                    ></label
-                  >{/each}
-              </div>
-            </section>
-          {/if}
-        </div>
-      {/if}
-      {#if editorMode !== 'visual'}
-        <section class="hdl-panel" aria-label="HDL code editor">
-          <div class="code-heading">
-            <span><b aria-hidden="true">&lt;/&gt;</b> {mission.chip}.hdl</span><button
-              on:click={copyHDL}
-              disabled={!code}>{copied ? 'Copied' : 'Copy code'}</button
-            >
+                  {/if}
+                  <div class="output-connections">
+                    <span class="output-title">CHIP OUTPUTS</span
+                    >{#each mission.outputs as pin}<label
+                        ><span>Output <b>{pin}</b></span><select
+                          disabled={!!codeError}
+                          aria-label={`Chip output ${pin}`}
+                          value={circuit.outputs[pin] ?? ''}
+                          on:change={(event) => setOutput(pin, event.currentTarget.value)}
+                          ><option value="">Choose source…</option
+                          >{#each availableSources(mission, circuit) as source}<option
+                              value={source}>{sourceLabel(source)}</option
+                            >{/each}</select
+                        ></label
+                      >{/each}
+                  </div>
+                </details>
+              </section>
+            {/if}
           </div>
-          <div class="code-editor" class:has-error={!!codeError}>
-            <div class="line-numbers" aria-hidden="true">
-              <div style={`transform: translateY(-${codeScroll}px)`}>
-                {#each code.split('\n') as _, index}<span>{index + 1}</span>{/each}
-              </div>
+        {/if}
+        {#if editorMode !== 'visual'}
+          <section class="hdl-panel" aria-label="HDL code editor">
+            <div class="code-heading">
+              <span><b aria-hidden="true">&lt;/&gt;</b> {mission.chip}.hdl</span><button
+                on:click={copyHDL}
+                disabled={!code}>{copied ? 'Copied' : 'Copy code'}</button
+              >
             </div>
-            <textarea
-              aria-label="HDL source"
-              aria-describedby="hdl-help"
-              value={code}
-              spellcheck="false"
-              autocapitalize="off"
-              autocomplete="off"
-              readonly={missionId === 'nand'}
-              on:input={(event) => editCode(event.currentTarget.value)}
-              on:scroll={(event) => (codeScroll = event.currentTarget.scrollTop)}
-            ></textarea>
-          </div>
-          <div class="code-status">
-            <span>{codeError ? 'HDL ERROR' : live.result ? 'COMPILED' : 'DRAFT'}</span><span
-              >HDL · {code.split('\n').length} lines</span
+            <div class="code-editor" class:has-error={!!codeError}>
+              <div class="line-numbers" aria-hidden="true">
+                <div style={`transform: translateY(-${codeScroll}px)`}>
+                  {#each code.split('\n') as _, index}<span>{index + 1}</span>{/each}
+                </div>
+              </div>
+              <textarea
+                aria-label="HDL source"
+                aria-describedby="hdl-help"
+                value={code}
+                spellcheck="false"
+                autocapitalize="off"
+                autocomplete="off"
+                readonly={missionId === 'nand'}
+                on:input={(event) => editCode(event.currentTarget.value)}
+                on:scroll={(event) => (codeScroll = event.currentTarget.scrollTop)}
+              ></textarea>
+            </div>
+            <div class="code-status">
+              <span>{codeError ? 'HDL ERROR' : live.result ? 'COMPILED' : 'DRAFT'}</span><span
+                >HDL · {code.split('\n').length} lines</span
+              >
+            </div>
+            <p id="hdl-help">
+              {missionId === 'nand'
+                ? 'NAND is supplied by the simulator; its HDL is read-only.'
+                : 'Edit either view. Visual edits rewrite the HDL.'}
+            </p>
+            <a href="/experiment/hardware-ide"
+              >Open full hardware IDE <span aria-hidden="true">↗</span></a
             >
-          </div>
-          <p id="hdl-help">
-            {missionId === 'nand'
-              ? 'NAND is supplied by the simulator; its HDL is read-only.'
-              : 'Edit either view. Visual edits rewrite the HDL.'}
-          </p>
-          <a href="/experiment/hardware-ide"
-            >Open full hardware IDE <span aria-hidden="true">↗</span></a
-          >
-        </section>
-      {/if}
-    </div>
-
-    <p class="draft-status">{saveNotice || 'Drafts are saved on this device.'}</p>
-    <aside class="mission-instruments" aria-label="Signal analysis and test results">
-      <div class="analyzer-panel">
-        <BenchMachine
-          {missionId}
-          outputs={live.result?.outputs ?? null}
-          inputs={inputValues}
-          certified={restoreReady}
-        />
+          </section>
+        {/if}
       </div>
 
-      {#if missionId === 'nand'}
-        <section id="nand-discovery" class="test-panel" aria-label="Discover NAND">
-          <div class="instrument-heading">
-            <span class="eyebrow">SIGNAL DISCOVERY</span><span class="case-count"
-              >{predictions.length} / {scenarios.length}</span
-            >
-          </div>
-          <h2>What comes out?</h2>
-          <p>Select each input pair and predict its output.</p>
-          <div class="prediction-buttons">
-            <button on:click={() => predict(false)}>Predict <strong>0</strong></button><button
-              on:click={() => predict(true)}>Predict <strong>1</strong></button
-            >
-          </div>
-          <p class="prediction-feedback" aria-live="polite">
-            {predictionMessage ||
-              `Try a=${Number(inputValues.a)}, b=${Number(inputValues.b)}. What will NAND send?`}
-          </p>
-          <div class="discovery-cases">
-            {#each scenarios as scenario, index}<button
-                class:case-discovered={predictions.includes(index)}
-                class:case-selected={selectedScenario === index}
-                on:click={() => {
-                  inputValues = { ...scenario.inputs };
-                  selectedScenario = index;
-                  predictionMessage = '';
-                }}
-                aria-label={`Try input ${mission.inputs.map((pin) => `${pin} ${Number(scenario.inputs[pin])}`).join(', ')}${predictions.includes(index) ? ', discovered' : ''}`}
-                >{mission.inputs.map((pin) => Number(scenario.inputs[pin])).join(' ')}<span
-                  >{predictions.includes(index) ? '✓' : '·'}</span
-                ></button
-              >{/each}
-          </div>
-          {#if !allPredicted}<button class="next-case" on:click={nextPrediction}
-              >Next undiscovered signal <span aria-hidden="true">→</span></button
-            >{/if}
-        </section>
-      {:else}
-        <section id="circuit-results" class="test-panel" aria-label="Circuit test instrument">
-          <div class="instrument-heading">
-            <span class="eyebrow">PROVE YOUR CIRCUIT</span><span class="case-count"
-              >{scenarios.length} CASES</span
-            >
-          </div>
-          <h2>Test results</h2>
-          {#if reportError}<div class="test-error" role="alert">
-              <strong>Circuit cannot run.</strong>
-              <p>{reportError}</p>
-            </div>{/if}
-          {#if report}
-            <div class="test-summary" class:all-pass={report.success} aria-live="polite">
-              <strong>{report.success ? 'Signal confirmed.' : 'Specification mismatch.'}</strong
-              ><span>{report.passed} of {report.total} combinations work.</span>
-            </div>
-            <div class="truth-table-wrap">
-              <table class="truth-table">
-                <caption>Click a case to inspect its live signal.</caption><thead
-                  ><tr
-                    >{#each mission.inputs as pin}<th scope="col">{pin}</th>{/each}<th scope="col"
-                      >Wanted {mission.outputs.length > 1 ? mission.outputs.join('/') : ''}</th
-                    ><th scope="col"
-                      >Yours {mission.outputs.length > 1 ? mission.outputs.join('/') : ''}</th
-                    ><th scope="col"><span class="sr-only">Result</span></th></tr
-                  ></thead
-                ><tbody
-                  >{#each report.rows as row, index}<tr class:row-failed={!row.passed}
-                      >{#each mission.inputs as pin}<td>{Number(row.inputs[pin])}</td>{/each}<td
-                        >{mission.outputs.map((pin) => Number(row.expected[pin])).join(' / ')}</td
-                      ><td>{mission.outputs.map((pin) => Number(row.actual[pin])).join(' / ')}</td
-                      ><td
-                        ><button
-                          on:click={() => {
-                            inputValues = { ...row.inputs };
-                          }}
-                          aria-label={`Inspect case ${index + 1}, ${row.passed ? 'passes' : 'needs work'}`}
-                          >{row.passed ? '✓' : '↗'}</button
-                        ></td
-                      ></tr
-                    >{/each}</tbody
-                >
-              </table>
-            </div>
-            {#if !report.success}<p class="test-clue">
-                The board is showing the first mismatching input. Follow its signal and change a
-                connection.
-              </p>{/if}
-          {:else if !reportError}<div class="waiting-signal">
-              <span aria-hidden="true">⌁</span>
-              <p>
-                {live.result
-                  ? 'Live circuit connected. Ready to test.'
-                  : 'Connect your parts to begin testing.'}
-              </p>
-            </div>{/if}
-        </section>
-      {/if}
+      <p class="draft-status">{saveNotice || 'Drafts are saved on this device.'}</p>
+      <aside class="mission-instruments" aria-label="Signal analysis and test results">
+        <details class="analyzer-panel">
+          <summary>Signal history</summary>
+          <BenchMachine
+            {missionId}
+            outputs={live.result?.outputs ?? null}
+            inputs={inputValues}
+            certified={restoreReady}
+          />
+        </details>
 
-      <section class="hint-panel">
-        <div>
-          <h2>Need a hint?</h2>
-        </div>
-        {#if hintCount > 0}<ol>
-            {#each mission.hints.slice(0, hintCount) as hint}<li>{hint}</li>{/each}
-          </ol>{/if}<button
-          on:click={() => {
-            hintCount = Math.min(mission.hints.length, hintCount + 1);
-          }}
-          disabled={hintCount >= mission.hints.length}
-          >{hintCount === 0
-            ? 'Reveal a hint'
-            : hintCount >= mission.hints.length
-              ? 'All hints revealed'
-              : 'Next hint'} <span aria-hidden="true">↗</span></button
-        >
-      </section>
-      {#if showGuide}<section class="field-guide">
-          <div class="instrument-heading">
-            <span class="eyebrow">REFERENCE</span><button
-              aria-label="Close reference"
-              on:click={() => (showGuide = false)}>×</button
-            >
-          </div>
-          <h2>{mission.chip}, under the hood.</h2>
-          <p>{mission.explanation}</p>
-          <a href="/learn/hardware/boolean-logic/background"
-            >Read the full background <span aria-hidden="true">↗</span></a
-          ><a href="/learn/hardware/boolean-logic/project"
-            >Original gate specifications <span aria-hidden="true">↗</span></a
+        {#if report || reportError}
+          <details id="circuit-results" class="test-panel" open={!report?.success}>
+            <summary>Test results</summary>
+            <div class="instrument-heading">
+              <span class="eyebrow">PROVE YOUR CIRCUIT</span><span class="case-count"
+                >{scenarios.length} CASES</span
+              >
+            </div>
+            {#if reportError}<div class="test-error" role="alert">
+                <strong>Circuit cannot run.</strong>
+                <p>{reportError}</p>
+              </div>{/if}
+            {#if report}
+              <div class="test-summary" class:all-pass={report.success} aria-live="polite">
+                <strong>{report.success ? 'Signal confirmed.' : 'Specification mismatch.'}</strong
+                ><span>{report.passed} of {report.total} combinations work.</span>
+              </div>
+              <div class="truth-table-wrap">
+                <table class="truth-table">
+                  <caption>Click a case to inspect its live signal.</caption><thead
+                    ><tr
+                      >{#each mission.inputs as pin}<th scope="col">{pin}</th>{/each}<th scope="col"
+                        >Wanted {mission.outputs.length > 1 ? mission.outputs.join('/') : ''}</th
+                      ><th scope="col"
+                        >Yours {mission.outputs.length > 1 ? mission.outputs.join('/') : ''}</th
+                      ><th scope="col"><span class="sr-only">Result</span></th></tr
+                    ></thead
+                  ><tbody
+                    >{#each report.rows as row, index}<tr class:row-failed={!row.passed}
+                        >{#each mission.inputs as pin}<td>{Number(row.inputs[pin])}</td>{/each}<td
+                          >{mission.outputs.map((pin) => Number(row.expected[pin])).join(' / ')}</td
+                        ><td>{mission.outputs.map((pin) => Number(row.actual[pin])).join(' / ')}</td
+                        ><td
+                          ><button
+                            on:click={() => {
+                              inputValues = { ...row.inputs };
+                            }}
+                            aria-label={`Inspect case ${index + 1}, ${row.passed ? 'passes' : 'needs work'}`}
+                            >{row.passed ? '✓' : '↗'}</button
+                          ></td
+                        ></tr
+                      >{/each}</tbody
+                  >
+                </table>
+              </div>
+              {#if !report.success}<p class="test-clue">
+                  The board is showing the first mismatching input. Follow its signal and change a
+                  connection.
+                </p>{/if}
+            {/if}
+          </details>
+        {/if}
+
+        <details class="hint-panel">
+          <summary>Need a hint?</summary>
+          {#if hintCount > 0}<ol>
+              {#each mission.hints.slice(0, hintCount) as hint}<li>{hint}</li>{/each}
+            </ol>{/if}
+          <button
+            on:click={() => (hintCount = Math.min(mission.hints.length, hintCount + 1))}
+            disabled={hintCount >= mission.hints.length}
           >
-        </section>{/if}
-    </aside>
-  </div>
-</section>
+            {hintCount === 0
+              ? 'Reveal a hint'
+              : hintCount >= mission.hints.length
+                ? 'All hints revealed'
+                : 'Next hint'}
+          </button>
+        </details>
+      </aside>
+    </div>
+  </section>
+{/if}
 
 <style>
   .bench {
@@ -1046,7 +975,7 @@
   .signal-inputs,
   .bench-layout,
   .code-error {
-    max-width: 1600px;
+    max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
   }
@@ -1070,14 +999,6 @@
   }
   .world-back span {
     font-size: 19px;
-  }
-
-  .small-light {
-    display: inline-block;
-    height: 5px;
-    width: 5px;
-    background: #a297ff;
-    border-radius: 1px;
   }
 
   .notes-trigger {
@@ -1122,22 +1043,6 @@
     color: var(--muted-text);
     max-width: 760px;
     margin: 0;
-  }
-  .chip-stamp {
-    border-left: 1px solid #3b365d;
-    display: grid;
-    gap: 7px;
-    min-width: 130px;
-    padding: 4px 0 4px 20px;
-  }
-  .chip-stamp strong {
-    font: 26px monospace;
-    color: #b8afff;
-  }
-  .chip-stamp span {
-    color: #a0a4b6;
-    font: 12px monospace;
-    letter-spacing: 1.5px;
   }
   .signal-inputs {
     display: flex;
@@ -1206,11 +1111,7 @@
     gap: 10px 16px;
     padding: 10px 0;
     border-top: 1px solid #252938;
-    position: sticky;
-    top: 0;
-    z-index: 20;
     background: #090b12;
-    box-shadow: 0 8px 14px #090b1277;
   }
   .toolbar-actions {
     display: flex;
@@ -1239,41 +1140,6 @@
     color: #171126;
     font-size: 12px !important;
     font-weight: 600 !important;
-  }
-  .results-link {
-    padding: 10px 0;
-    font-size: 12px;
-    color: #c3b6ec;
-    white-space: nowrap;
-  }
-  .mode-switch {
-    display: flex;
-    padding: 3px;
-    gap: 3px;
-    border: 1px solid var(--edge);
-    background: #0e111b;
-    border-radius: 5px;
-  }
-  .mode-switch button {
-    background: none;
-    color: #a3a7ba;
-    border: 1px solid transparent;
-    border-radius: 3px;
-    min-height: 33px;
-    padding: 6px 14px;
-    font-size: 12px;
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-  .mode-switch button.active {
-    color: #fff;
-    background: #302950;
-    border-color: #5d5192;
-  }
-  .mode-switch button span {
-    font: 13px monospace;
-    color: #aaa0e7;
   }
   .workspace {
     min-width: 0;
@@ -1409,50 +1275,8 @@
   .paused .circuit-viewport {
     opacity: 0.5;
   }
-  .board-footer {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-    padding: 12px 15px;
-    font: 12px monospace;
-    color: #a2a7bb;
-    border-top: 1px solid #2a2e40;
-  }
-  .board-footer > span:first-child {
-    display: flex;
-    gap: 7px;
-    align-items: center;
-  }
-  .signal-key {
-    height: 5px;
-    width: 5px;
-    background: #a599ff;
-  }
-  .board-state {
-    margin-left: auto;
-    color: #b8aeff;
-    font-size: 12px;
-    letter-spacing: 1px;
-  }
   .parts-bay {
     padding: 18px 0 0;
-  }
-  .parts-heading {
-    display: flex;
-    gap: 16px;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .parts-heading .eyebrow {
-    font-size: 12px;
-    color: #959bb1;
-    margin-bottom: 4px;
-  }
-  .parts-heading h2 {
-    font-size: 15px;
-    margin: 0;
-    font-weight: 500;
-    color: #d9dbe8;
   }
   .clear-actions {
     display: flex;
@@ -1474,7 +1298,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin: 14px 0 0;
+    margin: 0;
   }
   .part-buttons button {
     border: 1px solid #41405c;
@@ -1497,17 +1321,6 @@
   .part-buttons button > span:first-child {
     color: #b3a5ff;
     font-size: 18px;
-  }
-  .part-pin-count {
-    color: #a6a5bd;
-    font: 12px monospace;
-    letter-spacing: 0.5px;
-  }
-  .connection-help {
-    color: #a1a5b9;
-    font-size: 12px;
-    line-height: 1.8;
-    margin: 12px 0;
   }
   .gate-controls {
     display: grid;
@@ -1754,7 +1567,7 @@
   }
   .mission-instruments {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 0.8fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px;
     align-items: start;
   }
@@ -1770,12 +1583,11 @@
   }
   .analyzer-panel {
     grid-column: 1;
-    grid-row: 1;
   }
 
   .test-panel {
-    scroll-margin-top: 170px;
-    grid-column: 2;
+    scroll-margin-top: 24px;
+    grid-column: 1 / -1;
     grid-row: 1;
     border-color: #49405f;
     background: #171422;
@@ -1796,12 +1608,6 @@
     color: #b8afcf;
     white-space: nowrap;
   }
-  .test-panel h2 {
-    font-weight: 500;
-    letter-spacing: -0.5px;
-    font-size: 23px;
-    margin: 14px 0 10px;
-  }
   .test-panel > p {
     font-size: 12px;
     line-height: 1.8;
@@ -1819,23 +1625,6 @@
     font-size: 12px !important;
     padding: 9px 13px;
     min-height: 38px;
-  }
-  .test-button > span {
-    font-size: 18px;
-  }
-  .waiting-signal {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 14px;
-    color: #a8a1bc;
-  }
-  .waiting-signal > span {
-    font: 24px monospace;
-  }
-  .waiting-signal p {
-    font: 12px/1.6 monospace;
-    margin: 0;
   }
   .test-error {
     background: #332333;
@@ -1919,75 +1708,8 @@
     font-size: 12px !important;
     margin: 13px 0 0 !important;
   }
-  .prediction-buttons {
-    display: flex;
-    gap: 10px;
-  }
-  .prediction-buttons button {
-    display: flex;
-    flex: 1;
-    align-items: center;
-    justify-content: center;
-    gap: 13px;
-    min-height: 46px;
-    padding: 12px;
-    border: 1px solid #56496c;
-    background: #292137;
-    color: #d6cce8;
-    border-radius: 4px;
-    font-size: 12px;
-  }
-  .prediction-buttons strong {
-    font: 20px monospace;
-  }
-  .prediction-feedback {
-    font-size: 12px !important;
-    min-height: 34px;
-    margin: 12px 0 !important;
-  }
-  .discovery-cases {
-    display: flex;
-    gap: 6px;
-  }
-  .discovery-cases button {
-    display: grid;
-    gap: 5px;
-    flex: 1;
-    background: #211b2f;
-    color: #b9adc9;
-    border: 1px solid #4c405d;
-    border-radius: 3px;
-    padding: 9px 6px;
-    font: 12px monospace;
-  }
-  .discovery-cases .case-discovered {
-    border-color: #9b88d6;
-    background: #3c3053;
-    color: #e2d6ff;
-  }
-  .discovery-cases .case-selected {
-    box-shadow: inset 0 0 0 1px #afa0d6;
-  }
-  .next-case {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 38px;
-    width: 100%;
-    background: none;
-    border: 0;
-    color: #c5b4df;
-    font-size: 12px !important;
-    padding: 9px 0 0;
-  }
   .hint-panel {
-    grid-column: 3;
-    grid-row: 1;
-  }
-  .hint-panel h2 {
-    font-size: 13px;
-    font-weight: 500;
-    margin: 0 0 6px;
+    grid-column: 2;
   }
 
   .hint-panel button {
@@ -2013,8 +1735,6 @@
     margin-bottom: 10px;
   }
   .field-guide {
-    grid-column: 3;
-    grid-row: 2;
     border-color: #47415b;
   }
   .field-guide .eyebrow {
@@ -2046,12 +1766,8 @@
     padding-top: 12px;
   }
   .eyebrow,
-  .chip-stamp span,
   .switch-label,
   .board-heading,
-  .board-state,
-  .parts-heading .eyebrow,
-  .part-pin-count,
   .part-index,
   .output-title,
   .code-status,
@@ -2059,9 +1775,6 @@
   .case-count,
   .field-guide .eyebrow {
     font-size: 10px;
-  }
-  .board-footer {
-    font-size: 11px;
   }
   .toolbar-status {
     font-size: 12px;
@@ -2089,17 +1802,6 @@
     .mission-instruments {
       grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
     }
-    .hint-panel {
-      grid-column: 1;
-      grid-row: 2;
-    }
-    .field-guide {
-      grid-column: 2;
-      grid-row: 2;
-    }
-    .part-pin-count {
-      display: none;
-    }
 
     .workspace.split-view {
       grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
@@ -2108,10 +1810,6 @@
   @media (max-width: 760px) {
     .workspace.split-view {
       grid-template-columns: minmax(0, 1fr);
-    }
-
-    .chip-stamp {
-      min-width: 100px;
     }
     .mission-title-row {
       gap: 15px;
@@ -2134,9 +1832,6 @@
     }
     .mission-title-row {
       padding-top: 25px;
-    }
-    .chip-stamp {
-      display: none;
     }
     h1 {
       font-size: 30px;
@@ -2169,16 +1864,6 @@
     .toolbar-save {
       margin-left: auto;
     }
-
-    .mode-switch {
-      width: 100%;
-    }
-    .mode-switch button {
-      flex: 1;
-      justify-content: center;
-      padding: 7px 9px;
-      min-height: 38px;
-    }
     .mission-instruments {
       grid-template-columns: minmax(0, 1fr);
     }
@@ -2189,14 +1874,6 @@
       grid-row: auto;
       grid-column: auto;
       padding: 18px;
-    }
-    .board-footer {
-      flex-wrap: wrap;
-      gap: 10px;
-      font-size: 12px;
-    }
-    .board-footer > span:nth-child(2) {
-      display: none;
     }
     .gate-controls {
       grid-template-columns: minmax(0, 1fr);
@@ -2225,9 +1902,6 @@
     .circuit-svg {
       min-width: 660px;
     }
-    .parts-heading {
-      align-items: start;
-    }
     .clear-actions {
       gap: 2px;
     }
@@ -2236,6 +1910,78 @@
     .bench * {
       transition: none !important;
       animation: none !important;
+    }
+  }
+
+  .view-choice select {
+    min-height: 42px;
+    min-width: 120px;
+    padding: 9px 34px 9px 12px;
+    color: #d4d4e5;
+    background: #11141e;
+    border: 1px solid #36394d;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+  .bench summary {
+    cursor: pointer;
+    color: #c6c4da;
+    font-size: 13px;
+    line-height: 1.5;
+    min-height: 32px;
+  }
+  .bench summary:focus-visible {
+    outline: 2px solid #aaa0ff;
+    outline-offset: 4px;
+  }
+  .connections-disclosure {
+    padding: 10px 0;
+    border-bottom: 1px solid #292d3d;
+  }
+  .connections-disclosure[open] > summary {
+    margin-bottom: 10px;
+  }
+  .board-heading {
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .field-guide {
+    max-width: 1200px;
+    margin: 14px auto;
+  }
+  .analyzer-panel,
+  .hint-panel {
+    padding: 12px 0;
+    background: transparent;
+    border: 0;
+    border-top: 1px solid #292d3d;
+    border-radius: 0;
+  }
+  .test-panel[open] > summary {
+    margin-bottom: 18px;
+  }
+  @media (max-width: 700px) {
+    .editor-toolbar {
+      flex-direction: row;
+      align-items: center;
+    }
+    .toolbar-actions {
+      width: auto;
+      margin-left: auto;
+      max-width: 60%;
+    }
+    .toolbar-status {
+      font-size: 11px;
+    }
+    .view-choice select {
+      min-width: 104px;
+    }
+    .mission-instruments {
+      display: block;
+    }
+    .mission-instruments > * {
+      margin-top: 10px;
     }
   }
 </style>

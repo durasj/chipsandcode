@@ -6,7 +6,10 @@ describe('Learn', () => {
     // TODO: Find a way to suppress dynamic ESM loading for Cypress tests
     cy.wait(1500);
 
-    cy.contains('footer a', 'Original reading').click();
+    cy.contains('summary', 'Menu').click();
+    cy.findByRole('navigation', { name: 'Workspace menu' })
+      .findByRole('link', { name: 'Original reading' })
+      .click();
 
     cy.contains('Boolean Logic');
 
