@@ -64,63 +64,34 @@ Major features, ordered by priority:
 
 ## Developing
 
-This application is powered by [`SvelteKit`](https://kit.svelte.dev).
-
-Once you've cloned the repository and installed dependencies by running `npm install`, start the development server:
+Use Node.js 24 (`nvm use`) and install the locked dependencies:
 
 ```bash
+npm ci
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
-## Building
+The app uses Svelte 5, SvelteKit 3, Vite 8, and TypeScript 6 (the current version supported by SvelteKit and svelte-check). The editor uses Monaco 0.57. UI menus and tabs use Bits UI. Tailwind 3 and daisyUI 3 retain the existing presentation during this infrastructure migration; redesigning the styling system is a separate step.
 
-To build static HTML files that can be served by any web server run:
+Lessons, built-in examples, the simulator, local drafts and ZIP downloads work without a database. Saved experiments use the same-origin SvelteKit `/api/experiments` routes and require `DATABASE_URL` from a Neon Postgres database. Copy `.env.template` to `.env.local` and set the URL locally when working on persistence. Never commit credentials or migration exports.
+
+## Building and testing
 
 ```bash
+npm run check
+npm run test:unit
 npm run build
+npm run preview -- --host 127.0.0.1
+npm run test:cy
 ```
 
-> You can preview the built app with `npm run preview`.
+The production build generates `.vercel/output` using `@sveltejs/adapter-vercel`; it does not need database credentials. Lessons and the new-experiment page are prerendered. Shared experiment pages load on the client, and the API runs on Node.js 24 functions. The PWA precaches application assets and lessons; private API responses are never cached.
 
-> The built app can be found in `/build`.
+Unit tests live next to the source and include parser fixtures, simulator behavior, ownership checks, origin checks and migration validation. Cypress retains the existing accessibility and visual-regression checks. CI uses Node.js 24 and `npm ci` and runs typing, coverage, builds and Cypress on pull requests.
 
-## Tests
+## Deployment and data migration
 
-There are broadly two kinds of automated tests:
-
-- Unit tests - powered by Vitest, can be found next to the source code with the `.test.ts` suffix. During the dev, use the command `npm run test:unit:watch`.
-- Cypress tests - can be found in the directory `./cypress`. During the dev, use the command `npm run test:cy:open`. These tests also run visual regression and accessibility checks.
-
-All checks and tests can be run using the command `npm run test`.
-These roughly match CI checks.
-
-## Backend
-
-The application works completely fine without any backend, but the ability to sign in save experiments requires a backend.
-
-Start by creating a `.env` from the `.env.template`.
-
-Then, you can run the backend and frontend together by running:
-
-```bash
-# runs both backend and frontend
-npm start
-```
-
-## Deployment
-
-Currently, this application uses Cloudflare to both distribute the website and power the backend using Cloudflare Pages.
-
-To replicate the backend, you can log in using the wrangler:
-
-```bash
-npm run wrangler -- login
-```
-
-You need to change the account_id within `wrangler.toml` and sign up for Cloudflare Workers, see [documentation](https://developers.cloudflare.com/workers/get-started/guide#7-configure-your-project-for-deployment). Then, you can run:
+See [the Vercel migration runbook](docs/vercel-migration.md) for project settings, database setup, preserving legacy experiment IDs and anonymous sessions, validation, domain cutover and rollback. Import and test the migration branch before merging it or changing production DNS.
 
 ## Browser Support
 

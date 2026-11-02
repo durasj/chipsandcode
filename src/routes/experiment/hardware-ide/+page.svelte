@@ -1,6 +1,6 @@
 <script lang="ts">
-  import HardwareIDE from '$lib/components/HardwareIDE.svelte';
-  import Header from 'src/lib/components/Header.svelte';
+  import HardwareIDE from '#lib/components/HardwareIDE.svelte';
+  import Header from '#src/lib/components/Header.svelte';
 </script>
 
 <svelte:head>

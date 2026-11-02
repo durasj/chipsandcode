@@ -13,51 +13,28 @@
     Plus,
     XMark,
   } from '@steeze-ui/heroicons';
-  import {
-    Menu,
-    MenuButton,
-    MenuItems,
-    MenuItem,
-    Popover,
-    PopoverButton,
-    PopoverPanel,
-    TabGroup,
-    TabList,
-    Tab,
-  } from '@rgossiaux/svelte-headlessui';
-  import { createPopperActions } from 'svelte-popperjs';
-  import type zipType from '@zip.js/zip.js';
-  // @ts-ignore Upcoming version 1.3.0 that depends on Svelte 4 adds types
+  import { DropdownMenu, Popover, Tabs } from 'bits-ui';
   import { Confetti } from 'svelte-confetti';
 
   import { goto } from '$app/navigation';
-  import parseHdl from '$lib/editor/hdl/parse';
-  import parseTst from '$lib/editor/tst/parse';
-  import type { Root as HDLRoot } from '$lib/editor/hdl/tree';
+  import parseHdl from '#lib/editor/hdl/parse.js';
+  import parseTst from '#lib/editor/tst/parse.js';
+  import type { Root as HDLRoot } from '#lib/editor/hdl/tree.js';
   import type {
     CompareNode,
     LoadNode,
     OutputFileNode,
     Root as TSTRoot,
-  } from '$lib/editor/tst/tree';
-  import type Chip from '$lib/hardware-simulator/chips/Chip';
-  import ChipFactory from '$lib/hardware-simulator/chips/ChipFactory';
-  import type { Experiment, ExperimentRequest } from 'src/lib/shared';
-  import type { monaco, monaco as monacoApi } from '$lib/editor';
-  import { theme } from 'src/stores';
-  import api, { apiEnabled } from '$lib/api';
-  import TestScript from '$lib/hardware-simulator/tests/TestScript';
+  } from '#lib/editor/tst/tree.js';
+  import type Chip from '#lib/hardware-simulator/chips/Chip.js';
+  import ChipFactory from '#lib/hardware-simulator/chips/ChipFactory.js';
+  import type { Experiment, ExperimentRequest } from '#src/lib/shared.js';
+  import type * as monacoApi from 'monaco-editor/editor/editor.api.js';
+  import { theme } from '#src/stores.js';
+  import api, { apiEnabled } from '#lib/api.js';
+  import TestScript from '#lib/hardware-simulator/tests/TestScript.js';
   import InvalidDesignError from '../hardware-simulator/chips/InvalidDesignError';
   import examples from '../hardware-simulator/examples';
-
-  const [popperRef, popperContent] = createPopperActions();
-  const popperOptions = {
-    placement: 'bottom-end',
-    strategy: 'fixed',
-    modifiers: [{ name: 'offset', options: { offset: [0, 8] } }],
-  };
-
-  popperContent;
 
   function monacoEditor(node: HTMLElement) {
     (async () => {
@@ -105,8 +82,10 @@
       editor = monaco.editor.create(node, {
         theme: themeName ? `vs-${themeName}` : 'vs-light',
         automaticLayout: true,
+        // Retain the standard textarea input path used by the existing keyboard workflows.
+        editContext: false,
         model: hdlModel,
-        wordBasedSuggestions: false,
+        wordBasedSuggestions: 'off',
         accessibilityHelpUrl:
           'https://github.com/Microsoft/monaco-editor/wiki/Monaco-Editor-Accessibility-Guide',
       });
@@ -401,7 +380,7 @@
   let hdlState: monacoApi.editor.ICodeEditorViewState;
   let tstModel: monacoApi.editor.ITextModel;
   let testsState: monacoApi.editor.ICodeEditorViewState;
-  let diffModel: monaco.editor.IDiffEditorModel;
+  let diffModel: monacoApi.editor.IDiffEditorModel;
   let diffState: monacoApi.editor.IDiffEditorViewState;
 
   let chip: Chip | undefined;
@@ -455,22 +434,13 @@
     }
   }
 
-  async function download(e: MouseEvent) {
-    const target = e.target as HTMLAnchorElement;
-
-    // Already triggered download
-    if (target.download) return;
-
-    e.preventDefault();
-
-    if (!target) return;
-
-    // We only import part to reduce chunk size by two thirds
-    // @ts-ignore
-    const zip = (await import('@zip.js/zip.js/lib/zip-no-worker-deflate.js')) as typeof zipType;
+  async function download(e?: Event) {
+    e?.preventDefault();
+    const target = document.createElement('a');
+    const zip = await import('@zip.js/zip.js');
     zip.configure({ useWebWorkers: false });
 
-    const fileName = experiment?.name.replaceAll(/[^\w]/g, '-').toLocaleLowerCase();
+    const fileName = (name || 'experiment').replaceAll(/[^\w]/g, '-').toLocaleLowerCase();
 
     const blobWriter = new zip.BlobWriter('application/zip');
     const writer = new zip.ZipWriter(blobWriter);
@@ -483,17 +453,19 @@
 
     target.href = url;
     target.download = `${fileName}.zip`;
+    document.body.append(target);
     target.click();
-
-    URL.revokeObjectURL(url);
-    target.href = 'data:';
-    target.download = '';
+    target.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
   let removingState: boolean = false;
   async function remove() {
     // It was not even saved
-    if (!experiment?.id) openNewExperiment();
+    if (!experiment?.id) {
+      openNewExperiment();
+      return;
+    }
 
     removingState = true;
 
@@ -576,23 +548,21 @@
     if (monaco) monaco.editor.setTheme(`vs-${name}`);
   });
 
-  enum EditorTab {
-    HDL = 0,
-    TST = 1,
-    DIFF = 2,
-  }
+  const EditorTab = { HDL: 0, TST: 1, DIFF: 2 } as const;
+  type EditorTab = (typeof EditorTab)[keyof typeof EditorTab];
   const tabDescription: Record<EditorTab, string> = {
     [EditorTab.HDL]: 'Hardware Description Language',
     [EditorTab.TST]: 'Test Script',
     [EditorTab.DIFF]: 'Editable Expected and read-only Actual Output',
   };
-  let selectedTab = EditorTab.HDL;
+  let selectedTab: EditorTab = EditorTab.HDL;
   function onTabChange({ detail }: { detail: EditorTab }) {
+    if (!editor) return;
     const viewState = editor.saveViewState();
     if (viewState && editor.getModel() === hdlModel) {
-      hdlState = viewState as monaco.editor.ICodeEditorViewState;
+      hdlState = viewState as monacoApi.editor.ICodeEditorViewState;
     } else if (viewState && editor.getModel() === tstModel) {
-      testsState = viewState as monaco.editor.ICodeEditorViewState;
+      testsState = viewState as monacoApi.editor.ICodeEditorViewState;
     } else if (viewState && 'original' in viewState) {
       diffState = viewState;
     }
@@ -604,6 +574,8 @@
       editor = monaco.editor.createDiffEditor(editor.getContainerDomNode(), {
         theme: themeName ? `vs-${themeName}` : 'vs-light',
         automaticLayout: true,
+        // Retain the standard textarea input path used by the existing keyboard workflows.
+        editContext: false,
         enableSplitViewResizing: false,
       });
     } else if (selectedTab === EditorTab.DIFF) {
@@ -613,7 +585,9 @@
       editor = monaco.editor.create(editor.getContainerDomNode(), {
         theme: themeName ? `vs-${themeName}` : 'vs-light',
         automaticLayout: true,
-        wordBasedSuggestions: false,
+        // Retain the standard textarea input path used by the existing keyboard workflows.
+        editContext: false,
+        wordBasedSuggestions: 'off',
       });
     }
 
@@ -634,6 +608,7 @@
       }
     }
 
+    selectedTab = detail;
     editor.updateOptions({
       readOnly: detail !== EditorTab.HDL && readOnlyAssignment,
     });
@@ -656,15 +631,21 @@
 
 <div class="grid grid-cols-1 md:grid-cols-2 flex-grow">
   <div>
-    <TabGroup class="flex flex-col h-full" manual on:change={onTabChange}>
-      <TabList class="w-full">
-        <Tab
-          class={({ selected }) =>
-            `p-3 text-sm font-semibold ${selected ? 'bg-zinc-100 dark:bg-zinc-900' : ''}`}>HDL</Tab
+    <Tabs.Root
+      class="flex flex-col h-full"
+      value={String(selectedTab)}
+      onValueChange={(value) => onTabChange({ detail: Number(value) as EditorTab })}
+      activationMode="manual"
+    >
+      <Tabs.List class="w-full" aria-label="Editor views">
+        <Tabs.Trigger
+          value="0"
+          class="p-3 text-sm font-semibold data-[state=active]:bg-zinc-100 dark:data-[state=active]:bg-zinc-900"
+          >HDL</Tabs.Trigger
         >
-        <Tab
-          class={({ selected }) =>
-            `p-3 text-sm font-semibold ${selected ? 'bg-zinc-100 dark:bg-zinc-900' : ''}`}
+        <Tabs.Trigger
+          value="1"
+          class="p-3 text-sm font-semibold data-[state=active]:bg-zinc-100 dark:data-[state=active]:bg-zinc-900"
           >Tests {#if typeof testStats?.passed === 'number'}
             <div
               class="badge gap-2"
@@ -677,13 +658,13 @@
               {/if}
             </div>
           {/if}
-        </Tab>
-        <Tab
-          class={({ selected }) =>
-            `p-3 text-sm font-semibold ${selected ? 'bg-zinc-100 dark:bg-zinc-900' : ''}`}
-          >Output</Tab
+        </Tabs.Trigger>
+        <Tabs.Trigger
+          value="2"
+          class="p-3 text-sm font-semibold data-[state=active]:bg-zinc-100 dark:data-[state=active]:bg-zinc-900"
+          >Output</Tabs.Trigger
         >
-      </TabList>
+      </Tabs.List>
 
       {#if selectedTab === EditorTab.DIFF}
         <div class="bg-zinc-100 dark:bg-zinc-900 flex justify-around" aria-hidden="true">
@@ -706,8 +687,8 @@
         use:monacoEditor
         class="grow"
         aria-label={`${tabDescription[selectedTab]} editor`}
-      />
-    </TabGroup>
+      ></div>
+    </Tabs.Root>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-3 content-start">
@@ -739,8 +720,8 @@
                 title={savingState === 'UNSAVED'
                   ? 'You have unsaved changes'
                   : savingState === 'SAVING'
-                  ? 'Saving changes...'
-                  : 'All changes are saved'}
+                    ? 'Saving changes...'
+                    : 'All changes are saved'}
               >
                 {#if savingState === 'SAVED'}
                   <Icon src={CheckCircle} class="-ml-1 mr-2 h-5 w-5" />
@@ -771,77 +752,92 @@
               >
             {/if}
 
-            <Menu>
-              <MenuButton
-                as="button"
-                use={[popperRef]}
+            <DropdownMenu.Root>
+              <DropdownMenu.Trigger
                 class="btn btn-square btn-sm btn-outline rounded-none border-l-0 join-item"
                 title="Open/New"
                 aria-label="Open/New"
               >
                 <Icon src={DocumentText} class="h-5" />
-              </MenuButton>
+              </DropdownMenu.Trigger>
 
-              <MenuItems
-                as="ul"
-                use={[[popperContent, popperOptions]]}
-                class="menu menu-compact bg-base-100 dark:bg-neutral w-56 p-1.5 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
+              <DropdownMenu.Content
+                sideOffset={8}
+                align="end"
+                class="z-50 menu menu-compact bg-base-100 dark:bg-neutral w-56 p-1.5 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
               >
                 {#if apiEnabled}
                   {#await getUserExperiments()}
-                    <MenuItem as="li" class="menu-title" aria-live="polite" aria-busy="true">
-                      <span class="!text-base-content/60">Loading Your Experiments...</span
-                      ></MenuItem
-                    >
+                    <div class="menu-title" aria-live="polite" aria-busy="true">
+                      <span class="!text-base-content/60">Loading Your Experiments...</span>
+                    </div>
                   {:then savedExperiments}
-                    <MenuItem as="li" class="menu-title" aria-live="polite" aria-busy="false">
+                    <div class="menu-title" aria-live="polite" aria-busy="false">
                       <span class="!text-base-content/60">Your Experiments</span>
-                    </MenuItem>
+                    </div>
 
                     {#each savedExperiments as saved}
-                      <MenuItem as="li" let:active>
-                        <a href="/experiment/hardware-ide/{saved.id}" class:active>{saved.name}</a>
-                      </MenuItem>
+                      <DropdownMenu.Item>
+                        {#snippet child({ props })}
+                          <a
+                            {...props}
+                            href={`/experiment/hardware-ide/${saved.id}`}
+                            class="rounded px-3 py-2 data-[highlighted]:bg-base-200">{saved.name}</a
+                          >
+                        {/snippet}
+                      </DropdownMenu.Item>
                     {/each}
                   {:catch error}
-                    <MenuItem as="li" aria-live="polite" aria-busy="false"
-                      ><span class="text-error">Loading failed: {error.message}</span></MenuItem
-                    >
+                    <div aria-live="polite" aria-busy="false">
+                      <span class="text-error">Loading failed: {error.message}</span>
+                    </div>
                   {/await}
                 {/if}
 
-                <MenuItem as="li" let:active>
-                  <button on:click={openNewExperiment} class:active
-                    ><Icon src={Plus} class="h-5 w-5 text-primary dark:text-base-content" />Open new</button
-                  >
-                </MenuItem>
+                <DropdownMenu.Item onSelect={openNewExperiment}>
+                  {#snippet child({ props })}
+                    <button
+                      {...props}
+                      type="button"
+                      class="flex gap-2 rounded px-3 py-2 data-[highlighted]:bg-base-200"
+                      ><Icon src={Plus} class="h-5 w-5 text-primary dark:text-base-content" />Open
+                      new</button
+                    >
+                  {/snippet}
+                </DropdownMenu.Item>
 
-                <MenuItem as="li" class="menu-title">
+                <div class="menu-title">
                   <span class="!text-base-content/60">Examples</span>
-                </MenuItem>
+                </div>
                 {#each examples as example (example.id)}
-                  <MenuItem as="li" let:active>
-                    <a href="/experiment/hardware-ide/{example.id}" class:active>{example.name}</a>
-                  </MenuItem>
+                  <DropdownMenu.Item>
+                    {#snippet child({ props })}
+                      <a
+                        {...props}
+                        href={`/experiment/hardware-ide/${example.id}`}
+                        class="rounded px-3 py-2 data-[highlighted]:bg-base-200">{example.name}</a
+                      >
+                    {/snippet}
+                  </DropdownMenu.Item>
                 {/each}
-              </MenuItems>
-            </Menu>
+              </DropdownMenu.Content>
+            </DropdownMenu.Root>
 
             {#if apiEnabled}
-              <Popover>
-                <PopoverButton
-                  as="button"
-                  use={[popperRef]}
+              <Popover.Root>
+                <Popover.Trigger
                   class="btn btn-square btn-sm btn-outline rounded-none border-l-0 join-item"
                   title="Share"
                   aria-label="Share"
                 >
                   <Icon src={Share} class="h-5" />
-                </PopoverButton>
+                </Popover.Trigger>
 
-                <PopoverPanel
-                  use={[[popperContent, popperOptions]]}
-                  class="bg-base-100 dark:bg-neutral rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 min-w-[20rem] p-4"
+                <Popover.Content
+                  aria-label="Share experiment"
+                  sideOffset={8}
+                  align="end"
+                  class="z-50 bg-base-100 dark:bg-neutral rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 min-w-[20rem] p-4"
                 >
                   <div class="form-control">
                     <label class="label cursor-pointer">
@@ -874,52 +870,49 @@
                       >Copy link</button
                     >
                   </div>
-                </PopoverPanel>
-              </Popover>
+                </Popover.Content>
+              </Popover.Root>
             {/if}
 
             {#if apiEnabled}
-              <Menu>
-                <MenuButton
-                  use={[popperRef]}
+              <DropdownMenu.Root>
+                <DropdownMenu.Trigger
                   class="btn btn-square btn-sm btn-outline rounded-l-none border-l-0 join-item"
                   title="More actions"
                   aria-label="More actions"
                 >
                   <Icon src={EllipsisVertical} class="h-5" />
-                </MenuButton>
+                </DropdownMenu.Trigger>
 
-                <MenuItems
-                  as="ul"
-                  use={[[popperContent, popperOptions]]}
-                  class="menu menu-compact bg-base-100 dark:bg-neutral w-56 p-1.5 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
+                <DropdownMenu.Content
+                  sideOffset={8}
+                  align="end"
+                  class="z-50 menu bg-base-100 dark:bg-neutral w-56 p-1.5 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
                 >
-                  <MenuItem as="li" let:active>
-                    <a href="data:" class:active on:click={download}>
-                      <Icon
-                        src={ArchiveBoxArrowDown}
-                        class="h-5 w-5 text-primary dark:text-base-content"
-                      /> Download</a
-                    >
-                  </MenuItem>
-                  <!-- <MenuItem as="li" disabled let:active>
-                <button type="button" class:active
-                  ><Icon src={Cog} class="h-5 w-5 text-primary dark:text-base-content" /> Settings</button
-                >
-              </MenuItem> -->
-                  <MenuItem as="li" let:active>
-                    <button
-                      type="button"
-                      class:active
-                      on:click={remove}
-                      disabled={removingState}
-                      aria-live={removingState ? 'assertive' : 'off'}
-                      ><Icon src={Trash} class="h-5 w-5 text-primary dark:text-base-content" />
-                      {removingState ? 'Deleting...' : 'Delete'}</button
-                    >
-                  </MenuItem>
-                </MenuItems>
-              </Menu>
+                  <DropdownMenu.Item
+                    class="flex gap-2 rounded px-3 py-2 data-[highlighted]:bg-base-200"
+                    onSelect={() => download()}
+                  >
+                    <Icon
+                      src={ArchiveBoxArrowDown}
+                      class="h-5 w-5 text-primary dark:text-base-content"
+                    /> Download
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item onSelect={remove} disabled={removingState}>
+                    {#snippet child({ props })}
+                      <button
+                        {...props}
+                        type="button"
+                        disabled={removingState}
+                        class="flex gap-2 rounded px-3 py-2 data-[highlighted]:bg-base-200"
+                      >
+                        <Icon src={Trash} class="h-5 w-5 text-primary dark:text-base-content" />
+                        {removingState ? 'Deleting...' : 'Delete'}
+                      </button>
+                    {/snippet}
+                  </DropdownMenu.Item>
+                </DropdownMenu.Content>
+              </DropdownMenu.Root>
             {/if}
           </div>
         </div>
@@ -1063,6 +1056,7 @@
 
 <style>
   :global(.monaco-line-decoration) {
-    @apply !w-1 ml-1;
+    width: 0.25rem !important;
+    margin-left: 0.25rem;
   }
 </style>

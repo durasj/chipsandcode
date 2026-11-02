@@ -39,26 +39,36 @@ describe('HDL Parser', () => {
   });
 
   // Built-in HDL files
-  const builtInHdls = import.meta.glob('./testing/builtin/*.hdl', { as: 'raw', eager: true });
+  const builtInHdls = import.meta.glob('./testing/builtin/*.hdl', {
+    query: '?raw',
+    import: 'default',
+    eager: true,
+  });
   for (const [path, content] of Object.entries(builtInHdls)) {
     const name = basename(path, extname(path));
 
-    it(`Parses Built-In ${name}`, () => {
+    it(`Parses Built-In ${name}`, async () => {
       const ast = parse(content);
 
-      expect(JSON.stringify(ast, null, 2)).toMatchFileSnapshot(`./testing/builtin/${name}.hdl.ast`);
+      await expect(JSON.stringify(ast, null, 2)).toMatchFileSnapshot(
+        `./testing/builtin/${name}.hdl.ast`,
+      );
     });
   }
 
   // Project 1 HDL files
-  const project1Hdls = import.meta.glob('./testing/project1/*.hdl', { as: 'raw', eager: true });
+  const project1Hdls = import.meta.glob('./testing/project1/*.hdl', {
+    query: '?raw',
+    import: 'default',
+    eager: true,
+  });
   for (const [path, content] of Object.entries(project1Hdls)) {
     const name = basename(path, extname(path));
 
-    it(`Parses Project 1 ${name}`, () => {
+    it(`Parses Project 1 ${name}`, async () => {
       const ast = parse(content);
 
-      expect(JSON.stringify(ast, null, 2)).toMatchFileSnapshot(
+      await expect(JSON.stringify(ast, null, 2)).toMatchFileSnapshot(
         `./testing/project1/${name}.hdl.ast`,
       );
     });

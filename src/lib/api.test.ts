@@ -14,7 +14,7 @@ describe('API call abstraction', () => {
     const response = await apiCall('/smt');
 
     expect(response).toBe('Return value');
-    expect(fetch).toHaveBeenCalledWith(`${process.env.VITE_API_PREFIX}/smt`, {
+    expect(fetch).toHaveBeenCalledWith(`${process.env.VITE_API_PREFIX || '/api'}/smt`, {
       credentials: 'include',
     });
   });
@@ -23,7 +23,7 @@ describe('API call abstraction', () => {
     const response = await apiCall('/smt');
 
     expect(response).toBe('Return value');
-    expect(fetch).toHaveBeenCalledWith(`${process.env.VITE_API_PREFIX}/smt`, {
+    expect(fetch).toHaveBeenCalledWith(`${process.env.VITE_API_PREFIX || '/api'}/smt`, {
       credentials: 'include',
     });
   });
@@ -38,7 +38,7 @@ describe('API call abstraction', () => {
       json: fetchJson,
     }));
 
-    await expect(() => apiCall('/smt')).rejects.toMatch(/Error message/);
+    await expect(() => apiCall('/smt')).rejects.toThrow(/Error message/);
   });
 
   it('Handles errors without explicit message', async () => {
@@ -50,6 +50,6 @@ describe('API call abstraction', () => {
       statusText: 'Unlucky',
     }));
 
-    await expect(() => apiCall('/smt')).rejects.toMatch(/Unlucky/);
+    await expect(() => apiCall('/smt')).rejects.toThrow(/Unlucky/);
   });
 });

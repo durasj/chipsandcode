@@ -1,6 +1,6 @@
 <script>
-  import Header from 'src/lib/components/Header.svelte';
-  import Footer from 'src/lib/components/Footer.svelte';
+  import Header from '#src/lib/components/Header.svelte';
+  import Footer from '#src/lib/components/Footer.svelte';
 </script>
 
 <svelte:head>
@@ -65,8 +65,8 @@
             <p>
               The <a href="https://www.w3.org/WAI/standards-guidelines/wcag/" target="_blank"
                 >Web Content Accessibility Guidelines (WCAG)</a
-              > standard defines requirements to improve accessibility for people with disabilities.
-              It defines three levels of conformance: Level A, Level AA, and Level AAA. "Fully conforms"
+              > standard defines requirements to improve accessibility for people with disabilities. It
+              defines three levels of conformance: Level A, Level AA, and Level AAA. "Fully conforms"
               means that the content meets all of the WCAG requirements at the specified Level without
               exceptions.
             </p>
@@ -83,8 +83,7 @@
               <li>CSS</li>
               <li>SVG</li>
             </ul>
-            The following technologies are used to improve accessibility and the user experience for
-            everyone:
+            The following technologies are used to improve accessibility and the user experience for everyone:
 
             <ul>
               <li>JavaScript</li>

@@ -26,7 +26,7 @@ describe('Chip Factory', () => {
   it.todo('Throws with the list of available chips if unknown chip was used');
 
   // Built-in HDL files
-  const builtInHdlAsts = import.meta.glob('$lib/editor/hdl/testing/builtin/*.hdl.ast', {
+  const builtInHdlAsts = import.meta.glob('#lib/editor/hdl/testing/builtin/*.hdl.ast', {
     as: 'raw',
     eager: true,
   });
@@ -44,7 +44,7 @@ describe('Chip Factory', () => {
   }
 
   // Project 1 HDL files
-  const project1HdlAsts = import.meta.glob('$lib/editor/hdl/testing/project1/*.hdl.ast', {
+  const project1HdlAsts = import.meta.glob('#lib/editor/hdl/testing/project1/*.hdl.ast', {
     as: 'raw',
     eager: true,
   });

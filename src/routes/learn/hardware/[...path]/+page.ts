@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
-import type { Content } from 'src/lib/content/types';
+import type { Content } from '#src/lib/content/types.js';
 import type { Tag } from '@markdoc/markdoc';
 
 const FIRST_CHAPTER = 'boolean-logic';
@@ -12,19 +12,22 @@ export const load = (async ({ params }) => {
   pathChapter = pathChapter || FIRST_CHAPTER;
   pathSection = pathSection || FIRST_SECTION;
 
-  const chapters = Object.entries(modules).reduce((acc, [path, moduleImport]) => {
-    const [, chapter, sectionFile] = path.split('/');
-    const section = sectionFile.replace(/\.md$/, '');
+  const chapters = Object.entries(modules).reduce(
+    (acc, [path, moduleImport]) => {
+      const [, chapter, sectionFile] = path.split('/');
+      const section = sectionFile.replace(/\.md$/, '');
 
-    if (!(chapter in acc)) acc[chapter] = {};
+      if (!(chapter in acc)) acc[chapter] = {};
 
-    acc[chapter][section] = moduleImport;
+      acc[chapter][section] = moduleImport;
 
-    return acc;
-  }, {} as { [chapter: string]: { [section: string]: () => Promise<unknown> } });
+      return acc;
+    },
+    {} as { [chapter: string]: { [section: string]: () => Promise<unknown> } },
+  );
 
   if (!(pathChapter in chapters) || !(pathSection in chapters[pathChapter])) {
-    throw error(404, 'Not found');
+    error(404, 'Not found');
   }
 
   const markdownModule = (await chapters[pathChapter][pathSection]()) as { default: Content };

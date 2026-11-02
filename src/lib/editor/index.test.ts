@@ -1,17 +1,6 @@
 import { vi, describe, expect, it } from 'vitest';
 
-const sideEffectImports = [
-  'monaco-editor/esm/vs/editor/editor.all.js',
-
-  'monaco-editor/esm/vs/editor/standalone/browser/accessibilityHelp/accessibilityHelp.js',
-  'monaco-editor/esm/vs/editor/standalone/browser/toggleHighContrast/toggleHighContrast.js',
-  'monaco-editor/esm/vs/editor/standalone/browser/iPadShowKeyboard/iPadShowKeyboard.js',
-  'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneHelpQuickAccess.js',
-  'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneGotoLineQuickAccess.js',
-  'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneGotoSymbolQuickAccess.js',
-  'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneCommandsQuickAccess.js',
-  'monaco-editor/esm/vs/editor/standalone/browser/referenceSearch/standaloneReferenceSearch.js',
-];
+const sideEffectImports = ['./contributions.js'];
 
 const sideEffectImport = vi.fn();
 const worker = vi.fn();
@@ -25,11 +14,11 @@ sideEffectImports.forEach((path) => {
     return { default: path };
   });
 });
-vi.doMock('monaco-editor/esm/vs/editor/editor.api', () => ({
+vi.doMock('monaco-editor/editor/editor.api.js', () => ({
   editor: { defineTheme },
   languages: { register: registerLanguage, setMonarchTokensProvider },
 }));
-vi.doMock('monaco-editor/esm/vs/editor/editor.worker?worker', () => ({ default: worker }));
+vi.doMock('monaco-editor/editor/editor.worker?worker', () => ({ default: worker }));
 
 const self = {} as { MonacoEnvironment: { getWorker: () => typeof worker } };
 vi.stubGlobal('self', self);

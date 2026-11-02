@@ -1,4 +1,4 @@
-import * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import * as Monaco from 'monaco-editor/editor/editor.api.js';
 
 /**
  * Registers language "hdl" on global monaco editor instance

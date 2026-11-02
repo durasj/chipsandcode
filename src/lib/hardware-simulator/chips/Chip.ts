@@ -53,4 +53,4 @@ interface Chip {
   run(): void;
 }
 
-export default Chip;
+export type { Chip as default };

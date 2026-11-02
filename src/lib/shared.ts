@@ -1,12 +1,11 @@
-import type { KVNamespace } from '@cloudflare/workers-types';
 import { z } from 'zod';
 
 export const experimentSchema = z.object({
-  name: z.string(),
+  name: z.string().min(1).max(200),
   type: z.enum(['HARDWARE']),
-  code: z.string().describe('HDL code'),
-  tests: z.string().describe('Test script'),
-  compare: z.string().describe('Expected test script output'),
+  code: z.string().max(1000000).describe('HDL code'),
+  tests: z.string().max(1000000).describe('Test script'),
+  compare: z.string().max(1000000).describe('Expected test script output'),
   visibility: z.enum(['PRIVATE', 'PUBLIC']),
 });
 
@@ -20,12 +19,6 @@ export type Experiment = ExperimentRequest & {
 export const AUTH_KEY = 'auth';
 export const USER_DATA_KEY = 'user';
 export const HTTP_MUTATION_METHODS = new Set(['POST', 'PUT', 'DELETE']);
-
-export type Environment = {
-  KV: KVNamespace;
-  ENVIRONMENT: 'dev' | 'production';
-  DOMAIN?: string;
-};
 
 export type UserData = {
   name: string;

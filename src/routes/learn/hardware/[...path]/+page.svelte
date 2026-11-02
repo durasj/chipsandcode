@@ -1,13 +1,14 @@
 <script lang="ts">
-  import formatDistance from 'date-fns/formatDistance';
-  import parseISO from 'date-fns/parseISO';
+  import { formatDistance, parseISO } from 'date-fns';
   import { Icon } from '@steeze-ui/svelte-icon';
   import { ArrowLeft, ArrowRight } from '@steeze-ui/heroicons';
   import 'katex/dist/katex.css';
 
-  import { page } from '$app/stores';
-  import Footer from '$lib/components/Footer.svelte';
-  import Header from '$lib/components/Header.svelte';
+  import { page } from '$app/state';
+  import { toStore } from 'svelte/store';
+  const route = toStore(() => page.url.pathname);
+  import Footer from '#lib/components/Footer.svelte';
+  import Header from '#lib/components/Header.svelte';
 
   import type { PageData } from './$types';
   import Elements from './Elements.svelte';
@@ -44,7 +45,7 @@
     },
   ] as MenuItem[];
 
-  $: activeItemIndex = menu.findIndex((i) => $page.url.pathname.endsWith(i.link));
+  $: activeItemIndex = menu.findIndex((i) => $route.endsWith(i.link));
   $: prevItem = menu[activeItemIndex - 1];
   $: nextItem = !menu[activeItemIndex + 1]?.disabled ? menu[activeItemIndex + 1] : undefined;
 

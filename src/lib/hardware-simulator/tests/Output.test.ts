@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import Output from './Output';
-import type { OutputSpecNode } from 'src/lib/editor/tst/tree';
+import type { OutputSpecNode } from '#src/lib/editor/tst/tree.js';
 
 const outputSpec = [
   {

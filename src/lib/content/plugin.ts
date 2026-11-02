@@ -1,6 +1,6 @@
 import { dataToEsm } from '@rollup/pluginutils';
 
-import parseMarkdown from './parse';
+import parseMarkdown from './parse.ts';
 
 /**
  * Vite plugin that transforms markdown imports into AST using markdoc
@@ -10,7 +10,7 @@ const fileRegex = /\.(md)$/;
 export default function contentPlugin() {
   return {
     name: 'transform-markdown-content',
-    enforce: 'pre',
+    enforce: 'pre' as const,
 
     transform(src: string, id: string) {
       if (!fileRegex.test(id)) return;

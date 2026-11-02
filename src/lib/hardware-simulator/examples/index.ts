@@ -1,4 +1,4 @@
-import type { Experiment } from 'src/lib/shared';
+import type { Experiment } from '#src/lib/shared.js';
 
 const exampleFiles = import.meta.glob<true, string, { default: Experiment }>('./*.ts', {
   eager: true,

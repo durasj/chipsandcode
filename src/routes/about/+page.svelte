@@ -1,6 +1,6 @@
 <script>
-  import Header from 'src/lib/components/Header.svelte';
-  import Footer from 'src/lib/components/Footer.svelte';
+  import Header from '#src/lib/components/Header.svelte';
+  import Footer from '#src/lib/components/Footer.svelte';
 
   const oss = [
     'Nand2Tetris content licensed under the CC BY-NC-SA 3.0',
@@ -67,7 +67,7 @@
           <p>
             This project was started as a reimagined <a
               href="https://nand2tetris.org"
-              targe="_blank">Nand2Tetris</a
+              target="_blank">Nand2Tetris</a
             >
             (not affiliated or endorsed by them). Nand2Tetris is a very popular course that introduces
             a wide range of computer principles by building a virtual computer from the group up. However,

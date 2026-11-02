@@ -1,12 +1,12 @@
 <script lang="ts">
-  import type { Experiment } from 'src/lib/shared';
-  import Problem from '$lib/components/Problem.svelte';
-  import HardwareIDE from '$lib/components/HardwareIDE.svelte';
-  import api from '$lib/api';
-  import Loading from '$lib/components/Loading.svelte';
-  import Header from 'src/lib/components/Header.svelte';
+  import type { Experiment } from '#src/lib/shared.js';
+  import Problem from '#lib/components/Problem.svelte';
+  import HardwareIDE from '#lib/components/HardwareIDE.svelte';
+  import api from '#lib/api.js';
+  import Loading from '#lib/components/Loading.svelte';
+  import Header from '#src/lib/components/Header.svelte';
   import type { PageData } from './$types';
-  import examples from 'src/lib/hardware-simulator/examples';
+  import examples from '#src/lib/hardware-simulator/examples/index.js';
 
   export let data: PageData;
 
