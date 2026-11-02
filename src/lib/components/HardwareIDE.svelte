@@ -634,6 +634,10 @@
       const diffEditor = editor as monacoApi.editor.IStandaloneDiffEditor;
 
       diffEditor.setModel(diffModel);
+      diffEditor.getOriginalEditor().updateOptions({ ariaLabel: 'Actual output, read-only' });
+      diffEditor.getModifiedEditor().updateOptions({
+        ariaLabel: readOnlyAssignment ? 'Expected output, read-only' : 'Expected output, editable',
+      });
       if (diffState) diffEditor.restoreViewState(diffState);
     } else {
       const standaloneEditor = editor as monacoApi.editor.IStandaloneCodeEditor;
@@ -833,11 +837,11 @@
           <Tabs.Trigger value="2" class="editor-tab">Output</Tabs.Trigger>
         </Tabs.List>
         {#if selectedTab === EditorTab.DIFF}
-          <div class="diff-labels" aria-hidden="true">
-            <span>Actual · read-only</span><span
-              >Expected{readOnlyAssignment ? '' : ' · editable'}</span
-            >
-          </div>
+          <p class="diff-labels">
+            Compare actual output with expected values.{readOnlyAssignment
+              ? ' Expected values are supplied.'
+              : ' Expected values are editable.'}
+          </p>
         {/if}
         <div
           class="editor-mount"
@@ -1264,9 +1268,7 @@
       monospace;
   }
   .diff-labels {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 5px;
+    margin: 0;
     padding: 8px 15px;
     font:
       11px/1.4 ui-monospace,

@@ -6,6 +6,8 @@ The introduction is a 48-second, 1280 × 720 motion film at 30 fps. It introduce
 
 `static/media/computer-intro.mp4` is a **silent visual master**. Captions and a plain-text transcript provide the complete explanation. A natural narration track still needs to be generated or recorded and muxed into the film. The current asset must not be described as narrated or as having a voiceover.
 
+The connected Runway workspace was checked during this revision. Its Free plan exposes no speech models, so narration generation is blocked by the plan. No generation, credit purchase, or account change was made.
+
 The film introduces the relationship between computer layers. The site includes single-bit construction and dedicated Boolean-function and bus/routing labs; arithmetic, memory, architecture, and software remain conceptual previews.
 
 ## Assets

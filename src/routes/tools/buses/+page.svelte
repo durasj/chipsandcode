@@ -194,14 +194,15 @@
             {#if parsed[name].value !== null}
               <div class="bits editable-bits" class:eight-bits={inputWidth === 8}>
                 {#each binaryWord(parsed[name].value as number, inputWidth).split('') as bit, index}
-                  <button
-                    class:one={bit === '1'}
-                    aria-label={`Input ${name} bit ${inputWidth - 1 - index}: ${bit}`}
-                    aria-pressed={bit === '1'}
-                    on:click={() => toggleBit(name, inputWidth - 1 - index)}
-                  >
-                    <small aria-hidden="true">{inputWidth - 1 - index}</small><span>{bit}</span>
-                  </button>
+                  <div class="editable-bit">
+                    <small aria-hidden="true">{inputWidth - 1 - index}</small>
+                    <button
+                      class:one={bit === '1'}
+                      aria-label={`Input ${name} bit ${inputWidth - 1 - index}: ${bit}`}
+                      aria-pressed={bit === '1'}
+                      on:click={() => toggleBit(name, inputWidth - 1 - index)}>{bit}</button
+                    >
+                  </div>
                 {/each}
               </div>
             {:else}<p class="error">Enter a valid word before editing its bits.</p>{/if}
@@ -398,7 +399,7 @@
     gap: 5px;
   }
   .bits > span,
-  .bits > button {
+  .editable-bit > button {
     display: grid;
     gap: 5px;
     justify-items: center;
@@ -412,7 +413,8 @@
       16px/1.3 ui-monospace,
       monospace;
   }
-  .bits > .one {
+  .bits > .one,
+  .editable-bit > button.one {
     border-color: #c0b5ff;
     color: white;
     background: #40377e;
@@ -444,8 +446,15 @@
       monospace;
     margin: 22px 0 10px;
   }
-  .editable-bits > button {
-    min-height: 50px;
+  .editable-bit {
+    display: grid;
+    gap: 5px;
+    min-width: 0;
+    text-align: center;
+  }
+  .editable-bit > button {
+    min-height: 44px;
+    align-content: center;
   }
   .mux-table {
     margin-top: 28px;
@@ -474,7 +483,7 @@
       gap: 3px;
     }
     .bits > span,
-    .bits > button {
+    .editable-bit > button {
       font-size: 14px;
     }
   }

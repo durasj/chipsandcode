@@ -99,12 +99,15 @@ describe('Hardware simulator tool', () => {
     visitSimulator('Xor');
     cy.contains('[role="tab"]', 'Tests').contains('4 / 4');
     typeInEditor(
-      '{moveToStart}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{end}{leftArrow}, c',
+      '{ctrl+home}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{downArrow}{end}{leftArrow}, c',
     );
     cy.findByLabelText('Value for c').should('be.visible');
     typeInEditor(
-      '{moveToEnd}{upArrow}{upArrow}{end}{leftArrow}{leftArrow}{backspace}{backspace}{backspace}nota',
+      '{ctrl+end}{upArrow}{upArrow}{end}{leftArrow}{leftArrow}{backspace}{backspace}{backspace}nota',
     );
+    cy.get('.editor-mount')
+      .invoke('text')
+      .should('match', /Or\(a=w1,\s*b=w2,\s*out=nota\);/);
     cy.contains('[role="alert"]', 'contains a loop');
     cy.contains('[role="tab"]', 'Tests').should('not.contain', '/');
     cy.get('.signal-panel').should(($panel) => {
@@ -119,7 +122,7 @@ describe('Hardware simulator tool', () => {
 
   it('Keeps an intentionally emptied local draft across reloads', () => {
     visitSimulator('Xor');
-    typeInEditor('{selectAll}{backspace}');
+    typeInEditor('{ctrl+a}{backspace}');
     cy.contains('[role="tab"]', 'Tests').should('not.contain', '/');
     cy.reload();
     waitForEditor();
@@ -148,9 +151,12 @@ describe('Hardware simulator tool', () => {
   it('Re-evaluates changed test scripts and removes the result when tests are cleared', () => {
     visitSimulator('Xor');
     cy.contains('[role="tab"]', 'Tests').contains('4 / 4').click();
-    typeInEditor('{moveToStart}{downArrow}{downArrow}{shift}{end}{backspace}');
+    typeInEditor('{ctrl+home}{downArrow}{downArrow}{shift}{end}{backspace}');
+    // Deliberately change the first input combination. Omitting `set a 0`
+    // alone does not change its initial zero value and must still pass.
+    typeInEditor('set a 1,');
     cy.contains('[role="tab"]', 'Tests').contains('3 / 4');
-    typeInEditor('{selectAll}{backspace}');
+    typeInEditor('{ctrl+a}{backspace}');
     cy.contains('[role="tab"]', 'Tests').should('not.contain', '/');
   });
 
@@ -159,7 +165,7 @@ describe('Hardware simulator tool', () => {
     cy.contains('[role="tab"]', 'Tests').contains('4 / 4');
     cy.contains('[role="tab"]', 'Output').click();
     typeInEditor(
-      '{moveToStart}{downArrow}{end}{leftArrow}{leftArrow}{leftArrow}{leftArrow}{backspace}1',
+      '{ctrl+home}{downArrow}{end}{leftArrow}{leftArrow}{leftArrow}{leftArrow}{backspace}1',
       true,
     );
     cy.contains('[role="tab"]', 'Tests').contains('3 / 4');
@@ -237,7 +243,7 @@ describe('Hardware simulator tool', () => {
     cy.contains('button', 'Save').click();
     cy.wrap(null).should(() => expect(releaseSave).to.be.a('function'));
     cy.findByRole('button', { name: 'Saving…' }).should('be.disabled');
-    typeInEditor('{moveToEnd} plus an unsaved edit');
+    typeInEditor('{ctrl+end} plus an unsaved edit');
     cy.findByLabelText('Experiment name').clear().type('Second revision').blur();
     cy.then(() => releaseSave?.());
     cy.wait('@delayedSave').its('request.body').should('include', {
