@@ -1,6 +1,6 @@
 <script lang="ts">
-  import Problem from '$lib/components/Problem.svelte';
-  import HardwareIDE from '$lib/components/HardwareIDE.svelte';
+  import Problem from '#lib/components/Problem.svelte';
+  import HardwareIDE from '#lib/components/HardwareIDE.svelte';
   import examples from '../hardware-simulator/examples';
 
   export let id: string;

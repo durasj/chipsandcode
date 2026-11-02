@@ -1,10 +1,10 @@
 <script lang="ts">
   import type { RenderableTreeNode, Tag } from '@markdoc/markdoc';
-  import EmbeddedHardwareIDE from '$lib/components/EmbeddedHardwareIDE.svelte';
-  import EmbeddedVideo from '$lib/components/EmbeddedVideo.svelte';
-  import Math from '$lib/components/Math.svelte';
-  import LayoutRow from '$lib/components/LayoutRow.svelte';
-  import LayoutCol from '$lib/components/LayoutCol.svelte';
+  import EmbeddedHardwareIDE from '#lib/components/EmbeddedHardwareIDE.svelte';
+  import EmbeddedVideo from '#lib/components/EmbeddedVideo.svelte';
+  import Math from '#lib/components/Math.svelte';
+  import LayoutRow from '#lib/components/LayoutRow.svelte';
+  import LayoutCol from '#lib/components/LayoutCol.svelte';
 
   export let children: RenderableTreeNode[] = [];
 

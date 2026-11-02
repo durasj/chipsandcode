@@ -25,14 +25,18 @@ describe('TST Parser', () => {
   });
 
   // Project 1 TST files
-  const project1Tsts = import.meta.glob('./testing/project1/*.tst', { as: 'raw', eager: true });
+  const project1Tsts = import.meta.glob('./testing/project1/*.tst', {
+    query: '?raw',
+    import: 'default',
+    eager: true,
+  });
   for (const [path, content] of Object.entries(project1Tsts)) {
     const name = basename(path, extname(path));
 
-    it(`Parses Project 1 ${name}`, () => {
+    it(`Parses Project 1 ${name}`, async () => {
       const ast = parse(content);
 
-      expect(JSON.stringify(ast, null, 2)).toMatchFileSnapshot(
+      await expect(JSON.stringify(ast, null, 2)).toMatchFileSnapshot(
         `./testing/project1/${name}.tst.ast`,
       );
     });

@@ -1,4 +1,4 @@
-import type { Experiment } from 'src/lib/shared';
+import type { Experiment } from '#src/lib/shared.js';
 
 export default {
   id: 'ExerciseNot',

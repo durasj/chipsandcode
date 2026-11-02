@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import '@frsource/cypress-plugin-visual-regression-diff';
+import '@pixsame/cypress-plugin-visual-regression-diff';
 import '@testing-library/cypress/add-commands';
 import 'cypress-axe';
 

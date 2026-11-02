@@ -3,7 +3,7 @@
   import { Icon } from '@steeze-ui/svelte-icon';
   import { Moon, Sun } from '@steeze-ui/heroicons';
 
-  import { theme } from 'src/stores';
+  import { theme } from '#src/stores.js';
 
   onMount(() => {
     window.matchMedia?.('(prefers-color-scheme: dark)').addEventListener('change', (e) => {

@@ -12,3 +12,16 @@ node_modules
 .env
 # Unit test coverage
 coverage
+
+# Credentials, deployment state, local databases and exports
+.env.*
+!.env.template
+.vercel
+.wrangler
+backups/
+cypress/videos/
+cypress/screenshots/
+
+# Retired Cloudflare local files; history retains the rollback configuration.
+/functions/
+/wrangler.toml

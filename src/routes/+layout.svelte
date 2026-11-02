@@ -2,8 +2,8 @@
   import { onMount } from 'svelte';
   import { pwaInfo } from 'virtual:pwa-info';
 
-  import 'src/app.css';
-  import { theme } from 'src/stores';
+  import '#src/app.css';
+  import { theme } from '#src/stores.js';
 
   onMount(async () => {
     // @ts-ignore TODO: Any way to do this without polluting the bundle?
@@ -23,8 +23,6 @@
     }
   });
 
-  $: webManifest = pwaInfo ? pwaInfo.webManifest.linkTag : '';
-
   theme.subscribe((name) => {
     if (typeof document === 'undefined') return;
 
@@ -38,7 +36,7 @@
 </script>
 
 <svelte:head>
-  {@html webManifest}
+  {#if pwaInfo}<link rel="manifest" href="/manifest.webmanifest" />{/if}
 </svelte:head>
 
 <div class="flex flex-col min-h-screen">

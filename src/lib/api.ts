@@ -1,9 +1,9 @@
 import type { ErrorResponse } from './shared';
 
-export const apiEnabled = !!import.meta.env.VITE_API_PREFIX;
+export const apiEnabled = import.meta.env.VITE_API_PREFIX !== 'disabled';
 
 export default async function api<T>(url: string, options?: RequestInit) {
-  const resourceUrl = `${import.meta.env.VITE_API_PREFIX}${url}`;
+  const resourceUrl = `${import.meta.env.VITE_API_PREFIX || '/api'}${url}`;
 
   const response = await fetch(resourceUrl, {
     credentials: 'include',

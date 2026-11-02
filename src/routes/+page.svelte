@@ -1,16 +1,14 @@
 <script>
-  import Img from '@zerodevx/svelte-img';
+  import Header from '#src/lib/components/Header.svelte';
+  import Footer from '#src/lib/components/Footer.svelte';
 
-  import Header from 'src/lib/components/Header.svelte';
-  import Footer from 'src/lib/components/Footer.svelte';
-
-  import binary from '$lib/images/binary.png?run&width=176';
-  import chip from '$lib/images/chip.png?run&width=176';
-  import hdl from '$lib/images/hdl.png?run&width=176';
-  import keyboard from '$lib/images/keyboard.png?run&width=176';
-  import matrix from '$lib/images/matrix.png?run&width=176';
-  import pcb from '$lib/images/pcb.png?run&width=176';
-  import pixels from '$lib/images/pixels.png?run&width=176';
+  import binary from '#lib/images/binary.png?enhanced&w=176;352';
+  import chip from '#lib/images/chip.png?enhanced&w=176;352';
+  import hdl from '#lib/images/hdl.png?enhanced&w=176;352';
+  import keyboard from '#lib/images/keyboard.png?enhanced&w=176;352';
+  import matrix from '#lib/images/matrix.png?enhanced&w=176;352';
+  import pcb from '#lib/images/pcb.png?enhanced&w=176;352';
+  import pixels from '#lib/images/pixels.png?enhanced&w=176;352';
 </script>
 
 <svelte:head>
@@ -45,37 +43,67 @@
                 <div class="flex items-center space-x-6 lg:space-x-8">
                   <div class="flex-shrink-0 grid grid-cols-1 gap-y-6 lg:gap-y-8">
                     <div class="w-44 h-60 rounded-lg overflow-hidden sm:opacity-0 lg:opacity-100">
-                      <Img class="w-full h-full object-center object-cover" src={hdl} alt="" />
+                      <enhanced:img
+                        class="w-full h-full object-center object-cover"
+                        src={hdl}
+                        alt=""
+                      />
                     </div>
                     <div class="w-44 h-60 rounded-lg overflow-hidden">
-                      <Img class="w-full h-full object-center object-cover" src={chip} alt="" />
+                      <enhanced:img
+                        class="w-full h-full object-center object-cover"
+                        src={chip}
+                        alt=""
+                      />
                     </div>
                   </div>
                   <div class="flex-shrink-0 grid grid-cols-1 gap-y-6 lg:gap-y-8">
                     <div class="w-44 h-60 rounded-lg overflow-hidden">
-                      <Img class="w-full h-full object-center object-cover" src={binary} alt="" />
+                      <enhanced:img
+                        class="w-full h-full object-center object-cover"
+                        src={binary}
+                        alt=""
+                      />
                     </div>
                     <div class="w-44 h-64 rounded-lg overflow-hidden">
-                      <Img class="w-full h-full object-center object-cover" src={pcb} alt="" />
+                      <enhanced:img
+                        class="w-full h-full object-center object-cover"
+                        src={pcb}
+                        alt=""
+                      />
                     </div>
                     <div class="w-44 h-64 rounded-lg overflow-hidden">
-                      <Img class="w-full h-full object-center object-cover" src={keyboard} alt="" />
+                      <enhanced:img
+                        class="w-full h-full object-center object-cover"
+                        src={keyboard}
+                        alt=""
+                      />
                     </div>
                   </div>
                   <div class="flex-shrink-0 grid grid-cols-1 gap-y-6 lg:gap-y-8">
                     <div class="w-44 h-64 rounded-lg overflow-hidden">
-                      <Img class="w-full h-full object-center object-cover" src={pixels} alt="" />
+                      <enhanced:img
+                        class="w-full h-full object-center object-cover"
+                        src={pixels}
+                        alt=""
+                      />
                     </div>
                     <div class="w-44 h-64 rounded-lg overflow-hidden">
-                      <Img class="w-full h-full object-center object-cover" src={matrix} alt="" />
+                      <enhanced:img
+                        class="w-full h-full object-center object-cover"
+                        src={matrix}
+                        alt=""
+                      />
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <a href="/learn/hardware/boolean-logic" class="btn btn-primary" sveltekit:prefetch
-              >Start Learning 🤯</a
+            <a
+              href="/learn/hardware/boolean-logic"
+              class="btn btn-primary"
+              data-sveltekit-preload-data="hover">Start Learning 🤯</a
             >
           </div>
         </div>

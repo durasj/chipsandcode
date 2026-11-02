@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import TestScript from './TestScript';
 import AndChip from '../chips/builtin/AndChip';
-import type { OutputListNode, Root } from 'src/lib/editor/tst/tree';
+import type { OutputListNode, Root } from '#src/lib/editor/tst/tree.js';
 
 const andTst = {
   cases: [
