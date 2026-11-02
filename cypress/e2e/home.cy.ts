@@ -3,21 +3,15 @@ function visitLanding(reducedMotion = false) {
     onBeforeLoad(window) {
       window.localStorage.clear();
       const originalMatchMedia = window.matchMedia.bind(window);
-      cy.stub(window, 'matchMedia').callsFake((query: string) => {
-        if (query !== '(prefers-reduced-motion: reduce)') return originalMatchMedia(query);
-        return {
-          matches: reducedMotion,
-          media: query,
-          onchange: null,
-          addListener() {},
-          removeListener() {},
-          addEventListener() {},
-          removeEventListener() {},
-          dispatchEvent() {
-            return true;
-          },
-        } satisfies MediaQueryList;
-      });
+      // The shared visit command already stubs matchMedia for the light theme.
+      // Wrap that function without asking Sinon to wrap it a second time.
+      window.matchMedia = (query: string) => {
+        const result = originalMatchMedia(query);
+        if (query === '(prefers-reduced-motion: reduce)') {
+          Object.defineProperty(result, 'matches', { value: reducedMotion });
+        }
+        return result;
+      };
     },
   });
   cy.contains('Progress saved on this device');
@@ -40,6 +34,14 @@ describe('Chips and Code landing', () => {
       .findAllByRole('button')
       .should('have.length', 7);
     cy.contains('0 / 7 CHIPS VERIFIED');
+    cy.get('.hero-copy').then(($copy) => {
+      cy.get('.hero-motion').should(($motion) => {
+        expect(
+          $motion[0].getBoundingClientRect().left,
+          'the cinematic hero sits beside the copy and actions',
+        ).to.be.at.least($copy[0].getBoundingClientRect().right);
+      });
+    });
     cy.findByRole('button', { name: 'Begin building' }).then(($button) => {
       const bounds = $button[0].getBoundingClientRect();
       expect(bounds.bottom, 'start action is visible without scrolling').to.be.at.most(720);
@@ -89,7 +91,7 @@ describe('Chips and Code landing', () => {
     cy.findByRole('heading', { level: 1, name: /From signals\s*to software\./ }).should(
       'be.visible',
     );
-    cy.get('.hero').screenshot('computer-hero-software');
+    cy.get('.computer-hero').screenshot('computer-hero-software');
     cy.injectAxe();
     cy.checkA11y();
   });

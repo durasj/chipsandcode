@@ -30,7 +30,7 @@
 </script>
 
 <div class="landing">
-  <section class="hero" aria-labelledby="journey-heading">
+  <section class="computer-hero" aria-labelledby="journey-heading">
     <div class="hero-copy">
       <h1 id="journey-heading" tabindex="-1">From signals<br />to <em>software.</em></h1>
       <p>Wire a circuit or write its HDL. See how each layer makes the next possible.</p>
@@ -347,7 +347,7 @@
     outline: 2px solid #aaa4ff !important;
     outline-offset: 5px;
   }
-  .hero {
+  .computer-hero {
     max-width: 1480px;
     margin: auto;
     padding: 56px 4% 32px;
@@ -998,7 +998,7 @@
     color: #211a82;
   }
   @media (min-width: 1500px) {
-    .hero {
+    .computer-hero {
       padding-top: 70px;
       padding-bottom: 42px;
     }
@@ -1015,7 +1015,7 @@
     }
   }
   @media (max-width: 1100px) {
-    .hero {
+    .computer-hero {
       grid-template-columns: minmax(250px, 0.9fr) minmax(0, 1.25fr);
       gap: 24px 4%;
     }
@@ -1051,7 +1051,7 @@
     }
   }
   @media (max-width: 760px) {
-    .hero {
+    .computer-hero {
       display: flex;
       flex-direction: column;
       align-items: stretch;
@@ -1125,7 +1125,7 @@
     }
   }
   @media (max-width: 480px) {
-    .hero {
+    .computer-hero {
       padding-inline: 5%;
       padding-top: 34px;
       gap: 25px;
