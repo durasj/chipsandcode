@@ -1,3 +1,7 @@
+<script lang="ts">
+  import { resolve } from '$app/paths';
+</script>
+
 <svelte:head>
   <title>About — Chips and Code</title>
   <meta
@@ -8,7 +12,7 @@
 
 <main class="page-prose">
   <p class="eyebrow">ABOUT CHIPS AND CODE</p>
-  <h1>Understand it{' '}<br />by building it.</h1>
+  <h1>Understand it <br />by building it.</h1>
   <p class="lead">
     Computers become less mysterious when you can change a signal, connect a gate, and see what
     happens.
@@ -21,11 +25,13 @@
       machine.
     </p>
     <p>
-      The current learning path covers Boolean logic: signals, gates, circuit composition, truth
-      tables, expressions, buses, and routing. Arithmetic, memory, processors, and higher-level
-      software are the journey ahead.
+      The learning path runs from signals and gates through arithmetic, memory, machine language,
+      computer architecture, and an assembler. Build and test each layer in the browser. Tools also
+      let you explore virtual machines, compile Jack, and draw graphics.
     </p>
-    <p><a href="/learn">Start learning</a> or <a href="/tools">open a tool</a>.</p>
+    <p>
+      <a href={resolve('/learn')}>Start learning</a> or <a href={resolve('/tools')}>open a tool</a>.
+    </p>
   </section>
   <section>
     <h2>Built on learning research</h2>
@@ -56,6 +62,11 @@
   </section>
   <section>
     <h2>Sources and credits</h2>
+    <p>
+      The virtual machine and Jack compiler build on the open-source
+      <a href="https://github.com/nand2tetris/web-ide">Nand2Tetris Web IDE</a> by David Souther and its
+      contributors. The adapted runtime retains its license and attribution.
+    </p>
     <p>
       The learning material is adapted from <a href="https://www.nand2tetris.org">Nand2Tetris</a> by
       Noam Nisan and Shimon Schocken, under

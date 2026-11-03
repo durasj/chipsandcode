@@ -1,37 +1,80 @@
 <script lang="ts">
-  const tools = [
-    {
-      n: '01',
-      name: 'Hardware simulator',
-      href: '/tools/hardware-simulator',
-      description: 'Write HDL. Inspect the signals. Test your circuit.',
-      mark: 'CHIP',
-      note: 'Code · Signals · Tests',
-    },
-    {
-      n: '02',
-      name: 'Boolean functions',
-      href: '/tools/boolean-functions',
-      description: 'Turn a truth table into an expression and a NAND circuit.',
-      mark: '0 1',
-      note: 'Truth tables · Expressions · NAND',
-    },
-    {
-      n: '03',
-      name: 'Buses & routing',
-      href: '/tools/buses',
-      description: 'Work with whole words of bits and choose where signals go.',
-      mark: '0011',
-      note: '16-bit gates · Selectors · Routing',
-    },
-  ];
+  import { resolve } from '$app/paths';
+  const tools = (
+    [
+      {
+        n: '03',
+        name: 'Virtual machine',
+        href: '/tools/vm',
+        description: 'Follow stack operations, function calls, and running programs.',
+        mark: 'STACK',
+        note: 'VM · Memory · Screen',
+      },
+      {
+        n: '04',
+        name: 'Jack compiler',
+        href: '/tools/compiler',
+        description: 'Compile classes into VM code and run the result.',
+        mark: 'CLASS',
+        note: 'Jack · Tokens · VM',
+      },
+      {
+        n: '05',
+        name: 'Bitmap editor',
+        href: '/tools/bitmap',
+        description: 'Draw pixels and turn them into screen words.',
+        mark: 'PIXEL',
+        note: 'Pixels · Words · Code',
+      },
+      {
+        n: '01',
+        name: 'Chip workshop',
+        href: '/tools/chip-builder',
+        description: 'Build multi-bit circuits, clock memory, and connect a computer.',
+        mark: '16 BIT',
+        note: 'HDL · Buses · Clock',
+      },
+      {
+        n: '02',
+        name: 'Computer & assembler',
+        href: '/tools/computer',
+        description: 'Translate assembly. Step through a running machine.',
+        mark: '@CODE',
+        note: 'Assembly · CPU · Screen',
+      },
+      {
+        n: '06',
+        name: 'Saved HDL experiments',
+        href: '/tools/hardware-simulator',
+        description: 'Write HDL. Inspect the signals. Test your circuit.',
+        mark: 'CHIP',
+        note: 'Code · Signals · Tests',
+      },
+      {
+        n: '07',
+        name: 'Boolean functions',
+        href: '/tools/boolean-functions',
+        description: 'Turn a truth table into an expression and a NAND circuit.',
+        mark: '0 1',
+        note: 'Truth tables · Expressions · NAND',
+      },
+      {
+        n: '08',
+        name: 'Buses & routing',
+        href: '/tools/buses',
+        description: 'Work with whole words of bits and choose where signals go.',
+        mark: '0011',
+        note: '16-bit gates · Selectors · Routing',
+      },
+    ] as const
+  ).toSorted((a, b) => Number(a.n) - Number(b.n));
 </script>
 
 <svelte:head>
   <title>Tools — Chips and Code</title>
   <meta
     name="description"
-    content="Explore computer logic with a hardware simulator, Boolean function builder, and bus and routing lab."
+    content="Build circuits, run a computer, assemble code, execute VM programs, compile Jack, and draw bitmaps."
   />
 </svelte:head>
 
@@ -42,8 +85,8 @@
     <p>Change something. See what follows.</p>
   </header>
   <div class="tool-list">
-    {#each tools as tool}
-      <a class="tool-entry" href={tool.href}>
+    {#each tools as tool (tool.href)}
+      <a class="tool-entry" href={resolve(tool.href)}>
         <div class="tool-diagram" aria-hidden="true">
           <span>{tool.n}</span><b>{tool.mark}</b><i></i>
         </div>
@@ -57,7 +100,8 @@
     {/each}
   </div>
   <p class="learn-note">
-    Start with the basics in <a href="/learn">Learn</a>. Each tool is here when you need it.
+    Start with the basics in <a href={resolve('/learn')}>Learn</a>. Each tool is here when you need
+    it.
   </p>
 </main>
 

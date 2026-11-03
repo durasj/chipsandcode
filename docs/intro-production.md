@@ -8,7 +8,7 @@ The introduction is a 48-second, 1280 × 720 motion film at 30 fps. It introduce
 
 The connected Runway workspace was checked during this revision. Its Free plan exposes no speech models, so narration generation is blocked by the plan. No generation, credit purchase, or account change was made.
 
-The film introduces the relationship between computer layers. The site includes single-bit construction and dedicated Boolean-function and bus/routing labs; arithmetic, memory, architecture, and software remain conceptual previews.
+The film introduces the relationship between computer layers. The site now includes the learning path and tools through Project6 (assembler). The high-level software section of the film remains a conceptual preview of PartII.
 
 ## Assets
 

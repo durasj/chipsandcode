@@ -59,7 +59,7 @@ The Boolean functions tool and buses/routing tool are executable behavioral expl
 
 The factory does not yet register the player's earlier custom implementations as reusable chip packages. The workbench supplies primitive equivalents of permitted previously introduced gates. Both the full text and product avoid claiming a custom reusable library exists.
 
-Arithmetic, sequential state, memory, CPU construction, machine language, an assembler, and high-level software are future layers. Their names and conceptual relationship appear in the landing journey, not as working chapters or tools.
+This audit describes the original Boolean-logic adaptation. The subsequent Projects1–6 expansion adds arithmetic, sequential state, memory, machine language, CPU construction, and an assembler; see `part-one-content-audit.md` and `part-one-sources.md`. High-level software is the remaining PartII scope.
 
 ## Licensing and continuity
 

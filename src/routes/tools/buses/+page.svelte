@@ -333,9 +333,9 @@
       </p>
     {/if}
     <p>
-      These models let you explore the bus contracts directly. General bus construction in HDL is
-      still ahead; the <a href="/tools/hardware-simulator">hardware simulator</a> currently builds single-bit
-      circuits.
+      These models let you explore the bus contracts directly. Build these contracts in HDL in the <a
+        href="/tools/chip-builder">chip workshop</a
+      >, or follow the <a href="/learn/path/buses">guided construction path</a>.
     </p>
   </details>
 

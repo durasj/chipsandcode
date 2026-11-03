@@ -15,7 +15,7 @@ Build one reliable part, then use its behavior to understand the next. This chap
 
 The guided path introduces each tool gradually. [Continue learning](/learn). For independent experiments, open the [hardware simulator](/tools/hardware-simulator).
 
-The workbench supplies primitive equivalents of previously introduced gates as permitted components. It does not yet package your own earlier implementation as a reusable custom chip library.
+The introductory workbench supplies primitive equivalents of previously introduced gates as permitted components; it does not automatically package those first visual constructions into a library. In the later [chip builder](/tools/chip-builder), add explicit HDL dependencies to compose and test your own chip definitions.
 
 # The supplied NAND primitive
 
@@ -130,7 +130,7 @@ For a four-bit illustration, NOT of `0011` is `1100`. The same construction work
 
 [Explore 16-bit gates in the buses and routing tool](/tools/buses).
 
-These operations are executable behavioral models in that tool. The current guided circuit graph and hardware simulator do not provide full multi-bit HDL construction. A working lab output does not mean a custom Not16 implementation has been built or verified.
+These operations are executable behavioral models in the buses tool. To construct and validate your own multi-bit HDL, [continue with the bus challenges](/learn/path/buses) or use the [chip builder](/tools/chip-builder). Exploring a supplied model and verifying your own construction are separate steps.
 
 # Multi-way operations
 
@@ -182,6 +182,6 @@ NAND is not the only valid foundation. NOR alone is universal, and a library con
 
 # After the logic layer
 
-You now have the vocabulary for signals, logic operations, composition, and routing. Arithmetic organizes gates to calculate; memory adds state; architecture connects calculation, storage, and control. Those later chapters require new runtimes and exercises and are not yet implemented here.
+You now have the vocabulary for signals, logic operations, composition, and routing. [Continue constructing multi-bit chips](/learn/path/buses), then [turn those gates into arithmetic](/learn/reference/boolean-arithmetic). Memory adds state; architecture connects calculation, storage, and control. The guided path continues through a working computer and its assembler.
 
 [See the available next steps](/learn/reference/meta/what-next).

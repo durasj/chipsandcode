@@ -127,16 +127,13 @@
       <p class="chapter-label">FROM SIGNALS TO SOFTWARE</p>
       <h2 id="start-heading">Then build it{' '}<br />back up.</h2>
       <p>
-        Combine signals with gates. Build working circuits. Understand what your code is
-        built on.
+        Combine signals with gates. Build working circuits. Understand what your code is built on.
       </p>
       <button class="start-button" onclick={onstart}
         >{continuing ? 'Continue learning' : 'Start learning'}<span aria-hidden="true">↗</span
         ></button
       >
-      <p class="availability-note">
-        Start with signals and logic. Higher computer layers are still being built.
-      </p>
+      <p class="availability-note">Build from signals through a working computer and assembler.</p>
       <button class="intro-link" onclick={onwatch}
         >Watch the introduction <span aria-hidden="true">↗</span></button
       >

@@ -10,16 +10,16 @@ The animation is continuous and scroll-driven. It adds no timeline controls or a
 
 Every page shares **Learn, Tools, About**, the original brand mark, and a small footer. There is no parallel legacy interface, theme menu, or account dropdown.
 
-| Destination | Behavior |
-| --- | --- |
-| `/` | Computer disassembly story and one primary learning action |
-| `/learn` | Starts or resumes the guided learning sequence |
-| `/learn/reference/...` | Complete corrected explanations in the same design |
-| `/tools` | Hardware simulator, Boolean functions, buses and routing |
-| `/tools/hardware-simulator[/id]` | Free-form HDL simulation and saved/example experiments |
-| `/tools/boolean-functions` | Truth tables, canonical expressions, equivalence, NAND HDL |
-| `/tools/buses` | Multi-bit gates and multi-way routing |
-| `/about` | Purpose, research, credits, and device storage explanation |
+| Destination                      | Behavior                                                   |
+| -------------------------------- | ---------------------------------------------------------- |
+| `/`                              | Computer disassembly story and one primary learning action |
+| `/learn`                         | Starts or resumes the guided learning sequence             |
+| `/learn/reference/...`           | Complete corrected explanations in the same design         |
+| `/tools`                         | Hardware simulator, Boolean functions, buses and routing   |
+| `/tools/hardware-simulator[/id]` | Free-form HDL simulation and saved/example experiments     |
+| `/tools/boolean-functions`       | Truth tables, canonical expressions, equivalence, NAND HDL |
+| `/tools/buses`                   | Multi-bit gates and multi-way routing                      |
+| `/about`                         | Purpose, research, credits, and device storage explanation |
 
 Existing `/experiment/hardware-ide[/id]` and `/learn/hardware/...` URLs redirect to their canonical counterparts. Experiment IDs, API paths, and ownership checks remain unchanged. `/signin` redirects to the explanation of anonymous sessions on About; there is no unsupported sign-in flow.
 
@@ -59,6 +59,6 @@ Verification covers types, simulator/model tests, builds, existing editing/shari
 
 ## Boundaries
 
-Arithmetic, clocked memory, processor architecture, machine/assembly tools, and higher-level software have no source chapters yet and remain future work. The optional 48-second film introduces that wider journey; its current master is silent. Do not imply those layers are already playable or the film is narrated.
+The extended path now covers Projects1–6: multi-bit construction, arithmetic, clocked memory, machine language, architecture, and an assembler. The chip workshop and computer workspace provide the corresponding runtimes. Virtual machines, compilers, and higher-level software remain PartII work. The optional 48-second film introduces that wider journey; its current master is silent. The film is not narrated.
 
 See [source coverage](content-audit.md), [visual direction](art-direction.md), and [film production](intro-production.md).

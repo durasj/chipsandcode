@@ -46,7 +46,7 @@
       The video could not load. Read the transcript below.
     </p>{/if}
   <div class="intro-footer">
-    <p>Logic is playable now. The higher layers are the path ahead.</p>
+    <p>Build through the assembler. High-level software is the next horizon.</p>
     <a href="/media/computer-intro-transcript.txt" target="_blank" rel="noopener"
       >Read transcript ↗</a
     >

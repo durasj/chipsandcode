@@ -165,9 +165,7 @@
               Six circuits, built from one primitive. Next, use the same ideas with whole words of
               bits and multi-way routing.
             </p>
-            <a class="next-reading" href="/learn/reference/boolean-logic/project#buses"
-              >Continue with buses and selectors →</a
-            >
+            <a class="next-reading" href="/learn/path/buses">Continue with buses and selectors →</a>
           </div>
           <button class="learning-action" onclick={() => setView('collection')}
             >Review your chips <span aria-hidden="true">→</span></button
@@ -191,6 +189,9 @@
             </button>
           {/each}
         </div>
+        {#if !nextMission}<a class="learning-action" href="/learn/path"
+            >Continue through the computer →</a
+          >{/if}
         {#if nextMission}<button class="learning-action" onclick={startLearning}
             >Continue learning <span aria-hidden="true">→</span></button
           >{/if}

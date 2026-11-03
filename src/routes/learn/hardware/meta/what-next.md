@@ -1,39 +1,37 @@
 ---
-title: Beyond the logic layer
+title: Beyond the assembler
 updated: 2026-11-03
 ---
 
-The logic layer establishes a small set of reusable ideas: signals, gates, contracts, composition, and selection. The six guided constructions test those ideas on every input case.
+The path now connects signals to an assembler: gates combine into arithmetic, clocked storage keeps state, a CPU follows instructions, and a translator turns symbolic programs into machine words.
 
-# Go deeper here
+# Finish the hardware and assembler path
 
-- [Explore all sixteen two-input functions](/tools/boolean-functions). Change a truth table and follow its expression and NAND construction.
-- [Work with buses and routing](/tools/buses). Compare bitwise operations, reductions, and 4-way or 8-way selectors.
-- [Use the hardware simulator](/tools/hardware-simulator). Write HDL, run test scripts, and inspect supported single-bit designs.
-- [Read the complete explanations](/learn/reference/boolean-logic/background). Revisit canonical form, universality, composition, and verification.
+[Open the learning path](/learn/path) to continue through multi-bit logic, arithmetic, memory, machine language, computer architecture, and assembly translation. Each layer has a full explanation in this reference.
 
-These tools cover the broader Boolean logic material. They do not replace the arithmetic, memory, processor, or software chapters that are still to be authored.
+Use the [chip builder](/tools/chip-builder) for multi-bit and clocked HDL experiments, including TST scripts and CMP comparisons. Use the [computer and assembler](/tools/computer) for instruction translation, execution, RAM, screen, and keyboard inspection. The [Boolean functions](/tools/boolean-functions) and [buses and routing](/tools/buses) tools let you explore behavior before constructing an implementation.
 
-# The next layers
+Keep the distinction between a working reference model and your own construction. Running a program on a built-in CPU demonstrates the program's behavior. Validating your HDL CPU requires running that construction against its contract. Similarly, translating a program with the supplied assembler is different from implementing and testing your own translator.
 
-**Arithmetic** turns logic into operations on numbers: addition, comparison, and an arithmetic logic unit.
+# The next software layers
 
-**Memory** introduces state that persists between moments, with clocks, registers, and addressing.
+Nand2Tetris continues beyond Project 6:
 
-**Computer architecture** connects a processor, memory, and input/output so the machine can follow instructions.
+| Projects | Layer | What it adds |
+| --- | --- | --- |
+| 7–8 | Virtual machine | Stack arithmetic, memory segments, branches, function calls, and returns |
+| 9 | High-level programming | Programs written in Jack rather than assembly |
+| 10–11 | Compiler | Parsing Jack and generating executable VM code |
+| 12 | Operating-system services | Memory allocation, arithmetic helpers, strings, screen output, and keyboard input |
 
-**Software** gives those instructions a more useful form, from machine language through assembly and higher-level programs.
+The guided lessons stop at Project 6. You can already explore the later layers with the [VM emulator](/tools/vm), [Jack compiler](/tools/compiler), and [bitmap editor](/tools/bitmap). Compile Jack into VM code, open it in the emulator, or draw a sprite and inspect the code that puts it on screen. Follow the [official course](https://www.nand2tetris.org/course) for Projects 7–12 and their construction assignments.
 
-The homepage shows this destination. Only the logic learning path and the tools listed above are currently available. There is no working CPU, assembler, or later course hidden behind a preview.
+# Take your work further
 
-# Continue with Nand2Tetris
+Use the [official project files](https://github.com/nand2tetris/projects) and [online tools](https://www.nand2tetris.org/software) to compare your work with the course's contracts. The official tests make projects portable; a visual success in one interface is not a replacement for checking the required behavior.
 
-Chips and Code adapts Boolean logic material from [Nand2Tetris](https://www.nand2tetris.org/). Their course provides the wider computer-building curriculum and its tools. Follow their [official course site](https://www.nand2tetris.org/course) for the next project and current setup instructions.
-
-Completing the six single-bit exercises here is a useful foundation. It is not the same as completing every multi-bit construction in the original first project.
-
-Chips and Code is independent and is not affiliated with or endorsed by Nand2Tetris. Adapted learning content is licensed under [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/).
+Chips and Code is independent and is not affiliated with or endorsed by Nand2Tetris. The curriculum draws on work by Noam Nisan and Shimon Schocken. Adapted explanations retain [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/); imported software assets retain their source licenses. The authors ask learners not to publish completed exercise solutions, preserving the construction challenge for others.
 
 # Help improve this project
 
-[Report a problem or suggest an improvement](https://github.com/durasj/chipsandcode/issues), [join the discussion](https://github.com/durasj/chipsandcode/discussions), or [contribute content and code](https://github.com/durasj/chipsandcode). Clear examples of where a concept or control became confusing are especially useful.
+[Report a problem](https://github.com/durasj/chipsandcode/issues), [join the discussion](https://github.com/durasj/chipsandcode/discussions), or [contribute](https://github.com/durasj/chipsandcode). Include the smallest example that shows the problem and the behavior you expected. For a learning issue, describe the first concept or control that became unclear.

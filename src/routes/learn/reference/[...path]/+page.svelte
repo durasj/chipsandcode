@@ -1,27 +1,42 @@
 <script lang="ts">
+  import { resolve } from '$app/paths';
   import ReferenceContent from '#lib/learning/ReferenceContent.svelte';
-  import { referencePages, referenceUrl } from '#lib/learning/reference.js';
+  import { referencePages } from '#lib/learning/reference.js';
   import type { PageData } from './$types';
   export let data: PageData;
+  const learningChapters: Record<string, string> = {
+    'boolean-arithmetic': 'arithmetic',
+    memory: 'memory',
+    'machine-language': 'machine-language',
+    'computer-architecture': 'architecture',
+    assembler: 'assembler',
+  };
+  $: learningChapter = learningChapters[data.current.path];
 </script>
 
 <svelte:head>
   <title>{data.title} — Chips and Code</title>
   <meta
     name="description"
-    content="The complete explanation of signals, Boolean logic, gate construction, HDL, and buses, in Chips and Code."
+    content={`${data.title}: concepts, chip contracts, examples, and project guidance in Chips and Code.`}
   />
 </svelte:head>
 
 <main class="reference-page" id="reference-content">
   <div class="reading-navigation">
-    <a class="back-link" href="/learn"><span aria-hidden="true">←</span> Back to Learn</a>
+    <a
+      class="back-link"
+      href={learningChapter
+        ? resolve('/learn/path/[chapter]', { chapter: learningChapter })
+        : resolve(data.current.path === 'meta/what-next' ? '/learn/path' : '/learn')}
+      ><span aria-hidden="true">←</span> Back to Learn</a
+    >
     <details class="reading-picker">
       <summary>Full explanations <span aria-hidden="true">+</span></summary>
       <nav aria-label="Full explanations">
-        {#each referencePages as item}
+        {#each referencePages as item (item.path)}
           <a
-            href={referenceUrl(item.path)}
+            href={resolve('/learn/reference/[...path]', { path: item.path })}
             aria-current={item.path === data.current.path ? 'page' : undefined}>{item.label}</a
           >
         {/each}
@@ -29,14 +44,14 @@
     </details>
   </div>
   <header class="reading-header">
-    <p class="eyebrow">Learn / Logic / The full explanation</p>
+    <p class="eyebrow">Learn / The full explanation</p>
     <h1 tabindex="-1">{data.title}</h1>
   </header>
 
   <details class="contents">
     <summary>In this explanation</summary>
     <nav aria-label="On this page">
-      {#each data.headings as heading}
+      {#each data.headings as heading (heading.id)}
         <a href={`#${heading.id}`}>{heading.title}</a>
       {/each}
     </nav>
@@ -48,10 +63,12 @@
 
   <nav class="reading-pagination" aria-label="Continue reading">
     {#if data.previous}
-      <a href={referenceUrl(data.previous.path)}><span>Previous</span>{data.previous.title}</a>
+      <a href={resolve('/learn/reference/[...path]', { path: data.previous.path })}
+        ><span>Previous</span>{data.previous.title}</a
+      >
     {/if}
     {#if data.next}
-      <a class="next" href={referenceUrl(data.next.path)}
+      <a class="next" href={resolve('/learn/reference/[...path]', { path: data.next.path })}
         ><span>Next</span>{data.next.title} <b aria-hidden="true">→</b></a
       >
     {/if}
