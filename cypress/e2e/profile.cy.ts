@@ -1,24 +1,16 @@
-describe('Profile', () => {
-  it('Can be navigated to using icon', () => {
-    cy.visit('/');
+import { checkAccessibility, expectMainNavigation } from '../support/checks';
+
+describe('Device storage and legacy account route', () => {
+  it('Redirects the old sign-in page to an honest account explanation on About', () => {
+    cy.visit('/signin');
+    cy.location('pathname').should('eq', '/about');
+    cy.location('hash').should('eq', '#device-storage');
+    expectMainNavigation();
+    cy.findByRole('heading', { name: 'Your work, on this device' }).should('be.visible');
+    cy.contains('Learning progress and circuit drafts are kept in your browser.');
+    cy.contains('Accounts and cross-device progress sync are not available yet.');
+    cy.findByText('Hi, Anonym').should('not.exist');
     cy.injectAxe();
-
-    // TODO: Find a way to suppress dynamic ESM loading for Cypress tests
-    cy.wait(1500);
-
-    cy.findByLabelText('User account').click();
-
-    cy.contains('Hi, Anonym');
-
-    cy.contains('anonymous');
-    cy.contains('from the same device');
-    cy.contains('is read-only');
-
-    cy.matchImage();
-
-    // ... and screenshots cause the app to reload which may take some time
-    cy.wait(500);
-
-    cy.checkA11y();
+    checkAccessibility();
   });
 });

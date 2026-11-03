@@ -13,6 +13,7 @@ export default ts.config(
       'build/**',
       'coverage/**',
       'dev-dist/**',
+      'src/lib/software/vendor/**',
     ],
   },
   js.configs.recommended,
