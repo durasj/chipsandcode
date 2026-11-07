@@ -492,10 +492,12 @@ describe('The complete tool suite', () => {
     cy.screenshot('bitmap-mobile-drawing', { capture: 'fullPage' });
     cy.reload();
     cy.get('.machine-lab').should('have.attr', 'data-ready', 'true');
+    cy.findByRole('button', { name: 'Pixel 0, 0 off' }).should('have.attr', 'aria-pressed', 'false');
     cy.findByRole('button', { name: 'Pixel 15, 0 on' }).should('have.attr', 'aria-pressed', 'true');
     cy.findByRole('button', { name: 'Pixel 0, 1 on' }).should('have.attr', 'aria-pressed', 'true');
     cy.findByRole('combobox', { name: 'Export' }).select('assembly');
     cy.findByRole('textbox', { name: 'Generated bitmap code' })
+      .should('contain.value', '@32767\nD=!A')
       .invoke('val')
       .then((source) => {
         visitComputer();

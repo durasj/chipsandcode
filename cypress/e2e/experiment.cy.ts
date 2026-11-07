@@ -58,7 +58,7 @@ describe('Hardware simulator tool', () => {
       .findByRole('link', { name: 'Tools' })
       .click();
     cy.location('pathname').should('eq', '/tools');
-    cy.findByRole('link', { name: /Hardware simulator/ }).click();
+    cy.findByRole('link', { name: /Saved HDL experiments/ }).click();
     cy.location('pathname').should('eq', simulatorPath);
     waitForEditor();
     expectMainNavigation();

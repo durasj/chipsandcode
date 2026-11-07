@@ -4,7 +4,7 @@ const pages = [
   ['boolean-logic', 'From signals to logic'],
   ['boolean-logic/background', 'Logic, composition, and HDL'],
   ['boolean-logic/project', 'Gate contracts and larger buses'],
-  ['meta/what-next', 'Beyond the logic layer'],
+  ['meta/what-next', 'Beyond the assembler'],
 ];
 
 function visitFreshLearning() {
@@ -130,12 +130,12 @@ describe('Unified learning and full explanations', () => {
     cy.findByLabelText('Value for a').clear().type('1').blur();
     cy.contains('tr', 'out').contains('td', '1');
     cy.visit('/learn/reference/meta/what-next');
-    cy.findByRole('link', { name: 'Explore all sixteen two-input functions' }).should(
+    cy.findByRole('link', { name: 'Boolean functions' }).should(
       'have.attr',
       'href',
       '/tools/boolean-functions',
     );
-    cy.findByRole('link', { name: 'Work with buses and routing' }).click();
+    cy.findByRole('link', { name: 'buses and routing' }).click();
     cy.location('pathname').should('eq', '/tools/buses');
     cy.findByTestId('bus-output').should('have.text', '65295');
   });
