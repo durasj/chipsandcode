@@ -1,9 +1,5 @@
+import { redirect } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
-
-// We just forward params - any easier way to do it?
-export const load = (async ({ params }) => ({
-  id: params.id,
-})) satisfies PageLoad;
-
 export const prerender = false;
-export const ssr = false;
+export const load: PageLoad = ({ params, url }) =>
+  redirect(308, `/tools/hardware-simulator/${encodeURIComponent(params.id)}${url.search}`);

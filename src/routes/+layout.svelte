@@ -3,7 +3,8 @@
   import { pwaInfo } from 'virtual:pwa-info';
 
   import '#src/app.css';
-  import { theme } from '#src/stores.js';
+  import SiteHeader from '#lib/components/SiteHeader.svelte';
+  import SiteFooter from '#lib/components/SiteFooter.svelte';
 
   onMount(async () => {
     // @ts-ignore TODO: Any way to do this without polluting the bundle?
@@ -22,23 +23,14 @@
       });
     }
   });
-
-  theme.subscribe((name) => {
-    if (typeof document === 'undefined') return;
-
-    document.documentElement.setAttribute('data-theme', name);
-    if (name === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  });
 </script>
 
 <svelte:head>
   {#if pwaInfo}<link rel="manifest" href="/manifest.webmanifest" />{/if}
 </svelte:head>
 
-<div class="flex flex-col min-h-screen">
-  <slot />
+<div class="app-shell">
+  <SiteHeader />
+  <div id="page-content" tabindex="-1"><slot /></div>
+  <SiteFooter />
 </div>

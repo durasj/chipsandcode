@@ -2,12 +2,12 @@
   export let name: string;
 </script>
 
-<article class="prose max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-  <h1 class="my-8">Retrieving {name}</h1>
+<p class="loading-message" role="status">Loading {name}…</p>
 
-  <div class="my-8">
-    This should take little to no time...
-
-    <div class="block p-4 animate-pulse text-4xl" aria-hidden="true">⚡⚡⚡</div>
-  </div>
-</article>
+<style>
+  .loading-message {
+    padding: 40px 24px;
+    color: #c2cade;
+    font-size: 15px;
+  }
+</style>

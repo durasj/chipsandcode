@@ -1,4 +1,4 @@
-import { Parser, Grammar } from 'nearley';
+import nearley from 'nearley';
 
 import grammar from './grammar.ne';
 import type { Root } from './tree';
@@ -9,7 +9,7 @@ import type { Root } from './tree';
  * @param input test script source code
  */
 function parse(input: string): Root | undefined {
-  const parser = new Parser(Grammar.fromCompiled(grammar));
+  const parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
   parser.feed(input);
 
   if (parser.results.length > 1) {

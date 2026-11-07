@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import type { ChipPin } from './Chip';
 import type Chip from './Chip';
 import NotChip from './builtin/NotChip';
+import NandChip from './builtin/NandChip';
 import CustomChip from './CustomChip';
 
 const name = 'Foo';
@@ -98,4 +99,47 @@ describe('Custom Chip', () => {
 
     expect(() => chip.run()).toThrowError(`Implementation contains a loop`);
   });
+
+  it.each([13, 24])(
+    'evaluates a %i-stage NAND inverter chain without mistaking fan-out for a loop',
+    (length) => {
+      const gates = Array.from({ length }, () => new NandChip());
+      const chainPins = new Map<string, ChipPin>([
+        [
+          'in',
+          {
+            state: false,
+            type: 'input',
+            connections: [
+              [gates[0], 'a'],
+              [gates[0], 'b'],
+            ],
+          },
+        ],
+        ['out', { state: false, type: 'output', connections: [] }],
+      ]);
+      const chainParts = new Map<Chip, readonly [string, string][]>();
+      gates.forEach((gate, index) => {
+        const wire = index === length - 1 ? 'out' : `wire${index}`;
+        if (wire !== 'out') {
+          chainPins.set(wire, {
+            state: false,
+            type: 'internal',
+            connections: [
+              [gates[index + 1], 'a'],
+              [gates[index + 1], 'b'],
+            ],
+          });
+        }
+        chainParts.set(gate, [['out', wire]]);
+      });
+      const chip = new CustomChip('InverterChain', chainPins, chainParts);
+
+      for (const input of [false, true, false]) {
+        chip.setInput('in', input);
+        chip.run();
+        expect(chip.getOutput('out')).toBe(length % 2 === 0 ? input : !input);
+      }
+    },
+  );
 });

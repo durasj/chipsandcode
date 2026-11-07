@@ -7,7 +7,7 @@
 <h3 align="center">Chips and Code</h3>
 
 <p align="center">
-  Wondering how computers work? Find out by embarking on the journey of building your own computer from scratch, from chips to code. No prerequisites and for free from the browser.
+  Wondering how computers work? Build your own computer from scratch, from chips to code. Free in your browser, with no prerequisites.
   <br>
   <a href="https://chipsandcode.com/"><strong>Visit »</strong></a>
 </p>
@@ -20,9 +20,26 @@
 
 ## Features
 
-<img src="./demo.gif" width="100%">
+### Break down the magic of computers
 
-Currently contains and fully supports the first week of Nand2Tetris.
+The homepage is a native-scroll visual journey: a complete computer separates into its screen, board, memory, and processor, then the view moves inside the chip to binary signals. Mobile and reduced-motion layouts show the same sequence without requiring animation. The original chip/code mark and indigo branding remain.
+
+One shared navigation—**Learn, Tools, About**—covers the entire site. Old simulator and reading URLs redirect to the new interface, preserving saved experiment IDs and bookmarks. No legacy course or IDE chrome is exposed.
+
+**Learn** starts with one signal, introduces NOT and AND through observation, then explains NAND and why it is a useful primitive. Six construction exercises follow: NOT, AND, OR, XOR, Mux, and DMux. Visual, Code, and Split share the actual HDL parser and simulator. Wiring guidance, exhaustive tests, recoverable drafts, and optional theory support the same progression. Progress and learning drafts remain on the current device.
+
+Short reference entries link to complete, corrected explanations in the same visual style. All existing Boolean logic material is covered: functions and canonical expressions, gate composition, HDL and testing, 16-bit buses, multi-way routing, and design tradeoffs. Sources and CC BY-NC-SA attribution remain visible.
+
+**Tools** contains three working workspaces:
+
+- **Hardware simulator:** Monaco HDL and test editing, signal inspection, expected/actual output, examples, local drafts, saved experiment links, and ZIP export.
+- **Boolean functions:** all sixteen two-input functions, editable truth tables, canonical expressions, equivalence checks, and NAND-only HDL. Every generated function is tested through the existing parser and simulator.
+- **Buses & routing:** Not16, And16, Or16, Mux16, Or8Way, Mux4Way16, Mux8Way16, DMux4Way, and DMux8Way, with validated inputs, selectors, and live outputs. These are dedicated logic models; the general HDL simulator does not yet support bus construction.
+
+The existing material ends at Boolean logic. Arithmetic, clocked memory, processors, assembly, and higher-level software remain future layers. A separate optional 48-second introductory film has captions and a transcript; its current master is silent. See [intro production](docs/intro-production.md).
+
+See the [interaction design](docs/computer-layers-design.md), [art direction](docs/art-direction.md), and [content audit](docs/content-audit.md) for behavior, source coverage, and boundaries.
+
 Can work offline and supports installation as a PWA.
 No cloud dependency for the basic functionality.
 
@@ -71,7 +88,7 @@ npm ci
 npm run dev
 ```
 
-The app uses Svelte 5, SvelteKit 3, Vite 8, and TypeScript 6 (the current version supported by SvelteKit and svelte-check). The editor uses Monaco 0.57. UI menus and tabs use Bits UI. Tailwind 3 and daisyUI 3 retain the existing presentation during this infrastructure migration; redesigning the styling system is a separate step.
+The app uses Svelte 5, SvelteKit 3, Vite 8, and TypeScript 6 (the current version supported by SvelteKit and svelte-check). The editor uses Monaco 0.57. UI menus and tabs use Bits UI. Tailwind 3 and daisyUI 3 support the existing course and IDE pages. The shared shell, narrative landing, learning workspace, full reading, and tools use explicit high-contrast component styles with the original indigo brand.
 
 Lessons, built-in examples, the simulator, local drafts and ZIP downloads work without a database. Saved experiments use the same-origin SvelteKit `/api/experiments` routes and require `DATABASE_URL` from a Neon Postgres database. Copy `.env.template` to `.env.local` and set the URL locally when working on persistence. Never commit credentials or migration exports.
 
