@@ -25,14 +25,14 @@
   }
 </script>
 
-<figure
+<div
   class="hack-screen"
   role="img"
   aria-label="Hack computer display, 512 by 256 monochrome pixels. Inspect its words in the memory view."
 >
   <canvas bind:this={canvas} width="512" height="256" aria-hidden="true"></canvas>
-  <figcaption>512 × 256 pixels · each memory word controls 16 pixels</figcaption>
-</figure>
+  <p>512 × 256 pixels · each memory word controls 16 pixels</p>
+</div>
 
 <style>
   .hack-screen {
@@ -48,7 +48,7 @@
     border: 1px solid #77829c;
     background: #eeeff7;
   }
-  figcaption {
+  p {
     color: #b8bbd0;
     font:
       11px/1.6 ui-monospace,

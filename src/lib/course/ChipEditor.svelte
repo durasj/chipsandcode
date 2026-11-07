@@ -131,7 +131,7 @@
           {@const part = parts[selected]}
           <div class="part-connections">
             <div class="part-title">
-              <h3>{part.type} <span>Part {selected + 1}</span></h3>
+              <h2>{part.type} <span>Part {selected + 1}</span></h2>
               <button class="text-action" on:click={remove}>Remove part</button>
             </div>
             {#each Object.entries(part.connections) as [pin, wire] (pin)}<label

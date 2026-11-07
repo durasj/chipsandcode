@@ -106,11 +106,7 @@
       ArrowUp: -width,
       ArrowDown: width,
     };
-    if (event.key === ' ' || event.key === 'Enter') {
-      event.preventDefault();
-      toggle(index);
-      return;
-    }
+    // Space and Enter use the button's native click activation, exactly once.
     if (!(event.key in offsets)) return;
     event.preventDefault();
     focusIndex = Math.max(0, Math.min(pixels.length - 1, index + offsets[event.key]));

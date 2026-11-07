@@ -446,7 +446,7 @@ describe('The complete tool suite', () => {
     );
     cy.findByRole('combobox', { name: 'Source file' }).find('option').should('have.length', 2);
     cy.findByRole('button', { name: 'Run' }).click();
-    cy.findByRole('status', { timeout: 10000 }).should('contain', 'Program finished.');
+    cy.contains('p[role="status"]', 'Program finished.', { timeout: 10000 }).should('be.visible');
     cy.contains('summary', 'Inspect memory').click();
     cy.findByRole('textbox', { name: 'Memory address' }).clear().type('100');
     cy.findByRole('button', { name: 'Read memory' }).click();
@@ -459,6 +459,10 @@ describe('The complete tool suite', () => {
     cy.get('.machine-lab').should('have.attr', 'data-ready', 'true');
     expectMainNavigation();
     cy.findByRole('button', { name: 'Pixel 0, 0 off' }).focus().type(' ');
+    cy.findByRole('button', { name: 'Pixel 0, 0 on' }).should('have.attr', 'aria-pressed', 'true');
+    cy.findByRole('button', { name: 'Pixel 0, 0 on' }).type('{enter}');
+    cy.findByRole('button', { name: 'Pixel 0, 0 off' }).should('have.attr', 'aria-pressed', 'false');
+    cy.findByRole('button', { name: 'Pixel 0, 0 off' }).type('{enter}');
     cy.findByRole('button', { name: 'Pixel 0, 0 on' }).should('have.attr', 'aria-pressed', 'true');
     cy.findByRole('textbox', { name: 'Generated bitmap code' }).should(
       'contain.value',

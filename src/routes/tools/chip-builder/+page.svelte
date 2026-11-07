@@ -347,10 +347,12 @@
           {#if Object.keys(outputWidths).length}<dl class="output-list">
               {#each Object.entries(outputWidths) as [name, width] (name)}<div>
                   <dt>{name} · {width} {width === 1 ? 'bit' : 'bits'}</dt>
-                  <dd data-testid={`chip-output-${name}`}>{outputs[name] ?? '—'}</dd>
-                  {#if outputs[name] !== undefined}<span class="word"
-                      >{outputs[name].toString(2).padStart(width, '0')}</span
-                    >{/if}
+                  <dd>
+                    <span data-testid={`chip-output-${name}`}>{outputs[name] ?? '—'}</span>
+                    {#if outputs[name] !== undefined}<span class="word"
+                        >{outputs[name].toString(2).padStart(width, '0')}</span
+                      >{/if}
+                  </dd>
                 </div>{/each}
             </dl>{:else}<p class="hint">
               This circuit has no external output pins. Use a CPU or Memory probe to expose internal
