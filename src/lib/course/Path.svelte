@@ -2,12 +2,14 @@
   import { resolve } from '$app/paths';
   import { onMount } from 'svelte';
   import { courseChapters, courseProgressKey, taskKey } from './data.js';
+  import TopicNavigator from '#lib/learning/adaptive/TopicNavigator.svelte';
+  import { learningStorage } from '#lib/learning/adaptive/storage.js';
   import './course.css';
   let completed: string[] = [];
   let ready = false;
   onMount(() => {
     try {
-      const saved = JSON.parse(localStorage.getItem(courseProgressKey) ?? '[]');
+      const saved = JSON.parse(learningStorage.getItem(courseProgressKey) ?? '[]');
       if (Array.isArray(saved))
         completed = saved.filter((id: unknown): id is string => typeof id === 'string');
     } catch {
@@ -33,6 +35,7 @@
     <h1>Build it up.</h1>
     <p>Each layer uses the one beneath it. One working piece at a time.</p>
   </header>
+  <TopicNavigator {completed} />
   <p class="foundation-link">
     New here? <a href={resolve('/learn')}>Start with a signal and your first gates.</a>
   </p>

@@ -1,5 +1,7 @@
 <script lang="ts">
   import { resolve } from '$app/paths';
+  import { page } from '$app/state';
+  import { afterNavigate, replaceState } from '$app/navigation';
   import { onMount, tick } from 'svelte';
   import { compileHDL, type HDLCircuit } from '#lib/computer/hdl.js';
   import { assemble, createMachine } from '#lib/computer/hack.js';
@@ -13,6 +15,9 @@
   import { verifyHardware, verifyAssembly, type CheckResult } from './verify.js';
   import { verifyStudentAssembler } from './sandbox.js';
   import ChipEditor from './ChipEditor.svelte';
+  import TopicNavigator from '#lib/learning/adaptive/TopicNavigator.svelte';
+  import TopicCoach from '#lib/learning/adaptive/TopicCoach.svelte';
+  import { learningStorage } from '#lib/learning/adaptive/storage.js';
   import './course.css';
   export let chapter: CourseChapter;
   let taskIndex = 0;
@@ -20,6 +25,18 @@
   let source = '';
   let mode: 'visual' | 'code' | 'split' = 'visual';
   let ready = false;
+  afterNavigate(({ to }) => {
+    if (ready && to) {
+      const requested = chapter.tasks.findIndex(
+        (item) => item.id === to.url.searchParams.get('task'),
+      );
+      const nextIncomplete = Math.max(
+        0,
+        chapter.tasks.findIndex((item) => !completed.includes(taskKey(chapter, item))),
+      );
+      void choose(requested >= 0 ? requested : nextIncomplete, false);
+    }
+  });
   let verifying = false;
   let result: CheckResult | null = null;
   let notice = '';
@@ -43,7 +60,7 @@
   $: nextChapter = courseChapters[courseChapters.findIndex((item) => item.id === chapter.id) + 1];
   $: if (ready && source !== undefined) {
     try {
-      localStorage.setItem(`chipsandcode.part-one.draft.${key}`, source);
+      learningStorage.setItem(`chipsandcode.part-one.draft.${key}`, source);
     } catch {
       notice = 'Drafts are available for this session only.';
     }
@@ -57,7 +74,7 @@
   }
   onMount(() => {
     try {
-      const saved = JSON.parse(localStorage.getItem(courseProgressKey) ?? '[]');
+      const saved = JSON.parse(learningStorage.getItem(courseProgressKey) ?? '[]');
       if (Array.isArray(saved))
         completed = saved.filter((value: unknown): value is string => typeof value === 'string');
     } catch {
@@ -67,6 +84,10 @@
       0,
       chapter.tasks.findIndex((item) => !completed.includes(taskKey(chapter, item))),
     );
+    const requested = chapter.tasks.findIndex(
+      (item) => item.id === page.url.searchParams.get('task'),
+    );
+    if (requested >= 0) taskIndex = requested;
     loadTask();
     ready = true;
   });
@@ -74,7 +95,7 @@
     const selectedTask = chapter.tasks[taskIndex];
     try {
       source =
-        localStorage.getItem(`chipsandcode.part-one.draft.${taskKey(chapter, selectedTask)}`) ??
+        learningStorage.getItem(`chipsandcode.part-one.draft.${taskKey(chapter, selectedTask)}`) ??
         selectedTask.starter;
     } catch {
       source = selectedTask.starter;
@@ -89,9 +110,15 @@
     phase = 'Ready';
     inspectedSource = source;
   }
-  async function choose(index: number) {
+  async function choose(index: number, updateUrl = true) {
     taskIndex = index;
     loadTask();
+    if (updateUrl) {
+      const url = new URL(page.url.href);
+      url.searchParams.set('task', chapter.tasks[index].id);
+      // eslint-disable-next-line svelte/no-navigation-without-resolve -- Preserve the already-resolved current URL; only its query changes.
+      replaceState(url, page.state);
+    }
     await tick();
     title?.focus();
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -172,7 +199,7 @@
     if (answer.passed && !completed.includes(checkedKey)) {
       completed = [...completed, checkedKey];
       try {
-        localStorage.setItem(courseProgressKey, JSON.stringify(completed));
+        learningStorage.setItem(courseProgressKey, JSON.stringify(completed));
       } catch {
         notice = 'Your work passed. Progress is available for this session only.';
       }
@@ -192,6 +219,7 @@
       href={resolve(referenceRoute, { path: referenceParts[0] })}>Full explanation ↗</a
     >
   </div>
+  <TopicNavigator {completed} />
   <header class="course-heading">
     <p class="eyebrow">PROJECT 0{chapter.project} · {chapter.title}</p>
     <h1 bind:this={title} tabindex="-1">{task.title}</h1>
@@ -340,6 +368,7 @@
         {#if error}<p class="course-warning" role="alert">{error}</p>{/if}
       </details>{/if}
   </div>
+  <TopicCoach topicId={chapter.id} currentTask={key} {completed} hint={task.hint} />
   {#if notice}<p role="status" class="muted">{notice}</p>{/if}
   <footer class="course-footnote">
     Adapted from <a

@@ -1,10 +1,20 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
-  import { goto } from '$app/navigation';
+  import { afterNavigate, goto, replaceState } from '$app/navigation';
+  import { page } from '$app/state';
   import SignalIntro from './SignalIntro.svelte';
   import MissionWorkbench from './MissionWorkbench.svelte';
   import FieldGuide from './FieldGuide.svelte';
   import { missions, getMission, type MissionId } from './missions';
+  import TopicNavigator from '#lib/learning/adaptive/TopicNavigator.svelte';
+  import TopicCoach from '#lib/learning/adaptive/TopicCoach.svelte';
+  import { topicForMission } from '#lib/learning/adaptive/topics.js';
+  import {
+    learningChoices,
+    learningStorage,
+    loadLearningChoices,
+    readLearningEvidence,
+  } from '#lib/learning/adaptive/storage.js';
 
   type View = 'signal' | 'workbench' | 'guide' | 'collection' | 'milestone';
   const introKey = 'chipsandcode.signal-intro.v1';
@@ -17,38 +27,73 @@
   let lastCompleted: MissionId = 'nand';
   let notice = '';
   let ready = false;
+  $: adaptiveCompleted = completed.map((id) => `missions/${id}`);
+  afterNavigate(({ to }) => {
+    if (ready && to) {
+      openChosenEntry(to.url.searchParams);
+    }
+  });
 
-  $: nextMission = missions.find((mission) => !completed.includes(mission.id));
+  $: nextMission = missions
+    .slice(
+      view === 'milestone' ? missions.findIndex((mission) => mission.id === lastCompleted) + 1 : 0,
+    )
+    .find(
+      (mission) =>
+        !completed.includes(mission.id) &&
+        !$learningChoices.topics[topicForMission(mission.id)]?.skipped,
+    );
   $: verifiedMissions = missions.filter((mission) => completed.includes(mission.id));
   $: lastMission = getMission(lastCompleted);
-  $: continuing = introSeen || completed.includes('nand');
+  $: continuing = introSeen || completed.length > 0 || $learningChoices.topics.signals?.skipped;
 
   onMount(() => {
-    try {
-      const saved = JSON.parse(
-        (localStorage.getItem('chipsandcode.progress.v1') ??
-          localStorage.getItem('chipsandcode.signal-isles.progress.v1')) ||
-          '[]',
-      );
-      if (Array.isArray(saved)) {
-        completed = [
-          ...new Set(
-            saved.filter(
-              (id): id is MissionId =>
-                typeof id === 'string' && missions.some((mission) => mission.id === id),
-            ),
-          ),
-        ];
-      }
-      introSeen = localStorage.getItem(introKey) === 'complete' || completed.includes('nand');
-    } catch {
-      notice = 'Your progress can only be kept for this session.';
-    }
-    const pending = missions.find((mission) => !completed.includes(mission.id));
-    selected = pending?.id ?? 'nand';
+    loadLearningChoices();
+    const evidence = readLearningEvidence();
+    completed = evidence.verifiedTasks
+      .filter((id) => id.startsWith('missions/'))
+      .map((id) => id.slice('missions/'.length) as MissionId);
+    introSeen = evidence.exploredSignals;
+    openChosenEntry(page.url.searchParams);
     ready = true;
-    void setView(!introSeen ? 'signal' : pending ? 'workbench' : 'collection');
   });
+
+  function openDefaultEntry() {
+    const pending = missions.find(
+      (mission) =>
+        !completed.includes(mission.id) &&
+        !$learningChoices.topics[topicForMission(mission.id)]?.skipped,
+    );
+    selected = pending?.id ?? 'nand';
+    void setView(
+      !introSeen && !completed.length && !$learningChoices.topics.signals?.skipped
+        ? 'signal'
+        : pending
+          ? 'workbench'
+          : 'collection',
+    );
+  }
+
+  function openChosenEntry(params: Pick<URLSearchParams, 'get'>) {
+    const mission = missions.find((item) => item.id === params.get('mission'));
+    if (mission) {
+      selected = mission.id;
+      void setView('workbench');
+    } else if (params.get('topic') === 'signals') {
+      void setView('signal');
+    } else {
+      openDefaultEntry();
+    }
+  }
+
+  function updateChosenEntry(id: MissionId) {
+    if (!page.url.searchParams.has('mission') && !page.url.searchParams.has('topic')) return;
+    const url = new URL(page.url.href);
+    url.searchParams.delete('topic');
+    url.searchParams.set('mission', id);
+    // eslint-disable-next-line svelte/no-navigation-without-resolve -- Preserve the already-resolved current URL; only its query changes.
+    replaceState(url, page.state);
+  }
 
   async function setView(next: View) {
     view = next;
@@ -64,6 +109,7 @@
       void setView('signal');
     } else if (nextMission) {
       selected = nextMission.id;
+      updateChosenEntry(selected);
       void setView('workbench');
     } else {
       void setView('collection');
@@ -73,11 +119,12 @@
   function finishSignalIntro() {
     introSeen = true;
     try {
-      localStorage.setItem(introKey, 'complete');
+      learningStorage.setItem(introKey, 'complete');
     } catch {
       notice = 'Your progress can only be kept for this session.';
     }
     selected = 'nand';
+    updateChosenEntry(selected);
     void setView('workbench');
   }
 
@@ -86,8 +133,25 @@
     if (!mission) return;
     if (!completed.includes(mission.id)) completed = [...completed, mission.id];
     lastCompleted = mission.id;
+    const upcoming = missions
+      .slice(missions.indexOf(mission) + 1)
+      .find(
+        (item) =>
+          !completed.includes(item.id) &&
+          !$learningChoices.topics[topicForMission(item.id)]?.skipped,
+      );
+    if (upcoming) updateChosenEntry(upcoming.id);
+    if (mission.id === 'nand' && !introSeen) {
+      // Preserve the legacy NAND fallback only for old progress. Direct entry
+      // must not turn unobserved introductory activities into explored ones.
+      try {
+        learningStorage.setItem(introKey, 'not-observed');
+      } catch {
+        notice = 'Your progress can only be kept for this session.';
+      }
+    }
     try {
-      localStorage.setItem('chipsandcode.progress.v1', JSON.stringify(completed));
+      learningStorage.setItem('chipsandcode.progress.v1', JSON.stringify(completed));
     } catch {
       notice = 'Your circuit worked. Progress can only be kept for this session.';
     }
@@ -97,6 +161,7 @@
   function reopenMission(id: MissionId) {
     if (!completed.includes(id)) return;
     selected = id;
+    updateChosenEntry(id);
     void setView('workbench');
   }
 
@@ -119,9 +184,17 @@
   </nav>
 
   <main id="game-content" bind:this={content}>
+    <TopicNavigator completed={adaptiveCompleted} exploredSignals={introSeen} />
     {#if view === 'signal' || (view === 'guide' && referenceReturn === 'signal')}
       <div class="learning-session" hidden={view !== 'signal'}>
         <SignalIntro oncomplete={finishSignalIntro} onclose={() => goto('/')} />
+        <TopicCoach
+          topicId="signals"
+          currentTask="signals"
+          completed={adaptiveCompleted}
+          exploredSignals={introSeen}
+          hint="Start with the switch: 0 and 1 are two states. NOT flips the state; AND needs both inputs to be 1."
+        />
       </div>
     {/if}
     {#if view === 'workbench' || (view === 'guide' && referenceReturn === 'workbench')}
@@ -132,6 +205,13 @@
             oncomplete={completeMission}
             onclose={() => goto('/')}
           />{/key}
+        <TopicCoach
+          topicId={topicForMission(selected)}
+          currentTask={`missions/${selected}`}
+          completed={adaptiveCompleted}
+          exploredSignals={introSeen}
+          hint={getMission(selected).hints[0]}
+        />
       </div>
     {/if}
     {#if view === 'guide'}
@@ -149,6 +229,13 @@
             ? 'Its output is 0 only when both inputs are 1.'
             : lastMission.goal}
         </p>
+        <TopicCoach
+          topicId={topicForMission(lastCompleted)}
+          currentTask={`missions/${lastCompleted}`}
+          completed={adaptiveCompleted}
+          exploredSignals={introSeen}
+          hint={lastMission.hints[0]}
+        />
         {#if nextMission}
           <div class="next-concept">
             <span>Next</span>
@@ -162,8 +249,9 @@
           <div class="next-concept">
             <h2>Take logic further.</h2>
             <p>
-              Six circuits, built from one primitive. Next, use the same ideas with whole words of
-              bits and multi-way routing.
+              {completed.length === missions.length
+                ? 'Six circuits, built from one primitive. Next, use the same ideas with whole words of bits and multi-way routing.'
+                : 'Take these ideas into whole words of bits and multi-way routing. Any unchecked gates remain available in Choose a topic.'}
             </p>
             <a class="next-reading" href="/learn/path/buses">Continue with buses and selectors →</a>
           </div>
