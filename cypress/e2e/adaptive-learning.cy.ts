@@ -18,6 +18,25 @@ function focusSummary(selector: string) {
   cy.get<HTMLElement>(selector).then(($summary) => $summary[0].focus());
   cy.get(selector).should('have.focus');
 }
+function pressEnter() {
+  // Cypress 15.21's cy.press omits Enter's text/virtual-key data in CDP.
+  // Supply the full native event for the Electron/Chromium CI browser so
+  // summary/button activation is exercised, rather than simulating a click.
+  cy.window().then((win) => win.focus());
+  const key = { key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 };
+  cy.then(() =>
+    Cypress.automation('remote:debugger:protocol', {
+      command: 'Input.dispatchKeyEvent',
+      params: { type: 'keyDown', ...key, text: '\r', unmodifiedText: '\r' },
+    }),
+  );
+  cy.then(() =>
+    Cypress.automation('remote:debugger:protocol', {
+      command: 'Input.dispatchKeyEvent',
+      params: { type: 'keyUp', ...key },
+    }),
+  );
+}
 
 describe('Learner choices and topic-level suggestions', () => {
   it('keeps a fresh beginner entry and allows direct experienced entry without completing basics', () => {
@@ -283,18 +302,18 @@ describe('Learner choices and topic-level suggestions', () => {
     cy.get('.course-page').should('have.attr', 'data-ready', 'true');
     cy.get('h1').should('have.focus');
     focusSummary('.topic-navigation > summary');
-    cy.press(Cypress.Keyboard.Keys.ENTER);
+    pressEnter();
     cy.get('.topic-navigation').should('have.attr', 'open');
     cy.injectAxe();
     checkAccessibility();
     expectNoPageOverflow();
     cy.screenshot('adaptive-mobile-topic-picker', { capture: 'fullPage' });
     focusSummary('.topic-navigation > summary');
-    cy.press(Cypress.Keyboard.Keys.ENTER);
+    pressEnter();
     focusSummary('.topic-coach > summary');
-    cy.press(Cypress.Keyboard.Keys.ENTER);
+    pressEnter();
     cy.findByRole('button', { name: 'Need more help' }).focus();
-    cy.press(Cypress.Keyboard.Keys.ENTER);
+    pressEnter();
     cy.findByRole('button', { name: 'Need more help' }).should('have.attr', 'aria-pressed', 'true');
     checkAccessibility();
     expectNoPageOverflow();
