@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
+  import Journey from '#lib/journey/Journey.svelte';
   import { createCircuit, simulateCircuit } from './circuit';
   import { getMission } from './missions';
 
@@ -209,6 +210,11 @@
         ></pre>
     </details>
   {/if}
+  <Journey
+    currentId="missions/nand"
+    verified={finished}
+    live={{ a: Number(inputs.a), b: Number(inputs.b), out: Number(output) }}
+  />
 </section>
 
 <style>

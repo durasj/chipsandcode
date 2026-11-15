@@ -18,6 +18,7 @@
   import TopicNavigator from '#lib/learning/adaptive/TopicNavigator.svelte';
   import TopicCoach from '#lib/learning/adaptive/TopicCoach.svelte';
   import { learningStorage } from '#lib/learning/adaptive/storage.js';
+  import Journey from '#lib/journey/Journey.svelte';
   import './course.css';
   export let chapter: CourseChapter;
   let taskIndex = 0;
@@ -246,6 +247,7 @@
       </ol>
     </details>
   </div>
+  <Journey currentId={key} {completed} verified={result?.passed === true} {source} live={outputs} />
   <p class="concept-copy">{task.explanation}</p>
   {#if task.kind === 'symbols'}<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
     <pre class="program-example" tabindex="0" aria-label="Program for symbol resolution"><code

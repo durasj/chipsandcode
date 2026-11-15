@@ -2,6 +2,7 @@
   import { onMount, tick } from 'svelte';
   import { learningStorage } from '#lib/learning/adaptive/storage.js';
   import BenchMachine from './BenchMachine.svelte';
+  import Journey from '#lib/journey/Journey.svelte';
   import NandDiscovery from './NandDiscovery.svelte';
   import { getMission, truthTable, type GateKind } from './missions';
   import {
@@ -429,6 +430,14 @@
         <p class="mission-brief">{mission.goal}</p>
       </div>
     </div>
+
+    <Journey
+      currentId={`missions/${missionId}`}
+      completed={completed.map((id) => `missions/${id}`)}
+      verified={report?.success === true}
+      actualParts={missionId === 'nand' ? [] : circuit.gates.map((gate) => gate.type)}
+      live={liveSignals}
+    />
 
     {#if live.result}
       <div class="signal-inputs" aria-label="Live input switches">
