@@ -50,7 +50,7 @@ function alu(small: boolean): ConnectedDiagram {
       node('y', 'Prepare y', 30, 330, 150, 'zy: zero; ny: invert'),
       node('and', 'And16', 270, 120, 135, 'x AND y'),
       node('add', 'Add16', 270, 330, 135, 'x + y'),
-      node('select', 'Mux16', 465, 225, 130, 'f: choose operation'),
+      node('select', 'Mux16', 465, 225, 130, 'f: AND or sum'),
       node('out', 'out[16]', 625, 225, 130, 'no: keep / invert', 'output'),
       node('flags', 'zr / ng', 625, 390, 130, 'zero / sign bit'),
     ],
@@ -118,8 +118,8 @@ function bank(step: JourneyStep, small: boolean): ConnectedDiagram {
       width: 300,
       height: 780,
       nodes: [
-        node('address', 'address', 15, 100, 125, `${Math.log2(words)} bits`, 'input'),
-        node('write', 'in + load', 160, 100, 125, 'shared write data', 'input'),
+        node('address', 'addr + load', 15, 100, 125, `${Math.log2(words)} address bits`, 'input'),
+        node('write', 'in[16]', 160, 100, 125, 'shared write data', 'input'),
         node('decode', 'Write select', 15, 245, 125, `1 of ${banks} enables`, 'control'),
         node('first', 'Bank 0', 15, 390, 125, detail),
         node('last', `Bank ${banks - 1}`, 160, 390, 125, detail),
@@ -171,9 +171,9 @@ function bank(step: JourneyStep, small: boolean): ConnectedDiagram {
     width: 780,
     height: 560,
     nodes: [
-      node('address', 'address', 25, 105, 130, `${Math.log2(words)} bits`, 'input'),
+      node('address', 'addr + load', 25, 105, 130, `${Math.log2(words)} address bits`, 'input'),
       node('decode', 'Write select', 205, 105, 140, `1 of ${banks} enables`, 'control'),
-      node('write', 'in + load', 25, 325, 130, 'shared write data', 'input'),
+      node('write', 'in[16]', 25, 325, 130, 'shared write data', 'input'),
       node('first', 'Bank 0', 400, 190, 140, detail),
       node('last', `Bank ${banks - 1}`, 400, 365, 140, detail),
       node('mux', 'Read Mux', 605, 275, 140, 'address selects'),
@@ -288,6 +288,7 @@ function cpu(small: boolean): ConnectedDiagram {
             [275, 625],
           ],
         }),
+        edge('decode', 'operands', { label: 'A immediate' }),
         edge('operands', 'alu'),
         edge('alu', 'dest'),
         edge('dest', 'operands', {
@@ -346,6 +347,7 @@ function cpu(small: boolean): ConnectedDiagram {
     ],
     edges: [
       edge('instruction', 'decode'),
+      edge('decode', 'operands', { label: 'A immediate' }),
       edge('operands', 'alu'),
       edge('alu', 'dest'),
       edge('decode', 'alu', {
@@ -443,7 +445,7 @@ function translation(symbols: boolean, small: boolean): ConnectedDiagram {
     ],
     edges: [
       edge('source', 'first'),
-      edge('first', 'second', { label: 'instructions' }),
+      edge('first', 'second', { label: 'instructions', labelAt: [392.5, 105] }),
       edge('first', 'table', { label: 'ROM labels', labelAt: [335, 245] }),
       edge('table', 'second', {
         fromSide: 'right',

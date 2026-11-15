@@ -153,7 +153,7 @@
           <rect x={item.x} y={item.y} width={item.w} height={item.h} rx="5" />
           {#if keepPiece}
             <text x={item.x + item.w / 2} y={item.y + 13} class="node-detail"
-              >{item.label} · reusable piece</text
+              >{item.label} · {small ? 'chip' : 'reusable piece'}</text
             >
             <g class="preserved-piece"
               ><rect x={item.x + 10} y={item.y + 21} width={item.w - 20} height="28" rx="3" />
@@ -269,9 +269,12 @@
         {#each Array.from({ length: gridCount }, (_, i) => i) as i (i)}
           {@const x = 40 + (i % columns) * cellWidth}
           {@const y = 105 + Math.floor(i / columns) * (small ? 58 : 67)}
-          <path d={`M${x + cellWidth / 2 - 4} ${y - 12}V${y}`} class="connections" />
+          <path d={`M${x + cellWidth / 2 - 4} ${y - (small ? 5 : 12)}V${y}`} class="connections" />
           <rect {x} {y} width={cellWidth - 8} height="42" rx="3" class="part" />
-          <path d={`M${x + (cellWidth - 8) / 2} ${y + 42}V${y + 50}`} class="connections" />
+          <path
+            d={`M${x + (cellWidth - 8) / 2} ${y + 42}V${y + (small ? 47 : 50)}`}
+            class="connections"
+          />
           <text x={x + (cellWidth - 8) / 2} y={y + 17} class="tile-label">{step.parts[0]}</text>
           <text x={x + (cellWidth - 8) / 2} y={y + 33} class="tile-index"
             >{step.diagram === 'parallel' ? `bit ${i}` : `bank ${i}`}</text
@@ -391,7 +394,9 @@
           >feedback keeps the stored value</text
         >
         <text x={width / 2} y={height - 37} class="node-detail"
-          >DFF is supplied · state changes at the edge</text
+          >{small
+            ? 'supplied DFF · capture at edge'
+            : 'DFF is supplied · state changes at the edge'}</text
         >
       {:else}
         {#each parts as part, i (i)}

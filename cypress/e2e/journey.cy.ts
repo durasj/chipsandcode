@@ -180,6 +180,7 @@ describe('A growing computer at every learning step', () => {
       'assembler/assembler',
     ]) {
       pick(id);
+      cy.findByRole('button', { name: 'Inside this piece' }).click();
       cy.get('.scene-stage')
         .should('have.attr', 'data-motion', 'reduced')
         .and('not.have.class', 'revealing');
@@ -192,6 +193,9 @@ describe('A growing computer at every learning step', () => {
       .focus()
       .type('{enter}');
     scene().should('have.attr', 'data-journey-view', 'system');
+    pick('buses/not16');
+    cy.findByRole('button', { name: /Zoom out/ }).click();
+    scene().screenshot('journey-mobile-reduced-system-not16');
     cy.injectAxe();
     checkAccessibility();
     expectNoPageOverflow();

@@ -151,6 +151,9 @@
   .wire-label {
     font-size: 11px;
     fill: #d0c1f2;
+  }
+  .wire-label,
+  .diagram-note {
     paint-order: stroke;
     stroke: #0d111c;
     stroke-width: 5px;

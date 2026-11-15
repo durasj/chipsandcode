@@ -171,12 +171,12 @@ export function basicDiagram(step: JourneyStep, small: boolean): ConnectedDiagra
     return graph(
       [
         node('ab', 'a, b', left, 85, 'input bits', 'input'),
-        node('c', 'c', right, 85, 'carry from bit below', 'input'),
+        node('c', 'c', right, 85, 'incoming carry', 'input'),
         node('first', 'HalfAdder', left, 195, 'a + b'),
         node('second', 'HalfAdder', right, 195, 'partial sum + c'),
         node('or', 'Or', center, 320, 'combine carries'),
-        node('carry', 'carry', left, 435, 'to the next column', 'output'),
-        node('sum', 'sum', right, 435, 'this column’s bit', 'output'),
+        node('carry', 'carry', left, 435, 'next column', 'output'),
+        node('sum', 'sum', right, 435, 'this result bit', 'output'),
       ],
       [
         edge('ab', 'first'),
@@ -206,7 +206,7 @@ export function basicDiagram(step: JourneyStep, small: boolean): ConnectedDiagra
         node('in', 'in[16]', left, 90, 'input word', 'input'),
         node('one', '1', right, 90, 'constant word', 'input'),
         node('add', 'Add16', center, 220, 'add the operands'),
-        node('out', 'out[16]', center, 350, '(in + 1) mod 65536', 'output'),
+        node('out', 'out[16]', center, 350, 'wraps at 65536', 'output'),
       ],
       [edge('in', 'add'), edge('one', 'add'), edge('add', 'out')],
       450,
