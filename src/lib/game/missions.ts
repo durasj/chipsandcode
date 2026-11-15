@@ -76,7 +76,7 @@ export const missions: Mission[] = [
     availableParts: ['Nand', 'Not'],
     hints: [
       'NAND already responds to both switches. What is different about its output?',
-      'Try sending the NAND output through your inverter.',
+      'Try sending the NAND output through an inverter.',
     ],
     explanation:
       'AND outputs 1 only if both inputs are 1. NAND has exactly the opposite behavior, so inverting NAND produces AND. Internal connections let one chip feed another.',
@@ -142,7 +142,7 @@ export const missions: Mission[] = [
       'Enable a with NOT(sel), enable b with sel, then combine their outputs.',
     ],
     explanation:
-      'A multiplexor selects one of its data inputs. The selector is a control bit, not a data channel. There are eight possible input combinations, and your circuit must handle all eight. It can be composed from the elementary gates you have already built.',
+      'A multiplexor selects one of its data inputs. The selector is a control bit, not a data channel. There are eight possible input combinations, and your circuit must handle all eight. Compose it from elementary gates, supplied here whether or not you built them in earlier challenges.',
     reward: 'Mux verified. A control signal now selects the active data path.',
     prerequisite: 'xor',
   },
@@ -159,12 +159,12 @@ export const missions: Mission[] = [
     outputs: ['a', 'b'],
     availableParts: ['Nand', 'Not', 'And', 'Or', 'Xor'],
     hints: [
-      'Unlike the last machine, this one has one data input and two outputs.',
+      'This machine has one data input and two outputs.',
       'Each output needs its own enable condition. What enables a? What enables b?',
     ],
     explanation:
       'A demultiplexor routes one input to a selected output. For a two-way DMux: a = in AND NOT(sel), and b = in AND sel. These are separate output pins. Both must be correct in every case.',
-    reward: 'DMux verified. All seven logic challenges are complete.',
+    reward: 'DMux verified. One input can now be routed to either output.',
     prerequisite: 'mux',
   },
 ];

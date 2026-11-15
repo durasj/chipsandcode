@@ -153,7 +153,7 @@
           <h2 id="why-nand-title">Why build from NAND?</h2>
           <p>
             One kind of gate is enough to build every Boolean function. We’ll use NAND as our
-            starting part, then build the NOT and AND gates you just explored.
+            starting part, then construct NOT and AND from it.
           </p>
           <details class="theory-note">
             <summary>Go deeper: why NAND is universal</summary>

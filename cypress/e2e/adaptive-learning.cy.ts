@@ -12,6 +12,12 @@ function openChoices() {
 function openTopics() {
   cy.get('.topic-navigation > summary').click();
 }
+function focusSummary(selector: string) {
+  // Native summary elements are focusable, but Cypress's focusable-element
+  // allowlist omits them. Keep the browser's real focus/keyboard behavior.
+  cy.get<HTMLElement>(selector).then(($summary) => $summary[0].focus());
+  cy.get(selector).should('have.focus');
+}
 
 describe('Learner choices and topic-level suggestions', () => {
   it('keeps a fresh beginner entry and allows direct experienced entry without completing basics', () => {
@@ -83,6 +89,8 @@ describe('Learner choices and topic-level suggestions', () => {
     openChoices();
     cy.findByRole('button', { name: 'Familiar? Skip this topic' }).click();
     cy.get('.topic-coach .adaptive-suggestion').click();
+    cy.findByRole('heading', { name: 'AND, with its answer flipped.' }).should('be.visible');
+    cy.get('.topic-coach').should('have.attr', 'data-topic', 'gates');
     openChoices();
     cy.findByRole('button', { name: 'Familiar? Skip this topic' }).click();
     cy.get('.topic-coach .adaptive-suggestion').click();
@@ -273,16 +281,17 @@ describe('Learner choices and topic-level suggestions', () => {
     cy.viewport(320, 760);
     cy.visit('/learn/path/memory?task=pc');
     cy.get('.course-page').should('have.attr', 'data-ready', 'true');
-    cy.get('.topic-navigation > summary').focus();
+    cy.get('h1').should('have.focus');
+    focusSummary('.topic-navigation > summary');
     cy.press(Cypress.Keyboard.Keys.ENTER);
     cy.get('.topic-navigation').should('have.attr', 'open');
     cy.injectAxe();
     checkAccessibility();
     expectNoPageOverflow();
     cy.screenshot('adaptive-mobile-topic-picker', { capture: 'fullPage' });
-    cy.get('.topic-navigation > summary').focus();
+    focusSummary('.topic-navigation > summary');
     cy.press(Cypress.Keyboard.Keys.ENTER);
-    cy.get('.topic-coach > summary').focus();
+    focusSummary('.topic-coach > summary');
     cy.press(Cypress.Keyboard.Keys.ENTER);
     cy.findByRole('button', { name: 'Need more help' }).focus();
     cy.press(Cypress.Keyboard.Keys.ENTER);
@@ -292,5 +301,6 @@ describe('Learner choices and topic-level suggestions', () => {
     cy.screenshot('adaptive-mobile-help-and-refreshers', { capture: 'fullPage' });
     cy.findByRole('button', { name: 'Close adjustments' }).click();
     cy.get('.topic-coach').should('not.have.attr', 'open');
+    cy.get('.topic-coach > summary').should('have.focus');
   });
 });
