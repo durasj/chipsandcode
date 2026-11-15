@@ -304,10 +304,10 @@ describe('Learner choices and topic-level suggestions', () => {
     focusSummary('.topic-navigation > summary');
     pressEnter();
     cy.get('.topic-navigation').should('have.attr', 'open');
+    cy.screenshot('adaptive-mobile-topic-picker', { capture: 'fullPage' });
     cy.injectAxe();
     checkAccessibility();
     expectNoPageOverflow();
-    cy.screenshot('adaptive-mobile-topic-picker', { capture: 'fullPage' });
     focusSummary('.topic-navigation > summary');
     pressEnter();
     focusSummary('.topic-coach > summary');
@@ -315,9 +315,9 @@ describe('Learner choices and topic-level suggestions', () => {
     cy.findByRole('button', { name: 'Need more help' }).focus();
     pressEnter();
     cy.findByRole('button', { name: 'Need more help' }).should('have.attr', 'aria-pressed', 'true');
+    cy.screenshot('adaptive-mobile-help-and-refreshers', { capture: 'fullPage' });
     checkAccessibility();
     expectNoPageOverflow();
-    cy.screenshot('adaptive-mobile-help-and-refreshers', { capture: 'fullPage' });
     cy.findByRole('button', { name: 'Close adjustments' }).click();
     cy.get('.topic-coach').should('not.have.attr', 'open');
     cy.get('.topic-coach > summary').should('have.focus');
