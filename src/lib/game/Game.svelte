@@ -3,6 +3,7 @@
   import { afterNavigate, goto, replaceState } from '$app/navigation';
   import { page } from '$app/state';
   import SignalIntro from './SignalIntro.svelte';
+  import Journey from '#lib/journey/Journey.svelte';
   import MissionWorkbench from './MissionWorkbench.svelte';
   import FieldGuide from './FieldGuide.svelte';
   import { missions, getMission, type MissionId } from './missions';
@@ -229,6 +230,11 @@
             ? 'Its output is 0 only when both inputs are 1.'
             : lastMission.goal}
         </p>
+        <Journey
+          currentId={`missions/${lastCompleted}`}
+          completed={completed.map((id) => `missions/${id}`)}
+          verified
+        />
         <TopicCoach
           topicId={topicForMission(lastCompleted)}
           currentTask={`missions/${lastCompleted}`}
@@ -364,7 +370,7 @@
     visibility: hidden;
   }
   .learning-milestone {
-    width: min(620px, 100%);
+    width: min(980px, 100%);
     margin: auto;
     padding: clamp(52px, 10vh, 96px) 28px 100px;
     min-height: calc(100svh - 164px);

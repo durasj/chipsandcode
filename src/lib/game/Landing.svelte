@@ -88,7 +88,9 @@
               <h1 id="journey-heading" tabindex="-1">
                 Break down the <em>magic</em> of computers.
               </h1>
-              <p class="opening-promise">By building your own.</p>
+              <p class="opening-promise">
+                Learn how computers work from first principles—by building your own.
+              </p>
               <button class="start-button" onclick={onstart}
                 >{continuing ? 'Continue learning' : 'Start learning'}<span aria-hidden="true"
                   >↗</span

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { tick } from 'svelte';
+  import Journey from '#lib/journey/Journey.svelte';
   import NotChip from '#lib/hardware-simulator/chips/builtin/NotChip.js';
   import AndChip from '#lib/hardware-simulator/chips/builtin/AndChip.js';
 
@@ -208,6 +209,21 @@
         >Continue <span aria-hidden="true">→</span></button
       >
     {/if}
+    <Journey
+      currentId={`intro/${stage}`}
+      verified={explored}
+      completed={stage === 'and'
+        ? ['intro/signal', 'intro/not']
+        : stage === 'not'
+          ? ['intro/signal']
+          : []}
+      live={{
+        in: stage === 'and' ? Number(a) : Number(signal),
+        a: Number(a),
+        b: Number(b),
+        out: Number(result),
+      }}
+    />
   </div>
 </section>
 

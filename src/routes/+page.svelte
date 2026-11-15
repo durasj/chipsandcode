@@ -27,7 +27,7 @@
   <title>Break down the magic of computers — Chips and Code</title>
   <meta
     name="description"
-    content="Break down the magic of computers by building your own. Start with a signal, explore simple gates, and build from chips to code. Free in your browser."
+    content="Learn how computers work from first principles by building your own. Start with a signal, explore simple gates, and build from chips to code. Free in your browser."
   />
 </svelte:head>
 <main class="landing-page" data-ready={ready}>

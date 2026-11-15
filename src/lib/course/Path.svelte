@@ -5,6 +5,7 @@
   import TopicNavigator from '#lib/learning/adaptive/TopicNavigator.svelte';
   import { learningStorage } from '#lib/learning/adaptive/storage.js';
   import './course.css';
+  import Journey from '#lib/journey/Journey.svelte';
   let completed: string[] = [];
   let ready = false;
   onMount(() => {
@@ -33,12 +34,24 @@
   <header class="course-heading">
     <p class="eyebrow">FROM SIGNALS TO ASSEMBLY</p>
     <h1>Build it up.</h1>
-    <p>Each layer uses the one beneath it. One working piece at a time.</p>
+    <p>
+      Logic becomes calculation and memory. Bring them together, then give your computer a program.
+    </p>
   </header>
   <TopicNavigator {completed} />
   <p class="foundation-link">
     New here? <a href={resolve('/learn')}>Start with a signal and your first gates.</a>
   </p>
+  <Journey
+    currentId={next
+      ? taskKey(
+          next,
+          next.tasks.find((task) => !completed.includes(taskKey(next!, task))) ?? next.tasks[0],
+        )
+      : 'assembler/assembler'}
+    {completed}
+    overview
+  />
   <ol class="chapter-list">
     {#each courseChapters as chapter (chapter.id)}
       {@const count = chapter.tasks.filter((task) =>
