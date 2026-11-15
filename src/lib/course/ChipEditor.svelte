@@ -120,7 +120,7 @@
         {#if !parts.length}<p class="construction-empty">
             Add a part, then connect its pins to inputs, outputs, or named internal wires.
           </p>{/if}
-        <div class="part-strip" aria-label="Circuit parts">
+        <div class="part-strip" role="group" aria-label="Circuit parts">
           {#each parts as part, index (index)}<button
               class:selected={selected === index}
               aria-pressed={selected === index}

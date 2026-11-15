@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
+  import { learningStorage } from '#lib/learning/adaptive/storage.js';
   import BenchMachine from './BenchMachine.svelte';
   import NandDiscovery from './NandDiscovery.svelte';
   import { getMission, truthTable, type GateKind } from './missions';
@@ -113,10 +114,10 @@
 
   onMount(() => {
     try {
-      const preferred = localStorage.getItem('chipsandcode:workbench:mode');
+      const preferred = learningStorage.getItem('chipsandcode:workbench:mode');
       if (preferred === 'visual' || preferred === 'split' || preferred === 'code')
         editorMode = preferred;
-      const saved = localStorage.getItem(draftKey);
+      const saved = learningStorage.getItem(draftKey);
       if (saved && missionId !== 'nand') {
         const candidate = JSON.parse(saved);
         if (
@@ -135,7 +136,7 @@
           }
         }
       } else if (missionId !== 'nand') {
-        const legacy = localStorage.getItem(legacyDraftKey);
+        const legacy = learningStorage.getItem(legacyDraftKey);
         if (legacy) {
           const candidate: unknown = JSON.parse(legacy);
           if (isCircuitDraft(mission, candidate)) {
@@ -154,7 +155,7 @@
   function setMode(mode: EditorMode) {
     editorMode = mode;
     try {
-      localStorage.setItem('chipsandcode:workbench:mode', mode);
+      learningStorage.setItem('chipsandcode:workbench:mode', mode);
     } catch {
       /* Editor preference is optional. */
     }
@@ -199,7 +200,7 @@
   function save() {
     if (!remembered || missionId === 'nand') return;
     try {
-      localStorage.setItem(draftKey, JSON.stringify({ version: 2, circuit, source: code }));
+      learningStorage.setItem(draftKey, JSON.stringify({ version: 2, circuit, source: code }));
       saveNotice = 'Draft saved on this device';
     } catch {
       saveNotice = 'This draft could not be saved. Keep this page open to continue.';
