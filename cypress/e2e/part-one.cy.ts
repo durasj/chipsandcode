@@ -5,6 +5,26 @@ function visitComputer() {
   cy.get('.machine-lab').should('have.attr', 'data-ready', 'true');
 }
 
+function waitForHardware() {
+  cy.get('.hardware-workspace', { timeout: 20000 }).should('have.attr', 'data-ready', 'true');
+}
+
+function visitHardware(example: string) {
+  cy.visit(`/tools/hardware-simulator/${example}`);
+  waitForHardware();
+}
+
+function replaceHardwareEditor(source: string, expectedOutput = false) {
+  const selector = expectedOutput
+    ? '.modified-in-monaco-diff-editor textarea.inputarea'
+    : '.editor-mount .monaco-editor textarea.inputarea';
+  cy.get(selector)
+    .should('have.length', 1)
+    .focus()
+    .type('{ctrl+a}{backspace}', { delay: 0 })
+    .type(source, { parseSpecialCharSequences: false, delay: 0 });
+}
+
 function writeProgram(source: string) {
   cy.findByRole('textbox', { name: 'Program source' })
     .clear()
@@ -219,71 +239,58 @@ ${Array.from({ length: 16 }, (_, bit) => `Not(in=in[${bit}], out=out[${bit}]);`)
   });
 
   it('Compiles multi-bit HDL and removes stale output after an invalid input or definition', () => {
-    cy.visit('/tools/chip-builder');
-    cy.get('.machine-lab').should('have.attr', 'data-ready', 'true');
+    visitHardware('Inverter16');
     expectMainNavigation();
     cy.findByTestId('chip-output-out').should('have.text', '65535');
-    cy.findByRole('textbox', { name: 'Input in' }).clear().type('0x00ff');
+    cy.findByRole('textbox', { name: 'Value for in' }).clear().type('0x00ff');
     cy.findByTestId('chip-output-out').should('have.text', '65280');
-    cy.findByRole('textbox', { name: 'Input in' }).clear().type('65536');
+    cy.findByRole('textbox', { name: 'Value for in' }).clear().type('65536');
     cy.findByRole('alert').should('contain', '65535');
     cy.findByTestId('chip-output-out').should('have.text', '—');
-    cy.findByRole('textbox', { name: 'Chip HDL' })
-      .clear()
-      .type('CHIP Invalid {', { parseSpecialCharSequences: false });
-    cy.findByRole('button', { name: 'Compile' }).click();
+    replaceHardwareEditor('CHIP Invalid { IN in; OUT out; PARTS: Missing');
     cy.findByRole('alert').should('be.visible');
     cy.findByTestId('chip-output-out').should('not.exist');
     cy.findByRole('button', { name: 'Tick' }).should('be.disabled');
   });
 
   it('Separates captured next state from committed register state across tick and tock', () => {
-    cy.visit('/tools/chip-builder');
-    cy.get('.machine-lab').should('have.attr', 'data-ready', 'true');
-    cy.contains('summary', 'Inspect a supplied component').click();
-    cy.findByRole('button', { name: 'Register' }).click();
-    cy.findByRole('textbox', { name: 'Input in' }).clear().type('7');
-    cy.findByRole('textbox', { name: 'Input load' }).clear().type('1');
+    visitHardware('Register');
+    cy.findByRole('textbox', { name: 'Value for in' }).clear().type('7');
+    cy.findByRole('spinbutton', { name: 'Value for load' }).clear().type('1');
     cy.findByTestId('chip-output-out').should('have.text', '0');
     cy.findByRole('button', { name: 'Tick' }).click();
     cy.findByTestId('chip-output-out').should('have.text', '0');
     cy.findByRole('button', { name: 'Tock' }).click();
     cy.findByTestId('chip-output-out').should('have.text', '7');
-    cy.findByRole('textbox', { name: 'Input load' }).clear().type('0');
-    cy.findByRole('textbox', { name: 'Input in' }).clear().type('12');
+    cy.findByRole('spinbutton', { name: 'Value for load' }).clear().type('0');
+    cy.findByRole('textbox', { name: 'Value for in' }).clear().type('12');
     cy.findByRole('button', { name: 'Tick' }).click();
     cy.findByRole('button', { name: 'Tock' }).click();
     cy.findByTestId('chip-output-out').should('have.text', '7');
     cy.injectAxe();
     checkAccessibility();
-    cy.screenshot('clocked-chip-builder', { capture: 'fullPage' });
+    cy.screenshot('clocked-hardware-simulator', { capture: 'fullPage' });
     cy.reload();
-    cy.get('.machine-lab').should('have.attr', 'data-ready', 'true');
-    cy.findByRole('textbox', { name: 'Chip HDL' }).should('contain.value', 'Register(in=in');
-    cy.findByRole('textbox', { name: 'Input load' }).should('exist');
+    waitForHardware();
+    cy.get('.editor-mount .view-lines').invoke('text').should('contain', 'Register(in=in');
+    cy.findByRole('spinbutton', { name: 'Value for load' }).should('exist');
   });
 
   it('Runs clocked TST scripts and reports real comparison failures', () => {
-    cy.visit('/tools/chip-builder');
-    cy.get('.machine-lab').should('have.attr', 'data-ready', 'true');
-    cy.contains('summary', 'Inspect a supplied component').click();
-    cy.findByRole('button', { name: 'Register' }).click();
-    cy.contains('summary', 'Test scripts').click();
+    visitHardware('Register');
     const script =
       'output-list in%D1.6.1 load%B1.1.1 out%D1.6.1;\nset in 7, set load 1, eval, output;\ntick, output;\ntock, output;\nset in 9, set load 0, tick, tock, output;';
     const expected =
       '| in | load | out |\n| 7 | 1 | 0 |\n| 7 | 1 | 0 |\n| 7 | 1 | 7 |\n| 9 | 0 | 7 |';
-    cy.findByRole('textbox', { name: 'TST script' })
-      .clear()
-      .type(script, { parseSpecialCharSequences: false, delay: 0 });
-    cy.findByRole('textbox', { name: 'Expected output' }).type(expected, { delay: 0 });
+    cy.findByRole('tab', { name: /Tests/ }).click();
+    replaceHardwareEditor(script);
+    cy.findByRole('tab', { name: 'Output' }).click();
+    replaceHardwareEditor(expected, true);
     cy.findByRole('button', { name: 'Run tests' }).click();
     cy.contains('[role="status"]', '4 passed, 0 failed').should('be.visible');
     cy.findByTestId('chip-output-out').should('have.text', '7');
-    cy.findByRole('textbox', { name: 'Actual test output' }).should('contain.value', 'out');
-    cy.findByRole('textbox', { name: 'Expected output' })
-      .clear()
-      .type(expected.replace('| 7 | 1 | 0 |', '| 7 | 1 | 99 |'), { delay: 0 });
+    cy.get('.original-in-monaco-diff-editor .view-lines').invoke('text').should('contain', 'out');
+    replaceHardwareEditor(expected.replace('| 7 | 1 | 0 |', '| 7 | 1 | 99 |'), true);
     cy.findByRole('button', { name: 'Run tests' }).click();
     cy.contains('[role="status"]', '3 passed, 1 failed').should('be.visible');
     cy.injectAxe();
@@ -291,10 +298,7 @@ ${Array.from({ length: 16 }, (_, bit) => `Not(in=in[${bit}], out=out[${bit}]);`)
   });
 
   it('Runs a ROM program through the clocked computer inside a compiled HDL circuit', () => {
-    cy.visit('/tools/chip-builder');
-    cy.get('.machine-lab').should('have.attr', 'data-ready', 'true');
-    cy.contains('summary', 'Inspect a supplied component').click();
-    cy.findByRole('button', { name: 'Computer' }).click();
+    visitHardware('Computer');
     cy.contains('summary', 'ROM and keyboard').click();
     cy.findByRole('button', { name: 'Load ROM' }).click();
     cy.findByRole('button', { name: 'Inspect memory' }).click();
@@ -309,20 +313,81 @@ ${Array.from({ length: 16 }, (_, bit) => `Not(in=in[${bit}], out=out[${bit}]);`)
     cy.findByTestId('chip-memory-word').should('have.text', '0');
   });
 
-  it('Keeps the multi-bit builder keyboard accessible on a narrow screen', () => {
+  it('Keeps multi-bit hardware keyboard accessible on a narrow screen', () => {
     cy.viewport(320, 760);
-    cy.visit('/tools/chip-builder');
-    cy.get('.machine-lab').should('have.attr', 'data-ready', 'true');
+    visitHardware('Inverter16');
     expectNoPageOverflow();
     cy.injectAxe();
     checkAccessibility();
     cy.findByRole('combobox', { name: 'View' }).select('visual');
-    cy.findByRole('textbox', { name: 'Chip HDL' }).should('not.exist');
-    cy.findByRole('textbox', { name: 'Input in' }).clear().type('65535');
+    cy.get('.editor-mount').should('not.be.visible');
+    cy.findByRole('textbox', { name: 'Value for in' }).clear().type('65535');
     cy.findByTestId('chip-output-out').should('have.text', '0');
     expectNoPageOverflow();
     checkAccessibility();
-    cy.screenshot('chip-builder-mobile', { capture: 'fullPage' });
+    cy.screenshot('hardware-visual-mobile', { capture: 'fullPage' });
+  });
+
+  it('Recovers workshop chips without replacing an existing simulator draft and keeps edits across reloads', () => {
+    const workshop = {
+      source: 'CHIP Probe { IN in[16]; OUT out[16]; PARTS: Custom(in=in, out=out); }',
+      dependencies: [
+        { id: 0, source: 'CHIP Custom { IN in[16]; OUT out[16]; PARTS: Not16(in=in, out=out); }' },
+      ],
+    };
+    const independentDraft = {
+      hdl: '// Separate simulator work',
+      name: 'Independent draft',
+      saved: new Date().toISOString(),
+    };
+    cy.intercept('GET', '**/api/experiments', { body: { experiments: [] } });
+    cy.visit('/tools/chip-builder', {
+      onBeforeLoad(window) {
+        window.localStorage.setItem('chipsandcode.chip-builder.v1', JSON.stringify(workshop));
+        window.localStorage.setItem(
+          'chipsandcode:hardware-tool:draft:v1',
+          JSON.stringify(independentDraft),
+        );
+      },
+    });
+    cy.location('pathname').should('eq', '/tools/hardware-simulator/workshop-draft');
+    waitForHardware();
+    cy.findByTestId('chip-output-out').should('have.text', '65535');
+    cy.contains('summary', 'Your chip dependencies').click();
+    cy.findByRole('textbox', { name: 'Custom chip 1 HDL' })
+      .clear()
+      .type('CHIP Custom { IN in[16]; OUT out[16]; PARTS: And16(a=in, b=in, out=out); }', {
+        parseSpecialCharSequences: false,
+        delay: 0,
+      });
+    cy.findByRole('textbox', { name: 'Value for in' }).clear().type('255');
+    cy.findByTestId('chip-output-out').should('have.text', '255');
+    cy.reload();
+    waitForHardware();
+    cy.findByTestId('chip-output-out').should('have.text', '0');
+    cy.contains('summary', 'Your chip dependencies').click();
+    cy.findByRole('textbox', { name: 'Custom chip 1 HDL' }).should('contain.value', 'And16');
+    cy.findByRole('link', { name: '← Tools' }).click();
+    cy.findByRole('link', { name: /Hardware simulator/ }).click();
+    waitForHardware();
+    cy.findByRole('textbox', { name: 'Experiment name' }).should('have.value', 'Independent draft');
+    cy.get('.editor-mount .view-lines')
+      .invoke('text')
+      .should('match', /Separate\s+simulator\s+work/);
+    cy.findByRole('button', { name: 'File' }).click();
+    cy.findByRole('menuitem', { name: 'Open workshop draft' }).click();
+    waitForHardware();
+    cy.location('pathname').should('eq', '/tools/hardware-simulator/workshop-draft');
+    cy.findByTestId('chip-output-out').should('have.text', '0');
+    cy.window().then((window) => {
+      expect(
+        JSON.parse(window.localStorage.getItem('chipsandcode.chip-builder.v1') || 'null'),
+      ).to.deep.equal(workshop);
+      expect(
+        JSON.parse(window.localStorage.getItem('chipsandcode:hardware-tool:draft:v1') || 'null')
+          .hdl,
+      ).to.equal(independentDraft.hdl);
+    });
   });
 
   it('Keeps the computer workspace usable at 320 pixels in every view', () => {
@@ -461,7 +526,11 @@ describe('The complete tool suite', () => {
     cy.findByRole('button', { name: 'Pixel 0, 0 off' }).focus().type(' ');
     cy.findByRole('button', { name: 'Pixel 0, 0 on' }).should('have.attr', 'aria-pressed', 'true');
     cy.findByRole('button', { name: 'Pixel 0, 0 on' }).type('{enter}');
-    cy.findByRole('button', { name: 'Pixel 0, 0 off' }).should('have.attr', 'aria-pressed', 'false');
+    cy.findByRole('button', { name: 'Pixel 0, 0 off' }).should(
+      'have.attr',
+      'aria-pressed',
+      'false',
+    );
     cy.findByRole('button', { name: 'Pixel 0, 0 off' }).type('{enter}');
     cy.findByRole('button', { name: 'Pixel 0, 0 on' }).should('have.attr', 'aria-pressed', 'true');
     cy.findByRole('textbox', { name: 'Generated bitmap code' }).should(
@@ -492,7 +561,11 @@ describe('The complete tool suite', () => {
     cy.screenshot('bitmap-mobile-drawing', { capture: 'fullPage' });
     cy.reload();
     cy.get('.machine-lab').should('have.attr', 'data-ready', 'true');
-    cy.findByRole('button', { name: 'Pixel 0, 0 off' }).should('have.attr', 'aria-pressed', 'false');
+    cy.findByRole('button', { name: 'Pixel 0, 0 off' }).should(
+      'have.attr',
+      'aria-pressed',
+      'false',
+    );
     cy.findByRole('button', { name: 'Pixel 15, 0 on' }).should('have.attr', 'aria-pressed', 'true');
     cy.findByRole('button', { name: 'Pixel 0, 1 on' }).should('have.attr', 'aria-pressed', 'true');
     cy.findByRole('combobox', { name: 'Export' }).select('assembly');

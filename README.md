@@ -30,13 +30,16 @@ One shared navigation—**Learn, Tools, About**—covers the entire site. Old si
 
 Short reference entries link to complete, corrected explanations in the same visual style. All existing Boolean logic material is covered: functions and canonical expressions, gate composition, HDL and testing, 16-bit buses, multi-way routing, and design tradeoffs. Sources and CC BY-NC-SA attribution remain visible.
 
-**Tools** contains three working workspaces:
+**Tools** provides one workspace per task:
 
-- **Hardware simulator:** Monaco HDL and test editing, signal inspection, expected/actual output, examples, local drafts, saved experiment links, and ZIP export.
-- **Boolean functions:** all sixteen two-input functions, editable truth tables, canonical expressions, equivalence checks, and NAND-only HDL. Every generated function is tested through the existing parser and simulator.
-- **Buses & routing:** Not16, And16, Or16, Mux16, Or8Way, Mux4Way16, Mux8Way16, DMux4Way, and DMux8Way, with validated inputs, selectors, and live outputs. These are dedicated logic models; the general HDL simulator does not yet support bus construction.
+- **Hardware simulator:** Monaco HDL and test editing; Visual, Code, and Split views; bits and buses; custom chips; tick/tock; ROM, keyboard, and memory inspection; bounded TST/CMP execution; saved projects and ZIP export. The former chip workshop redirects here, with its local drafts recoverable from File.
+- **Computer & assembler:** assembly/binary loading, translation, CPU execution, RAM, screen, and keyboard.
+- **Virtual machine:** multi-file VM execution with stack, segments, calls, and native OS services.
+- **Jack compiler:** compile classes and send the result to the VM.
+- **Bitmap editor:** draw pixels and export screen words or code.
+- **Boolean functions** and **Buses & routing:** explore truth tables, expressions, and word routing before constructing chips.
 
-The existing material ends at Boolean logic. Arithmetic, clocked memory, processors, assembly, and higher-level software remain future layers. A separate optional 48-second introductory film has captions and a transcript; its current master is silent. See [intro production](docs/intro-production.md).
+The guided material covers Nand2Tetris Projects 1–6, through a learner-written assembler. A separate optional 48-second introductory film has captions and a transcript; its current master is silent. See [intro production](docs/intro-production.md).
 
 See the [interaction design](docs/computer-layers-design.md), [art direction](docs/art-direction.md), and [content audit](docs/content-audit.md) for behavior, source coverage, and boundaries.
 

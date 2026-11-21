@@ -20,7 +20,7 @@ Detailed source URLs and specification nuances are recorded in `docs/part-one-so
 ## Meaning preserved across interfaces
 
 - The scalar visual workbench remains a separate introductory representation. Its previously supplied primitive equivalents are not described as automatic exports of the learner's own chip definitions.
-- The new chip builder supports explicit HDL dependencies and bounded TST script execution with optional CMP comparison. Reading links distinguish exploration of a built-in behavioral model from validation of the learner's construction.
+- The unified hardware simulator supports explicit HDL dependencies and bounded TST script execution with optional CMP comparison. Reading links distinguish exploration of a built-in behavioral model from validation of the learner's construction.
 - Clocked examples distinguish observing old state after tick from committing captured state at tock. They do not describe a sequential loop of register writes as simultaneous hardware behavior.
 - The CPU reset pin resets the PC, not all RAM. A tool's fresh-machine control is not presented as the same contract.
 - A-instructions cannot write D or RAM or take jumps; their literal bits must not be decoded as C-instruction control bits.

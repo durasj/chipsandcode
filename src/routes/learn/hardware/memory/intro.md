@@ -5,7 +5,7 @@ updated: 2026-11-03
 
 A combinational circuit answers a question about its current inputs. A memory circuit can answer a different question: what value was stored earlier? State gives a machine a past, so it can count, follow a sequence, and keep the results of a program.
 
-[Build the memory layer](/learn/path/memory) or experiment with the clock in the [chip builder](/tools/chip-builder).
+[Build the memory layer](/learn/path/memory) or experiment with the clock in the [hardware simulator](/tools/hardware-simulator).
 
 # Separate now from next
 
@@ -85,7 +85,7 @@ Repeat the same experiment with RAM, adding an address. Then test two addresses 
 
 Construct Bit, Register, the RAM hierarchy, and PC. Test hold behavior as carefully as loading. Check first and last addresses, bank boundaries, several consecutive writes, and reads before and after each clock phase. PC tests must include simultaneous controls to establish precedence, not just one active control at a time.
 
-The official scripts interleave input changes, `tick`, `tock`, and recorded outputs. In the [chip builder](/tools/chip-builder), compile your design and open **Test scripts** to run a TST script with optional CMP expected output. Read the timing of each expected row before interpreting a failure: a value correct one half-cycle too early is still incorrect. Simulator initialization or a tool's “clear state” action is separate from a chip's specified input pins.
+The official scripts interleave input changes, `tick`, `tock`, and recorded outputs. In the [hardware simulator](/tools/hardware-simulator), compile your design and open **Tests** to run a TST script with optional CMP expected output. Read the timing of each expected row before interpreting a failure: a value correct one half-cycle too early is still incorrect. Simulator initialization or a tool's “clear state” action is separate from a chip's specified input pins.
 
 # Sources and next layer
 

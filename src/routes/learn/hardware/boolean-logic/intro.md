@@ -36,4 +36,4 @@ The [hardware simulator](/tools/hardware-simulator) runs the project's supported
 
 # What is available now
 
-The first guided constructions cover single-bit combinational logic. [Continue the learning path](/learn/path) through multi-bit construction, arithmetic, clocked storage, machine language, computer architecture, and the assembler. The [chip builder](/tools/chip-builder) supports multi-bit and clocked HDL experiments. Higher-level software follows in the later Nand2Tetris projects and remains outside this release's guided path.
+The first guided constructions cover single-bit combinational logic. [Continue the learning path](/learn/path) through multi-bit construction, arithmetic, clocked storage, machine language, computer architecture, and the assembler. The [hardware simulator](/tools/hardware-simulator) supports multi-bit and clocked HDL experiments. Higher-level software follows in the later Nand2Tetris projects and remains outside this release's guided path.

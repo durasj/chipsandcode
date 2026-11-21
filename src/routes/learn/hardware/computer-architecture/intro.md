@@ -5,7 +5,7 @@ updated: 2026-11-03
 
 The computer joins three capabilities: an ALU transforms values, memory keeps them, and instructions choose what happens next. You have already met each interface. This layer connects them into a machine that runs a program.
 
-[Build the computer layer](/learn/path/architecture), use the [chip builder](/tools/chip-builder), or trace instructions in the [computer tool](/tools/computer).
+[Build the computer layer](/learn/path/architecture), use the [hardware simulator](/tools/hardware-simulator), or trace instructions in the [computer tool](/tools/computer).
 
 # A stored program
 

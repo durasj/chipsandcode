@@ -15,7 +15,7 @@ Build one reliable part, then use its behavior to understand the next. This chap
 
 The guided path introduces each tool gradually. [Continue learning](/learn). For independent experiments, open the [hardware simulator](/tools/hardware-simulator).
 
-The introductory workbench supplies primitive equivalents of previously introduced gates as permitted components; it does not automatically package those first visual constructions into a library. In the later [chip builder](/tools/chip-builder), add explicit HDL dependencies to compose and test your own chip definitions.
+The introductory workbench supplies primitive equivalents of previously introduced gates as permitted components; it does not automatically package those first visual constructions into a library. In the later [hardware simulator](/tools/hardware-simulator), add explicit HDL dependencies to compose and test your own chip definitions.
 
 # The supplied NAND primitive
 
@@ -130,7 +130,7 @@ For a four-bit illustration, NOT of `0011` is `1100`. The same construction work
 
 [Explore 16-bit gates in the buses and routing tool](/tools/buses).
 
-These operations are executable behavioral models in the buses tool. To construct and validate your own multi-bit HDL, [continue with the bus challenges](/learn/path/buses) or use the [chip builder](/tools/chip-builder). Exploring a supplied model and verifying your own construction are separate steps.
+These operations are executable behavioral models in the buses tool. To construct and validate your own multi-bit HDL, [continue with the bus challenges](/learn/path/buses) or use the [hardware simulator](/tools/hardware-simulator). Exploring a supplied model and verifying your own construction are separate steps.
 
 # Multi-way operations
 

@@ -5,7 +5,7 @@ updated: 2026-11-03
 
 A bus is a group of signals. Give each bit a place value and that same bus becomes a number. This layer turns the gates you already know into adders, then combines arithmetic and logic in one controllable circuit: the ALU.
 
-[Build the arithmetic layer](/learn/path/arithmetic) or open the [chip builder](/tools/chip-builder).
+[Build the arithmetic layer](/learn/path/arithmetic) or open the [hardware simulator](/tools/hardware-simulator).
 
 # Numbers are an interpretation
 

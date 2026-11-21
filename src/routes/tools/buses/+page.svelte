@@ -334,7 +334,7 @@
     {/if}
     <p>
       These models let you explore the bus contracts directly. Build these contracts in HDL in the <a
-        href="/tools/chip-builder">chip workshop</a
+        href="/tools/hardware-simulator">hardware simulator</a
       >, or follow the <a href="/learn/path/buses">guided construction path</a>.
     </p>
   </details>

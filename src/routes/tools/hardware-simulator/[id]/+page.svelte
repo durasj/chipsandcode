@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { readWorkshopDraft } from '#lib/computer/hardware-project.js';
   import type { Experiment } from '#src/lib/shared.js';
   import HardwareIDE from '#lib/components/HardwareIDE.svelte';
   import api from '#lib/api.js';
@@ -6,6 +7,21 @@
   import examples from '#lib/hardware-simulator/examples/index.js';
   export let data: PageData;
   $: experiment = (async () => {
+    if (data.id === 'workshop-draft') {
+      const draft = readWorkshopDraft(localStorage);
+      if (!draft) throw new Error('No workshop draft is available on this device.');
+      return {
+        id: 'workshop-draft',
+        name: draft.name,
+        code: draft.hdl,
+        tests: draft.tests,
+        compare: draft.compare,
+        dependencies: draft.dependencies,
+        type: 'HARDWARE',
+        visibility: 'PRIVATE',
+        created: '1970-01-01T00:00:00Z',
+      } satisfies Experiment;
+    }
     const example = examples.find(({ id }) => id === data.id);
     if (example) return example;
     const response = await api<{ experiment: Experiment }>(

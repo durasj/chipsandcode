@@ -58,7 +58,9 @@ describe('Hardware simulator tool', () => {
       .findByRole('link', { name: 'Tools' })
       .click();
     cy.location('pathname').should('eq', '/tools');
-    cy.findByRole('link', { name: /Saved HDL experiments/ }).click();
+    cy.findAllByRole('link', { name: /Hardware simulator/ }).should('have.length', 1);
+    cy.findByRole('link', { name: /Chip workshop|Saved HDL experiments/ }).should('not.exist');
+    cy.findByRole('link', { name: /Hardware simulator/ }).click();
     cy.location('pathname').should('eq', simulatorPath);
     waitForEditor();
     expectMainNavigation();
@@ -108,7 +110,7 @@ describe('Hardware simulator tool', () => {
     cy.get('.editor-mount')
       .invoke('text')
       .should('match', /Or\(a=w1,\s*b=w2,\s*out=nota\);/);
-    cy.contains('[role="alert"]', 'contains a loop');
+    cy.contains('[role="alert"]', 'Signal nota[0] has multiple drivers.');
     cy.contains('[role="tab"]', 'Tests').should('not.contain', '/');
     cy.get('.signal-panel').should(($panel) => {
       expect(
@@ -258,6 +260,85 @@ describe('Hardware simulator tool', () => {
     cy.get('.editor-status').should('contain', 'Local draft');
     cy.findByLabelText('Share').should('be.disabled');
     cy.findByRole('button', { name: 'Save' }).should('not.be.disabled');
+  });
+
+  it('Keeps custom chips and test files with the same saved experiment, including removals', () => {
+    let saved: Record<string, unknown>;
+    cy.intercept('POST', '**/api/experiments', (request) => {
+      saved = { ...request.body, id: 'abc123', created: '2026-11-03T00:00:00Z' };
+      request.reply({ experiment: saved });
+    }).as('saveProject');
+    cy.intercept('GET', '**/api/experiments/abc123', (request) => {
+      request.reply({ experiment: saved });
+    }).as('openProject');
+    cy.intercept('PUT', '**/api/experiments/abc123', (request) => {
+      saved = { ...saved, ...request.body };
+      request.reply({ experiment: saved });
+    }).as('updateProject');
+
+    visitSimulator();
+    const code = 'CHIP Project { IN in; OUT out; PARTS: Custom1(in=in, out=out); }';
+    const customChip = 'CHIP Custom1 { IN in; OUT out; PARTS: Not(in=in, out=out); }';
+    cy.get('.editor-mount .monaco-editor textarea.inputarea')
+      .focus()
+      .type(code, { parseSpecialCharSequences: false, delay: 0 });
+    cy.contains('summary', 'Your chip dependencies').click();
+    cy.findByRole('button', { name: 'Add custom chip' }).click();
+    cy.findByRole('textbox', { name: 'Custom chip 1 HDL' })
+      .clear()
+      .type(customChip, { parseSpecialCharSequences: false, delay: 0 });
+    cy.contains('tr', 'out').contains('td', '1');
+    cy.findByLabelText('Value for in').clear().type('1').blur();
+    cy.contains('tr', 'out').contains('td', '0');
+
+    cy.contains('summary', 'ROM and test files').click();
+    const program = '0000000000000111\n';
+    cy.findByLabelText('Test files').selectFile({
+      contents: Cypress.Buffer.from(program),
+      fileName: 'Program.hack',
+      mimeType: 'text/plain',
+    });
+    cy.contains('p', 'Program.hack').should('be.visible');
+    cy.findByRole('button', { name: 'Save' }).click();
+    cy.wait('@saveProject')
+      .its('request.body')
+      .should('include', { code })
+      .and((body) => {
+        expect(body.dependencies).to.deep.equal([customChip]);
+        expect(body.testFiles).to.deep.equal({ 'Program.hack': program });
+      });
+    cy.location('pathname').should('eq', `${simulatorPath}/abc123`);
+
+    // Reload once with the local draft, then without it to check the saved payload too.
+    cy.reload();
+    waitForEditor();
+    cy.contains('summary', 'Your chip dependencies').click();
+    cy.findByRole('textbox', { name: 'Custom chip 1 HDL' }).should('have.value', customChip);
+    cy.window().then((win) => win.localStorage.removeItem('chipsandcode:hardware-tool:abc123:v1'));
+    cy.reload();
+    waitForEditor();
+    cy.contains('summary', 'Your chip dependencies').click();
+    cy.findByRole('textbox', { name: 'Custom chip 1 HDL' }).should('have.value', customChip);
+    cy.contains('tr', 'out').contains('td', '1');
+    cy.contains('summary', 'ROM and test files').click();
+    cy.contains('p', 'Program.hack').should('be.visible');
+
+    cy.findByRole('button', { name: 'Remove custom chip 1' }).click();
+    cy.findByRole('button', { name: 'Clear test files' }).click();
+    cy.findByRole('button', { name: 'Save' }).click();
+    cy.wait('@updateProject')
+      .its('request.body')
+      .should((body) => {
+        expect(body.dependencies).to.deep.equal([]);
+        expect(body.testFiles).to.deep.equal({});
+      });
+    cy.window().then((win) => win.localStorage.removeItem('chipsandcode:hardware-tool:abc123:v1'));
+    cy.reload();
+    waitForEditor();
+    cy.contains('summary', 'Your chip dependencies').click();
+    cy.findByRole('textbox', { name: 'Custom chip 1 HDL' }).should('not.exist');
+    cy.contains('summary', 'ROM and test files').click();
+    cy.findByRole('button', { name: 'Clear test files' }).should('not.exist');
   });
 
   it('Saves a bundled template as a copy without updating or deleting the template', () => {

@@ -9,7 +9,7 @@ The path now connects signals to an assembler: gates combine into arithmetic, cl
 
 [Open the learning path](/learn/path) to continue through multi-bit logic, arithmetic, memory, machine language, computer architecture, and assembly translation. Each layer has a full explanation in this reference.
 
-Use the [chip builder](/tools/chip-builder) for multi-bit and clocked HDL experiments, including TST scripts and CMP comparisons. Use the [computer and assembler](/tools/computer) for instruction translation, execution, RAM, screen, and keyboard inspection. The [Boolean functions](/tools/boolean-functions) and [buses and routing](/tools/buses) tools let you explore behavior before constructing an implementation.
+Use the [hardware simulator](/tools/hardware-simulator) for multi-bit and clocked HDL experiments, including TST scripts and CMP comparisons. Use the [computer and assembler](/tools/computer) for instruction translation, execution, RAM, screen, and keyboard inspection. The [Boolean functions](/tools/boolean-functions) and [buses and routing](/tools/buses) tools let you explore behavior before constructing an implementation.
 
 Keep the distinction between a working reference model and your own construction. Running a program on a built-in CPU demonstrates the program's behavior. Validating your HDL CPU requires running that construction against its contract. Similarly, translating a program with the supplied assembler is different from implementing and testing your own translator.
 

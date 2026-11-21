@@ -113,6 +113,26 @@ describe('Structural HDL wiring and state', () => {
     );
     expect(chip.evaluate({ a: 255, b: 64 }).out).toBe(16639);
   });
+  it('exposes root internal bus values without leaking dependency wiring', () => {
+    const chip = compileHDL(
+      'CHIP Probe { IN low[8],high[8],load; OUT out[16]; PARTS: Or16(a=false,b[0..7]=low,b[8..15]=high,out[0..7]=word[0..7],out[8..15]=word[8..15]); Buffered(in=word,load=load,out=stored); Not16(in=stored,out=out); }',
+      {
+        Buffered:
+          'CHIP Buffered { IN in[16],load; OUT out[16]; PARTS: Register(in=in,load=load,out=private); And16(a=private,b=true,out=out); }',
+      },
+    );
+    expect(chip.internalWidths).toEqual({ word: 16, stored: 16 });
+    expect(chip.internalValues).toEqual({ word: 0, stored: 0 });
+    chip.tick({ low: 0x34, high: 0x12, load: 1 });
+    expect(chip.internalValues).toEqual({ word: 0x1234, stored: 0 });
+    chip.tock();
+    expect(chip.internalValues).toEqual({ word: 0x1234, stored: 0x1234 });
+    expect(chip.outputs.out).toBe(0xedcb);
+    chip.evaluate({ low: 0xff, high: 0xab, load: 0 });
+    expect(chip.internalValues).toEqual({ word: 0xabff, stored: 0x1234 });
+    chip.reset();
+    expect(chip.internalValues).toEqual({ word: 0xabff, stored: 0 });
+  });
   it('captures all flip flops simultaneously, permits feedback, and separates tick from tock', () => {
     const chip = compileHDL(
       'CHIP Probe { IN in; OUT first,second; PARTS: DFF(in=in,out=first); DFF(in=first,out=second); }',

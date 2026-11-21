@@ -59,6 +59,6 @@ Verification covers types, simulator/model tests, builds, existing editing/shari
 
 ## Boundaries
 
-The extended path now covers Projects1–6: multi-bit construction, arithmetic, clocked memory, machine language, architecture, and an assembler. The chip workshop and computer workspace provide the corresponding runtimes. Virtual machines, compilers, and higher-level software remain PartII work. The optional 48-second film introduces that wider journey; its current master is silent. The film is not narrated.
+The extended path now covers Projects1–6: multi-bit construction, arithmetic, clocked memory, machine language, architecture, and an assembler. The hardware simulator and computer workspace provide the corresponding runtimes. Virtual machines, compilers, and higher-level software remain PartII work. The optional 48-second film introduces that wider journey; its current master is silent. The film is not narrated.
 
 See [source coverage](content-audit.md), [visual direction](art-direction.md), and [film production](intro-production.md).

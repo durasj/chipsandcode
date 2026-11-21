@@ -175,8 +175,10 @@ export interface HDLCircuit {
   setState(name: string, value: number, index?: number): void;
   readonly inputWidths: PinWidths;
   readonly outputWidths: PinWidths;
+  readonly internalWidths: PinWidths;
   readonly inputs: PinValues;
   readonly outputs: PinValues;
+  readonly internalValues: PinValues;
   readonly phase: 'tick' | 'tock';
   evaluate(values?: PinValues): PinValues;
   tick(values?: PinValues): PinValues;
@@ -200,7 +202,10 @@ export function compileHDL(source: string, dependencies: Record<string, string> 
   const stateful: Stateful[] = [],
     validators: Read[] = [],
     inputs: PinValues = {},
-    outputs: PinValues = {};
+    outputs: PinValues = {},
+    internalWidths: PinWidths = {},
+    internalValues: PinValues = {},
+    internalReads: Record<string, Read> = {};
   const memoryPorts: Array<{
     name: string;
     instance: Instance;
@@ -499,6 +504,13 @@ export function compileHDL(source: string, dependencies: Record<string, string> 
     for (const [name, bits] of Object.entries(nets))
       for (let bit = 0; bit < bits.length; bit++)
         if (!bits[bit]) throw new HDLError(`Signal ${name}[${bit}] has no driver.`);
+    // Inspect only the root's wiring, not similarly named nets inside dependencies.
+    if (def === root)
+      for (const [name, width] of Object.entries(widths))
+        if (!Object.hasOwn(def.inputs, name) && !Object.hasOwn(def.outputs, name)) {
+          internalWidths[name] = width;
+          internalReads[name] = (ctx) => readNet({ name }, width, ctx);
+        }
     return port;
   }
   const top = instantiate(root, [root.name]);
@@ -514,6 +526,7 @@ export function compileHDL(source: string, dependencies: Record<string, string> 
     const context = new Evaluation();
     for (const read of validators) read(context);
     for (const [name, read] of Object.entries(top.outputs)) outputs[name] = read(context);
+    for (const [name, read] of Object.entries(internalReads)) internalValues[name] = read(context);
     return { ...outputs };
   }
   const circuit: HDLCircuit = {
@@ -538,8 +551,10 @@ export function compileHDL(source: string, dependencies: Record<string, string> 
     },
     inputWidths: { ...root.inputs },
     outputWidths: { ...root.outputs },
+    internalWidths,
     inputs,
     outputs,
+    internalValues,
     get phase() {
       return phase;
     },

@@ -102,6 +102,55 @@ describe('Experiment API ownership and persistence', () => {
     expect(jar.set).not.toHaveBeenCalled();
   });
 
+  it('persists custom chips and test files together with the saved experiment', async () => {
+    const project = {
+      ...payload,
+      code: 'CHIP Probe { IN in; OUT out; PARTS: Custom(in=in, out=out); }',
+      dependencies: ['CHIP Custom { IN in; OUT out; PARTS: Not(in=in, out=out); }'],
+      testFiles: { 'Program.hack': '0000000000000111', 'Probe.cmp': '| out |\n| 1 |' },
+    };
+    const response = await saveExperiment(request(project), cookies());
+    expect(response.status).toBe(200);
+    const saved = (await response.json()).experiment;
+    const insert = sql.mock.calls.find(([query]) =>
+      query.join('?').includes('INSERT INTO cnc_experiments'),
+    );
+    expect(JSON.parse(insert![3])).toEqual(saved);
+    expect(saved).toMatchObject(project);
+
+    sql.mockResolvedValue([{ owner_id: sessionId(token), payload: saved }]);
+    expect((await (await readExperiment(saved.id, cookies(token))).json()).experiment).toEqual(
+      saved,
+    );
+  });
+
+  it('accepts explicit empty project fields when removing the last custom chip or test file', async () => {
+    sql.mockResolvedValue([
+      { payload: { ...payload, id: 'one', dependencies: [], testFiles: {} } },
+    ]);
+    const response = await saveExperiment(
+      request({ ...payload, dependencies: [], testFiles: {} }),
+      cookies(token),
+      'one',
+    );
+    expect(response.status).toBe(200);
+    expect(JSON.parse(sql.mock.calls[0][1])).toMatchObject({ dependencies: [], testFiles: {} });
+  });
+
+  it.each([
+    { dependencies: [42] },
+    { dependencies: Array(101).fill('CHIP Custom {}') },
+    { dependencies: ['x'.repeat(1000001)] },
+    { testFiles: { 'rom.hack': 42 } },
+    { testFiles: { '': 'contents' } },
+    { testFiles: { ['x'.repeat(201)]: 'contents' } },
+    { testFiles: { 'rom.hack': 'x'.repeat(2000001) } },
+    { testFiles: Object.fromEntries(Array.from({ length: 101 }, (_, i) => [`${i}.hack`, '0'])) },
+  ])('rejects malformed or oversized project files before accessing storage', async (fields) => {
+    expect((await saveExperiment(request({ ...payload, ...fields }), cookies())).status).toBe(400);
+    expect(sql).not.toHaveBeenCalled();
+  });
+
   it('rejects invalid payloads and malformed JSON before accessing storage', async () => {
     expect((await saveExperiment(request({}), cookies())).status).toBe(400);
     expect(

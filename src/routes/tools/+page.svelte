@@ -28,11 +28,12 @@
       },
       {
         n: '01',
-        name: 'Chip workshop',
-        href: '/tools/chip-builder',
-        description: 'Build multi-bit circuits, clock memory, and connect a computer.',
+        name: 'Hardware simulator',
+        href: '/tools/hardware-simulator',
+        description:
+          'Build chips in HDL, inspect signals, advance the clock, and test your circuit.',
         mark: '16 BIT',
-        note: 'HDL · Buses · Clock',
+        note: 'Code · Signals · Tests',
       },
       {
         n: '02',
@@ -44,14 +45,6 @@
       },
       {
         n: '06',
-        name: 'Saved HDL experiments',
-        href: '/tools/hardware-simulator',
-        description: 'Write HDL. Inspect the signals. Test your circuit.',
-        mark: 'CHIP',
-        note: 'Code · Signals · Tests',
-      },
-      {
-        n: '07',
         name: 'Boolean functions',
         href: '/tools/boolean-functions',
         description: 'Turn a truth table into an expression and a NAND circuit.',
@@ -59,7 +52,7 @@
         note: 'Truth tables · Expressions · NAND',
       },
       {
-        n: '08',
+        n: '07',
         name: 'Buses & routing',
         href: '/tools/buses',
         description: 'Work with whole words of bits and choose where signals go.',

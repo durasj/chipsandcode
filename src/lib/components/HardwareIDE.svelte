@@ -2,21 +2,13 @@
   import { DropdownMenu, Popover, Tabs } from 'bits-ui';
 
   import { goto } from '$app/navigation';
-  import parseHdl from '#lib/editor/hdl/parse.js';
-  import parseTst from '#lib/editor/tst/parse.js';
-  import type { Root as HDLRoot } from '#lib/editor/hdl/tree.js';
-  import type {
-    CompareNode,
-    LoadNode,
-    OutputFileNode,
-    Root as TSTRoot,
-  } from '#lib/editor/tst/tree.js';
-  import type Chip from '#lib/hardware-simulator/chips/Chip.js';
-  import ChipFactory from '#lib/hardware-simulator/chips/ChipFactory.js';
+  import { compileHDL, type HDLCircuit } from '#lib/computer/hdl.js';
+  import { createHDLTest, type HDLTestSession } from '#lib/computer/testing.js';
+  import { dependencyMap, readWorkshopDraft } from '#lib/computer/hardware-project.js';
+  import HardwarePeripherals from '#lib/computer/HardwarePeripherals.svelte';
   import type { Experiment, ExperimentRequest } from '#src/lib/shared.js';
   import type * as monacoApi from 'monaco-editor/editor/editor.api.js';
   import api, { apiEnabled } from '#lib/api.js';
-  import TestScript from '#lib/hardware-simulator/tests/TestScript.js';
   import examples from '../hardware-simulator/examples';
 
   function monacoEditor(node: HTMLElement) {
@@ -52,6 +44,13 @@
 
       const draft = loadDraft();
       if (draft?.name) name = draft.name;
+      dependencies = draft?.dependencies ?? experiment?.dependencies ?? [];
+      testFiles = draft?.testFiles ?? experiment?.testFiles ?? {};
+      try {
+        workshopDraftAvailable = !!readWorkshopDraft(localStorage);
+      } catch {
+        /* Storage may be disabled. */
+      }
       hdlModel = monaco.editor.createModel(draft?.hdl ?? experiment?.code ?? '', 'hdl');
       tstModel = monaco.editor.createModel(draft?.tests ?? experiment?.tests ?? '', 'tst');
       diffModel = {
@@ -133,8 +132,9 @@
   } satisfies monacoApi.editor.IStandaloneEditorConstructionOptions;
 
   function invalidateTests() {
-    if (testStats?.decorations && tstModel) tstModel.deltaDecorations(testStats.decorations, []);
+    testSession = undefined;
     testStats = undefined;
+    testStatus = '';
     diffModel?.original.setValue('');
   }
 
@@ -189,181 +189,198 @@
   function setup() {
     codeError = '';
     runtimeError = '';
-    if (tests) testError = '';
+    testError = '';
     chip = undefined;
     inputPins = [];
     internalPins = [];
     outputPins = [];
+    cycles = 0;
+    phase = 'tock';
     invalidateTests();
     const value = hdlModel.getValue();
-    let tree: HDLRoot | undefined;
-    try {
-      tree = parseHdl(value);
-      monaco.editor.setModelMarkers(hdlModel, 'parser', []);
-    } catch (cause: any) {
-      handleEditorError(cause, hdlModel);
-      codeError = cause.message || 'Check the HDL syntax.';
+    monaco.editor.setModelMarkers(hdlModel, 'parser', []);
+    if (
+      !value
+        .replace(/\/\*[\s\S]*?\*\//g, '')
+        .replace(/\/\/[^\n]*/g, '')
+        .trim()
+    )
       return false;
-    }
-    if (!tree?.[0]) {
-      if (value.trim() && !value.trim().startsWith('//'))
-        codeError = 'Add a CHIP declaration to describe the circuit.';
-      return false;
-    }
     try {
-      chip = new ChipFactory().fromAST(tree[0]);
+      chip = compileHDL(value, dependencyMap(dependencies));
+      reflectPins();
+      return true;
     } catch (cause) {
-      codeError = cause instanceof Error ? cause.message : `Loading the chip failed: ${cause}`;
+      codeError = cause instanceof Error ? cause.message : String(cause);
+      handleEditorError(cause, hdlModel);
       return false;
     }
-    reflectPins();
-    return true;
   }
 
   function setupTestScript() {
-    tests = undefined;
     testError = '';
     invalidateTests();
-    const value = tstModel.getValue();
+    monaco.editor.setModelMarkers(tstModel, 'parser', []);
+  }
 
-    let tree: TSTRoot | undefined;
-    try {
-      tree = parseTst(value);
-
-      monaco.editor.setModelMarkers(tstModel, 'parser', []);
-
-      monaco.editor.setModelMarkers(tstModel, 'tests', []);
-      testStats = undefined;
-    } catch (e: any) {
-      handleEditorError(e, tstModel);
-      testError = e.message || 'Check the test script syntax.';
-      return;
-    }
-
-    if (!tree) return;
-
-    const { preamble } = tree;
-
-    const firstUnusedPreamble = preamble.find(
-      (p) => p.type === 'compare' || p.type === 'load' || p.type === 'output',
-    ) as LoadNode | OutputFileNode | CompareNode;
-    if (firstUnusedPreamble) {
-      const line = firstUnusedPreamble.file.line;
-      const col = firstUnusedPreamble.file.col;
-      monaco.editor.setModelMarkers(tstModel, 'tests', [
-        {
-          startColumn: col,
-          startLineNumber: line,
-          endColumn: col,
-          endLineNumber: line,
-          severity: monaco.MarkerSeverity.Info,
-          message:
-            'Specification of files is ignored. Only the loaded chip and the comparison file specified via Output tab are used.',
-        },
-      ]);
-    }
-
-    tests = TestScript.fromAST(tree);
+  function inputValues() {
+    return Object.fromEntries(
+      inputPins.map(({ name, value, width }) => {
+        const parsed = typeof value === 'number' ? value : value.trim() ? Number(value) : NaN;
+        if (!Number.isInteger(parsed) || parsed < 0 || parsed > 2 ** width - 1)
+          throw new Error(
+            width === 1
+              ? `Input ${name} must be 0 or 1.`
+              : `Input ${name} must be an integer from 0 to ${2 ** width - 1}.`,
+          );
+        return [name, parsed];
+      }),
+    );
   }
 
   function run() {
     if (!chip || codeError) return;
     runtimeError = '';
     try {
-      inputPins.forEach(({ name, value }) => {
-        if (value !== 0 && value !== 1) throw new Error(`Input ${name} must be 0 or 1.`);
-        chip!.setInput(name, value === 1);
-      });
-      chip.run();
+      chip.evaluate(inputValues());
+      reflectPins(false);
+    } catch (cause) {
+      runtimeError = cause instanceof Error ? cause.message : String(cause);
+      invalidateTests();
+    }
+  }
+
+  function advance() {
+    if (!chip) return;
+    runtimeError = '';
+    try {
+      if (chip.phase === 'tock') chip.tick(inputValues());
+      else {
+        chip.tock();
+        cycles += 1;
+      }
       reflectPins();
     } catch (cause) {
-      runtimeError = cause instanceof Error ? cause.message : `Chip execution failed: ${cause}`;
-      invalidateTests();
+      runtimeError = cause instanceof Error ? cause.message : String(cause);
     }
   }
 
-  function runTestScript() {
-    if (!tests || !chip || codeError) return;
-    testError = '';
-    invalidateTests();
-    try {
-      const result = tests.run(chip, diffModel.modified.getValue(), (effect) => {
-        if (effect.type === 'output') diffModel.original.setValue(effect.output);
-      });
-      reflectScriptResult(result);
-    } catch (cause) {
-      testError = cause instanceof Error ? cause.message : `Test execution failed: ${cause}`;
-      invalidateTests();
-    } finally {
-      run();
-    }
-  }
-
-  function reflectScriptResult(result: ReturnType<TestScript['run']>) {
-    const oldDecorations = testStats?.decorations;
-    testStats = undefined;
-    const decorations = [];
-
-    for (const instructions of result) {
-      for (const instruction of instructions) {
-        if (instruction.type === 'output') {
-          const range = new monaco.Range(instruction.line, 0, instruction.line, 0);
-
-          if ('error' in instruction && typeof instruction.error === 'string') {
-            decorations.push({
-              range,
-              options: {
-                isWholeLine: true,
-                linesDecorationsClassName: 'test-failed monaco-line-decoration',
-                hoverMessage: { value: 'Output comparison failed' },
-              },
-            });
-
-            if (!testStats) {
-              testStats = { passed: 0, total: 1, decorations: [] };
-            } else {
-              testStats.total++;
-            }
-          } else if ('error' in instruction && instruction.error === false) {
-            decorations.push({
-              range,
-              options: {
-                isWholeLine: true,
-                linesDecorationsClassName: 'test-passed monaco-line-decoration',
-                hoverMessage: { value: 'Output comparison passed' },
-              },
-            });
-
-            if (!testStats) {
-              testStats = { passed: 1, total: 1, decorations: [] };
-            } else {
-              testStats.passed++;
-              testStats.total++;
-            }
-          }
-        }
-      }
-    }
-
-    if (testStats) {
-      testStats.decorations = tstModel.deltaDecorations(oldDecorations || [], decorations);
-    }
-  }
-
-  function reflectPins() {
+  function resetCircuit() {
     if (!chip) return;
+    chip.reset();
+    chip.setKeyboard(0);
+    chip.evaluate(Object.fromEntries(Object.keys(chip.inputWidths).map((name) => [name, 0])));
+    cycles = 0;
+    runtimeError = '';
+    invalidateTests();
+    reflectPins();
+  }
 
-    const input = [] as { name: string; value: number }[];
-    const internal = [] as { name: string; value: number }[];
-    const output = [] as { name: string; value: number }[];
-    for (const [name, pin] of chip.getPins()) {
-      if (pin.type === 'input') input.push({ name, value: pin.state ? 1 : 0 });
-      if (pin.type === 'internal') internal.push({ name, value: pin.state ? 1 : 0 });
-      if (pin.type === 'output') output.push({ name, value: pin.state ? 1 : 0 });
+  function runTestScript(single = false, resume = false, interactive = false) {
+    if (!chip || codeError) return;
+    testError = '';
+    const script = tstModel.getValue();
+    if (
+      !script
+        .replace(/\/\*[\s\S]*?\*\//g, '')
+        .replace(/\/\/[^\n]*/g, '')
+        .trim()
+    ) {
+      invalidateTests();
+      return;
     }
-    inputPins = input;
-    internalPins = internal;
-    outputPins = output;
+    try {
+      if (!interactive || !testIsInteractive || !resume || !testSession || testSession.done) {
+        const target = interactive
+          ? chip
+          : compileHDL(hdlModel.getValue(), dependencyMap(dependencies));
+        target.reset();
+        target.evaluate(Object.fromEntries(Object.keys(chip.inputWidths).map((name) => [name, 0])));
+        if (interactive) {
+          cycles = 0;
+          runtimeError = '';
+        }
+        testIsInteractive = interactive;
+        testSession = createHDLTest(target, script, {
+          compare: diffModel.modified.getValue().trim() || undefined,
+          files: testFiles,
+        });
+      }
+      if (single) testSession.step();
+      else testSession.run(1000);
+      testSession = testSession;
+      diffModel.original.setValue(testSession.output);
+      testStats =
+        testSession.passed + testSession.failed > 0
+          ? { passed: testSession.passed, total: testSession.passed + testSession.failed }
+          : undefined;
+      testStatus = `${testSession.status} · ${testSession.rows.length} output rows${testStats ? ` · ${testSession.passed} passed, ${testSession.failed} failed` : ''}`;
+      testError = testSession.error ?? '';
+    } catch (cause) {
+      invalidateTests();
+      testError = cause instanceof Error ? cause.message : String(cause);
+    } finally {
+      if (interactive) reflectPins();
+    }
+  }
+
+  function reflectPins(syncInputs = true) {
+    if (!chip) return;
+    if (syncInputs)
+      inputPins = Object.entries(chip.inputWidths).map(([name, width]) => ({
+        name,
+        width,
+        value: chip!.inputs[name] ?? 0,
+      }));
+    outputPins = Object.entries(chip.outputWidths).map(([name, width]) => ({
+      name,
+      width,
+      value: chip!.outputs[name] ?? 0,
+    }));
+    internalPins = Object.entries(chip.internalWidths).map(([name, width]) => ({
+      name,
+      width,
+      value: chip!.internalValues[name] ?? 0,
+    }));
+    phase = chip.phase;
+    revision += 1;
+  }
+
+  function dependenciesEdited() {
+    queueMicrotask(() => {
+      setup();
+      runTestScript();
+      checkIsDirty();
+      persistDraft();
+    });
+  }
+
+  async function uploadTestFiles(event: Event) {
+    const input = event.currentTarget as HTMLInputElement;
+    try {
+      const files = Array.from(input.files ?? []);
+      if (files.reduce((total, file) => total + file.size, 0) > 2000000)
+        throw new Error('Keep test files below 2 MB total.');
+      testFiles = {
+        ...testFiles,
+        ...Object.fromEntries(
+          await Promise.all(files.map(async (file) => [file.name, await file.text()])),
+        ),
+      };
+      invalidateTests();
+      checkIsDirty();
+      persistDraft();
+    } catch (cause) {
+      operationError = cause instanceof Error ? cause.message : String(cause);
+    }
+    input.value = '';
+  }
+
+  function restoreWorkshopDraft() {
+    const draft = readWorkshopDraft(localStorage);
+    if (!draft) return;
+    // The workshop draft has its own canonical route, so it never overwrites an existing editor draft.
+    location.assign('/tools/hardware-simulator/workshop-draft');
   }
 
   /**
@@ -392,7 +409,14 @@
   let diffModel: monacoApi.editor.IDiffEditorModel;
   let diffState: monacoApi.editor.IDiffEditorViewState;
 
-  let chip: Chip | undefined;
+  let chip: HDLCircuit | undefined;
+  let dependencies: string[] = [];
+  let testFiles: Record<string, string> = {};
+  let view: 'split' | 'visual' | 'code' = 'split';
+  let revision = 0;
+  let phase: 'tick' | 'tock' = 'tock';
+  let cycles = 0;
+  let workshopDraftAvailable = false;
   let codeError = '';
   let testError = '';
   let runtimeError = '';
@@ -403,13 +427,18 @@
   let copyStatus = '';
   let storageNotice = '';
   $: error = codeError || testError || runtimeError || operationError;
-  $: isBundledExample = !!experiment && examples.some((example) => example.id === experiment?.id);
-  let inputPins: { name: string; value: number }[] = [];
-  let internalPins: { name: string; value: number }[] = [];
-  let outputPins: { name: string; value: number }[] = [];
+  $: isBundledExample =
+    !!experiment &&
+    (experiment.id === 'workshop-draft' ||
+      examples.some((example) => example.id === experiment?.id));
+  let inputPins: { name: string; width: number; value: number | string }[] = [];
+  let internalPins: { name: string; width: number; value: number }[] = [];
+  let outputPins: { name: string; width: number; value: number }[] = [];
 
-  let tests: TestScript | undefined;
-  let testStats: { total: number; passed: number; decorations: string[] } | undefined;
+  let testSession: HDLTestSession | undefined;
+  let testIsInteractive = false;
+  let testStatus = '';
+  let testStats: { total: number; passed: number } | undefined;
 
   let name = experiment?.name || 'Untitled Experiment';
   let visibility = experiment?.visibility || 'PUBLIC';
@@ -434,6 +463,8 @@
           compare: diffModel.modified.getValue(),
           type: experiment?.type || 'HARDWARE',
           visibility,
+          ...(dependencies.length || experiment?.dependencies ? { dependencies } : {}),
+          ...(Object.keys(testFiles).length || experiment?.testFiles ? { testFiles } : {}),
         } as ExperimentRequest),
       });
 
@@ -461,28 +492,50 @@
   async function download(e?: Event) {
     e?.preventDefault();
     if (!initialized) return;
-    const target = document.createElement('a');
-    const zip = await import('@zip.js/zip.js');
-    zip.configure({ useWebWorkers: false });
-
-    const fileName = (name || 'experiment').replaceAll(/[^\w]/g, '-').toLocaleLowerCase();
-
-    const blobWriter = new zip.BlobWriter('application/zip');
-    const writer = new zip.ZipWriter(blobWriter);
-    await writer.add(`${fileName}.hdl`, new zip.TextReader(hdlModel.getValue()));
-    await writer.add(`${fileName}.tst`, new zip.TextReader(tstModel.getValue()));
-    await writer.add(`${fileName}.cmp`, new zip.TextReader(diffModel.modified.getValue()));
-    await writer.close();
-    const blob = await blobWriter.getData();
-
-    const url = URL.createObjectURL(blob);
-
-    target.href = url;
-    target.download = `${fileName}.zip`;
-    document.body.append(target);
-    target.click();
-    target.remove();
-    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    operationError = '';
+    try {
+      const target = document.createElement('a');
+      const zip = await import('@zip.js/zip.js');
+      zip.configure({ useWebWorkers: false });
+      const archiveName = (name || 'experiment').replaceAll(/[^\w]/g, '-').toLocaleLowerCase();
+      const chipName = (source: string, fallback: string) =>
+        source
+          .replace(/\/\*[\s\S]*?\*\//g, '')
+          .replace(/\/\/[^\n]*/g, '')
+          .match(/\bCHIP\s+([A-Za-z_][A-Za-z0-9_]*)/)?.[1] || fallback;
+      const mainName = chipName(hdlModel.getValue(), 'Main');
+      const files = new Map<string, string>();
+      const add = (fileName: string, content: string) => {
+        if (!/^[A-Za-z0-9_.-]+$/.test(fileName) || fileName === '.' || fileName === '..')
+          throw new Error(`Use a plain filename for ${fileName} before downloading.`);
+        if (files.has(fileName) && files.get(fileName) !== content)
+          throw new Error(
+            `Two project files are named ${fileName}. Rename one before downloading.`,
+          );
+        files.set(fileName, content);
+      };
+      add(`${mainName}.hdl`, hdlModel.getValue());
+      add(`${mainName}.tst`, tstModel.getValue());
+      add(`${mainName}.cmp`, diffModel.modified.getValue());
+      dependencies.forEach((source, index) =>
+        add(`${chipName(source, `Custom${index + 1}`)}.hdl`, source),
+      );
+      Object.entries(testFiles).forEach(([fileName, content]) => add(fileName, content));
+      const blobWriter = new zip.BlobWriter('application/zip');
+      const writer = new zip.ZipWriter(blobWriter);
+      for (const [fileName, content] of files)
+        await writer.add(fileName, new zip.TextReader(content));
+      await writer.close();
+      const url = URL.createObjectURL(await blobWriter.getData());
+      target.href = url;
+      target.download = `${archiveName}.zip`;
+      document.body.append(target);
+      target.click();
+      target.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (cause) {
+      operationError = `Could not download: ${cause instanceof Error ? cause.message : String(cause)}`;
+    }
   }
 
   let removingState: boolean = false;
@@ -519,7 +572,9 @@
       experiment?.code !== hdlModel.getValue() ||
       experiment?.tests !== tstModel.getValue() ||
       experiment?.compare !== diffModel.modified.getValue() ||
-      experiment?.visibility !== visibility
+      experiment?.visibility !== visibility ||
+      JSON.stringify(experiment?.dependencies ?? []) !== JSON.stringify(dependencies) ||
+      JSON.stringify(experiment?.testFiles ?? {}) !== JSON.stringify(testFiles)
     ) {
       if (savingState !== 'UNSAVED') {
         savingState = 'UNSAVED';
@@ -529,7 +584,15 @@
     }
   }
 
-  type LocalDraft = { hdl: string; tests?: string; compare?: string; name?: string; saved: string };
+  type LocalDraft = {
+    hdl: string;
+    tests?: string;
+    compare?: string;
+    name?: string;
+    saved: string;
+    dependencies?: string[];
+    testFiles?: Record<string, string>;
+  };
   const draftKey = () => `chipsandcode:hardware-tool:${experiment?.id || 'draft'}:v1`;
   function persistDraft() {
     if (!autoSaveHdlLocally || !initialized) return;
@@ -541,6 +604,8 @@
           tests: tstModel.getValue(),
           compare: diffModel.modified.getValue(),
           name,
+          dependencies,
+          testFiles,
           saved: new Date().toISOString(),
         }),
       );
@@ -560,6 +625,20 @@
       if (candidate.tests !== undefined && typeof candidate.tests !== 'string') return;
       if (candidate.compare !== undefined && typeof candidate.compare !== 'string') return;
       if (candidate.name !== undefined && typeof candidate.name !== 'string') return;
+      if (
+        candidate.dependencies !== undefined &&
+        (!Array.isArray(candidate.dependencies) ||
+          !candidate.dependencies.every((source: unknown) => typeof source === 'string'))
+      )
+        return;
+      if (
+        candidate.testFiles !== undefined &&
+        (!candidate.testFiles ||
+          typeof candidate.testFiles !== 'object' ||
+          Array.isArray(candidate.testFiles) ||
+          !Object.values(candidate.testFiles).every((source) => typeof source === 'string'))
+      )
+        return;
       const remoteAt = experiment && new Date(experiment.updated || experiment.created).valueOf();
       if (remoteAt && new Date(candidate.saved).valueOf() < remoteAt) return;
       return candidate;
@@ -704,6 +783,11 @@
             <DropdownMenu.Item onSelect={openNewExperiment} class="hardware-menu-item"
               >Open new</DropdownMenu.Item
             >
+            {#if workshopDraftAvailable && experiment?.id !== 'workshop-draft'}
+              <DropdownMenu.Item onSelect={restoreWorkshopDraft} class="hardware-menu-item"
+                >Open workshop draft</DropdownMenu.Item
+              >
+            {/if}
             <div class="hardware-menu-label">Examples</div>
             {#each examples as example (example.id)}
               <DropdownMenu.Item>
@@ -816,8 +900,24 @@
     {/if}
   </header>
 
-  <div class="workspace-grid">
-    <div class="editor-panel">
+  <div class="simulation-toolbar">
+    <label
+      >View<select bind:value={view} aria-label="View"
+        ><option value="split">Split</option><option value="visual">Visual</option><option
+          value="code">Code</option
+        ></select
+      ></label
+    >
+    <button class="tool-button" on:click={advance} disabled={!chip}
+      >{phase === 'tock' ? 'Tick' : 'Tock'}</button
+    >
+    <button class="tool-button" on:click={resetCircuit} disabled={!chip}>Reset</button>
+    {#if chip}<span class="clock-status"
+        >Clock {phase === 'tick' ? 'high' : 'low'} · {cycles} manual cycles</span
+      >{/if}
+  </div>
+  <div class="workspace-grid" class:single={view !== 'split'}>
+    <div class="editor-panel" class:hidden={view === 'visual'}>
       <Tabs.Root
         class="editor-tabs"
         value={String(selectedTab)}
@@ -850,6 +950,28 @@
           aria-label={`${tabDescription[selectedTab]} editor`}
         ></div>
       </Tabs.Root>
+      {#if selectedTab === EditorTab.TST || selectedTab === EditorTab.DIFF}
+        <div class="test-toolbar">
+          <button
+            class="tool-button"
+            disabled={!chip}
+            on:click={() => runTestScript(false, true, true)}
+            >{testSession && !testSession.done ? 'Continue test' : 'Run tests'}</button
+          >
+          <button
+            class="tool-button"
+            disabled={!chip}
+            on:click={() => runTestScript(true, true, true)}>Step test</button
+          >
+          <button class="tool-button" disabled={!testSession} on:click={invalidateTests}
+            >Restart test</button
+          >
+          <p role="status">{testStatus}</p>
+          <p class="test-hint">
+            Each batch runs up to 1,000 commands. A new test resets circuit state.
+          </p>
+        </div>
+      {/if}
       <div class="editor-status" aria-live="polite">
         <span
           >{!initialized
@@ -872,12 +994,78 @@
                 : 'Local workspace'}</span
         >
       </div>
+      <details class="project-details">
+        <summary
+          >Your chip dependencies{dependencies.length ? ` · ${dependencies.length}` : ''}</summary
+        >
+        <p>
+          Each custom chip has its own HDL definition and can be used as a part in your circuit.
+        </p>
+        {#each dependencies as source, index (index)}
+          <label
+            >Custom chip {index + 1}<textarea
+              value={source}
+              on:input={(event) => {
+                dependencies[index] = event.currentTarget.value;
+                dependenciesEdited();
+              }}
+              spellcheck="false"
+              autocapitalize="off"
+              aria-label={`Custom chip ${index + 1} HDL`}
+            ></textarea></label
+          >
+          <button
+            class="tool-button"
+            on:click={() => {
+              dependencies = dependencies.filter((_, i) => i !== index);
+              dependenciesEdited();
+            }}>Remove custom chip {index + 1}</button
+          >
+        {/each}
+        <button
+          class="tool-button"
+          on:click={() => {
+            dependencies = [
+              ...dependencies,
+              `CHIP Custom${dependencies.length + 1} {\n  IN in;\n  OUT out;\n  PARTS:\n  Not(in=in, out=out);\n}`,
+            ];
+            dependenciesEdited();
+          }}>Add custom chip</button
+        >
+      </details>
+      <details class="project-details">
+        <summary>ROM and test files</summary>
+        <p>
+          Supply files referenced by a test script, such as a .hack program loaded into ROM32K.
+          Files are saved with your experiment.
+        </p>
+        <label
+          >Test files<input
+            type="file"
+            multiple
+            accept=".hack,.asm,.tst,.cmp,.out"
+            on:change={uploadTestFiles}
+          /></label
+        >
+        {#if Object.keys(testFiles).length}
+          <p>{Object.keys(testFiles).join(', ')}</p>
+          <button
+            class="tool-button"
+            on:click={() => {
+              testFiles = {};
+              invalidateTests();
+              checkIsDirty();
+              persistDraft();
+            }}>Clear test files</button
+          >
+        {/if}
+      </details>
     </div>
 
-    <aside class="signal-panel" aria-label="Signal inspector">
+    <aside class="signal-panel" class:hidden={view === 'code'} aria-label="Signal inspector">
       <div class="inspector-title">
         <h2>Signals</h2>
-        <span>0 / 1</span>
+        <span>Bits &amp; buses</span>
       </div>
       {#if chip && !codeError}
         <p class="inspector-intro">Change an input. Follow its value through the circuit.</p>
@@ -887,13 +1075,18 @@
           <tbody>
             {#each inputPins as pin}
               <tr
-                ><th scope="row">{pin.name}</th><td
+                ><th scope="row"
+                  >{pin.name}{#if pin.width > 1}<small>{pin.width} bits</small>{/if}</th
+                ><td
                   ><input
-                    type="number"
-                    bind:value={pin.value}
-                    on:change={run}
+                    type={pin.width === 1 ? 'number' : 'text'}
+                    value={pin.value}
+                    on:input={(event) => {
+                      pin.value = event.currentTarget.value;
+                      run();
+                    }}
                     min="0"
-                    max="1"
+                    max={2 ** pin.width - 1}
                     step="1"
                     required
                     aria-label={`Value for ${pin.name}`}
@@ -908,8 +1101,13 @@
           <thead><tr><th scope="col">Pin</th><th scope="col">Value</th></tr></thead>
           <tbody>
             {#each outputPins as pin}<tr
-                ><th scope="row">{pin.name}</th><td
-                  ><span class="pin-value" class:high={!runtimeError && pin.value === 1}
+                ><th scope="row"
+                  >{pin.name}{#if pin.width > 1}<small>{pin.width} bits</small>{/if}</th
+                ><td
+                  ><span
+                    class="pin-value"
+                    data-testid={`chip-output-${pin.name}`}
+                    class:high={!runtimeError && pin.value === 1}
                     >{runtimeError ? '—' : pin.value}</span
                   ></td
                 ></tr
@@ -924,7 +1122,9 @@
               <thead><tr><th scope="col">Pin</th><th scope="col">Value</th></tr></thead>
               <tbody
                 >{#each internalPins as pin}<tr
-                    ><th scope="row">{pin.name}</th><td
+                    ><th scope="row"
+                      >{pin.name}{#if pin.width > 1}<small>{pin.width} bits</small>{/if}</th
+                    ><td
                       ><span class="pin-value" class:high={!runtimeError && pin.value === 1}
                         >{runtimeError ? '—' : pin.value}</span
                       ></td
@@ -947,6 +1147,7 @@
           >Xor Gate <span aria-hidden="true">↗</span></a
         >
       {/if}
+      <HardwarePeripherals circuit={chip} {revision} onupdate={reflectPins} />
       <details class="workspace-help">
         <summary>How this workspace works</summary>
         <p>
@@ -955,8 +1156,8 @@
           values.
         </p>
         <p>
-          This simulator runs single-bit, combinational circuits. Explore word-sized signals and
-          selectors in the <a href="/tools/buses">bus and routing lab</a>.
+          Use bits or whole buses, compose custom chips, and advance stored state with Tick and
+          Tock. Code, tests, and live signals all describe the same circuit.
         </p>
         <a href="/learn/reference/boolean-logic/background#reading-hdl"
           >Read the HDL explanation ↗</a
@@ -1197,6 +1398,85 @@
     padding: 10px;
     font-size: 12px;
   }
+  .simulation-toolbar,
+  .test-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border-bottom: 1px solid #414960;
+  }
+  .simulation-toolbar label {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 14px;
+  }
+  .simulation-toolbar select {
+    background: #202538;
+    color: #edf0fc;
+    border: 1px solid #77829c;
+    border-radius: 4px;
+    min-height: 44px;
+    padding: 8px 30px 8px 12px;
+  }
+  .clock-status,
+  .test-toolbar p {
+    font:
+      12px/1.7 ui-monospace,
+      monospace;
+    color: #c0c6d8;
+  }
+  .test-toolbar .test-hint {
+    flex-basis: 100%;
+    margin: 0;
+  }
+  .workspace-grid.single {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .hidden {
+    display: none;
+  }
+  .project-details {
+    padding: 18px;
+    border-top: 1px solid #414960;
+  }
+  .project-details summary {
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .project-details p {
+    color: #c0c6d8;
+    font-size: 14px;
+    line-height: 1.7;
+    margin: 12px 0;
+  }
+  .project-details label {
+    display: grid;
+    gap: 8px;
+    font-size: 14px;
+    margin: 16px 0;
+  }
+  .project-details textarea {
+    min-height: 180px;
+    width: 100%;
+    padding: 12px;
+    background: #10131f;
+    color: #edf0fc;
+    border: 1px solid #77829c;
+    font:
+      14px/1.7 ui-monospace,
+      monospace;
+  }
+  .project-details input {
+    max-width: 100%;
+  }
+  .pin-table small {
+    display: block;
+    color: #b9bfd3;
+    margin-top: 4px;
+  }
   .workspace-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 290px;
@@ -1337,7 +1617,8 @@
     text-align: right;
   }
   .pin-table input {
-    width: 64px;
+    width: 100px;
+    max-width: 100%;
     min-height: 36px;
     background: #1f263a;
     color: #f0ecff;
@@ -1349,6 +1630,7 @@
     display: inline-grid;
     place-items: center;
     min-width: 36px;
+    padding: 0 6px;
     min-height: 30px;
     color: #c7cde0;
     border: 1px solid #69718a;
@@ -1482,6 +1764,85 @@
     background: #88dfbd;
   }
   @media (min-width: 1500px) {
+    .simulation-toolbar,
+    .test-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 18px;
+      border-bottom: 1px solid #414960;
+    }
+    .simulation-toolbar label {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      font-size: 14px;
+    }
+    .simulation-toolbar select {
+      background: #202538;
+      color: #edf0fc;
+      border: 1px solid #77829c;
+      border-radius: 4px;
+      min-height: 44px;
+      padding: 8px 30px 8px 12px;
+    }
+    .clock-status,
+    .test-toolbar p {
+      font:
+        12px/1.7 ui-monospace,
+        monospace;
+      color: #c0c6d8;
+    }
+    .test-toolbar .test-hint {
+      flex-basis: 100%;
+      margin: 0;
+    }
+    .workspace-grid.single {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .hidden {
+      display: none;
+    }
+    .project-details {
+      padding: 18px;
+      border-top: 1px solid #414960;
+    }
+    .project-details summary {
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .project-details p {
+      color: #c0c6d8;
+      font-size: 14px;
+      line-height: 1.7;
+      margin: 12px 0;
+    }
+    .project-details label {
+      display: grid;
+      gap: 8px;
+      font-size: 14px;
+      margin: 16px 0;
+    }
+    .project-details textarea {
+      min-height: 180px;
+      width: 100%;
+      padding: 12px;
+      background: #10131f;
+      color: #edf0fc;
+      border: 1px solid #77829c;
+      font:
+        14px/1.7 ui-monospace,
+        monospace;
+    }
+    .project-details input {
+      max-width: 100%;
+    }
+    .pin-table small {
+      display: block;
+      color: #b9bfd3;
+      margin-top: 4px;
+    }
     .workspace-grid {
       grid-template-columns: minmax(0, 1fr) 340px;
     }
@@ -1490,6 +1851,85 @@
     }
   }
   @media (max-width: 800px) {
+    .simulation-toolbar,
+    .test-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 18px;
+      border-bottom: 1px solid #414960;
+    }
+    .simulation-toolbar label {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      font-size: 14px;
+    }
+    .simulation-toolbar select {
+      background: #202538;
+      color: #edf0fc;
+      border: 1px solid #77829c;
+      border-radius: 4px;
+      min-height: 44px;
+      padding: 8px 30px 8px 12px;
+    }
+    .clock-status,
+    .test-toolbar p {
+      font:
+        12px/1.7 ui-monospace,
+        monospace;
+      color: #c0c6d8;
+    }
+    .test-toolbar .test-hint {
+      flex-basis: 100%;
+      margin: 0;
+    }
+    .workspace-grid.single {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .hidden {
+      display: none;
+    }
+    .project-details {
+      padding: 18px;
+      border-top: 1px solid #414960;
+    }
+    .project-details summary {
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .project-details p {
+      color: #c0c6d8;
+      font-size: 14px;
+      line-height: 1.7;
+      margin: 12px 0;
+    }
+    .project-details label {
+      display: grid;
+      gap: 8px;
+      font-size: 14px;
+      margin: 16px 0;
+    }
+    .project-details textarea {
+      min-height: 180px;
+      width: 100%;
+      padding: 12px;
+      background: #10131f;
+      color: #edf0fc;
+      border: 1px solid #77829c;
+      font:
+        14px/1.7 ui-monospace,
+        monospace;
+    }
+    .project-details input {
+      max-width: 100%;
+    }
+    .pin-table small {
+      display: block;
+      color: #b9bfd3;
+      margin-top: 4px;
+    }
     .workspace-grid {
       grid-template-columns: minmax(0, 1fr);
     }
