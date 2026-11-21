@@ -245,10 +245,10 @@ ${Array.from({ length: 16 }, (_, bit) => `Not(in=in[${bit}], out=out[${bit}]);`)
     cy.findByRole('textbox', { name: 'Value for in' }).clear().type('0x00ff');
     cy.findByTestId('chip-output-out').should('have.text', '65280');
     cy.findByRole('textbox', { name: 'Value for in' }).clear().type('65536');
-    cy.findByRole('alert').should('contain', '65535');
+    cy.get('.workspace-error[role="alert"]').should('contain', '65535');
     cy.findByTestId('chip-output-out').should('have.text', '—');
     replaceHardwareEditor('CHIP Invalid { IN in; OUT out; PARTS: Missing');
-    cy.findByRole('alert').should('be.visible');
+    cy.get('.workspace-error[role="alert"]').should('be.visible');
     cy.findByTestId('chip-output-out').should('not.exist');
     cy.findByRole('button', { name: 'Tick' }).should('be.disabled');
   });

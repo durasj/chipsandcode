@@ -108,6 +108,7 @@
         disposed = true;
         workspaceActive = false;
         subscriptions.forEach((subscription) => subscription.dispose());
+        diffLabelSubscriptions.forEach((subscription) => subscription.dispose());
         editor?.dispose();
         hdlModel?.dispose();
         tstModel?.dispose();
@@ -408,6 +409,7 @@
   let testsState: monacoApi.editor.ICodeEditorViewState;
   let diffModel: monacoApi.editor.IDiffEditorModel;
   let diffState: monacoApi.editor.IDiffEditorViewState;
+  let diffLabelSubscriptions: monacoApi.IDisposable[] = [];
 
   let chip: HDLCircuit | undefined;
   let dependencies: string[] = [];
@@ -684,6 +686,8 @@
     }
 
     if (detail === EditorTab.DIFF) {
+      diffLabelSubscriptions.forEach((subscription) => subscription.dispose());
+      diffLabelSubscriptions = [];
       const container = editor.getContainerDomNode();
       editor.dispose();
 
@@ -696,6 +700,8 @@
         enableSplitViewResizing: false,
       });
     } else if (selectedTab === EditorTab.DIFF) {
+      diffLabelSubscriptions.forEach((subscription) => subscription.dispose());
+      diffLabelSubscriptions = [];
       const container = editor.getContainerDomNode();
       editor.dispose();
 
@@ -713,10 +719,21 @@
       const diffEditor = editor as monacoApi.editor.IStandaloneDiffEditor;
 
       diffEditor.setModel(diffModel);
-      diffEditor.getOriginalEditor().updateOptions({ ariaLabel: 'Actual output, read-only' });
-      diffEditor.getModifiedEditor().updateOptions({
-        ariaLabel: readOnlyAssignment ? 'Expected output, read-only' : 'Expected output, editable',
-      });
+      // Monaco can clear sub-editor labels when diff layout/options change.
+      // Keep names on the actual editable controls, including after resizing.
+      const labelEditor = (target: monacoApi.editor.IStandaloneCodeEditor, label: string) => {
+        const ensureLabel = () => {
+          if (target.getOption(monaco.editor.EditorOption.ariaLabel) !== label)
+            target.updateOptions({ ariaLabel: label });
+        };
+        ensureLabel();
+        diffLabelSubscriptions.push(target.onDidChangeConfiguration(ensureLabel));
+      };
+      labelEditor(diffEditor.getOriginalEditor(), 'Actual output, read-only');
+      labelEditor(
+        diffEditor.getModifiedEditor(),
+        readOnlyAssignment ? 'Expected output, read-only' : 'Expected output, editable',
+      );
       if (diffState) diffEditor.restoreViewState(diffState);
     } else {
       const standaloneEditor = editor as monacoApi.editor.IStandaloneCodeEditor;
