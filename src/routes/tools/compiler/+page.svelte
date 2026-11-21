@@ -130,6 +130,7 @@
         </div>
         <label
           >Generated VM<textarea
+            class="workspace-editor"
             readonly
             value={output[activeOutput] ?? ''}
             spellcheck="false"

@@ -19,13 +19,13 @@
 
 <style>
   .hardware-tool-page {
-    width: min(100%, 1480px);
+    width: 100%;
     margin: 0 auto;
-    padding: 32px 4% 70px;
+    padding: 0;
     color: #edf0fc;
   }
   .tool-introduction {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
   }
   .tool-introduction a {
     color: #c5baff;
@@ -34,8 +34,8 @@
     text-underline-offset: 4px;
   }
   h1 {
-    margin: 27px 0 13px;
-    font-size: clamp(30px, 4vw, 46px);
+    margin: 12px 0 8px;
+    font-size: clamp(28px, 3vw, 36px);
     line-height: 1.12;
     font-weight: 500;
     letter-spacing: -0.04em;
@@ -48,7 +48,7 @@
   }
   @media (max-width: 520px) {
     .hardware-tool-page {
-      padding: 24px 16px 50px;
+      padding: 0;
     }
   }
 </style>

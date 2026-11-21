@@ -282,6 +282,7 @@
         </div>
         <label class="source-label"
           ><span class="sr-only">Program source</span><textarea
+            class="workspace-editor"
             bind:value={source}
             on:input={edited}
             spellcheck="false"

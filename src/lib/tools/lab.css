@@ -5,9 +5,9 @@
   --lab-ink: #f3f3fc;
   --lab-muted: #b8bbd0;
   --lab-accent: #c0b5ff;
-  width: min(100%, 1160px);
+  width: 100%;
   margin: 0 auto;
-  padding: 38px 5% 80px;
+  padding: 0;
   color: var(--lab-ink);
   background: var(--lab-bg);
   box-sizing: border-box;
@@ -305,9 +305,6 @@
   border: 0;
 }
 @media (max-width: 720px) {
-  .logic-lab {
-    padding: 24px 6% 56px;
-  }
   .logic-lab .tool-heading {
     margin: 20px 0 28px;
   }

@@ -84,6 +84,7 @@
 </div>
 <label
   >Source code<textarea
+    class="workspace-editor"
     value={files[active] ?? ''}
     on:input={edit}
     disabled={!active}

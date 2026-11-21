@@ -1250,7 +1250,7 @@
     border-color: #4b8c72;
   }
   .editor-mount {
-    height: 500px;
+    height: var(--tool-editor-height, 500px);
     min-height: 360px;
     min-width: 0;
     width: 100%;
@@ -1486,7 +1486,7 @@
       grid-template-columns: minmax(0, 1fr) 340px;
     }
     .editor-mount {
-      height: 570px;
+      height: var(--tool-editor-height, 570px);
     }
   }
   @media (max-width: 800px) {
@@ -1509,7 +1509,7 @@
       width: 100%;
     }
     .editor-mount {
-      height: 440px;
+      height: var(--tool-editor-height, 440px);
     }
     .file-actions {
       width: 100%;

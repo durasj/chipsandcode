@@ -107,9 +107,9 @@
 
 <style>
   .tools-page {
-    max-width: 1200px;
+    width: 100%;
     margin: auto;
-    padding: 62px 5% 100px;
+    padding: 0;
   }
   header {
     margin-bottom: 52px;
@@ -220,7 +220,7 @@
   }
   @media (max-width: 620px) {
     .tools-page {
-      padding: 38px 20px 70px;
+      padding: 0;
     }
     .tool-entry {
       grid-template-columns: 1fr 22px;

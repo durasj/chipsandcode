@@ -271,6 +271,7 @@
         <h2 id="hdl-heading">Circuit definition</h2>
         <label
           ><span class="sr-only">Chip HDL</span><textarea
+            class="workspace-editor"
             bind:value={source}
             on:input={edited}
             spellcheck="false"
