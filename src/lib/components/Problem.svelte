@@ -2,13 +2,49 @@
   export let message: string;
 </script>
 
-<article role="alert" class="prose max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-  <h1 class="my-8">Uh, oh, an error has occurred 😞</h1>
-
-  {message}
-
-  <div class="my-8">
-    <button class="btn mx-2" on:click={() => location.reload()}>Reload</button>
-    <button class="btn mx-2" on:click={() => history.back()}>Go Back</button>
+<section class="problem" role="alert">
+  <h2>This could not be opened.</h2>
+  <p>{message}</p>
+  <div>
+    <button onclick={() => location.reload()}>Try again</button><a href="/tools">Back to Tools</a>
   </div>
-</article>
+</section>
+
+<style>
+  .problem {
+    width: min(100%, 760px);
+    margin: 40px auto;
+    padding: 28px;
+    color: #ececf6;
+  }
+  h2 {
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 1.2;
+    margin: 0 0 22px;
+  }
+  p {
+    color: #c7cfe0;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+  }
+  .problem > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    align-items: center;
+    margin-top: 28px;
+  }
+  button {
+    border: 1px solid #8f84db;
+    background: #4f46e5;
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 3px;
+  }
+  a {
+    color: #c8beff;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+</style>

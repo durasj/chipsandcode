@@ -87,14 +87,19 @@ class CustomChip implements Chip {
   public run() {
     // Execute using breadth-first exploring
     const queue = new Denque<Chip>();
+    const pending = new Set<Chip>();
 
     const explore = (pin: ChipPin) => {
       for (const [chip, pinName] of pin.connections) {
         // Set chip internal pin state
         chip.setInput(pinName, pin.state);
 
-        // Plan to visit the connected chip next
-        queue.push(chip);
+        // A signal may feed several pins on the same chip. Update every pin,
+        // but evaluate a pending chip only once with its latest input values.
+        if (!pending.has(chip)) {
+          pending.add(chip);
+          queue.push(chip);
+        }
       }
     };
 
@@ -110,6 +115,9 @@ class CustomChip implements Chip {
 
     let next = queue.shift();
     while (next) {
+      // Remove before running so feedback can schedule another evaluation;
+      // real loops must still reach the iteration guard below.
+      pending.delete(next);
       // 1. Run the chip logic
       next.run();
 

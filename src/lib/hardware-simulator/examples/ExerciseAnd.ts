@@ -4,7 +4,7 @@ export default {
   id: 'ExerciseAnd',
   name: 'Exercise - And',
   code: `/**
- * Not gate
+ * And gate
  *
  * If a=b=1 then out=1 else out=0.
  */

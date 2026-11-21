@@ -73,6 +73,7 @@
     "yaml": "^2.8.0"
   },
   "dependencies": {
+    "@davidsouther/jiffies": "2026.26.1",
     "@internationalized/date": "^3.8.1",
     "@markdoc/markdoc": "^0.3.2",
     "@neondatabase/serverless": "1.2.0",
@@ -84,12 +85,13 @@
     "daisyui": "^3.5.0",
     "date-fns": "4.4.0",
     "denque": "^2.1.0",
+    "dompurify": "3.4.17",
     "monaco-editor": "0.57.0",
+    "ohm-js": "17.5.0",
     "screenfull": "^6.0.2",
     "svelte-confetti": "2.3.2",
     "yaml": "^2.3.1",
-    "zod": "4.6.7",
-    "dompurify": "3.4.17"
+    "zod": "4.6.7"
   },
   "overrides": {
     "unist-util-find": "1.0.2",

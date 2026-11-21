@@ -1,0 +1,15 @@
+Chips and Code — from signal to software
+
+Every computer begins with two states. Zero and one.
+
+Connect those signals through logic gates, and simple rules become useful behavior.
+
+Combine gates into arithmetic. Bits become numbers, and circuits add, compare, and calculate.
+
+Add memory, and the machine can keep its state. A value survives beyond a single moment.
+
+Bring calculation, memory, and control together. Instructions now move through a complete computer.
+
+Software builds on all of it. Every line of code connects back to the machine beneath.
+
+Start with logic. Build from the ground up.

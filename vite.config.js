@@ -27,7 +27,12 @@ const config = defineConfig(() => {
           adapter: adapter({ runtime: 'nodejs26.x' }),
           preprocess: vitePreprocess({ script: true }),
           prerender: {
-            entries: ['*', '/learn/hardware/boolean-logic'],
+            entries: [
+              '*',
+              '/learn/reference',
+              '/learn/reference/boolean-logic',
+              '/learn/hardware/boolean-logic',
+            ],
           },
           serviceWorker: { register: false },
         },
@@ -79,7 +84,12 @@ const config = defineConfig(() => {
       coverage: {
         provider: 'v8',
         include: ['src/lib/**/*.ts'],
-        exclude: ['src/lib/**/*.d.ts', 'src/lib/**/testing/**', 'src/lib/editor/index.ts'],
+        exclude: [
+          'src/lib/**/*.d.ts',
+          'src/lib/**/testing/**',
+          'src/lib/editor/index.ts',
+          'src/lib/software/vendor/**',
+        ],
         thresholds: { lines: 90, functions: 90, branches: 90, statements: 90 },
       },
     },
