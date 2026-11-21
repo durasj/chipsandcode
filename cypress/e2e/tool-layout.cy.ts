@@ -13,9 +13,12 @@ const routes = [
   '/tools/hardware-simulator/Xor',
 ];
 
-function expectWidth(width: number) {
+function expectWidth(width: number | 'available') {
   cy.get('main').should(($main) => {
-    expect($main[0].getBoundingClientRect().width).to.be.closeTo(width, 1);
+    // Classic scrollbars consume viewport space; overlay scrollbars do not.
+    const expected =
+      width === 'available' ? $main[0].ownerDocument.documentElement.clientWidth - 32 : width;
+    expect($main[0].getBoundingClientRect().width).to.be.closeTo(expected, 1);
   });
 }
 
@@ -29,7 +32,7 @@ describe('Shared tool workspace', () => {
       cy.findByRole('button', { name: 'Full width' })
         .click()
         .should('have.attr', 'aria-pressed', 'true');
-      expectWidth(1888);
+      expectWidth('available');
       expectNoPageOverflow();
       if (route === '/tools/computer')
         cy.screenshot('computer-full-width', { capture: 'viewport' });
@@ -53,7 +56,7 @@ describe('Shared tool workspace', () => {
     cy.get('.machine-lab').should('have.attr', 'data-ready', 'true');
     cy.findByRole('textbox', { name: 'Program source' }).clear().type('@42\nD=A', { delay: 0 });
     cy.findByRole('button', { name: 'Full width' }).focus().type('{enter}');
-    expectWidth(1888);
+    expectWidth('available');
     cy.findByRole('textbox', { name: 'Program source' })
       .should('have.value', '@42\nD=A')
       .and(($editor) => {
@@ -61,11 +64,11 @@ describe('Shared tool workspace', () => {
       });
     cy.reload();
     cy.get('.tools-shell').should('have.attr', 'data-width-ready', 'true');
-    expectWidth(1888);
+    expectWidth('available');
     cy.findByRole('textbox', { name: 'Program source' }).should('have.value', '@42\nD=A');
     cy.findByRole('link', { name: '← Tools' }).click();
     cy.findByRole('link', { name: /Jack compiler/ }).click();
-    expectWidth(1888);
+    expectWidth('available');
     cy.findByRole('button', { name: 'Full width' }).click();
     cy.reload();
     expectWidth(1200);
@@ -76,9 +79,9 @@ describe('Shared tool workspace', () => {
     cy.viewport(320, 760);
     cy.visit('/tools/computer');
     cy.get('.machine-lab').should('have.attr', 'data-ready', 'true');
-    expectWidth(288);
+    expectWidth('available');
     cy.findByRole('button', { name: 'Full width' }).click();
-    expectWidth(288);
+    expectWidth('available');
     expectNoPageOverflow();
     cy.injectAxe();
     checkAccessibility();
